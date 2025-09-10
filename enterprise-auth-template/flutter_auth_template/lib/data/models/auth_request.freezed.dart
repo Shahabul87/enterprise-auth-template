@@ -1087,6 +1087,8 @@ VerifyTwoFactorRequest _$VerifyTwoFactorRequestFromJson(
 /// @nodoc
 mixin _$VerifyTwoFactorRequest {
   String get code => throw _privateConstructorUsedError;
+  String? get token => throw _privateConstructorUsedError;
+  bool? get isBackup => throw _privateConstructorUsedError;
 
   /// Serializes this VerifyTwoFactorRequest to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1105,7 +1107,7 @@ abstract class $VerifyTwoFactorRequestCopyWith<$Res> {
     $Res Function(VerifyTwoFactorRequest) then,
   ) = _$VerifyTwoFactorRequestCopyWithImpl<$Res, VerifyTwoFactorRequest>;
   @useResult
-  $Res call({String code});
+  $Res call({String code, String? token, bool? isBackup});
 }
 
 /// @nodoc
@@ -1125,13 +1127,25 @@ class _$VerifyTwoFactorRequestCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? code = null}) {
+  $Res call({
+    Object? code = null,
+    Object? token = freezed,
+    Object? isBackup = freezed,
+  }) {
     return _then(
       _value.copyWith(
             code: null == code
                 ? _value.code
                 : code // ignore: cast_nullable_to_non_nullable
                       as String,
+            token: freezed == token
+                ? _value.token
+                : token // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            isBackup: freezed == isBackup
+                ? _value.isBackup
+                : isBackup // ignore: cast_nullable_to_non_nullable
+                      as bool?,
           )
           as $Val,
     );
@@ -1147,7 +1161,7 @@ abstract class _$$VerifyTwoFactorRequestImplCopyWith<$Res>
   ) = __$$VerifyTwoFactorRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String code});
+  $Res call({String code, String? token, bool? isBackup});
 }
 
 /// @nodoc
@@ -1164,13 +1178,25 @@ class __$$VerifyTwoFactorRequestImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? code = null}) {
+  $Res call({
+    Object? code = null,
+    Object? token = freezed,
+    Object? isBackup = freezed,
+  }) {
     return _then(
       _$VerifyTwoFactorRequestImpl(
         code: null == code
             ? _value.code
             : code // ignore: cast_nullable_to_non_nullable
                   as String,
+        token: freezed == token
+            ? _value.token
+            : token // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        isBackup: freezed == isBackup
+            ? _value.isBackup
+            : isBackup // ignore: cast_nullable_to_non_nullable
+                  as bool?,
       ),
     );
   }
@@ -1179,17 +1205,25 @@ class __$$VerifyTwoFactorRequestImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$VerifyTwoFactorRequestImpl implements _VerifyTwoFactorRequest {
-  const _$VerifyTwoFactorRequestImpl({required this.code});
+  const _$VerifyTwoFactorRequestImpl({
+    required this.code,
+    this.token,
+    this.isBackup,
+  });
 
   factory _$VerifyTwoFactorRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$VerifyTwoFactorRequestImplFromJson(json);
 
   @override
   final String code;
+  @override
+  final String? token;
+  @override
+  final bool? isBackup;
 
   @override
   String toString() {
-    return 'VerifyTwoFactorRequest(code: $code)';
+    return 'VerifyTwoFactorRequest(code: $code, token: $token, isBackup: $isBackup)';
   }
 
   @override
@@ -1197,12 +1231,15 @@ class _$VerifyTwoFactorRequestImpl implements _VerifyTwoFactorRequest {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$VerifyTwoFactorRequestImpl &&
-            (identical(other.code, code) || other.code == code));
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.token, token) || other.token == token) &&
+            (identical(other.isBackup, isBackup) ||
+                other.isBackup == isBackup));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, code);
+  int get hashCode => Object.hash(runtimeType, code, token, isBackup);
 
   /// Create a copy of VerifyTwoFactorRequest
   /// with the given fields replaced by the non-null parameter values.
@@ -1223,19 +1260,364 @@ class _$VerifyTwoFactorRequestImpl implements _VerifyTwoFactorRequest {
 }
 
 abstract class _VerifyTwoFactorRequest implements VerifyTwoFactorRequest {
-  const factory _VerifyTwoFactorRequest({required final String code}) =
-      _$VerifyTwoFactorRequestImpl;
+  const factory _VerifyTwoFactorRequest({
+    required final String code,
+    final String? token,
+    final bool? isBackup,
+  }) = _$VerifyTwoFactorRequestImpl;
 
   factory _VerifyTwoFactorRequest.fromJson(Map<String, dynamic> json) =
       _$VerifyTwoFactorRequestImpl.fromJson;
 
   @override
   String get code;
+  @override
+  String? get token;
+  @override
+  bool? get isBackup;
 
   /// Create a copy of VerifyTwoFactorRequest
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$VerifyTwoFactorRequestImplCopyWith<_$VerifyTwoFactorRequestImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}
+
+VerifyEmailRequest _$VerifyEmailRequestFromJson(Map<String, dynamic> json) {
+  return _VerifyEmailRequest.fromJson(json);
+}
+
+/// @nodoc
+mixin _$VerifyEmailRequest {
+  String get token => throw _privateConstructorUsedError;
+
+  /// Serializes this VerifyEmailRequest to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of VerifyEmailRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $VerifyEmailRequestCopyWith<VerifyEmailRequest> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $VerifyEmailRequestCopyWith<$Res> {
+  factory $VerifyEmailRequestCopyWith(
+    VerifyEmailRequest value,
+    $Res Function(VerifyEmailRequest) then,
+  ) = _$VerifyEmailRequestCopyWithImpl<$Res, VerifyEmailRequest>;
+  @useResult
+  $Res call({String token});
+}
+
+/// @nodoc
+class _$VerifyEmailRequestCopyWithImpl<$Res, $Val extends VerifyEmailRequest>
+    implements $VerifyEmailRequestCopyWith<$Res> {
+  _$VerifyEmailRequestCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of VerifyEmailRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? token = null}) {
+    return _then(
+      _value.copyWith(
+            token: null == token
+                ? _value.token
+                : token // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$VerifyEmailRequestImplCopyWith<$Res>
+    implements $VerifyEmailRequestCopyWith<$Res> {
+  factory _$$VerifyEmailRequestImplCopyWith(
+    _$VerifyEmailRequestImpl value,
+    $Res Function(_$VerifyEmailRequestImpl) then,
+  ) = __$$VerifyEmailRequestImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String token});
+}
+
+/// @nodoc
+class __$$VerifyEmailRequestImplCopyWithImpl<$Res>
+    extends _$VerifyEmailRequestCopyWithImpl<$Res, _$VerifyEmailRequestImpl>
+    implements _$$VerifyEmailRequestImplCopyWith<$Res> {
+  __$$VerifyEmailRequestImplCopyWithImpl(
+    _$VerifyEmailRequestImpl _value,
+    $Res Function(_$VerifyEmailRequestImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of VerifyEmailRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? token = null}) {
+    return _then(
+      _$VerifyEmailRequestImpl(
+        token: null == token
+            ? _value.token
+            : token // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$VerifyEmailRequestImpl implements _VerifyEmailRequest {
+  const _$VerifyEmailRequestImpl({required this.token});
+
+  factory _$VerifyEmailRequestImpl.fromJson(Map<String, dynamic> json) =>
+      _$$VerifyEmailRequestImplFromJson(json);
+
+  @override
+  final String token;
+
+  @override
+  String toString() {
+    return 'VerifyEmailRequest(token: $token)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$VerifyEmailRequestImpl &&
+            (identical(other.token, token) || other.token == token));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, token);
+
+  /// Create a copy of VerifyEmailRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$VerifyEmailRequestImplCopyWith<_$VerifyEmailRequestImpl> get copyWith =>
+      __$$VerifyEmailRequestImplCopyWithImpl<_$VerifyEmailRequestImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$VerifyEmailRequestImplToJson(this);
+  }
+}
+
+abstract class _VerifyEmailRequest implements VerifyEmailRequest {
+  const factory _VerifyEmailRequest({required final String token}) =
+      _$VerifyEmailRequestImpl;
+
+  factory _VerifyEmailRequest.fromJson(Map<String, dynamic> json) =
+      _$VerifyEmailRequestImpl.fromJson;
+
+  @override
+  String get token;
+
+  /// Create a copy of VerifyEmailRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$VerifyEmailRequestImplCopyWith<_$VerifyEmailRequestImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+ChangePasswordRequest _$ChangePasswordRequestFromJson(
+  Map<String, dynamic> json,
+) {
+  return _ChangePasswordRequest.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ChangePasswordRequest {
+  String get currentPassword => throw _privateConstructorUsedError;
+  String get newPassword => throw _privateConstructorUsedError;
+
+  /// Serializes this ChangePasswordRequest to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of ChangePasswordRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $ChangePasswordRequestCopyWith<ChangePasswordRequest> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ChangePasswordRequestCopyWith<$Res> {
+  factory $ChangePasswordRequestCopyWith(
+    ChangePasswordRequest value,
+    $Res Function(ChangePasswordRequest) then,
+  ) = _$ChangePasswordRequestCopyWithImpl<$Res, ChangePasswordRequest>;
+  @useResult
+  $Res call({String currentPassword, String newPassword});
+}
+
+/// @nodoc
+class _$ChangePasswordRequestCopyWithImpl<
+  $Res,
+  $Val extends ChangePasswordRequest
+>
+    implements $ChangePasswordRequestCopyWith<$Res> {
+  _$ChangePasswordRequestCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of ChangePasswordRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? currentPassword = null, Object? newPassword = null}) {
+    return _then(
+      _value.copyWith(
+            currentPassword: null == currentPassword
+                ? _value.currentPassword
+                : currentPassword // ignore: cast_nullable_to_non_nullable
+                      as String,
+            newPassword: null == newPassword
+                ? _value.newPassword
+                : newPassword // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$ChangePasswordRequestImplCopyWith<$Res>
+    implements $ChangePasswordRequestCopyWith<$Res> {
+  factory _$$ChangePasswordRequestImplCopyWith(
+    _$ChangePasswordRequestImpl value,
+    $Res Function(_$ChangePasswordRequestImpl) then,
+  ) = __$$ChangePasswordRequestImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String currentPassword, String newPassword});
+}
+
+/// @nodoc
+class __$$ChangePasswordRequestImplCopyWithImpl<$Res>
+    extends
+        _$ChangePasswordRequestCopyWithImpl<$Res, _$ChangePasswordRequestImpl>
+    implements _$$ChangePasswordRequestImplCopyWith<$Res> {
+  __$$ChangePasswordRequestImplCopyWithImpl(
+    _$ChangePasswordRequestImpl _value,
+    $Res Function(_$ChangePasswordRequestImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of ChangePasswordRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? currentPassword = null, Object? newPassword = null}) {
+    return _then(
+      _$ChangePasswordRequestImpl(
+        currentPassword: null == currentPassword
+            ? _value.currentPassword
+            : currentPassword // ignore: cast_nullable_to_non_nullable
+                  as String,
+        newPassword: null == newPassword
+            ? _value.newPassword
+            : newPassword // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ChangePasswordRequestImpl implements _ChangePasswordRequest {
+  const _$ChangePasswordRequestImpl({
+    required this.currentPassword,
+    required this.newPassword,
+  });
+
+  factory _$ChangePasswordRequestImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ChangePasswordRequestImplFromJson(json);
+
+  @override
+  final String currentPassword;
+  @override
+  final String newPassword;
+
+  @override
+  String toString() {
+    return 'ChangePasswordRequest(currentPassword: $currentPassword, newPassword: $newPassword)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ChangePasswordRequestImpl &&
+            (identical(other.currentPassword, currentPassword) ||
+                other.currentPassword == currentPassword) &&
+            (identical(other.newPassword, newPassword) ||
+                other.newPassword == newPassword));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, currentPassword, newPassword);
+
+  /// Create a copy of ChangePasswordRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ChangePasswordRequestImplCopyWith<_$ChangePasswordRequestImpl>
+  get copyWith =>
+      __$$ChangePasswordRequestImplCopyWithImpl<_$ChangePasswordRequestImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ChangePasswordRequestImplToJson(this);
+  }
+}
+
+abstract class _ChangePasswordRequest implements ChangePasswordRequest {
+  const factory _ChangePasswordRequest({
+    required final String currentPassword,
+    required final String newPassword,
+  }) = _$ChangePasswordRequestImpl;
+
+  factory _ChangePasswordRequest.fromJson(Map<String, dynamic> json) =
+      _$ChangePasswordRequestImpl.fromJson;
+
+  @override
+  String get currentPassword;
+  @override
+  String get newPassword;
+
+  /// Create a copy of ChangePasswordRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ChangePasswordRequestImplCopyWith<_$ChangePasswordRequestImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

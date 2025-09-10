@@ -60,3 +60,13 @@ cryptography==42.0.5  # Updated from 41.0.7 (CRITICAL: multiple CVEs fixed inclu
 # Added for enhanced security monitoring and protection
 bcrypt==4.1.2  # Explicit version for password hashing (security update)
 cffi==1.16.0  # Explicit version to avoid build issues with cryptography
+
+# SMS and Communication Services
+twilio==8.12.0  # SMS authentication support
+boto3==1.34.34  # AWS SNS for SMS
+
+# Device Fingerprinting and Security
+user-agents==2.2.0  # User agent parsing for device fingerprinting
+
+# Enhanced Monitoring and Alerting
+psutil==5.9.8  # System monitoring

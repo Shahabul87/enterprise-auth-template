@@ -76,8 +76,38 @@ Map<String, dynamic> _$$MagicLinkRequestImplToJson(
 
 _$VerifyTwoFactorRequestImpl _$$VerifyTwoFactorRequestImplFromJson(
   Map<String, dynamic> json,
-) => _$VerifyTwoFactorRequestImpl(code: json['code'] as String);
+) => _$VerifyTwoFactorRequestImpl(
+  code: json['code'] as String,
+  token: json['token'] as String?,
+  isBackup: json['isBackup'] as bool?,
+);
 
 Map<String, dynamic> _$$VerifyTwoFactorRequestImplToJson(
   _$VerifyTwoFactorRequestImpl instance,
-) => <String, dynamic>{'code': instance.code};
+) => <String, dynamic>{
+  'code': instance.code,
+  if (instance.token case final value?) 'token': value,
+  if (instance.isBackup case final value?) 'isBackup': value,
+};
+
+_$VerifyEmailRequestImpl _$$VerifyEmailRequestImplFromJson(
+  Map<String, dynamic> json,
+) => _$VerifyEmailRequestImpl(token: json['token'] as String);
+
+Map<String, dynamic> _$$VerifyEmailRequestImplToJson(
+  _$VerifyEmailRequestImpl instance,
+) => <String, dynamic>{'token': instance.token};
+
+_$ChangePasswordRequestImpl _$$ChangePasswordRequestImplFromJson(
+  Map<String, dynamic> json,
+) => _$ChangePasswordRequestImpl(
+  currentPassword: json['currentPassword'] as String,
+  newPassword: json['newPassword'] as String,
+);
+
+Map<String, dynamic> _$$ChangePasswordRequestImplToJson(
+  _$ChangePasswordRequestImpl instance,
+) => <String, dynamic>{
+  'currentPassword': instance.currentPassword,
+  'newPassword': instance.newPassword,
+};

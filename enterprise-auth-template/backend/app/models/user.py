@@ -35,6 +35,7 @@ if TYPE_CHECKING:
     from app.models.notification import Notification
     from app.models.role import Role
     from app.models.permission import Permission
+    from app.models.device import UserDevice
 
 
 class User(Base):
@@ -67,6 +68,17 @@ class User(Base):
     full_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     avatar_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
+    # Phone number for SMS authentication
+    phone_number: Mapped[Optional[str]] = mapped_column(
+        String(20), unique=True, nullable=True, index=True
+    )
+    is_phone_verified: Mapped[bool] = mapped_column(
+        Boolean, default=False, nullable=False
+    )
+    phone_verified_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+
     # OAuth provider IDs
     google_id: Mapped[Optional[str]] = mapped_column(
         String(255), unique=True, nullable=True, index=True
@@ -75,6 +87,15 @@ class User(Base):
         String(255), unique=True, nullable=True, index=True
     )
     discord_id: Mapped[Optional[str]] = mapped_column(
+        String(255), unique=True, nullable=True, index=True
+    )
+    facebook_id: Mapped[Optional[str]] = mapped_column(
+        String(255), unique=True, nullable=True, index=True
+    )
+    apple_id: Mapped[Optional[str]] = mapped_column(
+        String(255), unique=True, nullable=True, index=True
+    )
+    microsoft_id: Mapped[Optional[str]] = mapped_column(
         String(255), unique=True, nullable=True, index=True
     )
 
@@ -195,6 +216,10 @@ class User(Base):
 
     notifications: Mapped[List["Notification"]] = relationship(
         "Notification", back_populates="user", cascade="all, delete-orphan"
+    )
+    
+    devices: Mapped[List["UserDevice"]] = relationship(
+        "UserDevice", back_populates="user", cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:

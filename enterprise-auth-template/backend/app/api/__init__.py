@@ -29,6 +29,19 @@ from app.api.v1.organizations import router as organizations_router
 from app.api.v1.device_management import router as device_management_router
 from app.api.v1.websocket import router as websocket_router
 
+# New routers for enhanced features
+try:
+    from app.api.v1.sms_auth import router as sms_auth_router
+    SMS_AUTH_AVAILABLE = True
+except ImportError:
+    SMS_AUTH_AVAILABLE = False
+
+try:
+    from app.api.v1.monitoring import router as monitoring_router
+    MONITORING_AVAILABLE = True
+except ImportError:
+    MONITORING_AVAILABLE = False
+
 # Create main API router
 api_router = APIRouter()
 
@@ -53,6 +66,13 @@ api_router.include_router(api_keys_router, prefix="/v1/api-keys", tags=["API Key
 api_router.include_router(organizations_router, prefix="/v1/organizations", tags=["Organizations"])
 api_router.include_router(device_management_router, prefix="/v1/devices", tags=["Device Management"])
 api_router.include_router(websocket_router, prefix="/v1", tags=["WebSocket"])
+
+# Include new feature routers if available
+if SMS_AUTH_AVAILABLE:
+    api_router.include_router(sms_auth_router, prefix="/v1/auth", tags=["SMS Authentication"])
+
+if MONITORING_AVAILABLE:
+    api_router.include_router(monitoring_router, prefix="/v1", tags=["Monitoring"])
 
 
 @api_router.get("/health/")

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'routes.dart';
+import 'app_router.dart';
 import 'theme.dart';
 
 class FlutterAuthApp extends ConsumerWidget {
@@ -8,7 +8,7 @@ class FlutterAuthApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(routerProvider);
+    final router = ref.watch(simpleRouterProvider);
 
     return MaterialApp.router(
       title: 'Enterprise Auth Template',

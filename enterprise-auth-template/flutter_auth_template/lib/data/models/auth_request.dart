@@ -68,9 +68,31 @@ class MagicLinkRequest with _$MagicLinkRequest {
 
 @freezed
 class VerifyTwoFactorRequest with _$VerifyTwoFactorRequest {
-  const factory VerifyTwoFactorRequest({required String code}) =
-      _VerifyTwoFactorRequest;
+  const factory VerifyTwoFactorRequest({
+    required String code,
+    String? token,
+    bool? isBackup,
+  }) = _VerifyTwoFactorRequest;
 
   factory VerifyTwoFactorRequest.fromJson(Map<String, dynamic> json) =>
       _$VerifyTwoFactorRequestFromJson(json);
+}
+
+@freezed
+class VerifyEmailRequest with _$VerifyEmailRequest {
+  const factory VerifyEmailRequest({required String token}) = _VerifyEmailRequest;
+
+  factory VerifyEmailRequest.fromJson(Map<String, dynamic> json) =>
+      _$VerifyEmailRequestFromJson(json);
+}
+
+@freezed
+class ChangePasswordRequest with _$ChangePasswordRequest {
+  const factory ChangePasswordRequest({
+    required String currentPassword,
+    required String newPassword,
+  }) = _ChangePasswordRequest;
+
+  factory ChangePasswordRequest.fromJson(Map<String, dynamic> json) =>
+      _$ChangePasswordRequestFromJson(json);
 }

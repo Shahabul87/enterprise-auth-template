@@ -33,6 +33,9 @@ class OAuthProviderType(Enum):
     GOOGLE = "google"
     GITHUB = "github"
     DISCORD = "discord"
+    FACEBOOK = "facebook"
+    APPLE = "apple"
+    MICROSOFT = "microsoft"
 
 
 class OAuthConfig:
@@ -66,6 +69,40 @@ class OAuthConfig:
         "api_base_url": "https://discord.com/api/",
         "client_kwargs": {"scope": "identify email"},
         "userinfo_endpoint": "https://discord.com/api/users/@me",
+    }
+
+    FACEBOOK = {
+        "client_id": getattr(settings, "FACEBOOK_CLIENT_ID", ""),
+        "client_secret": getattr(settings, "FACEBOOK_CLIENT_SECRET", ""),
+        "authorize_url": "https://www.facebook.com/v18.0/dialog/oauth",
+        "access_token_url": "https://graph.facebook.com/v18.0/oauth/access_token",
+        "api_base_url": "https://graph.facebook.com/v18.0/",
+        "client_kwargs": {"scope": "email public_profile"},
+        "userinfo_endpoint": "https://graph.facebook.com/v18.0/me?fields=id,name,email,picture",
+    }
+
+    APPLE = {
+        "client_id": getattr(settings, "APPLE_CLIENT_ID", ""),
+        "client_secret": getattr(settings, "APPLE_CLIENT_SECRET", ""),
+        "authorize_url": "https://appleid.apple.com/auth/authorize",
+        "access_token_url": "https://appleid.apple.com/auth/token",
+        "api_base_url": "https://appleid.apple.com/",
+        "client_kwargs": {
+            "scope": "name email",
+            "response_mode": "form_post",
+            "response_type": "code id_token",
+        },
+        "userinfo_endpoint": "https://appleid.apple.com/auth/userinfo",
+    }
+
+    MICROSOFT = {
+        "client_id": getattr(settings, "MICROSOFT_CLIENT_ID", ""),
+        "client_secret": getattr(settings, "MICROSOFT_CLIENT_SECRET", ""),
+        "authorize_url": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+        "access_token_url": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+        "api_base_url": "https://graph.microsoft.com/v1.0/",
+        "client_kwargs": {"scope": "openid profile email User.Read"},
+        "userinfo_endpoint": "https://graph.microsoft.com/v1.0/me",
     }
 
 
@@ -128,6 +165,42 @@ class OAuthService:
                 client_kwargs=OAuthConfig.DISCORD["client_kwargs"],
             )
 
+        # Register Facebook
+        if OAuthConfig.FACEBOOK["client_id"]:
+            self.oauth.register(
+                name="facebook",
+                client_id=OAuthConfig.FACEBOOK["client_id"],
+                client_secret=OAuthConfig.FACEBOOK["client_secret"],
+                access_token_url=OAuthConfig.FACEBOOK["access_token_url"],
+                authorize_url=OAuthConfig.FACEBOOK["authorize_url"],
+                api_base_url=OAuthConfig.FACEBOOK["api_base_url"],
+                client_kwargs=OAuthConfig.FACEBOOK["client_kwargs"],
+            )
+
+        # Register Apple
+        if OAuthConfig.APPLE["client_id"]:
+            self.oauth.register(
+                name="apple",
+                client_id=OAuthConfig.APPLE["client_id"],
+                client_secret=OAuthConfig.APPLE["client_secret"],
+                access_token_url=OAuthConfig.APPLE["access_token_url"],
+                authorize_url=OAuthConfig.APPLE["authorize_url"],
+                api_base_url=OAuthConfig.APPLE["api_base_url"],
+                client_kwargs=OAuthConfig.APPLE["client_kwargs"],
+            )
+
+        # Register Microsoft
+        if OAuthConfig.MICROSOFT["client_id"]:
+            self.oauth.register(
+                name="microsoft",
+                client_id=OAuthConfig.MICROSOFT["client_id"],
+                client_secret=OAuthConfig.MICROSOFT["client_secret"],
+                access_token_url=OAuthConfig.MICROSOFT["access_token_url"],
+                authorize_url=OAuthConfig.MICROSOFT["authorize_url"],
+                api_base_url=OAuthConfig.MICROSOFT["api_base_url"],
+                client_kwargs=OAuthConfig.MICROSOFT["client_kwargs"],
+            )
+
     def get_authorization_url(self, provider: str, state: Optional[str] = None) -> str:
         """
         Get OAuth authorization URL for a provider.
@@ -144,7 +217,7 @@ class OAuthService:
         """
         provider = provider.lower()
 
-        if provider not in ["google", "github", "discord"]:
+        if provider not in ["google", "github", "discord", "facebook", "apple", "microsoft"]:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Unsupported OAuth provider: {provider}",
