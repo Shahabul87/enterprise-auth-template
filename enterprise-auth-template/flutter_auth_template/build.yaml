@@ -1,0 +1,13 @@
+targets:
+  $default:
+    builders:
+      freezed:
+        options:
+          # Ensure proper formatting
+          runs_before: [json_serializable]
+      json_serializable:
+        options:
+          # Generate toJson/fromJson for nested objects
+          explicit_to_json: true
+          # Handle nullable fields properly
+          include_if_null: false

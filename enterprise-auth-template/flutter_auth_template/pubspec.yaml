@@ -1,0 +1,123 @@
+name: flutter_auth_template
+description: Enterprise Flutter Authentication Template with comprehensive auth flows
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  # Core Flutter
+  flutter:
+    sdk: flutter
+  
+  # State Management
+  riverpod: ^2.4.9
+  flutter_riverpod: ^2.4.9
+  hooks_riverpod: ^2.4.9
+  flutter_hooks: ^0.21.3+1
+  
+  # Code Generation
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.9.0
+  
+  # Navigation
+  go_router: ^16.2.1
+  
+  # HTTP & Networking
+  dio: ^5.4.0
+  dio_cache_interceptor: ^4.0.3
+  
+  # Storage
+  flutter_secure_storage: ^9.0.0
+  shared_preferences: ^2.2.2
+  
+  # Authentication
+  google_sign_in: ^7.1.1
+  local_auth: ^2.1.7
+  crypto: ^3.0.3
+  
+  # Firebase & Push Notifications
+  firebase_core: ^3.4.1
+  firebase_messaging: ^15.1.2
+  flutter_local_notifications: ^18.0.1
+  permission_handler: ^11.3.1
+  
+  # UI Components
+  flutter_form_builder: ^10.2.0
+  form_builder_validators: ^11.2.0
+  cached_network_image: ^3.3.1
+  connectivity_plus: ^6.1.4
+  smooth_page_indicator: ^1.1.0
+  intl: ^0.20.2
+  
+  # Charts and Analytics
+  fl_chart: ^0.70.2
+  syncfusion_flutter_charts: ^27.2.5
+  
+  # WebSocket
+  web_socket_channel: ^3.0.1
+  
+  # Loading & Animations
+  shimmer: ^3.0.0
+  lottie: ^3.1.2
+  flutter_svg: ^2.0.10
+  
+  # File & Export
+  path_provider: ^2.1.4
+  file_picker: ^8.1.4
+  csv: ^6.0.0
+  pdf: ^3.11.1
+  
+  # QR Code
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^7.0.1
+  
+  # Deep Linking
+  app_links: ^6.4.1
+  
+  # Utilities
+  url_launcher: ^6.2.2
+  package_info_plus: ^8.3.1
+  device_info_plus: ^11.5.0
+  image_picker: ^1.1.2
+  
+  # UI Icons
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+  # Code Generation
+  build_runner: ^2.4.7
+  freezed: ^2.4.1
+  json_serializable: ^6.7.1
+  
+  # Testing
+  mockito: ^5.4.4
+  integration_test:
+    sdk: flutter
+  
+  # Linting
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  
+  # Assets
+  assets:
+    - assets/images/
+    - assets/icons/
+  
+  # Fonts (uncomment when font files are added)
+  # fonts:
+  #   - family: Inter
+  #     fonts:
+  #       - asset: assets/fonts/Inter-Regular.ttf
+  #       - asset: assets/fonts/Inter-Medium.ttf
+  #         weight: 500
+  #       - asset: assets/fonts/Inter-SemiBold.ttf
+  #         weight: 600
+  #       - asset: assets/fonts/Inter-Bold.ttf
+  #         weight: 700

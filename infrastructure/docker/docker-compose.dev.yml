@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  # FastAPI Backend Service
+  backend:
+    build:
+      context: ../../enterprise-auth-template/backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: auth_backend
+    environment:
+      # Database
+      DATABASE_URL: postgresql://${POSTGRES_USER:-dev_user}:${POSTGRES_PASSWORD:-dev_password}@auth_postgres:5432/${POSTGRES_DB:-enterprise_auth_dev}
+      POSTGRES_HOST: auth_postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-enterprise_auth_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-dev_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_password}
+      
+      # Redis
+      REDIS_URL: redis://auth_redis:6379/0
+      REDIS_HOST: auth_redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      
+      # Environment
+      ENVIRONMENT: development
+      DEBUG: "true"
+      
+      # API Configuration
+      API_V1_PREFIX: /api/v1
+      PROJECT_NAME: "Enterprise Auth API"
+      VERSION: "1.0.0"
+      
+      # CORS - Allow Flutter dev server and mobile emulators
+      CORS_ORIGINS: '["http://localhost:3000","http://localhost:8080","http://10.0.2.2:3000","http://localhost:*","http://127.0.0.1:*"]'
+      CORS_ALLOW_CREDENTIALS: "true"
+      CORS_ALLOW_METHODS: '["*"]'
+      CORS_ALLOW_HEADERS: '["*"]'
+      
+      # JWT Configuration
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-dev-secret-key-change-in-production}
+      JWT_ALGORITHM: HS256
+      JWT_ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      JWT_REFRESH_TOKEN_EXPIRE_DAYS: 7
+      
+      # Email Configuration (Mailhog)
+      SMTP_HOST: mailhog
+      SMTP_PORT: 1025
+      SMTP_USER: ""
+      SMTP_PASSWORD: ""
+      SMTP_FROM: noreply@dev.local
+      SMTP_FROM_NAME: "Enterprise Auth Dev"
+      
+      # OAuth Configuration
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      
+      # Rate Limiting
+      RATE_LIMIT_ENABLED: "true"
+      RATE_LIMIT_PER_MINUTE: 60
+      
+      # File Storage (MinIO)
+      S3_ENDPOINT_URL: http://minio:9000
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      S3_BUCKET_NAME: enterprise-auth
+      
+    volumes:
+      - ../../enterprise-auth-template/backend:/app
+      - /app/.venv  # Exclude virtual environment from volume mount
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+    command: >
+      sh -c "
+        echo 'Waiting for database...' &&
+        sleep 5 &&
+        echo 'Running migrations...' &&
+        alembic upgrade head &&
+        echo 'Seeding development data...' &&
+        python -m scripts.seed_dev_data || true &&
+        echo 'Starting FastAPI server...' &&
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --log-level debug
+      "
+    networks:
+      - auth_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Nginx Reverse Proxy (optional, for production-like setup)
+  nginx:
+    image: nginx:alpine
+    container_name: auth_nginx
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ../nginx/sites:/etc/nginx/sites-enabled
+      - ../../enterprise-auth-template/flutter_auth_template/build/web:/usr/share/nginx/html
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+    networks:
+      - auth_network
+
+networks:
+  auth_network:
+    name: docker_auth_network
+    external: true

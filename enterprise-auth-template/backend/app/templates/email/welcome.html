@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to {{ app_name }}</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .welcome-message {
+            background-color: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .features {
+            margin: 30px 0;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+        }
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            margin: 20px 0;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+        }
+        .footer {
+            background-color: #f8fafc;
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+            font-size: 14px;
+        }
+        .social-links {
+            margin: 20px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 8px 12px;
+            background-color: #e2e8f0;
+            color: #475569;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+        @media only screen and (max-width: 600px) {
+            .container {
+                margin: 0 10px;
+            }
+            .header, .content, .footer {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Welcome to {{ app_name }}!</h1>
+            <p style="margin: 10px 0 0 0; opacity: 0.9;">Your secure authentication platform</p>
+        </div>
+        
+        <div class="content">
+            <div class="welcome-message">
+                <h2 style="margin: 0 0 10px 0; color: #0ea5e9;">Hello, {{ user_name }}!</h2>
+                <p style="margin: 0;">Thank you for joining {{ app_name }}. Your account has been successfully created and verified.</p>
+            </div>
+            
+            <p>You now have access to a comprehensive authentication platform with enterprise-grade security features:</p>
+            
+            <div class="features">
+                <div class="feature-item">
+                    <span class="feature-icon">🔐</span>
+                    <div>
+                        <strong>Multi-Factor Authentication</strong><br>
+                        <small>Secure your account with 2FA, WebAuthn, and biometric authentication</small>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">🚀</span>
+                    <div>
+                        <strong>Single Sign-On (SSO)</strong><br>
+                        <small>Connect with Google, GitHub, Discord, and other providers</small>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">🔑</span>
+                    <div>
+                        <strong>Magic Link Login</strong><br>
+                        <small>Passwordless authentication for ultimate convenience</small>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <div>
+                        <strong>Security Dashboard</strong><br>
+                        <small>Monitor your account activity and manage security settings</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="{{ dashboard_url }}" class="button">🎯 Go to Dashboard</a>
+            </div>
+            
+            <hr style="border: none; height: 1px; background-color: #e2e8f0; margin: 30px 0;">
+            
+            <h3 style="color: #374151;">Quick Start Guide:</h3>
+            <ol style="color: #6b7280;">
+                <li><strong>Secure your account:</strong> Set up two-factor authentication in Security Settings</li>
+                <li><strong>Connect your accounts:</strong> Link your social media accounts for easy sign-in</li>
+                <li><strong>Explore features:</strong> Check out our API keys, webhooks, and integrations</li>
+                <li><strong>Stay updated:</strong> Configure your notification preferences</li>
+            </ol>
+            
+            <div style="background-color: #fef3c7; border: 1px solid #f59e0b; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <p style="margin: 0; color: #92400e;"><strong>💡 Pro Tip:</strong> Enable WebAuthn (passkeys) for the most secure and convenient authentication experience!</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Need help getting started?</strong></p>
+            <div class="social-links">
+                <a href="{{ help_url }}">📚 Help Center</a>
+                <a href="{{ support_url }}">💬 Support</a>
+                <a href="{{ docs_url }}">📖 Documentation</a>
+            </div>
+            
+            <hr style="border: none; height: 1px; background-color: #e2e8f0; margin: 20px 0;">
+            
+            <p>&copy; {{ current_year }} {{ app_name }}. All rights reserved.</p>
+            <p>This email was sent to {{ user_email }}</p>
+            <p><a href="{{ unsubscribe_url }}" style="color: #64748b;">Unsubscribe</a> | <a href="{{ privacy_url }}" style="color: #64748b;">Privacy Policy</a></p>
+        </div>
+    </div>
+</body>
+</html>

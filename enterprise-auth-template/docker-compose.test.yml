@@ -1,0 +1,341 @@
+# Docker Compose for Test Environment
+# Optimized for automated testing with CI/CD pipelines
+
+version: '3.8'
+
+services:
+  # PostgreSQL Test Database
+  postgres-test:
+    image: postgres:15-alpine
+    container_name: enterprise_auth_postgres_test
+    restart: no  # Don't restart in test environment
+    environment:
+      POSTGRES_DB: enterprise_auth_test
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_INITDB_ARGS: "--auth-host=md5"
+    ports:
+      - "5433:5432"  # Different port to avoid conflicts
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+      - ./database/test-init:/docker-entrypoint-initdb.d
+    networks:
+      - test_network
+    command: >
+      postgres 
+      -c max_connections=100
+      -c shared_buffers=128MB
+      -c fsync=off
+      -c synchronous_commit=off
+      -c checkpoint_segments=32
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d enterprise_auth_test"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  # Redis Test Cache
+  redis-test:
+    image: redis:7-alpine
+    container_name: enterprise_auth_redis_test
+    restart: no
+    ports:
+      - "6380:6379"  # Different port to avoid conflicts
+    volumes:
+      - redis_test_data:/data
+    networks:
+      - test_network
+    command: >
+      redis-server 
+      --appendonly no
+      --save ""
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --timeout 0
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  # FastAPI Backend (Test)
+  backend-test:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: testing
+    container_name: enterprise_auth_backend_test
+    restart: no
+    environment:
+      DATABASE_URL: postgresql://test_user:test_password@postgres-test:5432/enterprise_auth_test
+      REDIS_URL: redis://redis-test:6379/0
+      SECRET_KEY: test-secret-key-for-testing-only
+      JWT_SECRET_KEY: test-jwt-secret-key-for-testing-only
+      JWT_ALGORITHM: HS256
+      JWT_ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      JWT_REFRESH_TOKEN_EXPIRE_DAYS: 7
+      ENVIRONMENT: test
+      DEBUG: "false"
+      LOG_LEVEL: INFO
+      FRONTEND_URL: http://frontend-test:3000
+      # Test-specific configurations
+      RATE_LIMIT_ENABLED: "false"
+      EMAIL_BACKEND: console
+      TESTING: "true"
+    ports:
+      - "8001:8000"  # Different port for test
+    volumes:
+      - ./backend:/app
+      - backend_test_logs:/app/logs
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    networks:
+      - test_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    # Test-specific resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  # Next.js Frontend (Test)
+  frontend-test:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: testing
+    container_name: enterprise_auth_frontend_test
+    restart: no
+    environment:
+      - NODE_ENV=test
+      - NEXT_PUBLIC_API_URL=http://backend-test:8000
+      - NEXT_PUBLIC_APP_NAME=Enterprise Auth Template (Test)
+      - CI=true
+      - NEXT_TELEMETRY_DISABLED=1
+    ports:
+      - "3001:3000"  # Different port for test
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      backend-test:
+        condition: service_healthy
+    networks:
+      - test_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    # Test-specific resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+
+  # Test Database Migrations
+  test-migrations:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: testing
+    container_name: enterprise_auth_test_migrations
+    restart: no
+    environment:
+      DATABASE_URL: postgresql://test_user:test_password@postgres-test:5432/enterprise_auth_test
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+    networks:
+      - test_network
+    command: ["alembic", "upgrade", "head"]
+    profiles:
+      - migration
+
+  # Test Data Seeder
+  test-seed:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: testing
+    container_name: enterprise_auth_test_seed
+    restart: no
+    environment:
+      DATABASE_URL: postgresql://test_user:test_password@postgres-test:5432/enterprise_auth_test
+      REDIS_URL: redis://redis-test:6379/0
+      SECRET_KEY: test-secret-key-for-testing-only
+    volumes:
+      - ./backend:/app
+    depends_on:
+      test-migrations:
+        condition: service_completed_successfully
+    networks:
+      - test_network
+    command: ["python", "-m", "scripts.seed_test_data"]
+    profiles:
+      - seed
+
+  # Test Runner for Backend
+  backend-test-runner:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: testing
+    container_name: enterprise_auth_backend_test_runner
+    restart: no
+    environment:
+      DATABASE_URL: postgresql://test_user:test_password@postgres-test:5432/enterprise_auth_test
+      REDIS_URL: redis://redis-test:6379/0
+      SECRET_KEY: test-secret-key-for-testing-only
+      ENVIRONMENT: test
+      TESTING: "true"
+    volumes:
+      - ./backend:/app
+      - test_coverage:/app/coverage
+    depends_on:
+      backend-test:
+        condition: service_healthy
+    networks:
+      - test_network
+    command: >
+      sh -c "
+        pytest tests/ \
+          --cov=app \
+          --cov-report=xml:/app/coverage/coverage.xml \
+          --cov-report=html:/app/coverage/htmlcov \
+          --cov-report=term-missing \
+          --junit-xml=/app/coverage/junit.xml \
+          -v
+      "
+    profiles:
+      - test
+
+  # Test Runner for Frontend
+  frontend-test-runner:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: testing
+    container_name: enterprise_auth_frontend_test_runner
+    restart: no
+    environment:
+      - NODE_ENV=test
+      - CI=true
+      - NEXT_TELEMETRY_DISABLED=1
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - test_coverage:/app/coverage
+    depends_on:
+      - frontend-test
+    networks:
+      - test_network
+    command: >
+      sh -c "
+        npm run test:coverage -- \
+          --watchAll=false \
+          --coverage \
+          --coverageDirectory=/app/coverage \
+          --coverageReporters=text,lcov,html,json
+      "
+    profiles:
+      - test
+
+  # E2E Test Runner with Playwright
+  e2e-test-runner:
+    image: mcr.microsoft.com/playwright:v1.40.0-focal
+    container_name: enterprise_auth_e2e_test_runner
+    restart: no
+    environment:
+      - NODE_ENV=test
+      - BASE_URL=http://frontend-test:3000
+      - API_URL=http://backend-test:8000
+    volumes:
+      - ./tests/e2e:/tests
+      - e2e_results:/results
+    depends_on:
+      backend-test:
+        condition: service_healthy
+      frontend-test:
+        condition: service_healthy
+    networks:
+      - test_network
+    working_dir: /tests
+    command: >
+      sh -c "
+        npm install &&
+        npx playwright test \
+          --config=playwright.config.ts \
+          --reporter=html \
+          --output-dir=/results
+      "
+    profiles:
+      - e2e
+
+  # Test monitoring with Prometheus (lightweight)
+  prometheus-test:
+    image: prom/prometheus:latest
+    container_name: enterprise_auth_prometheus_test
+    restart: no
+    volumes:
+      - ./monitoring/prometheus-test.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_test_data:/prometheus
+    ports:
+      - "9091:9090"
+    networks:
+      - test_network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=24h'
+      - '--web.enable-lifecycle'
+    profiles:
+      - monitoring
+
+networks:
+  test_network:
+    driver: bridge
+    name: enterprise_auth_test_network
+
+volumes:
+  postgres_test_data:
+    driver: local
+    name: enterprise_auth_postgres_test_data
+  redis_test_data:
+    driver: local
+    name: enterprise_auth_redis_test_data
+  backend_test_logs:
+    driver: local
+    name: enterprise_auth_backend_test_logs
+  test_coverage:
+    driver: local
+    name: enterprise_auth_test_coverage
+  e2e_results:
+    driver: local
+    name: enterprise_auth_e2e_results
+  prometheus_test_data:
+    driver: local
+    name: enterprise_auth_prometheus_test_data

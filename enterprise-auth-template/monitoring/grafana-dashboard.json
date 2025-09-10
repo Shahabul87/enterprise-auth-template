@@ -1,0 +1,353 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "enterprise-auth-monitoring",
+    "title": "Enterprise Auth Template - Monitoring Dashboard",
+    "tags": ["enterprise-auth", "monitoring", "performance"],
+    "timezone": "browser",
+    "schemaVersion": 30,
+    "version": 1,
+    "refresh": "10s",
+    "panels": [
+      {
+        "id": 1,
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "type": "graph",
+        "title": "Request Rate",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total[5m])) by (method)",
+            "legendFormat": "{{method}}",
+            "refId": "A"
+          }
+        ],
+        "xaxis": {"mode": "time"},
+        "yaxis": {"format": "reqps", "label": "Requests/sec"}
+      },
+      {
+        "id": 2,
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "type": "graph",
+        "title": "Request Duration (95th percentile)",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, endpoint))",
+            "legendFormat": "{{endpoint}}",
+            "refId": "A"
+          }
+        ],
+        "xaxis": {"mode": "time"},
+        "yaxis": {"format": "s", "label": "Duration (seconds)"}
+      },
+      {
+        "id": 3,
+        "gridPos": {"h": 8, "w": 8, "x": 0, "y": 8},
+        "type": "graph",
+        "title": "Error Rate",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{status_code=~\"5..\"}[5m])) by (endpoint)",
+            "legendFormat": "{{endpoint}}",
+            "refId": "A"
+          }
+        ],
+        "xaxis": {"mode": "time"},
+        "yaxis": {"format": "reqps", "label": "Errors/sec"},
+        "alert": {
+          "conditions": [
+            {
+              "evaluator": {"params": [0.05], "type": "gt"},
+              "operator": {"type": "and"},
+              "query": {"params": ["A", "5m", "now"]},
+              "reducer": {"params": [], "type": "avg"},
+              "type": "query"
+            }
+          ],
+          "name": "High Error Rate Alert"
+        }
+      },
+      {
+        "id": 4,
+        "gridPos": {"h": 8, "w": 8, "x": 8, "y": 8},
+        "type": "graph",
+        "title": "Active Requests",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(http_requests_active) by (method)",
+            "legendFormat": "{{method}}",
+            "refId": "A"
+          }
+        ],
+        "xaxis": {"mode": "time"},
+        "yaxis": {"format": "short", "label": "Active Requests"}
+      },
+      {
+        "id": 5,
+        "gridPos": {"h": 8, "w": 8, "x": 16, "y": 8},
+        "type": "stat",
+        "title": "Total Requests",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(increase(http_requests_total[1h]))",
+            "refId": "A"
+          }
+        ],
+        "format": "short",
+        "graphMode": "area",
+        "orientation": "auto"
+      },
+      {
+        "id": 6,
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+        "type": "graph",
+        "title": "Database Query Duration",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(database_query_duration_seconds_bucket[5m])) by (le, operation))",
+            "legendFormat": "{{operation}}",
+            "refId": "A"
+          }
+        ],
+        "xaxis": {"mode": "time"},
+        "yaxis": {"format": "s", "label": "Duration (seconds)"}
+      },
+      {
+        "id": 7,
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+        "type": "graph",
+        "title": "Database Connection Pool",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "database_connection_pool_size",
+            "legendFormat": "{{pool_type}}",
+            "refId": "A"
+          }
+        ],
+        "xaxis": {"mode": "time"},
+        "yaxis": {"format": "short", "label": "Connections"}
+      },
+      {
+        "id": 8,
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24},
+        "type": "graph",
+        "title": "Cache Hit Rate",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(rate(cache_hits_total[5m])) / (sum(rate(cache_hits_total[5m])) + sum(rate(cache_misses_total[5m])))",
+            "legendFormat": "Hit Rate",
+            "refId": "A"
+          }
+        ],
+        "xaxis": {"mode": "time"},
+        "yaxis": {"format": "percentunit", "label": "Hit Rate", "max": 1, "min": 0}
+      },
+      {
+        "id": 9,
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24},
+        "type": "graph",
+        "title": "Authentication Metrics",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "sum(rate(user_login_attempts_total[5m])) by (status)",
+            "legendFormat": "Login {{status}}",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(rate(user_registrations_total[5m]))",
+            "legendFormat": "Registrations",
+            "refId": "B"
+          }
+        ],
+        "xaxis": {"mode": "time"},
+        "yaxis": {"format": "ops", "label": "Operations/sec"}
+      },
+      {
+        "id": 10,
+        "gridPos": {"h": 8, "w": 8, "x": 0, "y": 32},
+        "type": "gauge",
+        "title": "Memory Usage",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
+            "refId": "A"
+          }
+        ],
+        "format": "percent",
+        "max": 100,
+        "min": 0,
+        "thresholds": {
+          "mode": "absolute",
+          "steps": [
+            {"color": "green", "value": null},
+            {"color": "yellow", "value": 70},
+            {"color": "red", "value": 90}
+          ]
+        }
+      },
+      {
+        "id": 11,
+        "gridPos": {"h": 8, "w": 8, "x": 8, "y": 32},
+        "type": "gauge",
+        "title": "CPU Usage",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "100 - (avg(irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+            "refId": "A"
+          }
+        ],
+        "format": "percent",
+        "max": 100,
+        "min": 0,
+        "thresholds": {
+          "mode": "absolute",
+          "steps": [
+            {"color": "green", "value": null},
+            {"color": "yellow", "value": 60},
+            {"color": "red", "value": 80}
+          ]
+        }
+      },
+      {
+        "id": 12,
+        "gridPos": {"h": 8, "w": 8, "x": 16, "y": 32},
+        "type": "gauge",
+        "title": "Disk Usage",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "(1 - (node_filesystem_avail_bytes{mountpoint=\"/\"} / node_filesystem_size_bytes{mountpoint=\"/\"})) * 100",
+            "refId": "A"
+          }
+        ],
+        "format": "percent",
+        "max": 100,
+        "min": 0,
+        "thresholds": {
+          "mode": "absolute",
+          "steps": [
+            {"color": "green", "value": null},
+            {"color": "yellow", "value": 70},
+            {"color": "red", "value": 85}
+          ]
+        }
+      },
+      {
+        "id": 13,
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 40},
+        "type": "table",
+        "title": "Top Slow Endpoints",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "topk(10, histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, method, endpoint)))",
+            "format": "table",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {"Time": true},
+              "indexByName": {},
+              "renameByName": {
+                "endpoint": "Endpoint",
+                "method": "Method",
+                "Value": "95th Percentile (s)"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 48},
+        "type": "logs",
+        "title": "Application Logs",
+        "datasource": "Loki",
+        "targets": [
+          {
+            "expr": "{service=\"enterprise-auth-backend\"} |= \"error\"",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "showTime": true,
+          "showLabels": true,
+          "wrapLogMessage": true
+        }
+      },
+      {
+        "id": 15,
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 48},
+        "type": "alertlist",
+        "title": "Active Alerts",
+        "datasource": "Prometheus",
+        "options": {
+          "showOptions": "current",
+          "maxItems": 10,
+          "sortOrder": 1,
+          "dashboardAlerts": false,
+          "alertName": "",
+          "dashboardTitle": "",
+          "tags": []
+        }
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "datasource",
+          "type": "datasource",
+          "query": "prometheus",
+          "current": {
+            "text": "Prometheus",
+            "value": "Prometheus"
+          }
+        },
+        {
+          "name": "interval",
+          "type": "interval",
+          "query": "1m,5m,15m,30m,1h,6h,12h,1d",
+          "current": {
+            "text": "5m",
+            "value": "5m"
+          }
+        }
+      ]
+    },
+    "annotations": {
+      "list": [
+        {
+          "datasource": "Prometheus",
+          "enable": true,
+          "expr": "ALERTS{alertstate=\"firing\"}",
+          "iconColor": "red",
+          "name": "Alerts",
+          "step": "60s",
+          "tagKeys": "severity",
+          "textFormat": "{{ alertname }}"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-3h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["5s", "10s", "30s", "1m", "5m", "15m", "30m", "1h", "2h", "1d"]
+    }
+  }
+}

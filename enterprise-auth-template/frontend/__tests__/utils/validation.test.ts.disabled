@@ -1,0 +1,590 @@
+/**
+ * Validation Utilities Tests
+ *
+ * Comprehensive tests for validation utility functions
+ * including email, password, form validation, and sanitization.
+ */
+
+import {
+  validateEmail,
+  validatePassword,
+  validateName,
+  validatePhoneNumber,
+  sanitizeInput,
+  isValidUrl,
+  isValidDate,
+  passwordStrength,
+  validateRegistrationForm,
+  validateLoginForm,
+  validatePasswordResetForm,
+  formatValidationErrors,
+  debounceValidation,
+} from '@/lib/validation';
+
+describe('Email Validation', () => {
+  describe('validateEmail', () => {
+    it('should validate correct email formats', () => {
+      const validEmails = [
+        'user@example.com',
+        'test.user@domain.co.uk',
+        'user+label@example.org',
+        'firstname.lastname@company.com',
+        'user123@test-domain.com',
+        'a@b.co',
+      ];
+
+      validEmails.forEach((email) => {
+        expect(validateEmail(email)).toEqual({ isValid: true, error: null });
+      });
+    });
+
+    it('should reject invalid email formats', () => {
+      const invalidEmails = [
+        'invalid-email',
+        '@domain.com',
+        'user@',
+        'user..name@domain.com',
+        'user@domain',
+        '',
+        ' ',
+        'user@domain..com',
+        'user name@domain.com',
+      ];
+
+      invalidEmails.forEach((email) => {
+        const result = validateEmail(email);
+        expect(result.isValid).toBe(false);
+        expect(result.error).toBeTruthy();
+      });
+    });
+
+    it('should provide specific error messages for different invalid formats', () => {
+      expect(validateEmail('').error).toBe('Email is required');
+      expect(validateEmail('invalid-email').error).toBe('Invalid email format');
+      expect(validateEmail('user@').error).toBe('Invalid email format');
+      expect(validateEmail('@domain.com').error).toBe('Invalid email format');
+    });
+
+    it('should handle edge cases', () => {
+      expect(validateEmail('user@domain.c')).toEqual({ isValid: true, error: null }); // Single char TLD
+      expect(validateEmail('a@b.co')).toEqual({ isValid: true, error: null }); // Minimal valid email
+    });
+  });
+});
+
+describe('Password Validation', () => {
+  describe('validatePassword', () => {
+    it('should validate strong passwords', () => {
+      const strongPasswords = [
+        'StrongPassword123!',
+        'MyP@ssw0rd2024',
+        'Complex!Pass1',
+        'Secure123$Password',
+      ];
+
+      strongPasswords.forEach((password) => {
+        expect(validatePassword(password)).toEqual({ isValid: true, error: null });
+      });
+    });
+
+    it('should reject weak passwords', () => {
+      const weakPasswords = [
+        '',
+        '123',
+        'password',
+        'PASSWORD',
+        '12345678',
+        'Password',
+        'Password123',
+        'password123!',
+      ];
+
+      weakPasswords.forEach((password) => {
+        const result = validatePassword(password);
+        expect(result.isValid).toBe(false);
+        expect(result.error).toBeTruthy();
+      });
+    });
+
+    it('should provide specific error messages for password requirements', () => {
+      expect(validatePassword('').error).toBe('Password is required');
+      expect(validatePassword('123').error).toBe('Password must be at least 8 characters long');
+      expect(validatePassword('password123').error).toBe('Password must contain at least one uppercase letter');
+      expect(validatePassword('PASSWORD123').error).toBe('Password must contain at least one lowercase letter');
+      expect(validatePassword('Password').error).toBe('Password must contain at least one number');
+      expect(validatePassword('Password123').error).toBe('Password must contain at least one special character');
+    });
+  });
+
+  describe('passwordStrength', () => {
+    it('should calculate password strength correctly', () => {
+      expect(passwordStrength('123')).toEqual({
+        score: 0,
+        level: 'very-weak',
+        feedback: ['Too short', 'Add uppercase letters', 'Add special characters'],
+      });
+
+      expect(passwordStrength('password')).toEqual({
+        score: 1,
+        level: 'weak',
+        feedback: ['Add numbers', 'Add uppercase letters', 'Add special characters'],
+      });
+
+      expect(passwordStrength('Password123')).toEqual({
+        score: 3,
+        level: 'good',
+        feedback: ['Add special characters'],
+      });
+
+      expect(passwordStrength('Password123!')).toEqual({
+        score: 4,
+        level: 'strong',
+        feedback: [],
+      });
+    });
+
+    it('should detect common patterns', () => {
+      const commonPasswords = ['password123', '123456789', 'qwerty123'];
+      
+      commonPasswords.forEach((password) => {
+        const result = passwordStrength(password);
+        expect(result.feedback).toContain('Avoid common passwords');
+      });
+    });
+
+    it('should detect repeated characters', () => {
+      const result = passwordStrength('Passssword123!');
+      expect(result.feedback).toContain('Avoid repeated characters');
+    });
+  });
+});
+
+describe('Name Validation', () => {
+  describe('validateName', () => {
+    it('should validate proper names', () => {
+      const validNames = [
+        'John',
+        'Mary-Jane',
+        'José',
+        'Li Wei',
+        'O&apos;Connor',
+        'Van Der Berg',
+      ];
+
+      validNames.forEach((name) => {
+        expect(validateName(name)).toEqual({ isValid: true, error: null });
+      });
+    });
+
+    it('should reject invalid names', () => {
+      const invalidNames = [
+        '',
+        ' ',
+        'John123',
+        'Mary@Jane',
+        'Test#Name',
+        'A', // Too short
+        'A'.repeat(51), // Too long
+      ];
+
+      invalidNames.forEach((name) => {
+        const result = validateName(name);
+        expect(result.isValid).toBe(false);
+        expect(result.error).toBeTruthy();
+      });
+    });
+
+    it('should provide specific error messages', () => {
+      expect(validateName('').error).toBe('Name is required');
+      expect(validateName('A').error).toBe('Name must be at least 2 characters long');
+      expect(validateName('A'.repeat(51)).error).toBe('Name must be less than 50 characters');
+      expect(validateName('John123').error).toBe('Name can only contain letters, spaces, hyphens, and apostrophes');
+    });
+  });
+});
+
+describe('Phone Number Validation', () => {
+  describe('validatePhoneNumber', () => {
+    it('should validate various phone number formats', () => {
+      const validPhones = [
+        '+1-555-123-4567',
+        '(555) 123-4567',
+        '555.123.4567',
+        '555 123 4567',
+        '+44 20 7946 0958',
+        '+33 1 42 86 83 26',
+      ];
+
+      validPhones.forEach((phone) => {
+        expect(validatePhoneNumber(phone)).toEqual({ isValid: true, error: null });
+      });
+    });
+
+    it('should reject invalid phone numbers', () => {
+      const invalidPhones = [
+        '',
+        '123',
+        'abc-def-ghij',
+        '123-45-6789', // Too short
+        '+1-555-123-456-789-0', // Too long
+      ];
+
+      invalidPhones.forEach((phone) => {
+        const result = validatePhoneNumber(phone);
+        expect(result.isValid).toBe(false);
+        expect(result.error).toBeTruthy();
+      });
+    });
+  });
+});
+
+describe('URL Validation', () => {
+  describe('isValidUrl', () => {
+    it('should validate correct URLs', () => {
+      const validUrls = [
+        'https://example.com',
+        'http://test.org',
+        'https://subdomain.example.com/path',
+        'https://example.com:8080/path?query=value',
+        'ftp://files.example.com',
+      ];
+
+      validUrls.forEach((url) => {
+        expect(isValidUrl(url)).toBe(true);
+      });
+    });
+
+    it('should reject invalid URLs', () => {
+      const invalidUrls = [
+        '',
+        'not-a-url',
+        'http://',
+        'https://.',
+        'invalid-protocol://example.com',
+      ];
+
+      invalidUrls.forEach((url) => {
+        expect(isValidUrl(url)).toBe(false);
+      });
+    });
+  });
+});
+
+describe('Date Validation', () => {
+  describe('isValidDate', () => {
+    it('should validate correct date formats', () => {
+      const validDates = [
+        '2024-03-15',
+        '12/25/2023',
+        '2023-12-31T23:59:59Z',
+        new Date(),
+      ];
+
+      validDates.forEach((date) => {
+        expect(isValidDate(date)).toBe(true);
+      });
+    });
+
+    it('should reject invalid dates', () => {
+      const invalidDates = [
+        '',
+        'not-a-date',
+        '2024-13-01', // Invalid month
+        '2024-02-30', // Invalid day for February
+        '2024/15/01', // Invalid format
+      ];
+
+      invalidDates.forEach((date) => {
+        expect(isValidDate(date)).toBe(false);
+      });
+    });
+  });
+});
+
+describe('Input Sanitization', () => {
+  describe('sanitizeInput', () => {
+    it('should remove dangerous HTML and scripts', () => {
+      const dangerousInputs = [
+        '<script>alert("xss")</script>',
+        '<img src="x" onerror="alert(1)">',
+        '<div onclick="malicious()">content</div>',
+        'javascript:alert("xss")',
+      ];
+
+      dangerousInputs.forEach((input) => {
+        const result = sanitizeInput(input);
+        expect(result).not.toContain('<script>');
+        expect(result).not.toContain('javascript:');
+        expect(result).not.toContain('onerror');
+        expect(result).not.toContain('onclick');
+      });
+    });
+
+    it('should preserve safe content', () => {
+      const safeInputs = [
+        'Hello world',
+        'Test <b>bold</b> text',
+        '<p>Safe paragraph</p>',
+        'Email: test@example.com',
+      ];
+
+      safeInputs.forEach((input) => {
+        const result = sanitizeInput(input);
+        expect(result).toBeTruthy();
+        expect(typeof result).toBe('string');
+      });
+    });
+
+    it('should handle empty and null inputs', () => {
+      expect(sanitizeInput('')).toBe('');
+      expect(sanitizeInput(null as any)).toBe('');
+      expect(sanitizeInput(undefined as any)).toBe('');
+    });
+  });
+});
+
+describe('Form Validation', () => {
+  describe('validateRegistrationForm', () => {
+    it('should validate complete registration form', () => {
+      const validForm = {
+        email: 'user@example.com',
+        password: 'StrongPassword123!',
+        confirmPassword: 'StrongPassword123!',
+        firstName: 'John',
+        lastName: 'Doe',
+        agreeToTerms: true,
+      };
+
+      const result = validateRegistrationForm(validForm);
+      expect(result.isValid).toBe(true);
+      expect(result.errors).toEqual({});
+    });
+
+    it('should identify all validation errors', () => {
+      const invalidForm = {
+        email: 'invalid-email',
+        password: 'weak',
+        confirmPassword: 'different',
+        firstName: '',
+        lastName: 'Invalid123',
+        agreeToTerms: false,
+      };
+
+      const result = validateRegistrationForm(invalidForm);
+      expect(result.isValid).toBe(false);
+      expect(result.errors.email).toBeTruthy();
+      expect(result.errors.password).toBeTruthy();
+      expect(result.errors.confirmPassword).toBeTruthy();
+      expect(result.errors.firstName).toBeTruthy();
+      expect(result.errors.lastName).toBeTruthy();
+      expect(result.errors.agreeToTerms).toBeTruthy();
+    });
+  });
+
+  describe('validateLoginForm', () => {
+    it('should validate login form', () => {
+      const validForm = {
+        email: 'user@example.com',
+        password: 'password123',
+      };
+
+      const result = validateLoginForm(validForm);
+      expect(result.isValid).toBe(true);
+      expect(result.errors).toEqual({});
+    });
+
+    it('should require email and password', () => {
+      const invalidForm = {
+        email: '',
+        password: '',
+      };
+
+      const result = validateLoginForm(invalidForm);
+      expect(result.isValid).toBe(false);
+      expect(result.errors.email).toBe('Email is required');
+      expect(result.errors.password).toBe('Password is required');
+    });
+  });
+
+  describe('validatePasswordResetForm', () => {
+    it('should validate password reset form', () => {
+      const validForm = {
+        password: 'NewPassword123!',
+        confirmPassword: 'NewPassword123!',
+      };
+
+      const result = validatePasswordResetForm(validForm);
+      expect(result.isValid).toBe(true);
+      expect(result.errors).toEqual({});
+    });
+
+    it('should ensure passwords match', () => {
+      const invalidForm = {
+        password: 'NewPassword123!',
+        confirmPassword: 'DifferentPassword123!',
+      };
+
+      const result = validatePasswordResetForm(invalidForm);
+      expect(result.isValid).toBe(false);
+      expect(result.errors.confirmPassword).toBe('Passwords do not match');
+    });
+  });
+});
+
+describe('Error Formatting', () => {
+  describe('formatValidationErrors', () => {
+    it('should format validation errors consistently', () => {
+      const errors = {
+        email: 'Invalid email format',
+        password: 'Password too weak',
+        name: 'Name is required',
+      };
+
+      const formatted = formatValidationErrors(errors);
+      expect(formatted).toHaveProperty('email');
+      expect(formatted).toHaveProperty('password');
+      expect(formatted).toHaveProperty('name');
+      
+      // Check that all errors are strings
+      Object.values(formatted).forEach((error) => {
+        expect(typeof error).toBe('string');
+      });
+    });
+
+    it('should handle nested validation errors', () => {
+      const errors = {
+        'user.email': 'Invalid email',
+        'user.profile.name': 'Name required',
+      };
+
+      const formatted = formatValidationErrors(errors);
+      expect(formatted).toHaveProperty('user');
+      expect(formatted.user).toHaveProperty('email');
+      expect(formatted.user).toHaveProperty('profile');
+      expect(formatted.user.profile).toHaveProperty('name');
+    });
+
+    it('should handle array validation errors', () => {
+      const errors = {
+        'items.0.name': 'Item name required',
+        'items.1.price': 'Invalid price',
+      };
+
+      const formatted = formatValidationErrors(errors);
+      expect(formatted).toHaveProperty('items');
+      expect(Array.isArray(formatted.items)).toBe(true);
+      expect(formatted.items[0]).toHaveProperty('name');
+      expect(formatted.items[1]).toHaveProperty('price');
+    });
+  });
+});
+
+describe('Debounced Validation', () => {
+  describe('debounceValidation', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('should debounce validation calls', () => {
+      const mockValidator = jest.fn(() => ({ isValid: true, error: null }));
+      const debouncedValidator = debounceValidation(mockValidator, 300);
+
+      // Call multiple times rapidly
+      debouncedValidator('test1');
+      debouncedValidator('test2');
+      debouncedValidator('test3');
+
+      // Validator should not be called yet
+      expect(mockValidator).not.toHaveBeenCalled();
+
+      // Fast-forward time
+      jest.advanceTimersByTime(300);
+
+      // Should be called only once with the last value
+      expect(mockValidator).toHaveBeenCalledTimes(1);
+      expect(mockValidator).toHaveBeenCalledWith('test3');
+    });
+
+    it('should cancel previous timeout when called again', () => {
+      const mockValidator = jest.fn(() => ({ isValid: true, error: null }));
+      const debouncedValidator = debounceValidation(mockValidator, 300);
+
+      debouncedValidator('test1');
+      jest.advanceTimersByTime(200);
+      
+      debouncedValidator('test2');
+      jest.advanceTimersByTime(200);
+      
+      // Should not be called yet
+      expect(mockValidator).not.toHaveBeenCalled();
+      
+      jest.advanceTimersByTime(100);
+      
+      // Should be called with the second value
+      expect(mockValidator).toHaveBeenCalledTimes(1);
+      expect(mockValidator).toHaveBeenCalledWith('test2');
+    });
+  });
+});
+
+describe('Real-world Scenarios', () => {
+  it('should handle international names correctly', () => {
+    const internationalNames = [
+      'José María',
+      'François',
+      'Müller',
+      'Åse',
+      'Николай',
+      'محمد',
+      '田中',
+    ];
+
+    internationalNames.forEach((name) => {
+      const result = validateName(name);
+      expect(result.isValid).toBe(true);
+    });
+  });
+
+  it('should handle complex email addresses', () => {
+    const complexEmails = [
+      'user.name+tag@example.co.uk',
+      'first.last+category@subdomain.example.org',
+      'admin@xn--e1afmkfd.xn--p1ai', // IDN domain
+    ];
+
+    complexEmails.forEach((email) => {
+      const result = validateEmail(email);
+      expect(result.isValid).toBe(true);
+    });
+  });
+
+  it('should validate complete user profile forms', () => {
+    const profileForm = {
+      email: 'user@example.com',
+      firstName: 'John',
+      lastName: 'Doe',
+      phoneNumber: '+1-555-123-4567',
+      website: 'https://johndoe.com',
+      birthDate: '1990-01-15',
+      bio: 'Software developer with passion for clean code.',
+    };
+
+    const emailValidation = validateEmail(profileForm.email);
+    const firstNameValidation = validateName(profileForm.firstName);
+    const lastNameValidation = validateName(profileForm.lastName);
+    const phoneValidation = validatePhoneNumber(profileForm.phoneNumber);
+    const websiteValidation = isValidUrl(profileForm.website);
+    const birthDateValidation = isValidDate(profileForm.birthDate);
+
+    expect(emailValidation.isValid).toBe(true);
+    expect(firstNameValidation.isValid).toBe(true);
+    expect(lastNameValidation.isValid).toBe(true);
+    expect(phoneValidation.isValid).toBe(true);
+    expect(websiteValidation).toBe(true);
+    expect(birthDateValidation).toBe(true);
+  });
+});

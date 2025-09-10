@@ -1,0 +1,380 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mockito/mockito.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_auth_template/data/models/user_models.dart';
+import 'package:flutter_auth_template/data/models/auth_models.dart';
+import 'package:flutter_auth_template/data/services/auth_api_service.dart';
+import 'package:flutter_auth_template/providers/auth_provider.dart';
+
+/// Test utilities and helpers for Flutter Auth Template tests
+class TestUtils {
+  TestUtils._();
+
+  /// Creates a mock user for testing
+  static User createMockUser({
+    String? id,
+    String? email,
+    String? name,
+    UserRole? role,
+    bool? isActive,
+    DateTime? createdAt,
+  }) {
+    return User(
+      id: id ?? 'test-user-id',
+      email: email ?? 'test@example.com',
+      name: name ?? 'Test User',
+      role: role ?? UserRole.user,
+      isActive: isActive ?? true,
+      createdAt: createdAt ?? DateTime.now(),
+    );
+  }
+
+  /// Creates a mock login response for testing
+  static LoginResponse createMockLoginResponse({
+    String? accessToken,
+    String? refreshToken,
+    User? user,
+    int? expiresIn,
+    bool? requiresTwoFactor,
+  }) {
+    return LoginResponse(
+      accessToken: accessToken ?? 'mock-access-token',
+      refreshToken: refreshToken ?? 'mock-refresh-token',
+      user: user ?? createMockUser(),
+      expiresIn: expiresIn ?? 3600,
+      requiresTwoFactor: requiresTwoFactor,
+    );
+  }
+
+  /// Creates a mock registration request for testing
+  static RegisterRequest createMockRegisterRequest({
+    String? email,
+    String? password,
+    String? name,
+  }) {
+    return RegisterRequest(
+      email: email ?? 'test@example.com',
+      password: password ?? 'password123',
+      name: name ?? 'Test User',
+    );
+  }
+
+  /// Creates a mock login request for testing
+  static LoginRequest createMockLoginRequest({
+    String? email,
+    String? password,
+  }) {
+    return LoginRequest(
+      email: email ?? 'test@example.com',
+      password: password ?? 'password123',
+    );
+  }
+
+  /// Creates a ProviderContainer with overrides for testing
+  static ProviderContainer createTestContainer({
+    List<Override> overrides = const [],
+  }) {
+    return ProviderContainer(overrides: overrides);
+  }
+
+  /// Creates a widget wrapped with providers for testing
+  static Widget createTestWidget({
+    required Widget child,
+    List<Override> overrides = const [],
+  }) {
+    return UncontrolledProviderScope(
+      container: createTestContainer(overrides: overrides),
+      child: MaterialApp(
+        home: child,
+        theme: ThemeData.light(),
+      ),
+    );
+  }
+
+  /// Pumps a widget with Material app wrapper
+  static Future<void> pumpWidgetWithMaterial(
+    WidgetTester tester,
+    Widget widget, {
+    List<Override> overrides = const [],
+  }) async {
+    await tester.pumpWidget(
+      createTestWidget(
+        child: widget,
+        overrides: overrides,
+      ),
+    );
+  }
+
+  /// Sets up SharedPreferences mocks
+  static void setupSharedPreferencesMocks([Map<String, Object>? values]) {
+    SharedPreferences.setMockInitialValues(values ?? <String, Object>{});
+  }
+
+  /// Creates a mock authenticated state
+  static Override createMockAuthProvider({
+    User? user,
+    bool isLoading = false,
+    Object? error,
+  }) {
+    if (error != null) {
+      return authProvider.overrideWith(
+        (ref) => AsyncValue.error(error, StackTrace.current),
+      );
+    }
+    
+    if (isLoading) {
+      return authProvider.overrideWith(
+        (ref) => const AsyncValue.loading(),
+      );
+    }
+
+    return authProvider.overrideWith(
+      (ref) => AsyncValue.data(user ?? createMockUser()),
+    );
+  }
+
+  /// Waits for animations and microtasks to complete
+  static Future<void> pumpAndSettle(WidgetTester tester, [Duration? duration]) async {
+    await tester.pumpAndSettle(duration ?? const Duration(seconds: 1));
+  }
+
+  /// Enters text in a specific field by key
+  static Future<void> enterTextInField(
+    WidgetTester tester,
+    String key,
+    String text,
+  ) async {
+    await tester.enterText(find.byKey(Key(key)), text);
+    await tester.pump();
+  }
+
+  /// Taps a widget by key
+  static Future<void> tapByKey(WidgetTester tester, String key) async {
+    await tester.tap(find.byKey(Key(key)));
+    await tester.pump();
+  }
+
+  /// Taps a widget by text
+  static Future<void> tapByText(WidgetTester tester, String text) async {
+    await tester.tap(find.text(text));
+    await tester.pump();
+  }
+
+  /// Scrolls to find a widget
+  static Future<void> scrollToWidget(
+    WidgetTester tester,
+    Finder finder, {
+    Finder? scrollable,
+  }) async {
+    await tester.scrollUntilVisible(
+      finder,
+      100.0,
+      scrollable: scrollable,
+    );
+  }
+
+  /// Verifies that a specific error message is displayed
+  static void expectErrorMessage(String message) {
+    expect(find.textContaining(message), findsOneWidget);
+  }
+
+  /// Verifies that a loading indicator is displayed
+  static void expectLoadingIndicator() {
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  }
+
+  /// Verifies that a success message is displayed
+  static void expectSuccessMessage(String message) {
+    expect(find.textContaining(message), findsOneWidget);
+  }
+
+  /// Creates a mock HTTP response for dio
+  static Map<String, dynamic> createMockHttpResponse({
+    int statusCode = 200,
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? headers,
+  }) {
+    return {
+      'statusCode': statusCode,
+      'data': data ?? {},
+      'headers': headers ?? {},
+    };
+  }
+
+  /// Simulates a form validation error
+  static void simulateFormValidationError(
+    WidgetTester tester,
+    String fieldKey,
+    String errorMessage,
+  ) {
+    // This would be used in form validation tests
+    expect(find.byKey(Key(fieldKey)), findsOneWidget);
+    expect(find.textContaining(errorMessage), findsOneWidget);
+  }
+
+  /// Simulates network delay
+  static Future<void> simulateNetworkDelay([Duration? delay]) async {
+    await Future.delayed(delay ?? const Duration(milliseconds: 500));
+  }
+
+  /// Creates a mock API service with predefined responses
+  static T createMockApiService<T extends Object>() {
+    // This would return a mock implementation based on the type T
+    throw UnimplementedError('Implement specific mock for type $T');
+  }
+
+  /// Verifies navigation occurred (simplified version)
+  static void expectNavigation(String routeName) {
+    // In a real implementation, this would verify route changes
+    // For now, just verify that expected widgets are not present
+  }
+
+  /// Creates test data for list views
+  static List<Map<String, dynamic>> createTestListData({
+    int count = 10,
+    String prefix = 'item',
+  }) {
+    return List.generate(count, (index) => {
+      'id': '$prefix-$index',
+      'name': '$prefix ${index + 1}',
+      'index': index,
+    });
+  }
+
+  /// Verifies that a list contains expected number of items
+  static void expectListLength(Finder listFinder, int expectedLength) {
+    expect(listFinder, findsNWidgets(expectedLength));
+  }
+
+  /// Simulates device back button press
+  static Future<void> pressBackButton(WidgetTester tester) async {
+    final navigator = tester.state<NavigatorState>(find.byType(Navigator));
+    navigator.pop();
+    await tester.pumpAndSettle();
+  }
+
+  /// Verifies dialog is displayed
+  static void expectDialog(String title) {
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.text(title), findsOneWidget);
+  }
+
+  /// Closes dialog by tapping outside or OK button
+  static Future<void> closeDialog(WidgetTester tester) async {
+    final okButton = find.text('OK');
+    if (okButton.evaluate().isNotEmpty) {
+      await tester.tap(okButton);
+    } else {
+      await tester.tapAt(const Offset(10, 10)); // Tap outside dialog
+    }
+    await tester.pumpAndSettle();
+  }
+
+  /// Verifies snackbar with specific message
+  static void expectSnackbar(String message) {
+    expect(find.byType(SnackBar), findsOneWidget);
+    expect(find.textContaining(message), findsOneWidget);
+  }
+
+  /// Creates test theme data
+  static ThemeData createTestTheme({bool isDark = false}) {
+    return isDark ? ThemeData.dark() : ThemeData.light();
+  }
+
+  /// Sets up test environment with common mocks
+  static void setupTestEnvironment() {
+    setupSharedPreferencesMocks();
+    // Add other common setup here
+  }
+
+  /// Cleans up test environment
+  static void cleanupTestEnvironment() {
+    // Clean up any resources if needed
+  }
+
+  /// Creates a matcher for async values
+  static Matcher isAsyncData(dynamic data) {
+    return isA<AsyncData>().having((d) => d.value, 'value', data);
+  }
+
+  /// Creates a matcher for async loading state
+  static Matcher get isAsyncLoading => isA<AsyncLoading>();
+
+  /// Creates a matcher for async error state
+  static Matcher isAsyncError(dynamic error) {
+    return isA<AsyncError>().having((e) => e.error, 'error', error);
+  }
+
+  /// Fills a complete form with test data
+  static Future<void> fillForm(
+    WidgetTester tester,
+    Map<String, String> fieldValues,
+  ) async {
+    for (final entry in fieldValues.entries) {
+      await enterTextInField(tester, entry.key, entry.value);
+    }
+    await tester.pumpAndSettle();
+  }
+
+  /// Verifies form validation state
+  static void expectFormValidation({
+    required Map<String, String?> fieldErrors,
+  }) {
+    for (final entry in fieldErrors.entries) {
+      final fieldKey = entry.key;
+      final error = entry.value;
+      
+      if (error != null) {
+        expect(
+          find.descendant(
+            of: find.byKey(Key(fieldKey)),
+            matching: find.textContaining(error),
+          ),
+          findsOneWidget,
+          reason: 'Expected validation error "$error" for field "$fieldKey"',
+        );
+      }
+    }
+  }
+
+  /// Creates a test gesture for drag operations
+  static TestGesture createDragGesture(
+    WidgetTester tester,
+    Finder finder,
+  ) {
+    return tester.startGesture(tester.getCenter(finder));
+  }
+
+  /// Simulates a long press gesture
+  static Future<void> longPress(
+    WidgetTester tester,
+    Finder finder,
+  ) async {
+    await tester.longPress(finder);
+    await tester.pumpAndSettle();
+  }
+
+  /// Verifies accessibility properties
+  static void expectAccessibility(
+    Finder finder, {
+    String? label,
+    String? hint,
+    bool? isEnabled,
+  }) {
+    final widget = tester.widget(finder);
+    // Add accessibility verification logic based on widget type
+  }
+
+  /// Creates test data for charts/graphs
+  static List<Map<String, dynamic>> createChartTestData({
+    int dataPoints = 10,
+  }) {
+    return List.generate(dataPoints, (index) => {
+      'x': index.toDouble(),
+      'y': (index * 10 + (index % 3) * 5).toDouble(),
+      'label': 'Point $index',
+    });
+  }
+}

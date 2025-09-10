@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  # CI Runner Service
+  ci-runner:
+    build:
+      context: .
+      dockerfile: ci/Dockerfile
+    volumes:
+      - .:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /workspace
+    environment:
+      - CI=true
+      - NODE_ENV=test
+      - ENVIRONMENT=test
+    command: ["./scripts/local-ci.sh", "full"]
+
+  # Test Database
+  postgres-test:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d test_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Test Redis
+  redis-test:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend Tests
+  backend-test:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: test
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://test_user:test_password@postgres-test/test_db
+      - REDIS_URL=redis://redis-test:6379/0
+      - ENVIRONMENT=test
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - backend_test_cache:/root/.cache
+    command: ["python", "-m", "pytest", "tests/", "-v", "--cov=app"]
+
+  # Frontend Tests
+  frontend-test:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: test
+    environment:
+      - NODE_ENV=test
+      - CI=true
+    volumes:
+      - ./frontend:/app
+      - frontend_test_cache:/root/.npm
+    command: ["npm", "run", "test:coverage"]
+
+  # Security Scanner
+  security-scanner:
+    image: securecodewarrior/docker-security-scanner
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: ["scan", "."]
+
+volumes:
+  postgres_test_data:
+  backend_test_cache:
+  frontend_test_cache:

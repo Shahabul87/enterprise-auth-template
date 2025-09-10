@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Enterprise Auth</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: #f3f4f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .icon svg {
+            width: 60px;
+            height: 60px;
+            fill: #6b7280;
+        }
+        
+        .pulse {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid #e5e7eb;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        h1 {
+            color: #1f2937;
+            font-size: 28px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+        
+        p {
+            color: #6b7280;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .status {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            fill: #f59e0b;
+        }
+        
+        .status-text {
+            color: #92400e;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: #7c3aed;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        button:hover {
+            background: #6d28d9;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button.secondary {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+        
+        button.secondary:hover {
+            background: #e5e7eb;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .queue-info {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .queue-count {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">
+            <div class="pulse"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4s1.79-4 4-4h.71C7.37 7.69 9.48 6 12 6c3.04 0 5.5 2.46 5.5 5.5v.5H19c1.66 0 3 1.34 3 3s-1.34 3-3 3z"/>
+            </svg>
+        </div>
+        
+        <h1>You&apos;re Offline</h1>
+        <p>It looks like you&apos;ve lost your internet connection. Don&apos;t worry, your work is being saved locally and will sync when you&apos;re back online.</p>
+        
+        <div class="status">
+            <svg class="status-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+            </svg>
+            <span class="status-text">No internet connection detected</span>
+        </div>
+        
+        <div class="actions">
+            <button onclick="checkConnection()">Try Again</button>
+            <button class="secondary" onclick="goBack()">Go Back</button>
+        </div>
+        
+        <div class="queue-info" id="queueInfo" style="display: none;">
+            <p style="font-size: 14px; margin-bottom: 10px;">Pending actions:</p>
+            <span class="queue-count" id="queueCount">0 items queued</span>
+        </div>
+    </div>
+    
+    <script>
+        // Check connection status
+        function checkConnection() {
+            if (navigator.onLine) {
+                location.reload();
+            } else {
+                showNotification('Still offline. Please check your connection.');
+            }
+        }
+        
+        // Go back if possible
+        function goBack() {
+            if (history.length > 1) {
+                history.back();
+            } else {
+                location.href = '/';
+            }
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            const status = document.querySelector('.status-text');
+            const originalText = status.textContent;
+            status.textContent = message;
+            setTimeout(() => {
+                status.textContent = originalText;
+            }, 3000);
+        }
+        
+        // Check queue status
+        async function checkQueue() {
+            try {
+                const cache = await caches.open('enterprise-auth-dynamic-v1');
+                const keys = await cache.keys();
+                const queueCount = keys.length;
+                
+                if (queueCount > 0) {
+                    document.getElementById('queueInfo').style.display = 'block';
+                    document.getElementById('queueCount').textContent = `${queueCount} items queued`;
+                }
+            } catch (error) {
+                console.error('Failed to check queue:', error);
+            }
+        }
+        
+        // Listen for online event
+        window.addEventListener('online', () => {
+            location.reload();
+        });
+        
+        // Check queue on load
+        checkQueue();
+        
+        // Periodically check connection
+        setInterval(() => {
+            if (navigator.onLine) {
+                location.reload();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

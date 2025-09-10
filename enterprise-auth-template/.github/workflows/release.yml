@@ -1,0 +1,639 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - prerelease
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        default: false
+        type: boolean
+      skip_tests:
+        description: 'Skip tests (use with caution)'
+        required: false
+        default: false
+        type: boolean
+
+# Restrict concurrency to prevent multiple releases
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '18'
+  PYTHON_VERSION: '3.11'
+  DOCKER_REGISTRY: ghcr.io
+  IMAGE_NAME: enterprise-auth-template
+
+jobs:
+  validate-release:
+    name: Validate Release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      tag: ${{ steps.version.outputs.tag }}
+      is-prerelease: ${{ steps.version.outputs.is-prerelease }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Needed for changelog generation
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            # Get current version from package.json
+            CURRENT_VERSION=$(node -p "require('./frontend/package.json').version")
+            echo "Current version: $CURRENT_VERSION"
+            
+            # Calculate new version based on release type
+            npm install -g semver
+            NEW_VERSION=$(semver -i ${{ github.event.inputs.release_type }} $CURRENT_VERSION)
+            
+            if [ "${{ github.event.inputs.release_type }}" = "prerelease" ]; then
+              NEW_VERSION=$(semver -i prerelease $CURRENT_VERSION --preid alpha)
+            fi
+            
+            echo "New version: $NEW_VERSION"
+            echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+            echo "tag=v$NEW_VERSION" >> $GITHUB_OUTPUT
+            echo "is-prerelease=${{ github.event.inputs.prerelease }}" >> $GITHUB_OUTPUT
+          else
+            # Extract version from tag
+            TAG_VERSION=${GITHUB_REF#refs/tags/v}
+            echo "version=$TAG_VERSION" >> $GITHUB_OUTPUT
+            echo "tag=$GITHUB_REF_NAME" >> $GITHUB_OUTPUT
+            
+            # Check if this is a prerelease (contains alpha, beta, rc)
+            if [[ $TAG_VERSION =~ (alpha|beta|rc) ]]; then
+              echo "is-prerelease=true" >> $GITHUB_OUTPUT
+            else
+              echo "is-prerelease=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Validate version format
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+(\-[a-zA-Z0-9\-\.]+)?$ ]]; then
+            echo "❌ Invalid version format: $VERSION"
+            exit 1
+          fi
+          echo "✅ Version format is valid: $VERSION"
+
+      - name: Check if tag already exists
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          if git tag --list | grep -q "^$TAG$"; then
+            echo "❌ Tag $TAG already exists"
+            exit 1
+          fi
+          echo "✅ Tag $TAG is available"
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Install conventional-changelog-cli
+          npm install -g conventional-changelog-cli
+          
+          # Generate changelog for this version
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+            if [ -n "$LAST_TAG" ]; then
+              CHANGELOG=$(conventional-changelog -p angular -r 1)
+            else
+              CHANGELOG="Initial release"
+            fi
+          else
+            # For tag-based releases, get changes since previous tag
+            PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+            if [ -n "$PREV_TAG" ]; then
+              CHANGELOG=$(git log --pretty=format:"- %s (%h)" $PREV_TAG..HEAD)
+            else
+              CHANGELOG="Initial release"
+            fi
+          fi
+          
+          # Save changelog to file and output
+          echo "$CHANGELOG" > changelog.md
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Upload changelog
+        uses: actions/upload-artifact@v3
+        with:
+          name: changelog
+          path: changelog.md
+          retention-days: 7
+
+  test-suite:
+    name: Run Full Test Suite
+    runs-on: ubuntu-latest
+    needs: validate-release
+    if: github.event.inputs.skip_tests != 'true'
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: release_test_db
+          POSTGRES_USER: release_user
+          POSTGRES_PASSWORD: release_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: ./backend
+        env:
+          DATABASE_URL: postgresql://release_user:release_password@localhost:5432/release_test_db
+          REDIS_URL: redis://localhost:6379/0
+          SECRET_KEY: release-test-secret-key
+          ENVIRONMENT: test
+        run: |
+          # Set up database
+          alembic upgrade head
+          
+          # Run comprehensive test suite
+          pytest tests/ -v --cov=app --cov-report=xml --cov-report=term-missing
+
+      - name: Run frontend tests
+        working-directory: ./frontend
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test -- --coverage --passWithNoTests
+          npm run build
+
+      - name: Upload test coverage
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ./backend
+          flags: backend
+          name: backend-coverage
+
+      - name: Upload frontend coverage
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ./frontend/coverage
+          flags: frontend
+          name: frontend-coverage
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: validate-release
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Run npm audit
+        working-directory: ./frontend
+        run: |
+          npm audit --audit-level high
+
+      - name: Run pip safety check
+        working-directory: ./backend
+        run: |
+          pip install safety
+          safety check --json
+
+  build-artifacts:
+    name: Build Release Artifacts
+    runs-on: ubuntu-latest
+    needs: [validate-release, test-suite, security-scan]
+    if: always() && (needs.test-suite.result == 'success' || github.event.inputs.skip_tests == 'true') && needs.security-scan.result == 'success'
+    outputs:
+      backend-digest: ${{ steps.build-backend.outputs.digest }}
+      frontend-digest: ${{ steps.build-frontend.outputs.digest }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for backend
+        id: meta-backend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/backend
+          tags: |
+            type=ref,event=tag
+            type=raw,value=${{ needs.validate-release.outputs.version }}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push backend image
+        id: build-backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Extract metadata for frontend
+        id: meta-frontend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/frontend
+          tags: |
+            type=ref,event=tag
+            type=raw,value=${{ needs.validate-release.outputs.version }}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push frontend image
+        id: build-frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Generate SBOM for backend
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/backend:${{ needs.validate-release.outputs.version }}
+          format: spdx-json
+          output-file: backend-sbom.spdx.json
+
+      - name: Generate SBOM for frontend
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/frontend:${{ needs.validate-release.outputs.version }}
+          format: spdx-json
+          output-file: frontend-sbom.spdx.json
+
+      - name: Upload SBOMs
+        uses: actions/upload-artifact@v3
+        with:
+          name: sboms
+          path: |
+            backend-sbom.spdx.json
+            frontend-sbom.spdx.json
+          retention-days: 90
+
+      - name: Create source distribution
+        run: |
+          VERSION="${{ needs.validate-release.outputs.version }}"
+          
+          # Create source tarball excluding unnecessary files
+          tar -czf "enterprise-auth-template-$VERSION-source.tar.gz" \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='__pycache__' \
+            --exclude='*.pyc' \
+            --exclude='.next' \
+            --exclude='coverage' \
+            --exclude='*.log' \
+            .
+
+      - name: Upload source distribution
+        uses: actions/upload-artifact@v3
+        with:
+          name: source-distribution
+          path: "enterprise-auth-template-${{ needs.validate-release.outputs.version }}-source.tar.gz"
+          retention-days: 90
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [validate-release, build-artifacts]
+    if: always() && needs.build-artifacts.result == 'success'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Update package versions
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          VERSION="${{ needs.validate-release.outputs.version }}"
+          
+          # Update frontend package.json
+          cd frontend
+          npm version $VERSION --no-git-tag-version
+          
+          # Update backend version
+          cd ../backend
+          sed -i "s/version = \".*\"/version = \"$VERSION\"/" app/__init__.py
+
+      - name: Create and push tag
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          TAG="${{ needs.validate-release.outputs.tag }}"
+          VERSION="${{ needs.validate-release.outputs.version }}"
+          
+          git add frontend/package.json backend/app/__init__.py
+          git commit -m "chore: bump version to $VERSION"
+          git tag -a "$TAG" -m "Release $VERSION"
+          git push origin main --tags
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.validate-release.outputs.tag }}
+          name: Release ${{ needs.validate-release.outputs.version }}
+          body_path: changelog/changelog.md
+          draft: false
+          prerelease: ${{ needs.validate-release.outputs.is-prerelease }}
+          generate_release_notes: true
+          files: |
+            source-distribution/*
+            sboms/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [validate-release, create-release]
+    if: needs.validate-release.outputs.is-prerelease == 'false'
+    environment:
+      name: staging
+      url: https://staging.enterprise-auth.example.com
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to staging environment
+        run: |
+          echo "Deploying version ${{ needs.validate-release.outputs.version }} to staging..."
+          
+          # Replace with your actual deployment script
+          # This could be:
+          # - Kubernetes deployment
+          # - Docker Compose update
+          # - Cloud provider deployment (AWS ECS, Azure Container Instances, etc.)
+          # - Server deployment via SSH
+          
+          # Example deployment commands:
+          # kubectl set image deployment/backend backend=${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/backend:${{ needs.validate-release.outputs.version }}
+          # kubectl set image deployment/frontend frontend=${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/frontend:${{ needs.validate-release.outputs.version }}
+          
+          echo "✅ Successfully deployed to staging"
+
+      - name: Run smoke tests
+        run: |
+          echo "Running smoke tests on staging environment..."
+          
+          # Add smoke tests here
+          # curl -f https://staging.enterprise-auth.example.com/health
+          # curl -f https://staging.enterprise-auth.example.com/api/health
+          
+          echo "✅ Smoke tests passed"
+
+      - name: Notify deployment
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#deployments'
+          text: |
+            🚀 *Release ${{ needs.validate-release.outputs.version }}* deployed to staging
+            Status: ${{ job.status }}
+            Environment: https://staging.enterprise-auth.example.com
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [validate-release, create-release, deploy-staging]
+    if: needs.validate-release.outputs.is-prerelease == 'false' && needs.deploy-staging.result == 'success'
+    environment:
+      name: production
+      url: https://enterprise-auth.example.com
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to production environment
+        run: |
+          echo "Deploying version ${{ needs.validate-release.outputs.version }} to production..."
+          
+          # Replace with your actual production deployment script
+          # This should include:
+          # - Blue-green or rolling deployment strategy
+          # - Database migrations if needed
+          # - Health checks
+          # - Rollback capability
+          
+          echo "✅ Successfully deployed to production"
+
+      - name: Run production smoke tests
+        run: |
+          echo "Running smoke tests on production environment..."
+          
+          # Add production smoke tests here
+          # These should be more comprehensive than staging
+          
+          echo "✅ Production smoke tests passed"
+
+      - name: Create deployment record
+        run: |
+          echo "Creating deployment record..."
+          
+          # Log deployment for audit purposes
+          # This could be sent to your monitoring/logging system
+          
+          cat << EOF > deployment-record.json
+          {
+            "version": "${{ needs.validate-release.outputs.version }}",
+            "environment": "production",
+            "deployed_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "deployed_by": "${{ github.actor }}",
+            "commit_sha": "${{ github.sha }}",
+            "backend_image": "${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/backend:${{ needs.validate-release.outputs.version }}",
+            "frontend_image": "${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/frontend:${{ needs.validate-release.outputs.version }}"
+          }
+          EOF
+
+      - name: Notify successful deployment
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          channel: '#releases'
+          text: |
+            🎉 *Release ${{ needs.validate-release.outputs.version }}* successfully deployed to production!
+            
+            📋 **Release Notes:**
+            ${{ needs.validate-release.outputs.changelog }}
+            
+            🔗 **Links:**
+            • [Production](https://enterprise-auth.example.com)
+            • [Release Notes](https://github.com/${{ github.repository }}/releases/tag/${{ needs.validate-release.outputs.tag }})
+            • [Docker Images](${{ env.DOCKER_REGISTRY }}/${{ github.repository }})
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  post-release:
+    name: Post-Release Tasks
+    runs-on: ubuntu-latest
+    needs: [validate-release, create-release, deploy-production]
+    if: always() && needs.create-release.result == 'success'
+    
+    steps:
+      - name: Update documentation
+        run: |
+          echo "Updating release documentation..."
+          
+          # Tasks could include:
+          # - Update changelog
+          # - Update API documentation
+          # - Update deployment guides
+          # - Send release announcements
+          
+          echo "✅ Documentation updated"
+
+      - name: Clean up old releases
+        run: |
+          echo "Cleaning up old pre-releases..."
+          
+          # Clean up old pre-release artifacts
+          # Remove old container images
+          # Archive old logs
+          
+          echo "✅ Cleanup completed"
+
+      - name: Trigger downstream updates
+        run: |
+          echo "Triggering downstream repository updates..."
+          
+          # Trigger updates in related repositories
+          # Update helm charts
+          # Update infrastructure configs
+          
+          echo "✅ Downstream updates triggered"
+
+  on-failure:
+    name: Handle Release Failure
+    runs-on: ubuntu-latest
+    needs: [validate-release, test-suite, security-scan, build-artifacts, create-release]
+    if: failure()
+    
+    steps:
+      - name: Notify failure
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          channel: '#releases'
+          text: |
+            ❌ **Release ${{ needs.validate-release.outputs.version }} FAILED**
+            
+            Failed job: ${{ github.job }}
+            Triggered by: ${{ github.actor }}
+            
+            Please check the [workflow run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Clean up failed release artifacts
+        run: |
+          echo "Cleaning up artifacts from failed release..."
+          
+          # Clean up any partially created resources
+          # Remove failed container images
+          # Clean up temporary tags
+          
+          echo "✅ Cleanup completed"

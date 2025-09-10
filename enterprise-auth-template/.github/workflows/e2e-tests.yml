@@ -1,0 +1,698 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened]
+  schedule:
+    # Run E2E tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: 'Browser to run tests on'
+        required: false
+        default: 'chromium'
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
+          - all
+      environment:
+        description: 'Environment to test against'
+        required: false
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+# Allow only one concurrent E2E test run
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '18'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  prepare:
+    name: Prepare Test Environment
+    runs-on: ubuntu-latest
+    outputs:
+      test-matrix: ${{ steps.set-matrix.outputs.matrix }}
+      cache-key: ${{ steps.cache-key.outputs.key }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set test matrix
+        id: set-matrix
+        run: |
+          if [ "${{ github.event.inputs.browser }}" = "all" ]; then
+            echo "matrix=[\"chromium\", \"firefox\", \"webkit\"]" >> $GITHUB_OUTPUT
+          else
+            echo "matrix=[\"${{ github.event.inputs.browser || 'chromium' }}\"]" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate cache key
+        id: cache-key
+        run: |
+          echo "key=e2e-deps-${{ hashFiles('frontend/package-lock.json', 'backend/requirements.txt') }}" >> $GITHUB_OUTPUT
+
+  build-backend:
+    name: Build Backend
+    runs-on: ubuntu-latest
+    needs: prepare
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python dependencies
+        working-directory: ./backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set up test environment
+        working-directory: ./backend
+        env:
+          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
+          REDIS_URL: redis://localhost:6379/0
+          SECRET_KEY: test-secret-key-for-e2e-tests
+          ENVIRONMENT: test
+        run: |
+          # Run database migrations
+          alembic upgrade head
+          
+          # Seed test data
+          python scripts/seed_test_data.py
+
+      - name: Run backend tests
+        working-directory: ./backend
+        env:
+          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
+          REDIS_URL: redis://localhost:6379/0
+          SECRET_KEY: test-secret-key-for-e2e-tests
+          ENVIRONMENT: test
+        run: |
+          pytest tests/ -v --tb=short
+
+      - name: Start backend server
+        working-directory: ./backend
+        env:
+          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
+          REDIS_URL: redis://localhost:6379/0
+          SECRET_KEY: test-secret-key-for-e2e-tests
+          ENVIRONMENT: test
+          PORT: 8000
+        run: |
+          uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+          echo $! > backend.pid
+          
+          # Wait for backend to be ready
+          timeout 30 bash -c 'until curl -f http://localhost:8000/health; do sleep 1; done'
+
+      - name: Save backend artifacts
+        run: |
+          mkdir -p /tmp/backend-artifacts
+          if [ -f backend.pid ]; then
+            cp backend.pid /tmp/backend-artifacts/
+          fi
+
+      - name: Upload backend artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-server
+          path: /tmp/backend-artifacts/
+          retention-days: 1
+
+  build-frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+    needs: prepare
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run frontend linting
+        working-directory: ./frontend
+        run: npm run lint
+
+      - name: Run frontend type checking
+        working-directory: ./frontend
+        run: npm run typecheck
+
+      - name: Run frontend unit tests
+        working-directory: ./frontend
+        run: npm test -- --coverage --passWithNoTests
+
+      - name: Build frontend
+        working-directory: ./frontend
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8000
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
+        run: npm run build
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ./frontend/coverage
+          flags: frontend
+          name: frontend-coverage
+
+  e2e-tests:
+    name: E2E Tests (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    needs: [prepare, build-backend, build-frontend]
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: ${{ fromJson(needs.prepare.outputs.test-matrix) }}
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: e2e_test_db
+          POSTGRES_USER: e2e_user
+          POSTGRES_PASSWORD: e2e_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5433:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6380:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          # Install frontend dependencies
+          cd frontend && npm ci
+          
+          # Install backend dependencies
+          cd ../backend && pip install -r requirements.txt
+
+      - name: Install Playwright browsers
+        working-directory: ./frontend
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Set up test environment
+        env:
+          DATABASE_URL: postgresql://e2e_user:e2e_password@localhost:5433/e2e_test_db
+          REDIS_URL: redis://localhost:6380/0
+          SECRET_KEY: e2e-test-secret-key
+          ENVIRONMENT: test
+        run: |
+          # Set up backend database
+          cd backend
+          alembic upgrade head
+          python scripts/seed_e2e_test_data.py
+
+      - name: Start backend server
+        working-directory: ./backend
+        env:
+          DATABASE_URL: postgresql://e2e_user:e2e_password@localhost:5433/e2e_test_db
+          REDIS_URL: redis://localhost:6380/0
+          SECRET_KEY: e2e-test-secret-key
+          ENVIRONMENT: test
+          PORT: 8001
+        run: |
+          uvicorn app.main:app --host 0.0.0.0 --port 8001 &
+          echo $! > backend_e2e.pid
+          
+          # Wait for backend to be ready
+          timeout 60 bash -c 'until curl -f http://localhost:8001/health; do sleep 2; done'
+
+      - name: Start frontend server
+        working-directory: ./frontend
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8001
+          NEXT_PUBLIC_APP_URL: http://localhost:3001
+          PORT: 3001
+        run: |
+          npm run build
+          npm start &
+          echo $! > frontend_e2e.pid
+          
+          # Wait for frontend to be ready
+          timeout 60 bash -c 'until curl -f http://localhost:3001; do sleep 2; done'
+
+      - name: Run E2E tests
+        working-directory: ./frontend
+        env:
+          PLAYWRIGHT_BROWSER: ${{ matrix.browser }}
+          BASE_URL: http://localhost:3001
+          API_URL: http://localhost:8001
+        run: |
+          npx playwright test --project=${{ matrix.browser }} --reporter=html,github
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: frontend/playwright-report/
+          retention-days: 7
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: e2e-results-${{ matrix.browser }}
+          path: |
+            frontend/test-results/
+            frontend/tests/screenshots/
+          retention-days: 7
+
+      - name: Stop servers
+        if: always()
+        run: |
+          # Stop frontend server
+          if [ -f frontend/frontend_e2e.pid ]; then
+            kill -TERM $(cat frontend/frontend_e2e.pid) || true
+          fi
+          
+          # Stop backend server
+          if [ -f backend/backend_e2e.pid ]; then
+            kill -TERM $(cat backend/backend_e2e.pid) || true
+          fi
+
+  visual-regression-tests:
+    name: Visual Regression Tests
+    runs-on: ubuntu-latest
+    needs: [build-backend, build-frontend]
+    if: github.event_name == 'pull_request'
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: visual_test_db
+          POSTGRES_USER: visual_user
+          POSTGRES_PASSWORD: visual_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5434:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6381:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          cd frontend && npm ci
+          cd ../backend && pip install -r requirements.txt
+
+      - name: Install Playwright browsers
+        working-directory: ./frontend
+        run: npx playwright install --with-deps chromium
+
+      - name: Set up test environment
+        env:
+          DATABASE_URL: postgresql://visual_user:visual_password@localhost:5434/visual_test_db
+          REDIS_URL: redis://localhost:6381/0
+          SECRET_KEY: visual-test-secret-key
+          ENVIRONMENT: test
+        run: |
+          cd backend
+          alembic upgrade head
+          python scripts/seed_visual_test_data.py
+
+      - name: Start servers
+        env:
+          DATABASE_URL: postgresql://visual_user:visual_password@localhost:5434/visual_test_db
+          REDIS_URL: redis://localhost:6381/0
+          SECRET_KEY: visual-test-secret-key
+          ENVIRONMENT: test
+          NEXT_PUBLIC_API_URL: http://localhost:8002
+          NEXT_PUBLIC_APP_URL: http://localhost:3002
+        run: |
+          # Start backend
+          cd backend
+          uvicorn app.main:app --host 0.0.0.0 --port 8002 &
+          echo $! > backend_visual.pid
+          
+          # Start frontend
+          cd ../frontend
+          npm run build
+          npm start -- -p 3002 &
+          echo $! > frontend_visual.pid
+          
+          # Wait for servers
+          timeout 60 bash -c 'until curl -f http://localhost:8002/health; do sleep 2; done'
+          timeout 60 bash -c 'until curl -f http://localhost:3002; do sleep 2; done'
+
+      - name: Run visual regression tests
+        working-directory: ./frontend
+        env:
+          BASE_URL: http://localhost:3002
+        run: |
+          npx playwright test --project=chromium --grep="@visual"
+
+      - name: Upload visual test results
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: visual-test-failures
+          path: |
+            frontend/test-results/
+            frontend/playwright-report/
+          retention-days: 7
+
+  accessibility-tests:
+    name: Accessibility Tests
+    runs-on: ubuntu-latest
+    needs: [build-backend, build-frontend]
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: a11y_test_db
+          POSTGRES_USER: a11y_user
+          POSTGRES_PASSWORD: a11y_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5435:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          cd frontend && npm ci
+          cd ../backend && pip install -r requirements.txt
+
+      - name: Install accessibility testing tools
+        working-directory: ./frontend
+        run: |
+          npm install -D @axe-core/playwright lighthouse
+          npx playwright install --with-deps chromium
+
+      - name: Set up test environment
+        env:
+          DATABASE_URL: postgresql://a11y_user:a11y_password@localhost:5435/a11y_test_db
+          SECRET_KEY: a11y-test-secret-key
+          ENVIRONMENT: test
+        run: |
+          cd backend
+          alembic upgrade head
+          python scripts/seed_a11y_test_data.py
+
+      - name: Start servers
+        env:
+          DATABASE_URL: postgresql://a11y_user:a11y_password@localhost:5435/a11y_test_db
+          SECRET_KEY: a11y-test-secret-key
+          ENVIRONMENT: test
+          NEXT_PUBLIC_API_URL: http://localhost:8003
+          NEXT_PUBLIC_APP_URL: http://localhost:3003
+        run: |
+          # Start backend
+          cd backend
+          uvicorn app.main:app --host 0.0.0.0 --port 8003 &
+          
+          # Start frontend
+          cd ../frontend
+          npm run build
+          npm start -- -p 3003 &
+          
+          # Wait for servers
+          timeout 60 bash -c 'until curl -f http://localhost:8003/health; do sleep 2; done'
+          timeout 60 bash -c 'until curl -f http://localhost:3003; do sleep 2; done'
+
+      - name: Run accessibility tests
+        working-directory: ./frontend
+        env:
+          BASE_URL: http://localhost:3003
+        run: |
+          npx playwright test --project=chromium --grep="@a11y"
+
+      - name: Generate Lighthouse reports
+        working-directory: ./frontend
+        env:
+          BASE_URL: http://localhost:3003
+        run: |
+          npx lighthouse http://localhost:3003 --output=json --output-path=./lighthouse-home.json --chrome-flags="--headless"
+          npx lighthouse http://localhost:3003/auth/login --output=json --output-path=./lighthouse-login.json --chrome-flags="--headless"
+          npx lighthouse http://localhost:3003/dashboard --output=json --output-path=./lighthouse-dashboard.json --chrome-flags="--headless"
+
+      - name: Upload accessibility reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: accessibility-reports
+          path: |
+            frontend/lighthouse-*.json
+            frontend/test-results/
+            frontend/playwright-report/
+          retention-days: 7
+
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: [build-backend, build-frontend]
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install k6
+        run: |
+          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+      - name: Run API performance tests
+        run: |
+          k6 run --vus 10 --duration 30s tests/performance/api-load-test.js
+
+      - name: Run frontend performance tests
+        working-directory: ./frontend
+        run: |
+          npm ci
+          npm run perf:test
+
+  test-report:
+    name: Generate Test Report
+    runs-on: ubuntu-latest
+    needs: [e2e-tests, visual-regression-tests, accessibility-tests]
+    if: always()
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Generate comprehensive test report
+        run: |
+          mkdir -p test-report
+          
+          # Combine all test results
+          echo "# E2E Test Report" > test-report/README.md
+          echo "Generated: $(date)" >> test-report/README.md
+          echo "" >> test-report/README.md
+          
+          # Add summary of test results
+          echo "## Test Results Summary" >> test-report/README.md
+          
+          # Process Playwright reports
+          if [ -d "playwright-report-chromium" ]; then
+            echo "✅ Chromium E2E tests completed" >> test-report/README.md
+          fi
+          
+          if [ -d "playwright-report-firefox" ]; then
+            echo "✅ Firefox E2E tests completed" >> test-report/README.md
+          fi
+          
+          if [ -d "playwright-report-webkit" ]; then
+            echo "✅ WebKit E2E tests completed" >> test-report/README.md
+          fi
+          
+          # Add accessibility results
+          if [ -d "accessibility-reports" ]; then
+            echo "✅ Accessibility tests completed" >> test-report/README.md
+          fi
+          
+          # Add visual regression results
+          if [ -d "visual-test-failures" ]; then
+            echo "⚠️ Visual regression tests found differences" >> test-report/README.md
+          else
+            echo "✅ Visual regression tests passed" >> test-report/README.md
+          fi
+
+      - name: Upload comprehensive report
+        uses: actions/upload-artifact@v3
+        with:
+          name: comprehensive-test-report
+          path: test-report/
+          retention-days: 30
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reportPath = 'test-report/README.md';
+            
+            if (fs.existsSync(reportPath)) {
+              const report = fs.readFileSync(reportPath, 'utf8');
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `## 🧪 E2E Test Results\n\n${report}\n\n📊 [View detailed reports in the Actions artifacts](${context.payload.pull_request.html_url}/checks)`
+              });
+            }
+
+  cleanup:
+    name: Cleanup
+    runs-on: ubuntu-latest
+    needs: [e2e-tests, visual-regression-tests, accessibility-tests, performance-tests]
+    if: always()
+    
+    steps:
+      - name: Clean up test artifacts
+        run: |
+          echo "Cleaning up temporary test data and artifacts..."
+          # Any cleanup tasks would go here
+          echo "Cleanup completed"

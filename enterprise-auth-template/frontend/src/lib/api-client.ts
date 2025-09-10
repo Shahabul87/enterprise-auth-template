@@ -1,0 +1,260 @@
+// Type-safe API client for communicating with FastAPI backend
+
+import {
+  ApiResponse,
+  ApiConfig,
+  RequestOptions,
+  HttpMethod,
+  PaginatedResponse,
+  QueryParams,
+} from '@/types';
+import { ErrorHandler } from '@/lib/error-handler';
+import { useAuthStore } from '@/stores/auth.store';
+
+class ApiClient {
+  private baseURL: string;
+  private defaultHeaders: Record<string, string>;
+  private timeout: number;
+
+  constructor(config: ApiConfig) {
+    this.baseURL = config.baseURL.replace(/\/$/, ''); // Remove trailing slash
+    this.timeout = config.timeout || 30000; // 30 seconds default
+    this.defaultHeaders = {
+      'Content-Type': 'application/json',
+      ...config.headers,
+    };
+  }
+
+  // Get authorization header from stored tokens
+  private getAuthHeaders(): Record<string, string> {
+    if (typeof window === 'undefined') return {};
+
+    // Get token from Zustand store
+    const { accessToken } = useAuthStore.getState();
+    if (accessToken) {
+      return {
+        Authorization: `Bearer ${accessToken}`,
+      };
+    }
+
+    return {};
+  }
+
+  // Make HTTP request with proper error handling and type safety
+  private async request<T>(
+    method: HttpMethod,
+    endpoint: string,
+    data?: unknown,
+    options?: RequestOptions
+  ): Promise<ApiResponse<T>> {
+    const url = `${this.baseURL}${endpoint}`;
+
+    // Prepare headers
+    const headers: Record<string, string> = {
+      ...this.defaultHeaders,
+      ...this.getAuthHeaders(),
+      ...options?.headers,
+    };
+
+    // Prepare request configuration
+    const config: RequestInit = {
+      method,
+      headers,
+      signal: options?.signal || null,
+    };
+
+    // Add body for non-GET requests
+    if (data && method !== 'GET') {
+      if (data instanceof FormData) {
+        // Remove Content-Type for FormData (browser will set it with boundary)
+        delete headers['Content-Type'];
+        config.body = data;
+      } else {
+        config.body = JSON.stringify(data);
+      }
+    }
+
+    // Add query parameters for GET requests
+    let finalUrl = url;
+    if (method === 'GET' && data && typeof data === 'object') {
+      const params = new URLSearchParams();
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, String(value));
+        }
+      });
+      if (params.toString()) {
+        finalUrl += `?${params.toString()}`;
+      }
+    }
+
+    try {
+      const response = await fetch(finalUrl, {
+        ...config,
+        signal: AbortSignal.timeout(this.timeout),
+      });
+
+      let responseData: ApiResponse<T>;
+
+      // Handle non-JSON responses
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const jsonData = await response.json();
+
+        // If response is OK, wrap the data in success format
+        if (response.ok) {
+          // Check if it's already in ApiResponse format
+          if ('success' in jsonData || 'error' in jsonData) {
+            responseData = jsonData;
+          } else {
+            // Wrap raw data in success response
+            responseData = {
+              success: true,
+              data: jsonData,
+            };
+          }
+        } else {
+          // Error response - check if it has a detail field (FastAPI error format)
+          if ('detail' in jsonData) {
+            responseData = {
+              success: false,
+              error: {
+                code: `HTTP_${response.status}`,
+                message: jsonData.detail || `Request failed with status ${response.status}`,
+              },
+            };
+          } else {
+            responseData = {
+              success: false,
+              error: {
+                code: `HTTP_${response.status}`,
+                message: `Request failed with status ${response.status}`,
+                details: jsonData,
+              },
+            };
+          }
+        }
+      } else {
+        // Handle non-JSON responses (like plain text errors)
+        const text = await response.text();
+        if (response.ok) {
+          responseData = {
+            success: true,
+          };
+        } else {
+          responseData = {
+            success: false,
+            error: {
+              code: 'INVALID_RESPONSE',
+              message: text || 'Invalid response format',
+            },
+          };
+        }
+      }
+
+      // Handle 401 errors globally
+      if (!response.ok && response.status === 401) {
+        const { clearAuth } = useAuthStore.getState();
+        clearAuth();
+      }
+
+      return responseData;
+    } catch (error) {
+      // Use unified error handler
+      const standardError = ErrorHandler.parseError(error);
+      
+      return {
+        success: false,
+        error: {
+          code: standardError.code,
+          message: standardError.userMessage || standardError.message,
+          details: standardError.details || {},
+        },
+      };
+    }
+  }
+
+  // Convenience methods for different HTTP verbs
+  async get<T>(
+    endpoint: string,
+    params?: QueryParams,
+    options?: RequestOptions
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>('GET', endpoint, params, options);
+  }
+
+  async post<T>(
+    endpoint: string,
+    data?: unknown,
+    options?: RequestOptions
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>('POST', endpoint, data, options);
+  }
+
+  async put<T>(
+    endpoint: string,
+    data?: unknown,
+    options?: RequestOptions
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>('PUT', endpoint, data, options);
+  }
+
+  async patch<T>(
+    endpoint: string,
+    data?: unknown,
+    options?: RequestOptions
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>('PATCH', endpoint, data, options);
+  }
+
+  async delete<T>(endpoint: string, options?: RequestOptions): Promise<ApiResponse<T>> {
+    return this.request<T>('DELETE', endpoint, undefined, options);
+  }
+
+  // Paginated requests
+  async getPaginated<T>(
+    endpoint: string,
+    params?: QueryParams & { page?: number; size?: number },
+    options?: RequestOptions
+  ): Promise<ApiResponse<PaginatedResponse<T>>> {
+    return this.get<PaginatedResponse<T>>(endpoint, params, options);
+  }
+
+  // Upload files
+  async upload<T>(
+    endpoint: string,
+    formData: FormData,
+    options?: RequestOptions & { onProgress?: (progress: number) => void }
+  ): Promise<ApiResponse<T>> {
+    // Note: Progress tracking would require additional implementation with XMLHttpRequest
+    return this.post<T>(endpoint, formData, options);
+  }
+
+  // Update base configuration
+  updateConfig(config: Partial<ApiConfig>): void {
+    if (config.baseURL) {
+      this.baseURL = config.baseURL.replace(/\/$/, '');
+    }
+    if (config.timeout) {
+      this.timeout = config.timeout;
+    }
+    if (config.headers) {
+      this.defaultHeaders = { ...this.defaultHeaders, ...config.headers };
+    }
+  }
+
+  // Clear stored authentication
+  clearAuth(): void {
+    const { clearAuth } = useAuthStore.getState();
+    clearAuth();
+  }
+}
+
+// Create and export default API client instance
+const apiClient = new ApiClient({
+  baseURL: process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:8000',
+  timeout: 30000,
+});
+
+export { ApiClient };
+export default apiClient;

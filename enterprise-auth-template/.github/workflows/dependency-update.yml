@@ -1,0 +1,642 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    # Run weekly on Mondays at 8 AM UTC
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+    inputs:
+      update_type:
+        description: 'Type of dependency update'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - security
+          - patch
+          - minor
+          - major
+      auto_merge:
+        description: 'Auto-merge updates if tests pass'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  NODE_VERSION: '18'
+  PYTHON_VERSION: '3.11'
+  DOCKER_BUILDKIT: 1
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: write
+  actions: read
+
+jobs:
+  # ==============================================================================
+  # Security Updates - High priority security patches
+  # ==============================================================================
+  security-updates:
+    name: Security Updates
+    runs-on: ubuntu-latest
+    if: github.event.inputs.update_type == 'all' || github.event.inputs.update_type == 'security' || github.event.inputs.update_type == ''
+    
+    strategy:
+      matrix:
+        component: ['backend', 'frontend']
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Node.js (Frontend)
+        if: matrix.component == 'frontend'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Set up Python (Backend)
+        if: matrix.component == 'backend'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies (Frontend)
+        if: matrix.component == 'frontend'
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Install dependencies (Backend)
+        if: matrix.component == 'backend'
+        working-directory: ./backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Check for security vulnerabilities (Frontend)
+        if: matrix.component == 'frontend'
+        working-directory: ./frontend
+        run: |
+          # Get security audit report
+          npm audit --audit-level=high --json > security-audit.json || true
+          
+          # Check if there are fixable security issues
+          if npm audit --audit-level=high --json | jq -e '.vulnerabilities | length > 0' > /dev/null; then
+            echo "SECURITY_ISSUES_FOUND=true" >> $GITHUB_ENV
+            echo "Security vulnerabilities found that can be fixed"
+          else
+            echo "SECURITY_ISSUES_FOUND=false" >> $GITHUB_ENV
+            echo "No security vulnerabilities found"
+          fi
+
+      - name: Check for security vulnerabilities (Backend)
+        if: matrix.component == 'backend'
+        working-directory: ./backend
+        run: |
+          # Install security checking tools
+          pip install safety pip-audit
+          
+          # Check for security vulnerabilities
+          safety check --json --output safety-report.json || true
+          pip-audit --format=json --output pip-audit-report.json || true
+          
+          # Check if security issues were found
+          if [ -s safety-report.json ] && [ "$(jq 'length' safety-report.json)" -gt 0 ]; then
+            echo "SECURITY_ISSUES_FOUND=true" >> $GITHUB_ENV
+            echo "Security vulnerabilities found with Safety"
+          elif [ -s pip-audit-report.json ] && [ "$(jq 'length' pip-audit-report.json)" -gt 0 ]; then
+            echo "SECURITY_ISSUES_FOUND=true" >> $GITHUB_ENV
+            echo "Security vulnerabilities found with pip-audit"
+          else
+            echo "SECURITY_ISSUES_FOUND=false" >> $GITHUB_ENV
+            echo "No security vulnerabilities found"
+          fi
+
+      - name: Fix security vulnerabilities (Frontend)
+        if: matrix.component == 'frontend' && env.SECURITY_ISSUES_FOUND == 'true'
+        working-directory: ./frontend
+        run: |
+          # Fix security vulnerabilities
+          npm audit fix --audit-level=high || true
+          
+          # If that doesn't work, try force fix
+          if npm audit --audit-level=high --json | jq -e '.vulnerabilities | length > 0' > /dev/null; then
+            npm audit fix --force || true
+          fi
+
+      - name: Update vulnerable packages (Backend)
+        if: matrix.component == 'backend' && env.SECURITY_ISSUES_FOUND == 'true'
+        working-directory: ./backend
+        run: |
+          # Install pip-upgrader to help with updates
+          pip install pip-upgrader
+          
+          # Update packages with known security vulnerabilities
+          safety check --json | jq -r '.vulnerabilities[].package_name' | sort -u > vulnerable-packages.txt || true
+          
+          if [ -s vulnerable-packages.txt ]; then
+            while IFS= read -r package; do
+              echo "Updating vulnerable package: $package"
+              pip install --upgrade "$package" || true
+            done < vulnerable-packages.txt
+            
+            # Update requirements.txt with new versions
+            pip freeze > requirements-new.txt
+            # Only update packages that were vulnerable
+            while IFS= read -r package; do
+              if grep -i "^$package==" requirements-new.txt; then
+                new_version=$(grep -i "^$package==" requirements-new.txt)
+                # Update requirements.txt
+                sed -i "s/^$package==.*/$new_version/" requirements.txt || true
+              fi
+            done < vulnerable-packages.txt
+            rm requirements-new.txt vulnerable-packages.txt
+          fi
+
+      - name: Run tests after security updates
+        if: env.SECURITY_ISSUES_FOUND == 'true'
+        run: |
+          # Test backend
+          if [ "${{ matrix.component }}" == "backend" ]; then
+            cd backend
+            pip install pytest pytest-asyncio
+            pytest tests/ -v || echo "TESTS_FAILED=true" >> $GITHUB_ENV
+          fi
+          
+          # Test frontend
+          if [ "${{ matrix.component }}" == "frontend" ]; then
+            cd frontend
+            npm test -- --watchAll=false --passWithNoTests || echo "TESTS_FAILED=true" >> $GITHUB_ENV
+          fi
+
+      - name: Create security update PR
+        if: env.SECURITY_ISSUES_FOUND == 'true' && env.TESTS_FAILED != 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            🔒 Security: Update ${{ matrix.component }} dependencies with security fixes
+            
+            - Automated security update for ${{ matrix.component }}
+            - Fixed security vulnerabilities detected by automated scanning
+            - All tests passing after updates
+            
+            🤖 Generated by dependency update automation
+          title: '🔒 Security Updates: ${{ matrix.component }} dependencies'
+          body: |
+            ## Security Dependency Updates
+            
+            This PR contains automated security updates for **${{ matrix.component }}** dependencies.
+            
+            ### What Changed
+            - 🔒 Updated packages with known security vulnerabilities
+            - ✅ All tests are passing
+            - 🤖 Automated by dependency update workflow
+            
+            ### Security Scan Results
+            - Component: ${{ matrix.component }}
+            - Vulnerabilities found and fixed
+            - Tests status: ✅ Passing
+            
+            ### Review Checklist
+            - [ ] Review updated dependencies
+            - [ ] Verify test results
+            - [ ] Check for any breaking changes
+            - [ ] Approve and merge if all looks good
+            
+            > **Note**: This is an automated security update. Please review and merge promptly to address security vulnerabilities.
+          branch: security-updates-${{ matrix.component }}-${{ github.run_number }}
+          labels: |
+            security
+            dependencies
+            automated
+            ${{ matrix.component }}
+          reviewers: ${{ secrets.DEFAULT_REVIEWERS }}
+          draft: false
+
+  # ==============================================================================
+  # Regular Dependency Updates - Patch and Minor updates
+  # ==============================================================================
+  regular-updates:
+    name: Regular Dependency Updates
+    runs-on: ubuntu-latest
+    if: github.event.inputs.update_type == 'all' || github.event.inputs.update_type == 'patch' || github.event.inputs.update_type == 'minor' || github.event.inputs.update_type == ''
+    
+    strategy:
+      matrix:
+        component: ['backend', 'frontend']
+        update-type: ['patch', 'minor']
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js (Frontend)
+        if: matrix.component == 'frontend'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Set up Python (Backend)
+        if: matrix.component == 'backend'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install npm-check-updates (Frontend)
+        if: matrix.component == 'frontend'
+        run: npm install -g npm-check-updates
+
+      - name: Install pip-upgrader (Backend)
+        if: matrix.component == 'backend'
+        run: pip install pip-upgrader pur
+
+      - name: Check for updates (Frontend)
+        if: matrix.component == 'frontend'
+        working-directory: ./frontend
+        run: |
+          # Check for updates
+          if [ "${{ matrix.update-type }}" == "patch" ]; then
+            ncu --target patch --jsonUpgraded > updates.json || echo "{}" > updates.json
+          elif [ "${{ matrix.update-type }}" == "minor" ]; then
+            ncu --target minor --jsonUpgraded > updates.json || echo "{}" > updates.json
+          fi
+          
+          # Check if there are updates
+          if [ "$(jq 'length' updates.json)" -gt 0 ]; then
+            echo "UPDATES_AVAILABLE=true" >> $GITHUB_ENV
+            echo "Updates found:"
+            cat updates.json
+          else
+            echo "UPDATES_AVAILABLE=false" >> $GITHUB_ENV
+            echo "No updates available for ${{ matrix.update-type }}"
+          fi
+
+      - name: Check for updates (Backend)
+        if: matrix.component == 'backend'
+        working-directory: ./backend
+        run: |
+          # Create backup of requirements
+          cp requirements.txt requirements.backup
+          
+          # Check for updates based on type
+          if [ "${{ matrix.update-type }}" == "patch" ]; then
+            pur --patch --force requirements.txt || true
+          elif [ "${{ matrix.update-type }}" == "minor" ]; then
+            pur --minor --force requirements.txt || true
+          fi
+          
+          # Check if requirements.txt changed
+          if ! cmp -s requirements.txt requirements.backup; then
+            echo "UPDATES_AVAILABLE=true" >> $GITHUB_ENV
+            echo "Updates found:"
+            diff requirements.backup requirements.txt || true
+          else
+            echo "UPDATES_AVAILABLE=false" >> $GITHUB_ENV
+            echo "No updates available for ${{ matrix.update-type }}"
+            mv requirements.backup requirements.txt
+          fi
+
+      - name: Apply updates (Frontend)
+        if: matrix.component == 'frontend' && env.UPDATES_AVAILABLE == 'true'
+        working-directory: ./frontend
+        run: |
+          if [ "${{ matrix.update-type }}" == "patch" ]; then
+            ncu --target patch -u
+          elif [ "${{ matrix.update-type }}" == "minor" ]; then
+            ncu --target minor -u
+          fi
+          
+          # Install updated dependencies
+          npm ci
+
+      - name: Apply updates (Backend)
+        if: matrix.component == 'backend' && env.UPDATES_AVAILABLE == 'true'
+        working-directory: ./backend
+        run: |
+          # Install updated dependencies
+          pip install -r requirements.txt
+          rm requirements.backup
+
+      - name: Run comprehensive tests
+        if: env.UPDATES_AVAILABLE == 'true'
+        run: |
+          # Test backend
+          if [ "${{ matrix.component }}" == "backend" ]; then
+            cd backend
+            pip install pytest pytest-asyncio pytest-cov
+            pytest tests/ -v --cov=app || echo "TESTS_FAILED=true" >> $GITHUB_ENV
+          fi
+          
+          # Test frontend
+          if [ "${{ matrix.component }}" == "frontend" ]; then
+            cd frontend
+            npm run lint || echo "LINT_FAILED=true" >> $GITHUB_ENV
+            npm run typecheck || echo "TYPECHECK_FAILED=true" >> $GITHUB_ENV
+            npm test -- --watchAll=false --coverage || echo "TESTS_FAILED=true" >> $GITHUB_ENV
+          fi
+
+      - name: Build application
+        if: env.UPDATES_AVAILABLE == 'true' && env.TESTS_FAILED != 'true'
+        run: |
+          if [ "${{ matrix.component }}" == "frontend" ]; then
+            cd frontend
+            npm run build || echo "BUILD_FAILED=true" >> $GITHUB_ENV
+          fi
+
+      - name: Create regular update PR
+        if: env.UPDATES_AVAILABLE == 'true' && env.TESTS_FAILED != 'true' && env.BUILD_FAILED != 'true' && env.LINT_FAILED != 'true' && env.TYPECHECK_FAILED != 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            ⬆️ Update ${{ matrix.component }} dependencies (${{ matrix.update-type }})
+            
+            - Automated ${{ matrix.update-type }} updates for ${{ matrix.component }}
+            - All tests passing
+            - Build successful
+            
+            🤖 Generated by dependency update automation
+          title: '⬆️ ${{ matrix.component }}: ${{ matrix.update-type }} dependency updates'
+          body: |
+            ## Dependency Updates (${{ matrix.update-type }})
+            
+            This PR contains automated **${{ matrix.update-type }}** updates for **${{ matrix.component }}** dependencies.
+            
+            ### What Changed
+            - ⬆️ Updated ${{ matrix.component }} dependencies (${{ matrix.update-type }} versions)
+            - ✅ All tests passing
+            - ✅ Build successful
+            - ✅ Linting and type checking passed
+            - 🤖 Automated by dependency update workflow
+            
+            ### Update Type
+            - **${{ matrix.update-type }}** updates (should be backward compatible)
+            - Component: **${{ matrix.component }}**
+            
+            ### Quality Checks
+            - Tests: ✅ Passing
+            - Build: ✅ Successful
+            - Linting: ✅ Passed
+            - Type checking: ✅ Passed
+            
+            ### Auto-merge
+            - Auto-merge enabled: ${{ github.event.inputs.auto_merge == 'true' }}
+            
+            > **Note**: This is an automated dependency update. Review the changes and merge when ready.
+          branch: deps-${{ matrix.update-type }}-${{ matrix.component }}-${{ github.run_number }}
+          labels: |
+            dependencies
+            ${{ matrix.update-type }}
+            automated
+            ${{ matrix.component }}
+          reviewers: ${{ secrets.DEFAULT_REVIEWERS }}
+          draft: false
+
+  # ==============================================================================
+  # Major Version Updates - Requires manual review
+  # ==============================================================================
+  major-updates:
+    name: Major Version Updates
+    runs-on: ubuntu-latest
+    if: github.event.inputs.update_type == 'all' || github.event.inputs.update_type == 'major'
+    
+    strategy:
+      matrix:
+        component: ['backend', 'frontend']
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js (Frontend)
+        if: matrix.component == 'frontend'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Set up Python (Backend)
+        if: matrix.component == 'backend'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Check for major updates (Frontend)
+        if: matrix.component == 'frontend'
+        working-directory: ./frontend
+        run: |
+          npm install -g npm-check-updates
+          ncu --target major --jsonUpgraded > major-updates.json || echo "{}" > major-updates.json
+          
+          if [ "$(jq 'length' major-updates.json)" -gt 0 ]; then
+            echo "MAJOR_UPDATES_AVAILABLE=true" >> $GITHUB_ENV
+            echo "Major updates found:"
+            cat major-updates.json
+          else
+            echo "MAJOR_UPDATES_AVAILABLE=false" >> $GITHUB_ENV
+          fi
+
+      - name: Check for major updates (Backend)
+        if: matrix.component == 'backend'
+        working-directory: ./backend
+        run: |
+          pip install pur
+          cp requirements.txt requirements.backup
+          pur --major --force requirements.txt || true
+          
+          if ! cmp -s requirements.txt requirements.backup; then
+            echo "MAJOR_UPDATES_AVAILABLE=true" >> $GITHUB_ENV
+            echo "Major updates found:"
+            diff requirements.backup requirements.txt || true
+          else
+            echo "MAJOR_UPDATES_AVAILABLE=false" >> $GITHUB_ENV
+            mv requirements.backup requirements.txt
+          fi
+
+      - name: Create major update issue
+        if: env.MAJOR_UPDATES_AVAILABLE == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const component = '${{ matrix.component }}';
+            
+            let updatesInfo = '';
+            if (component === 'frontend') {
+              try {
+                const updates = JSON.parse(fs.readFileSync('frontend/major-updates.json', 'utf8'));
+                updatesInfo = Object.entries(updates)
+                  .map(([pkg, version]) => `- ${pkg}: ${version}`)
+                  .join('\n');
+              } catch (e) {
+                updatesInfo = 'Error reading update information';
+              }
+            } else {
+              try {
+                const diff = require('child_process').execSync('cd backend && diff requirements.backup requirements.txt || true').toString();
+                updatesInfo = diff || 'No specific update information available';
+              } catch (e) {
+                updatesInfo = 'Error reading update information';
+              }
+            }
+            
+            const body = `## Major Dependency Updates Available
+            
+            Major version updates are available for **${component}** dependencies. These updates may contain breaking changes and require manual review.
+            
+            ### Available Updates
+            \`\`\`
+            ${updatesInfo}
+            \`\`\`
+            
+            ### Action Required
+            - [ ] Review breaking changes for each dependency
+            - [ ] Update code to handle breaking changes
+            - [ ] Update tests if necessary
+            - [ ] Update documentation
+            - [ ] Create PR with updates after review
+            
+            ### Notes
+            - Major updates may contain breaking changes
+            - Manual testing recommended
+            - Consider updating dependencies one at a time
+            - Check migration guides for each dependency
+            
+            > **Warning**: These are major version updates that may require code changes. Please review carefully before applying.
+            `;
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚨 Major dependency updates available: ${component}`,
+              body: body,
+              labels: ['dependencies', 'major', 'manual-review-required', component]
+            });
+
+  # ==============================================================================
+  # Auto-merge approved PRs
+  # ==============================================================================
+  auto-merge:
+    name: Auto-merge Dependency PRs
+    runs-on: ubuntu-latest
+    needs: [security-updates, regular-updates]
+    if: github.event.inputs.auto_merge == 'true' && (github.event.inputs.update_type != 'major')
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Enable auto-merge for dependency PRs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get all PRs with dependency labels
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head: `${context.repo.owner}:deps-`,
+            });
+            
+            for (const pr of prs) {
+              // Check if PR has dependency labels and is created by this workflow
+              const hasDepLabel = pr.labels.some(label => 
+                label.name === 'dependencies' || 
+                label.name === 'automated'
+              );
+              
+              if (hasDepLabel && pr.head.ref.startsWith('deps-')) {
+                // Enable auto-merge
+                await github.rest.pulls.createReview({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  event: 'APPROVE',
+                  body: 'Auto-approving dependency update PR with passing tests.'
+                });
+                
+                await github.rest.pulls.merge({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  merge_method: 'squash',
+                });
+                
+                console.log(`Auto-merged PR #${pr.number}: ${pr.title}`);
+              }
+            }
+
+  # ==============================================================================
+  # Dependency Update Summary
+  # ==============================================================================
+  dependency-summary:
+    name: Dependency Update Summary
+    runs-on: ubuntu-latest
+    needs: [security-updates, regular-updates, major-updates]
+    if: always()
+    
+    steps:
+      - name: Generate summary report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const summary = `
+            # Dependency Update Summary
+            
+            **Date:** ${new Date().toISOString()}
+            **Workflow:** ${context.workflow}
+            **Run ID:** ${context.runId}
+            
+            ## Job Results
+            - Security Updates: ${{ needs.security-updates.result }}
+            - Regular Updates: ${{ needs.regular-updates.result }}
+            - Major Updates: ${{ needs.major-updates.result }}
+            
+            ## Next Steps
+            1. Review any created PRs
+            2. Check for major update issues
+            3. Monitor test results
+            4. Merge approved updates
+            
+            ---
+            *Automated dependency management by GitHub Actions*
+            `;
+            
+            // Write summary to job summary
+            await core.summary
+              .addRaw(summary)
+              .write();
+
+      - name: Send notification on completion
+        if: github.event_name == 'schedule'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: |
+            📦 Dependency update workflow completed
+            
+            Security Updates: ${{ needs.security-updates.result }}
+            Regular Updates: ${{ needs.regular-updates.result }}
+            Major Updates: ${{ needs.major-updates.result }}
+            
+            Check the repository for any new dependency PRs or issues.
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        if: env.SLACK_WEBHOOK != ''

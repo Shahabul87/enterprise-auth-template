@@ -1,0 +1,23 @@
+# Docker Compose for Development with Database Access
+# Use this override file when you need direct database access for debugging
+# Usage: docker-compose -f docker-compose.dev.yml -f docker-compose.dev-with-db-access.yml up
+
+version: '3.8'
+
+services:
+  # Expose database ports (localhost only for security)
+  postgres:
+    ports:
+      - "127.0.0.1:5432:5432"  # Bind to localhost only
+    environment:
+      # Additional security environment variables
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=peer"
+
+  redis:
+    ports:
+      - "127.0.0.1:6379:6379"  # Bind to localhost only
+
+  # Optional: pgAdmin for database management (development only)
+  pgadmin:
+    ports:
+      - "127.0.0.1:5050:80"  # Bind to localhost only

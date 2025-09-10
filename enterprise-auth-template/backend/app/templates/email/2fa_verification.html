@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two-Factor Authentication Code</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .verification-code {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde047 100%);
+            border: 3px solid #eab308;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .code-display {
+            font-family: 'Courier New', monospace;
+            font-size: 36px;
+            font-weight: bold;
+            color: #dc2626;
+            letter-spacing: 8px;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            border: 2px dashed #dc2626;
+        }
+        .security-notice {
+            background-color: #fef2f2;
+            border-left: 4px solid #dc2626;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .security-notice h3 {
+            color: #dc2626;
+            margin: 0 0 10px 0;
+        }
+        .timer {
+            background-color: #fff7ed;
+            border: 1px solid #fb923c;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .steps {
+            background-color: #f0fdf4;
+            border: 1px solid #22c55e;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .step {
+            margin: 10px 0;
+            padding: 10px 0;
+            border-bottom: 1px dotted #d1d5db;
+        }
+        .step:last-child {
+            border-bottom: none;
+        }
+        .step-number {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-color: #22c55e;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 24px;
+            margin-right: 10px;
+        }
+        .footer {
+            background-color: #f8fafc;
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+            font-size: 14px;
+        }
+        .help-links {
+            margin: 20px 0;
+        }
+        .help-links a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 8px 12px;
+            background-color: #e2e8f0;
+            color: #475569;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+        @media only screen and (max-width: 600px) {
+            .container {
+                margin: 0 10px;
+            }
+            .header, .content, .footer {
+                padding: 20px;
+            }
+            .code-display {
+                font-size: 28px;
+                letter-spacing: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Two-Factor Authentication</h1>
+            <p style="margin: 10px 0 0 0; opacity: 0.9;">Secure login verification</p>
+        </div>
+        
+        <div class="content">
+            <h2 style="color: #374151;">Hello, {{ user_name }}!</h2>
+            <p>You're attempting to sign in to your {{ app_name }} account. To complete the login process, please use the verification code below:</p>
+            
+            <div class="verification-code">
+                <h3 style="margin: 0 0 15px 0; color: #1f2937;">Your Verification Code:</h3>
+                <div class="code-display">{{ verification_code }}</div>
+                <p style="margin: 15px 0 0 0; color: #6b7280; font-size: 14px;">Enter this code in your authenticator app or login form</p>
+            </div>
+            
+            <div class="timer">
+                <p style="margin: 0;"><strong>⏰ This code expires in {{ expires_in }} minutes</strong></p>
+                <small style="color: #9ca3af;">Generated at {{ generated_at }}</small>
+            </div>
+            
+            <div class="steps">
+                <h3 style="color: #16a34a; margin: 0 0 20px 0;">How to use this code:</h3>
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Return to your login screen</strong> on {{ app_name }}
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Enter the 6-digit code</strong> exactly as shown above
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Complete your login</strong> to access your account
+                </div>
+            </div>
+            
+            <div class="security-notice">
+                <h3>🛡️ Security Information</h3>
+                <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                    <li><strong>Never share this code</strong> with anyone - {{ app_name }} staff will never ask for it</li>
+                    <li><strong>Use only once</strong> - this code becomes invalid after successful use</li>
+                    <li><strong>Time-sensitive</strong> - code expires automatically for security</li>
+                    <li><strong>Location check</strong> - login attempt from {{ login_location }}</li>
+                </ul>
+            </div>
+            
+            <hr style="border: none; height: 1px; background-color: #e2e8f0; margin: 30px 0;">
+            
+            <div style="background-color: #fef3c7; border: 1px solid #f59e0b; padding: 20px; border-radius: 8px;">
+                <h4 style="margin: 0 0 10px 0; color: #92400e;">Didn't request this code?</h4>
+                <p style="margin: 0; color: #92400e;">
+                    If you didn't attempt to sign in, someone may be trying to access your account. 
+                    <strong>Do not use this code</strong> and secure your account immediately by changing your password.
+                </p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <p style="color: #6b7280;">Having trouble with 2FA?</p>
+                <div class="help-links">
+                    <a href="{{ backup_codes_url }}">🔑 Use Backup Code</a>
+                    <a href="{{ support_url }}">💬 Get Help</a>
+                    <a href="{{ security_settings_url }}">⚙️ Security Settings</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; {{ current_year }} {{ app_name }}. All rights reserved.</p>
+            <p>This security code was sent to {{ user_email }}</p>
+            <p><a href="{{ privacy_url }}" style="color: #64748b;">Privacy Policy</a> | <a href="{{ security_policy_url }}" style="color: #64748b;">Security Policy</a></p>
+            
+            <hr style="border: none; height: 1px; background-color: #e2e8f0; margin: 20px 0;">
+            
+            <p style="font-size: 12px; color: #9ca3af;">
+                <strong>Request Details:</strong><br>
+                IP: {{ request_ip }} | Browser: {{ user_agent }}<br>
+                Time: {{ timestamp }} | Session: {{ session_id }}
+            </p>
+        </div>
+    </div>
+</body>
+</html>
