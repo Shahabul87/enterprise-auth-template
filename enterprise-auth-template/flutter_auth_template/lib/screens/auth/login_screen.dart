@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../providers/session_provider.dart';
+import '../../providers/biometric_provider.dart';
+import '../../providers/magic_link_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/common/custom_text_field.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/loading_overlay.dart';
+import '../../services/oauth_service.dart';
+import '../../services/session_service.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -38,9 +43,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     try {
-      await ref.read(authStateProvider.notifier).login(
-            _emailController.text.trim(),
-            _passwordController.text,
+      await ref.read(sessionNotifierProvider.notifier).login(
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
           );
 
       if (mounted) {
@@ -105,10 +110,124 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     try {
-      await ref.read(authStateProvider.notifier).signInWithGoogle();
+      // Use OAuth service directly
+      final oauthService = ref.read(oauthServiceProvider);
+      final googleResult = await oauthService.signInWithGoogle();
 
+      if (googleResult.isSuccess) {
+        final result = googleResult.data!;
+        final oauthRequest = OAuthLoginRequest(
+          provider: 'google',
+          accessToken: result.accessToken,
+          idToken: result.idToken,
+        );
+
+        await ref.read(sessionNotifierProvider.notifier).oauthLogin(oauthRequest);
+
+        if (mounted) {
+          context.go('/dashboard');
+        }
+      } else {
+        throw Exception(googleResult.message);
+      }
+    } catch (e) {
       if (mounted) {
-        context.go('/dashboard');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString().replaceFirst('Exception: ', '')),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _handleBiometricLogin() async {
+    final canUseBiometric = ref.read(biometricCanUseProvider);
+    if (!canUseBiometric) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Biometric authentication is not available'),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final biometricNotifier = ref.read(biometricSettingsProvider.notifier);
+      final success = await biometricNotifier.authenticateWithBiometrics(
+        reason: 'Authenticate to sign in to your account',
+      );
+
+      if (success && mounted) {
+        // For demo purposes, auto-login with saved credentials
+        // In a real app, you'd retrieve saved credentials after biometric auth
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Biometric authentication successful! Implement credential retrieval.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString().replaceFirst('Exception: ', '')),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _handleMagicLinkRequest() async {
+    if (_emailController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your email address first'),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final magicLinkNotifier = ref.read(magicLinkProvider.notifier);
+      final success = await magicLinkNotifier.requestMagicLink(
+        email: _emailController.text.trim(),
+      );
+
+      if (success && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Magic link sent to ${_emailController.text.trim()}'),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            action: SnackBarAction(
+              label: 'Open Email',
+              onPressed: () => magicLinkNotifier.openEmailApp(),
+            ),
+          ),
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -130,8 +249,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authStateProvider);
+    final sessionState = ref.watch(currentSessionProvider);
     final isAuthLoading = ref.watch(isLoadingProvider);
+    final canUseBiometric = ref.watch(biometricCanUseProvider);
+    final biometricSupported = ref.watch(biometricSupportedProvider);
 
     return Scaffold(
       body: LoadingOverlay(
@@ -262,7 +383,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     _handleGoogleSignIn,
                   ),
                   const SizedBox(height: 12),
-                  
+
                   _buildOAuthButton(
                     context,
                     'Continue with Apple',
@@ -276,6 +397,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       );
                     },
                   ),
+
+                  // Biometric Authentication
+                  if (biometricSupported) ...[
+                    const SizedBox(height: 12),
+                    _buildOAuthButton(
+                      context,
+                      canUseBiometric
+                        ? 'Sign in with Biometrics'
+                        : 'Enable Biometric Sign-in',
+                      Icons.fingerprint,
+                      canUseBiometric
+                        ? _handleBiometricLogin
+                        : () async {
+                            final notifier = ref.read(biometricSettingsProvider.notifier);
+                            final success = await notifier.enableBiometric();
+                            if (success && mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Biometric authentication enabled!'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }
+                          },
+                    ),
+                  ],
                   const SizedBox(height: 32),
 
                   // Sign Up Link
@@ -296,14 +443,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                   // Magic Link Option
                   TextButton(
-                    onPressed: () {
-                      // TODO: Implement magic link
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Magic link coming soon!'),
-                        ),
-                      );
-                    },
+                    onPressed: _handleMagicLinkRequest,
                     child: const Text('Send me a magic link instead'),
                   ),
                 ],
