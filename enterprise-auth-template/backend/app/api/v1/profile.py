@@ -17,7 +17,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db_session
 from app.dependencies.auth import CurrentUser, get_current_user
 from app.models.user import User
-from app.services.auth_service import AuthService
+# Import new refactored services
+from app.services.auth.password_management_service import PasswordManagementService
+from app.services.auth.email_verification_service import EmailVerificationService
+from app.repositories.user_repository import UserRepository
+from app.core.security import verify_password, get_password_hash
 from app.services.user.user_crud_service import UserCRUDService
 from app.services.notification_service import NotificationService
 from app.services.audit_service import AuditService
@@ -32,8 +36,7 @@ class ProfileResponse(BaseModel):
 
     id: str = Field(..., description="User ID")
     email: str = Field(..., description="User email")
-    first_name: str = Field(..., description="First name")
-    last_name: str = Field(..., description="Last name")
+    full_name: str = Field(..., description="Full name")
     phone_number: Optional[str] = Field(None, description="Phone number")
     bio: Optional[str] = Field(None, description="User bio")
     avatar_url: Optional[str] = Field(None, description="Avatar image URL")
@@ -50,8 +53,7 @@ class ProfileResponse(BaseModel):
 class ProfileUpdateRequest(BaseModel):
     """Profile update request model."""
 
-    first_name: Optional[str] = Field(None, min_length=2, max_length=50, description="First name")
-    last_name: Optional[str] = Field(None, min_length=2, max_length=50, description="Last name")
+    full_name: Optional[str] = Field(None, min_length=2, max_length=100, description="Full name")
     phone_number: Optional[str] = Field(None, max_length=20, description="Phone number")
     bio: Optional[str] = Field(None, max_length=500, description="User bio")
     timezone: Optional[str] = Field(None, description="User timezone")
@@ -60,8 +62,7 @@ class ProfileUpdateRequest(BaseModel):
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
-                "first_name": "John",
-                "last_name": "Doe",
+                "full_name": "John Doe",
                 "phone_number": "+1234567890",
                 "bio": "Software developer with 5 years of experience",
                 "timezone": "America/New_York",
@@ -170,17 +171,16 @@ async def get_profile(
             )
 
         return ProfileResponse(
-            id=user.id,
+            id=str(user.id),
             email=user.email,
-            first_name=user.first_name,
-            last_name=user.last_name,
+            full_name=user.full_name,
             phone_number=getattr(user, 'phone_number', None),
             bio=getattr(user, 'bio', None),
             avatar_url=getattr(user, 'avatar_url', None),
             timezone=getattr(user, 'timezone', None),
             language=getattr(user, 'language', 'en'),
             is_active=user.is_active,
-            is_verified=user.is_verified,
+            is_verified=user.email_verified,  # Fix: use email_verified instead of is_verified
             roles=current_user.roles,
             created_at=user.created_at.isoformat() if user.created_at else "",
             updated_at=user.updated_at.isoformat() if user.updated_at else "",
@@ -227,10 +227,8 @@ async def update_profile(
 
         # Build update data dictionary
         update_data = {}
-        if profile_update.first_name is not None:
-            update_data['first_name'] = profile_update.first_name
-        if profile_update.last_name is not None:
-            update_data['last_name'] = profile_update.last_name
+        if profile_update.full_name is not None:
+            update_data['full_name'] = profile_update.full_name
         if profile_update.phone_number is not None:
             update_data['phone_number'] = profile_update.phone_number
         if profile_update.bio is not None:
@@ -271,17 +269,16 @@ async def update_profile(
         )
 
         return ProfileResponse(
-            id=updated_user.id,
+            id=str(updated_user.id),
             email=updated_user.email,
-            first_name=updated_user.first_name,
-            last_name=updated_user.last_name,
+            full_name=updated_user.full_name,
             phone_number=getattr(updated_user, 'phone_number', None),
             bio=getattr(updated_user, 'bio', None),
             avatar_url=getattr(updated_user, 'avatar_url', None),
             timezone=getattr(updated_user, 'timezone', None),
             language=getattr(updated_user, 'language', 'en'),
             is_active=updated_user.is_active,
-            is_verified=updated_user.is_verified,
+            is_verified=updated_user.email_verified,  # Fix: use email_verified instead of is_verified
             roles=current_user.roles,
             created_at=updated_user.created_at.isoformat() if updated_user.created_at else "",
             updated_at=updated_user.updated_at.isoformat() if updated_user.updated_at else "",
@@ -323,7 +320,9 @@ async def change_password(
     logger.info("Password change requested", user_id=current_user.id)
 
     try:
-        auth_service = AuthService(db)
+        # Use new password management service
+        user_repo = UserRepository(db)
+        password_service = PasswordManagementService(db, user_repo)
         audit_service = AuditService(db)
         notification_service = NotificationService(db)
 
@@ -339,17 +338,17 @@ async def change_password(
             )
 
         # Verify current password
-        if not auth_service.verify_password(password_change.current_password, user.password_hash):
+        if not verify_password(password_change.current_password, user.password_hash or user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Current password is incorrect"
             )
 
         # Validate new password strength
-        await auth_service.validate_password_strength(password_change.new_password)
+        await password_service.validate_password_strength(password_change.new_password)
 
         # Update password
-        new_password_hash = auth_service.hash_password(password_change.new_password)
+        new_password_hash = get_password_hash(password_change.new_password)
 
         stmt = (
             update(User)
@@ -429,7 +428,9 @@ async def change_email(
     logger.info("Email change requested", user_id=current_user.id, new_email=email_change.new_email)
 
     try:
-        auth_service = AuthService(db)
+        # Use new password management service
+        user_repo = UserRepository(db)
+        password_service = PasswordManagementService(db, user_repo)
         user_service = UserCRUDService(db)
         audit_service = AuditService(db)
 
@@ -444,7 +445,7 @@ async def change_email(
                 detail="User not found"
             )
 
-        if not auth_service.verify_password(email_change.password, user.password_hash):
+        if not verify_password(email_change.password, user.password_hash or user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Password is incorrect"
@@ -459,7 +460,9 @@ async def change_email(
             )
 
         # Initiate email change process (would send verification emails)
-        await auth_service.initiate_email_change(
+        # Use email verification service for email change
+        email_service = EmailVerificationService(db, user_repo)
+        await email_service.initiate_email_change(
             user_id=current_user.id,
             new_email=email_change.new_email,
             ip_address=request.client.host if request and request.client else None
@@ -604,7 +607,9 @@ async def delete_account(
     logger.warning("Account deletion requested", user_id=current_user.id)
 
     try:
-        auth_service = AuthService(db)
+        # Use new password management service
+        user_repo = UserRepository(db)
+        password_service = PasswordManagementService(db, user_repo)
         user_service = UserCRUDService(db)
         audit_service = AuditService(db)
 
@@ -619,7 +624,7 @@ async def delete_account(
                 detail="User not found"
             )
 
-        if not auth_service.verify_password(password, user.password_hash):
+        if not verify_password(password, user.password_hash or user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Password is incorrect"

@@ -1,8 +1,13 @@
 /** @type {import('next').NextConfig} */
+const path = require('path');
+
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
-  
+  // swcMinify is now default in Next.js 15, removing deprecated option
+
+  // Set the workspace root to prevent multiple lockfile warnings
+  outputFileTracingRoot: path.join(__dirname, '../../'),
+
   // Performance optimizations
   experimental: {
     optimizePackageImports: [

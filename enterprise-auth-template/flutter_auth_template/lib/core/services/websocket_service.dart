@@ -30,7 +30,7 @@ enum WebSocketEventType {
 
 class WebSocketEvent {
   final WebSocketEventType type;
-  final Map&lt;String, dynamic&gt; data;
+  final Map<String, dynamic> data;
   final DateTime timestamp;
   final String? userId;
   final String? organizationId;
@@ -43,33 +43,33 @@ class WebSocketEvent {
     this.organizationId,
   });
 
-  factory WebSocketEvent.fromJson(Map&lt;String, dynamic&gt; json) {
+  factory WebSocketEvent.fromJson(Map<String, dynamic> json) {
     return WebSocketEvent(
       type: WebSocketEventType.values.firstWhere(
-        (e) =&gt; e.name == json[&apos;type&apos;],
-        orElse: () =&gt; WebSocketEventType.notification,
+        (e) => e.name == json['type'],
+        orElse: () => WebSocketEventType.notification,
       ),
-      data: json[&apos;data&apos;] ?? {},
-      timestamp: DateTime.parse(json[&apos;timestamp&apos;]),
-      userId: json[&apos;user_id&apos;],
-      organizationId: json[&apos;organization_id&apos;],
+      data: json['data'] ?? {},
+      timestamp: DateTime.parse(json['timestamp']),
+      userId: json['user_id'],
+      organizationId: json['organization_id'],
     );
   }
 
-  Map&lt;String, dynamic&gt; toJson() {
+  Map<String, dynamic> toJson() {
     return {
-      &apos;type&apos;: type.name,
-      &apos;data&apos;: data,
-      &apos;timestamp&apos;: timestamp.toIso8601String(),
-      if (userId != null) &apos;user_id&apos;: userId,
-      if (organizationId != null) &apos;organization_id&apos;: organizationId,
+      'type': type.name,
+      'data': data,
+      'timestamp': timestamp.toIso8601String(),
+      if (userId != null) 'user_id': userId,
+      if (organizationId != null) 'organization_id': organizationId,
     };
   }
 }
 
 class WebSocketService {
   static final WebSocketService _instance = WebSocketService._internal();
-  factory WebSocketService() =&gt; _instance;
+  factory WebSocketService() => _instance;
   WebSocketService._internal();
 
   WebSocketChannel? _channel;
@@ -78,12 +78,12 @@ class WebSocketService {
   final SecureStorageService _storageService = SecureStorageService();
 
   // State management
-  final StreamController&lt;WebSocketState&gt; _stateController =
-      StreamController&lt;WebSocketState&gt;.broadcast();
-  final StreamController&lt;WebSocketEvent&gt; _eventController =
-      StreamController&lt;WebSocketEvent&gt;.broadcast();
-  final StreamController&lt;String&gt; _errorController =
-      StreamController&lt;String&gt;.broadcast();
+  final StreamController<WebSocketState> _stateController =
+      StreamController<WebSocketState>.broadcast();
+  final StreamController<WebSocketEvent> _eventController =
+      StreamController<WebSocketEvent>.broadcast();
+  final StreamController<String> _errorController =
+      StreamController<String>.broadcast();
 
   WebSocketState _currentState = WebSocketState.disconnected;
   int _reconnectAttempts = 0;
@@ -92,15 +92,15 @@ class WebSocketService {
   static const Duration _reconnectDelay = Duration(seconds: 5);
 
   // Streams
-  Stream&lt;WebSocketState&gt; get stateStream =&gt; _stateController.stream;
-  Stream&lt;WebSocketEvent&gt; get eventStream =&gt; _eventController.stream;
-  Stream&lt;String&gt; get errorStream =&gt; _errorController.stream;
+  Stream<WebSocketState> get stateStream => _stateController.stream;
+  Stream<WebSocketEvent> get eventStream => _eventController.stream;
+  Stream<String> get errorStream => _errorController.stream;
 
-  WebSocketState get currentState =&gt; _currentState;
-  bool get isConnected =&gt; _currentState == WebSocketState.connected;
+  WebSocketState get currentState => _currentState;
+  bool get isConnected => _currentState == WebSocketState.connected;
 
   /// Connect to WebSocket server
-  Future&lt;void&gt; connect() async {
+  Future<void> connect() async {
     if (_currentState == WebSocketState.connecting ||
         _currentState == WebSocketState.connected) {
       return;
@@ -112,21 +112,24 @@ class WebSocketService {
       // Get authentication token
       final token = await _storageService.getToken();
       if (token == null) {
-        throw const AuthenticationException(&apos;No authentication token found&apos;);
+        throw AppException.authentication(
+          message: 'No authentication token found',
+          reason: 'missing_token',
+        );
       }
 
       // Build WebSocket URL
-      final baseUrl = ApiConstants.baseUrl.replaceFirst(&apos;http&apos;, &apos;ws&apos;);
-      final wsUrl = &apos;$baseUrl/ws?token=$token&apos;;
+      final baseUrl = ApiConstants.baseUrl.replaceFirst('http', 'ws');
+      final wsUrl = '$baseUrl/ws?token=$token';
 
       if (kDebugMode) {
-        print(&apos;Connecting to WebSocket: $wsUrl&apos;);
+        print('Connecting to WebSocket: $wsUrl');
       }
 
       // Create WebSocket connection
       _channel = WebSocketChannel.connect(
         Uri.parse(wsUrl),
-        protocols: [&apos;echo-protocol&apos;],
+        protocols: ['echo-protocol'],
       );
 
       // Listen for messages
@@ -137,24 +140,24 @@ class WebSocketService {
       );
 
       // Send connection acknowledgment
-      await _sendMessage({&apos;type&apos;: &apos;connection_ack&apos;});
+      await _sendMessage({'type': 'connection_ack'});
 
       _updateState(WebSocketState.connected);
       _resetReconnectAttempts();
       _startHeartbeat();
 
       if (kDebugMode) {
-        print(&apos;WebSocket connected successfully&apos;);
+        print('WebSocket connected successfully');
       }
     } catch (e) {
       _updateState(WebSocketState.error);
-      _addError(&apos;Connection failed: ${e.toString()}&apos;);
+      _addError('Connection failed: ${e.toString()}');
       _scheduleReconnect();
     }
   }
 
   /// Disconnect from WebSocket server
-  Future&lt;void&gt; disconnect() async {
+  Future<void> disconnect() async {
     _heartbeatTimer?.cancel();
     _reconnectTimer?.cancel();
 
@@ -167,33 +170,33 @@ class WebSocketService {
     _resetReconnectAttempts();
 
     if (kDebugMode) {
-      print(&apos;WebSocket disconnected&apos;);
+      print('WebSocket disconnected');
     }
   }
 
   /// Send message to WebSocket server
-  Future&lt;void&gt; sendMessage(Map&lt;String, dynamic&gt; message) async {
+  Future<void> sendMessage(Map<String, dynamic> message) async {
     if (!isConnected) {
-      throw const NetworkException(&apos;WebSocket not connected&apos;, null);
+      throw const NetworkException('WebSocket not connected', null);
     }
 
     await _sendMessage(message);
   }
 
   /// Subscribe to specific event types
-  Stream&lt;WebSocketEvent&gt; subscribeToEventType(WebSocketEventType type) {
-    return eventStream.where((event) =&gt; event.type == type);
+  Stream<WebSocketEvent> subscribeToEventType(WebSocketEventType type) {
+    return eventStream.where((event) => event.type == type);
   }
 
   /// Subscribe to user-specific events
-  Stream&lt;WebSocketEvent&gt; subscribeToUserEvents(String userId) {
-    return eventStream.where((event) =&gt; event.userId == userId);
+  Stream<WebSocketEvent> subscribeToUserEvents(String userId) {
+    return eventStream.where((event) => event.userId == userId);
   }
 
   /// Subscribe to organization-specific events
-  Stream&lt;WebSocketEvent&gt; subscribeToOrganizationEvents(String organizationId) {
+  Stream<WebSocketEvent> subscribeToOrganizationEvents(String organizationId) {
     return eventStream.where(
-      (event) =&gt; event.organizationId == organizationId,
+      (event) => event.organizationId == organizationId,
     );
   }
 
@@ -203,12 +206,12 @@ class WebSocketService {
     try {
       final data = json.decode(message as String);
       
-      if (data[&apos;type&apos;] == &apos;ping&apos;) {
-        _sendMessage({&apos;type&apos;: &apos;pong&apos;});
+      if (data['type'] == 'ping') {
+        _sendMessage({'type': 'pong'});
         return;
       }
 
-      if (data[&apos;type&apos;] == &apos;pong&apos;) {
+      if (data['type'] == 'pong') {
         // Heartbeat response received
         return;
       }
@@ -217,26 +220,26 @@ class WebSocketService {
       _eventController.add(event);
 
       if (kDebugMode) {
-        print(&apos;WebSocket event received: ${event.type.name}&apos;);
+        print('WebSocket event received: ${event.type.name}');
       }
     } catch (e) {
-      _addError(&apos;Failed to parse WebSocket message: ${e.toString()}&apos;);
+      _addError('Failed to parse WebSocket message: ${e.toString()}');
     }
   }
 
   void _handleError(dynamic error) {
     if (kDebugMode) {
-      print(&apos;WebSocket error: $error&apos;);
+      print('WebSocket error: $error');
     }
 
     _updateState(WebSocketState.error);
-    _addError(&apos;WebSocket error: ${error.toString()}&apos;);
+    _addError('WebSocket error: ${error.toString()}');
     _scheduleReconnect();
   }
 
   void _handleDisconnect() {
     if (kDebugMode) {
-      print(&apos;WebSocket disconnected&apos;);
+      print('WebSocket disconnected');
     }
 
     _heartbeatTimer?.cancel();
@@ -248,27 +251,27 @@ class WebSocketService {
     }
   }
 
-  Future&lt;void&gt; _sendMessage(Map&lt;String, dynamic&gt; message) async {
+  Future<void> _sendMessage(Map<String, dynamic> message) async {
     try {
       final jsonMessage = json.encode(message);
       _channel!.sink.add(jsonMessage);
     } catch (e) {
-      _addError(&apos;Failed to send WebSocket message: ${e.toString()}&apos;);
+      _addError('Failed to send WebSocket message: ${e.toString()}');
     }
   }
 
   void _startHeartbeat() {
     _heartbeatTimer = Timer.periodic(_heartbeatInterval, (timer) {
       if (isConnected) {
-        _sendMessage({&apos;type&apos;: &apos;ping&apos;});
+        _sendMessage({'type': 'ping'});
       }
     });
   }
 
   void _scheduleReconnect() {
-    if (_reconnectAttempts &gt;= _maxReconnectAttempts) {
+    if (_reconnectAttempts >= _maxReconnectAttempts) {
       _updateState(WebSocketState.error);
-      _addError(&apos;Max reconnection attempts reached&apos;);
+      _addError('Max reconnection attempts reached');
       return;
     }
 
@@ -280,7 +283,7 @@ class WebSocketService {
     );
 
     if (kDebugMode) {
-      print(&apos;Scheduling WebSocket reconnect attempt $_reconnectAttempts in ${delay.inSeconds}s&apos;);
+      print('Scheduling WebSocket reconnect attempt $_reconnectAttempts in ${delay.inSeconds}s');
     }
 
     _reconnectTimer = Timer(delay, () {

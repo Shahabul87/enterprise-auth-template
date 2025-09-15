@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part &apos;export_models.freezed.dart&apos;;
-part &apos;export_models.g.dart&apos;;
+part 'export_models.freezed.dart';
+part 'export_models.g.dart';
 
 @freezed
 class ExportRequest with _$ExportRequest {
@@ -12,12 +12,12 @@ class ExportRequest with _$ExportRequest {
     ExportOptions? options,
     DateTime? startDate,
     DateTime? endDate,
-    List&lt;String&gt;? includedFields,
-    List&lt;String&gt;? excludedFields,
-    Map&lt;String, dynamic&gt;? metadata,
+    List<String>? includedFields,
+    List<String>? excludedFields,
+    Map<String, dynamic>? metadata,
   }) = _ExportRequest;
 
-  factory ExportRequest.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ExportRequest.fromJson(Map<String, dynamic> json) =>
       _$ExportRequestFromJson(json);
 }
 
@@ -41,10 +41,10 @@ class ExportJob with _$ExportJob {
     double? progress,
     ExportFilters? filters,
     ExportOptions? options,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _ExportJob;
 
-  factory ExportJob.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ExportJob.fromJson(Map<String, dynamic> json) =>
       _$ExportJobFromJson(json);
 }
 
@@ -53,14 +53,14 @@ class ExportFilters with _$ExportFilters {
   const factory ExportFilters({
     DateTime? dateFrom,
     DateTime? dateTo,
-    List&lt;String&gt;? userIds,
-    List&lt;String&gt;? roles,
-    List&lt;String&gt;? statuses,
+    List<String>? userIds,
+    List<String>? roles,
+    List<String>? statuses,
     String? searchQuery,
-    Map&lt;String, dynamic&gt;? customFilters,
+    Map<String, dynamic>? customFilters,
   }) = _ExportFilters;
 
-  factory ExportFilters.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ExportFilters.fromJson(Map<String, dynamic> json) =>
       _$ExportFiltersFromJson(json);
 }
 
@@ -72,21 +72,21 @@ class ExportOptions with _$ExportOptions {
     @Default(false) bool encryptFile,
     String? password,
     @Default(10000) int batchSize,
-    @Default(&apos;,&apos;) String csvDelimiter,
-    @Default(&apos;&quot;&apos;) String csvQuoteChar,
+    @Default(',') String csvDelimiter,
+    @Default('"') String csvQuoteChar,
     @Default(true) bool includeSoftDeleted,
     @Default(false) bool includeSystemFields,
-    Map&lt;String, dynamic&gt;? formatOptions,
+    Map<String, dynamic>? formatOptions,
   }) = _ExportOptions;
 
-  factory ExportOptions.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ExportOptions.fromJson(Map<String, dynamic> json) =>
       _$ExportOptionsFromJson(json);
 }
 
 @freezed
 class ExportJobList with _$ExportJobList {
   const factory ExportJobList({
-    required List&lt;ExportJob&gt; jobs,
+    required List<ExportJob> jobs,
     required int total,
     required int page,
     required int limit,
@@ -94,7 +94,7 @@ class ExportJobList with _$ExportJobList {
     required bool hasPrevious,
   }) = _ExportJobList;
 
-  factory ExportJobList.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ExportJobList.fromJson(Map<String, dynamic> json) =>
       _$ExportJobListFromJson(json);
 }
 
@@ -105,14 +105,14 @@ class ExportStats with _$ExportStats {
     required int completedJobs,
     required int failedJobs,
     required int runningJobs,
-    required Map&lt;String, int&gt; jobsByType,
-    required Map&lt;String, int&gt; jobsByFormat,
-    required List&lt;ExportJob&gt; recentJobs,
+    required Map<String, int> jobsByType,
+    required Map<String, int> jobsByFormat,
+    required List<ExportJob> recentJobs,
     required double averageExportTime,
     required int totalExportedRecords,
   }) = _ExportStats;
 
-  factory ExportStats.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ExportStats.fromJson(Map<String, dynamic> json) =>
       _$ExportStatsFromJson(json);
 }
 
@@ -123,12 +123,12 @@ class BackupRequest with _$BackupRequest {
     required String name,
     String? description,
     BackupOptions? options,
-    List&lt;String&gt;? includedTables,
-    List&lt;String&gt;? excludedTables,
-    Map&lt;String, dynamic&gt;? metadata,
+    List<String>? includedTables,
+    List<String>? excludedTables,
+    Map<String, dynamic>? metadata,
   }) = _BackupRequest;
 
-  factory BackupRequest.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory BackupRequest.fromJson(Map<String, dynamic> json) =>
       _$BackupRequestFromJson(json);
 }
 
@@ -152,10 +152,10 @@ class BackupJob with _$BackupJob {
     String? error,
     double? progress,
     BackupOptions? options,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _BackupJob;
 
-  factory BackupJob.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory BackupJob.fromJson(Map<String, dynamic> json) =>
       _$BackupJobFromJson(json);
 }
 
@@ -169,10 +169,10 @@ class BackupOptions with _$BackupOptions {
     @Default(true) bool includeSystemData,
     @Default(false) bool includeAuditLogs,
     @Default(false) bool includeSessions,
-    Map&lt;String, dynamic&gt;? customOptions,
+    Map<String, dynamic>? customOptions,
   }) = _BackupOptions;
 
-  factory BackupOptions.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory BackupOptions.fromJson(Map<String, dynamic> json) =>
       _$BackupOptionsFromJson(json);
 }
 
@@ -181,10 +181,10 @@ class RestoreRequest with _$RestoreRequest {
   const factory RestoreRequest({
     required String backupId,
     required RestoreOptions options,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _RestoreRequest;
 
-  factory RestoreRequest.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory RestoreRequest.fromJson(Map<String, dynamic> json) =>
       _$RestoreRequestFromJson(json);
 }
 
@@ -194,12 +194,12 @@ class RestoreOptions with _$RestoreOptions {
     @Default(false) bool overwriteExisting,
     @Default(true) bool validateBeforeRestore,
     @Default(true) bool createBackupBeforeRestore,
-    List&lt;String&gt;? includedTables,
-    List&lt;String&gt;? excludedTables,
-    Map&lt;String, dynamic&gt;? customOptions,
+    List<String>? includedTables,
+    List<String>? excludedTables,
+    Map<String, dynamic>? customOptions,
   }) = _RestoreOptions;
 
-  factory RestoreOptions.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory RestoreOptions.fromJson(Map<String, dynamic> json) =>
       _$RestoreOptionsFromJson(json);
 }
 
@@ -217,10 +217,10 @@ class RestoreJob with _$RestoreJob {
     String? error,
     double? progress,
     RestoreOptions? options,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _RestoreJob;
 
-  factory RestoreJob.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory RestoreJob.fromJson(Map<String, dynamic> json) =>
       _$RestoreJobFromJson(json);
 }
 
@@ -283,54 +283,54 @@ extension ExportTypeExtension on ExportType {
   String get displayName {
     switch (this) {
       case ExportType.users:
-        return &apos;Users&apos;;
+        return 'Users';
       case ExportType.auditLogs:
-        return &apos;Audit Logs&apos;;
+        return 'Audit Logs';
       case ExportType.sessions:
-        return &apos;Sessions&apos;;
+        return 'Sessions';
       case ExportType.devices:
-        return &apos;Devices&apos;;
+        return 'Devices';
       case ExportType.roles:
-        return &apos;Roles&apos;;
+        return 'Roles';
       case ExportType.permissions:
-        return &apos;Permissions&apos;;
+        return 'Permissions';
       case ExportType.organizations:
-        return &apos;Organizations&apos;;
+        return 'Organizations';
       case ExportType.apiKeys:
-        return &apos;API Keys&apos;;
+        return 'API Keys';
       case ExportType.webhooks:
-        return &apos;Webhooks&apos;;
+        return 'Webhooks';
       case ExportType.analytics:
-        return &apos;Analytics&apos;;
+        return 'Analytics';
       case ExportType.fullSystem:
-        return &apos;Full System&apos;;
+        return 'Full System';
     }
   }
 
   String get description {
     switch (this) {
       case ExportType.users:
-        return &apos;Export all user data and profiles&apos;;
+        return 'Export all user data and profiles';
       case ExportType.auditLogs:
-        return &apos;Export audit logs and system events&apos;;
+        return 'Export audit logs and system events';
       case ExportType.sessions:
-        return &apos;Export user sessions and login data&apos;;
+        return 'Export user sessions and login data';
       case ExportType.devices:
-        return &apos;Export registered devices and security info&apos;;
+        return 'Export registered devices and security info';
       case ExportType.roles:
-        return &apos;Export roles and hierarchies&apos;;
+        return 'Export roles and hierarchies';
       case ExportType.permissions:
-        return &apos;Export permissions and access controls&apos;;
+        return 'Export permissions and access controls';
       case ExportType.organizations:
-        return &apos;Export organization data&apos;;
+        return 'Export organization data';
       case ExportType.apiKeys:
-        return &apos;Export API keys and usage data&apos;;
+        return 'Export API keys and usage data';
       case ExportType.webhooks:
-        return &apos;Export webhooks and delivery logs&apos;;
+        return 'Export webhooks and delivery logs';
       case ExportType.analytics:
-        return &apos;Export analytics and metrics&apos;;
+        return 'Export analytics and metrics';
       case ExportType.fullSystem:
-        return &apos;Export complete system data&apos;;
+        return 'Export complete system data';
     }
   }
 }
@@ -339,51 +339,51 @@ extension ExportFormatExtension on ExportFormat {
   String get displayName {
     switch (this) {
       case ExportFormat.csv:
-        return &apos;CSV&apos;;
+        return 'CSV';
       case ExportFormat.json:
-        return &apos;JSON&apos;;
+        return 'JSON';
       case ExportFormat.xlsx:
-        return &apos;Excel (XLSX)&apos;;
+        return 'Excel (XLSX)';
       case ExportFormat.xml:
-        return &apos;XML&apos;;
+        return 'XML';
       case ExportFormat.pdf:
-        return &apos;PDF&apos;;
+        return 'PDF';
       case ExportFormat.sql:
-        return &apos;SQL&apos;;
+        return 'SQL';
     }
   }
 
   String get fileExtension {
     switch (this) {
       case ExportFormat.csv:
-        return &apos;.csv&apos;;
+        return '.csv';
       case ExportFormat.json:
-        return &apos;.json&apos;;
+        return '.json';
       case ExportFormat.xlsx:
-        return &apos;.xlsx&apos;;
+        return '.xlsx';
       case ExportFormat.xml:
-        return &apos;.xml&apos;;
+        return '.xml';
       case ExportFormat.pdf:
-        return &apos;.pdf&apos;;
+        return '.pdf';
       case ExportFormat.sql:
-        return &apos;.sql&apos;;
+        return '.sql';
     }
   }
 
   String get mimeType {
     switch (this) {
       case ExportFormat.csv:
-        return &apos;text/csv&apos;;
+        return 'text/csv';
       case ExportFormat.json:
-        return &apos;application/json&apos;;
+        return 'application/json';
       case ExportFormat.xlsx:
-        return &apos;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&apos;;
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
       case ExportFormat.xml:
-        return &apos;application/xml&apos;;
+        return 'application/xml';
       case ExportFormat.pdf:
-        return &apos;application/pdf&apos;;
+        return 'application/pdf';
       case ExportFormat.sql:
-        return &apos;application/sql&apos;;
+        return 'application/sql';
     }
   }
 }
@@ -392,30 +392,30 @@ extension ExportStatusExtension on ExportStatus {
   String get displayName {
     switch (this) {
       case ExportStatus.pending:
-        return &apos;Pending&apos;;
+        return 'Pending';
       case ExportStatus.running:
-        return &apos;Running&apos;;
+        return 'Running';
       case ExportStatus.completed:
-        return &apos;Completed&apos;;
+        return 'Completed';
       case ExportStatus.failed:
-        return &apos;Failed&apos;;
+        return 'Failed';
       case ExportStatus.cancelled:
-        return &apos;Cancelled&apos;;
+        return 'Cancelled';
     }
   }
 
   String get colorName {
     switch (this) {
       case ExportStatus.pending:
-        return &apos;orange&apos;;
+        return 'orange';
       case ExportStatus.running:
-        return &apos;blue&apos;;
+        return 'blue';
       case ExportStatus.completed:
-        return &apos;green&apos;;
+        return 'green';
       case ExportStatus.failed:
-        return &apos;red&apos;;
+        return 'red';
       case ExportStatus.cancelled:
-        return &apos;gray&apos;;
+        return 'gray';
     }
   }
 }
@@ -424,26 +424,26 @@ extension BackupTypeExtension on BackupType {
   String get displayName {
     switch (this) {
       case BackupType.full:
-        return &apos;Full Backup&apos;;
+        return 'Full Backup';
       case BackupType.incremental:
-        return &apos;Incremental Backup&apos;;
+        return 'Incremental Backup';
       case BackupType.differential:
-        return &apos;Differential Backup&apos;;
+        return 'Differential Backup';
       case BackupType.custom:
-        return &apos;Custom Backup&apos;;
+        return 'Custom Backup';
     }
   }
 
   String get description {
     switch (this) {
       case BackupType.full:
-        return &apos;Complete backup of all data&apos;;
+        return 'Complete backup of all data';
       case BackupType.incremental:
-        return &apos;Backup of changes since last backup&apos;;
+        return 'Backup of changes since last backup';
       case BackupType.differential:
-        return &apos;Backup of changes since last full backup&apos;;
+        return 'Backup of changes since last full backup';
       case BackupType.custom:
-        return &apos;Custom selective backup&apos;;
+        return 'Custom selective backup';
     }
   }
 }

@@ -8,7 +8,7 @@ and user role management.
 from typing import List, Optional
 
 import structlog
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
@@ -25,6 +25,11 @@ from app.utils.response_helpers import (
     format_user_response,
     message_response,
 )
+from app.repositories.user_repository import UserRepository
+from app.repositories.role_repository import RoleRepository
+from app.models.user import User
+from sqlalchemy import select, func
+from sqlalchemy.orm import selectinload
 
 logger = structlog.get_logger(__name__)
 
@@ -53,25 +58,29 @@ async def get_current_user_profile(
     """
     logger.debug("Current user profile requested", user_id=current_user.id)
 
-    # Create a mock user object from CurrentUser for formatting
-    from types import SimpleNamespace
-    user_obj = SimpleNamespace(
-        id=current_user.id,
-        email=current_user.email,
-        first_name=current_user.first_name,
-        last_name=current_user.last_name,
-        is_active=current_user.is_active,
-        is_verified=current_user.is_verified,
-        roles=[SimpleNamespace(name=role) for role in current_user.roles],
-        created_at=None,  # CurrentUser doesn't have timestamp fields
-        updated_at=None,  # CurrentUser doesn't have timestamp fields
-        last_login=None,  # CurrentUser doesn't have timestamp fields
-        profile_picture=None,
-        is_2fa_enabled=False,
-    )
+    # Use repository pattern to get full user data
+    user_repo = UserRepository(db)
+    user = await user_repo.get_by_id(current_user.id)
+
+    if not user:
+        # Fallback to CurrentUser data if not found
+        from types import SimpleNamespace
+        user = SimpleNamespace(
+            id=current_user.id,
+            email=current_user.email,
+            full_name=current_user.full_name,
+            is_active=current_user.is_active,
+            is_verified=current_user.is_verified,
+            roles=[SimpleNamespace(name=role) for role in current_user.roles],
+            created_at=None,
+            updated_at=None,
+            last_login=None,
+            profile_picture=None,
+            is_2fa_enabled=False,
+        )
 
     request_id = generate_request_id()
-    return user_profile_response(user_obj, request_id)
+    return user_profile_response(user, request_id)
 
 
 @router.put("/me", response_model=UserResponse)
@@ -98,23 +107,34 @@ async def update_current_user(
     """
     logger.info("User profile update", user_id=current_user.id)
 
-    # TODO: Implement user profile update logic
-    # 1. Validate update data
-    # 2. Update user record in database
-    # 3. Return updated user data
+    # Use repository pattern for user updates
+    user_repo = UserRepository(db)
 
-    # Placeholder response with updated data
+    # Get the user
+    user = await user_repo.get_by_id(current_user.id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Update user fields
+    update_data = user_update.dict(exclude_unset=True)
+    for field, value in update_data.items():
+        if hasattr(user, field):
+            setattr(user, field, value)
+
+    # Save changes
+    updated_user = await user_repo.update(user)
+    await db.commit()
+
     return UserResponse(
-        id=current_user.id,
-        email=current_user.email,
-        first_name=user_update.first_name or current_user.first_name,
-        last_name=user_update.last_name or current_user.last_name,
-        is_active=current_user.is_active,
-        is_verified=current_user.is_verified,
-        roles=current_user.roles,
-        created_at=None,  # CurrentUser doesn't have timestamp fields
-        updated_at=None,  # CurrentUser doesn't have timestamp fields
-        last_login=None,  # CurrentUser doesn't have timestamp fields
+        id=updated_user.id,
+        email=updated_user.email,
+        full_name=updated_user.full_name,
+        is_active=updated_user.is_active,
+        is_verified=updated_user.is_verified,
+        roles=[role.name for role in updated_user.roles] if updated_user.roles else [],
+        created_at=updated_user.created_at.isoformat() if updated_user.created_at else None,
+        updated_at=updated_user.updated_at.isoformat() if updated_user.updated_at else None,
+        last_login=updated_user.last_login.isoformat() if updated_user.last_login else None,
     )
 
 
@@ -157,37 +177,64 @@ async def list_users(
         is_active=is_active,
     )
 
-    # TODO: Implement user listing logic
-    # 1. Check admin permissions
-    # 2. Build query with filters
-    # 3. Apply pagination
-    # 4. Return paginated results
+    # Use repository pattern for user listing
+    user_repo = UserRepository(db)
 
-    # Placeholder response
+    # Build query with filters
+    query = select(User).options(selectinload(User.roles))
+
+    if search:
+        search_filter = f"%{search}%"
+        query = query.where(
+            (User.email.ilike(search_filter)) |
+            (User.full_name.ilike(search_filter)) |
+            (User.first_name.ilike(search_filter)) |
+            (User.last_name.ilike(search_filter))
+        )
+
+    if is_active is not None:
+        query = query.where(User.is_active == is_active)
+
+    # Get total count
+    count_query = select(func.count()).select_from(User)
+    if search or is_active is not None:
+        count_query = query.with_only_columns(func.count())
+    total_result = await db.execute(count_query)
+    total = total_result.scalar()
+
+    # Apply pagination
+    query = query.offset(skip).limit(limit)
+
+    # Execute query
+    result = await db.execute(query)
+    users_db = result.scalars().all()
+
+    # Convert to response format
     users = [
         UserResponse(
-            id=f"user-{i}",
-            email=f"user{i}@example.com",
-            first_name="User",
-            last_name=f"{i}",
-            is_active=True,
-            is_verified=True,
-            roles=["user"],
-            created_at="2024-01-01T00:00:00Z",
-            updated_at="2024-01-01T00:00:00Z",
-            last_login="2024-01-01T12:00:00Z",
+            id=str(user.id),
+            email=user.email,
+            full_name=user.full_name,
+            is_active=user.is_active,
+            is_verified=user.is_verified,
+            roles=[role.name for role in user.roles] if user.roles else [],
+            created_at=user.created_at.isoformat() if user.created_at else None,
+            updated_at=user.updated_at.isoformat() if user.updated_at else None,
+            last_login=user.last_login.isoformat() if user.last_login else None,
         )
-        for i in range(skip + 1, skip + min(limit, 10) + 1)
+        for user in users_db
     ]
 
     return UserListResponse(
-        users=users, total=100, skip=skip, limit=limit
-    )  # Placeholder total
+        users=users, total=total, skip=skip, limit=limit
+    )
 
 
 @router.get("/{user_id}", response_model=UserResponse)
 async def get_user(
-    user_id: str, db: AsyncSession = Depends(get_db_session)
+    user_id: str,
+    current_user: CurrentUser = Depends(require_permissions(["users:read"])),
+    db: AsyncSession = Depends(get_db_session)
 ) -> UserResponse:
     """
     Get user by ID (Admin only).
@@ -196,6 +243,7 @@ async def get_user(
 
     Args:
         user_id: User ID to retrieve
+        current_user: Current authenticated user with permissions
         db: Database session
 
     Returns:
@@ -206,23 +254,23 @@ async def get_user(
     """
     logger.info("User details requested", user_id=user_id)
 
-    # TODO: Implement get user logic
-    # 1. Check admin permissions
-    # 2. Find user by ID
-    # 3. Return user data
+    # Use repository pattern to get user
+    user_repo = UserRepository(db)
+    user = await user_repo.get_by_id(user_id)
 
-    # Placeholder response
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
     return UserResponse(
-        id=user_id,
-        email=f"user-{user_id}@example.com",
-        first_name="User",
-        last_name="Name",
-        is_active=True,
-        is_verified=True,
-        roles=["user"],
-        created_at="2024-01-01T00:00:00Z",
-        updated_at="2024-01-01T00:00:00Z",
-        last_login="2024-01-01T12:00:00Z",
+        id=str(user.id),
+        email=user.email,
+        full_name=user.full_name,
+        is_active=user.is_active,
+        is_verified=user.is_verified,
+        roles=[role.name for role in user.roles] if user.roles else [],
+        created_at=user.created_at.isoformat() if user.created_at else None,
+        updated_at=user.updated_at.isoformat() if user.updated_at else None,
+        last_login=user.last_login.isoformat() if user.last_login else None,
     )
 
 
@@ -230,6 +278,7 @@ async def get_user(
 async def update_user(
     user_id: str,
     user_update: UserUpdate,
+    current_user: CurrentUser = Depends(require_permissions(["users:write"])),
     db: AsyncSession = Depends(get_db_session),
 ) -> UserResponse:
     """
@@ -240,6 +289,7 @@ async def update_user(
     Args:
         user_id: User ID to update
         user_update: User update data
+        current_user: Current authenticated user with permissions
         db: Database session
 
     Returns:
@@ -250,30 +300,43 @@ async def update_user(
     """
     logger.info("User update requested", user_id=user_id)
 
-    # TODO: Implement user update logic
-    # 1. Check admin permissions
-    # 2. Find user by ID
-    # 3. Validate update data
-    # 4. Update user record
-    # 5. Return updated user data
+    # Use repository pattern for user updates
+    user_repo = UserRepository(db)
 
-    # Placeholder response
+    # Get the user
+    user = await user_repo.get_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Update user fields
+    update_data = user_update.dict(exclude_unset=True)
+    for field, value in update_data.items():
+        if hasattr(user, field):
+            setattr(user, field, value)
+
+    # Save changes
+    updated_user = await user_repo.update(user)
+    await db.commit()
+
     return UserResponse(
-        id=user_id,
-        email=f"user-{user_id}@example.com",
-        first_name=user_update.first_name or "User",
-        last_name=user_update.last_name or "Name",
-        is_active=True,
-        is_verified=True,
-        roles=["user"],
-        created_at="2024-01-01T00:00:00Z",
-        updated_at="2024-01-01T00:00:00Z",
-        last_login="2024-01-01T12:00:00Z",
+        id=str(updated_user.id),
+        email=updated_user.email,
+        full_name=updated_user.full_name,
+        is_active=updated_user.is_active,
+        is_verified=updated_user.is_verified,
+        roles=[role.name for role in updated_user.roles] if updated_user.roles else [],
+        created_at=updated_user.created_at.isoformat() if updated_user.created_at else None,
+        updated_at=updated_user.updated_at.isoformat() if updated_user.updated_at else None,
+        last_login=updated_user.last_login.isoformat() if updated_user.last_login else None,
     )
 
 
 @router.delete("/{user_id}")
-async def delete_user(user_id: str, db: AsyncSession = Depends(get_db_session)) -> dict:
+async def delete_user(
+    user_id: str,
+    current_user: CurrentUser = Depends(require_permissions(["users:delete"])),
+    db: AsyncSession = Depends(get_db_session)
+) -> dict:
     """
     Delete user by ID (Admin only).
 
@@ -281,6 +344,7 @@ async def delete_user(user_id: str, db: AsyncSession = Depends(get_db_session)) 
 
     Args:
         user_id: User ID to delete
+        current_user: Current authenticated user with permissions
         db: Database session
 
     Returns:
@@ -291,19 +355,30 @@ async def delete_user(user_id: str, db: AsyncSession = Depends(get_db_session)) 
     """
     logger.info("User deletion requested", user_id=user_id)
 
-    # TODO: Implement user deletion logic
-    # 1. Check admin permissions
-    # 2. Find user by ID
-    # 3. Soft delete user (set is_active=False)
-    # 4. Invalidate all user sessions
-    # 5. Return success message
+    # Use repository pattern for user deletion
+    user_repo = UserRepository(db)
+
+    # Get the user
+    user = await user_repo.get_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Soft delete user (set is_active=False)
+    user.is_active = False
+    await user_repo.update(user)
+
+    # TODO: Invalidate all user sessions using SessionRepository
+
+    await db.commit()
 
     return {"message": f"User {user_id} has been deleted"}
 
 
 @router.post("/{user_id}/activate")
 async def activate_user(
-    user_id: str, db: AsyncSession = Depends(get_db_session)
+    user_id: str,
+    current_user: CurrentUser = Depends(require_permissions(["users:write"])),
+    db: AsyncSession = Depends(get_db_session)
 ) -> dict:
     """
     Activate user account (Admin only).
@@ -322,18 +397,28 @@ async def activate_user(
     """
     logger.info("User activation requested", user_id=user_id)
 
-    # TODO: Implement user activation logic
-    # 1. Check admin permissions
-    # 2. Find user by ID
-    # 3. Set is_active=True
-    # 4. Return success message
+    # Use repository pattern for user activation
+    user_repo = UserRepository(db)
+
+    # Get the user
+    user = await user_repo.get_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Activate user
+    user.is_active = True
+    user.is_verified = True  # Also verify on activation
+    await user_repo.update(user)
+    await db.commit()
 
     return {"message": f"User {user_id} has been activated"}
 
 
 @router.post("/{user_id}/deactivate")
 async def deactivate_user(
-    user_id: str, db: AsyncSession = Depends(get_db_session)
+    user_id: str,
+    current_user: CurrentUser = Depends(require_permissions(["users:write"])),
+    db: AsyncSession = Depends(get_db_session)
 ) -> dict:
     """
     Deactivate user account (Admin only).
@@ -342,6 +427,7 @@ async def deactivate_user(
 
     Args:
         user_id: User ID to deactivate
+        current_user: Current authenticated user with permissions
         db: Database session
 
     Returns:
@@ -352,19 +438,31 @@ async def deactivate_user(
     """
     logger.info("User deactivation requested", user_id=user_id)
 
-    # TODO: Implement user deactivation logic
-    # 1. Check admin permissions
-    # 2. Find user by ID
-    # 3. Set is_active=False
-    # 4. Invalidate all user sessions
-    # 5. Return success message
+    # Use repository pattern for user deactivation
+    user_repo = UserRepository(db)
+
+    # Get the user
+    user = await user_repo.get_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Deactivate user
+    user.is_active = False
+    await user_repo.update(user)
+
+    # TODO: Invalidate all user sessions using SessionRepository
+
+    await db.commit()
 
     return {"message": f"User {user_id} has been deactivated"}
 
 
 @router.put("/{user_id}/roles")
 async def update_user_roles(
-    user_id: str, roles: List[str], db: AsyncSession = Depends(get_db_session)
+    user_id: str,
+    roles: List[str],
+    current_user: CurrentUser = Depends(require_permissions(["roles:manage"])),
+    db: AsyncSession = Depends(get_db_session)
 ) -> UserResponse:
     """
     Update user roles (Admin only).
@@ -374,6 +472,7 @@ async def update_user_roles(
     Args:
         user_id: User ID to update
         roles: List of role names to assign
+        current_user: Current authenticated user with permissions
         db: Database session
 
     Returns:
@@ -384,23 +483,36 @@ async def update_user_roles(
     """
     logger.info("User roles update requested", user_id=user_id, roles=roles)
 
-    # TODO: Implement role update logic
-    # 1. Check admin permissions
-    # 2. Validate role names
-    # 3. Find user by ID
-    # 4. Update user roles
-    # 5. Return updated user data
+    # Use repository pattern for role updates
+    user_repo = UserRepository(db)
+    role_repo = RoleRepository(db)
 
-    # Placeholder response
+    # Get the user
+    user = await user_repo.get_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Validate and get role objects
+    role_objects = []
+    for role_name in roles:
+        role = await role_repo.get_by_name(role_name)
+        if not role:
+            raise HTTPException(status_code=400, detail=f"Role '{role_name}' not found")
+        role_objects.append(role)
+
+    # Update user roles
+    user.roles = role_objects
+    updated_user = await user_repo.update(user)
+    await db.commit()
+
     return UserResponse(
-        id=user_id,
-        email=f"user-{user_id}@example.com",
-        first_name="User",
-        last_name="Name",
-        is_active=True,
-        is_verified=True,
-        roles=roles,
-        created_at="2024-01-01T00:00:00Z",
-        updated_at="2024-01-01T00:00:00Z",
-        last_login="2024-01-01T12:00:00Z",
+        id=str(updated_user.id),
+        email=updated_user.email,
+        full_name=updated_user.full_name,
+        is_active=updated_user.is_active,
+        is_verified=updated_user.is_verified,
+        roles=[role.name for role in updated_user.roles] if updated_user.roles else [],
+        created_at=updated_user.created_at.isoformat() if updated_user.created_at else None,
+        updated_at=updated_user.updated_at.isoformat() if updated_user.updated_at else None,
+        last_login=updated_user.last_login.isoformat() if updated_user.last_login else None,
     )

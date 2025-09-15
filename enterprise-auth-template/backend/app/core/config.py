@@ -43,6 +43,14 @@ class Settings(BaseSettings):
     MAINTENANCE_MESSAGE: str = "System is under maintenance"
 
     # ===========================================
+    # EMAIL VERIFICATION SETTINGS
+    # ===========================================
+    EMAIL_VERIFICATION_REQUIRED: bool = True
+    SKIP_EMAIL_VERIFICATION_IN_DEV: bool = True
+    EMAIL_VERIFICATION_TOKEN_EXPIRE_HOURS: int = 24
+    EMAIL_VERIFICATION_RESEND_COOLDOWN_MINUTES: int = 5
+
+    # ===========================================
     # API SETTINGS
     # ===========================================
     API_V1_PREFIX: str = "/api/v1"
@@ -233,11 +241,14 @@ class Settings(BaseSettings):
     @classmethod
     def assemble_db_connection(cls, v: Optional[str], info) -> Any:
         """Construct database URL from individual components if not provided."""
-        # Allow sqlite for testing
+        # NEVER allow SQLite - this application requires PostgreSQL
         if isinstance(v, str):
-            environment = os.getenv("ENVIRONMENT", "development")
-            if environment.lower() in {"test", "testing"} and v.startswith("sqlite:"):
-                return v  # Allow sqlite in test environment
+            if v.startswith("sqlite:") or v.startswith("sqlite+"):
+                raise ValueError(
+                    "SQLite is not supported. This application requires PostgreSQL for "
+                    "proper foreign keys, JSONB fields, UUID support, and async operations. "
+                    "Please configure a PostgreSQL database."
+                )
             return v
 
         # Get values from the validation context
@@ -436,6 +447,43 @@ class Settings(BaseSettings):
 
     # Flower (Celery Monitoring)
     FLOWER_PORT: int = 5555
+
+    # ===========================================
+    # FEATURE FLAGS
+    # ===========================================
+    FEATURE_EMAIL_VERIFICATION_ENFORCEMENT: bool = True
+    FEATURE_STRICT_EMAIL_VERIFICATION: bool = False
+    FEATURE_BYPASS_VERIFICATION_FOR_ADMINS: bool = False
+    FEATURE_EMAIL_VERIFICATION_GRACE_PERIOD_HOURS: int = 0
+
+    # ===========================================
+    # UTILITY METHODS
+    # ===========================================
+    def should_enforce_email_verification(self) -> bool:
+        """
+        Determine if email verification should be enforced based on environment and settings.
+
+        Returns:
+            bool: True if email verification should be enforced
+        """
+        # Always enforce if explicitly required
+        if not self.EMAIL_VERIFICATION_REQUIRED:
+            return False
+
+        # Skip in development if configured
+        if self.ENVIRONMENT == "development" and self.SKIP_EMAIL_VERIFICATION_IN_DEV:
+            return False
+
+        # Check feature flag
+        if not self.FEATURE_EMAIL_VERIFICATION_ENFORCEMENT:
+            return False
+
+        return True
+
+    def get_current_timestamp(self) -> str:
+        """Get current timestamp in ISO format."""
+        from datetime import datetime
+        return datetime.utcnow().isoformat() + "Z"
 
     class Config:
         env_file = ".env"

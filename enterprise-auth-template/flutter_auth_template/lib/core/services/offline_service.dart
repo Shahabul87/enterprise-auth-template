@@ -130,7 +130,9 @@ class OfflineService {
   }
 
   void _startConnectivityMonitoring() {
-    _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+    _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      // Take the first result, or default to none if empty
+      final result = results.isNotEmpty ? results.first : ConnectivityResult.none;
       _updateConnectivityStatus(result);
     });
   }
@@ -144,7 +146,9 @@ class OfflineService {
   }
 
   Future<void> _checkConnectivity() async {
-    final result = await _connectivity.checkConnectivity();
+    final results = await _connectivity.checkConnectivity();
+    // Take the first result, or default to none if empty
+    final result = results.isNotEmpty ? results.first : ConnectivityResult.none;
     _updateConnectivityStatus(result);
   }
 

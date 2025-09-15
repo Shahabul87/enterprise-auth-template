@@ -432,8 +432,6 @@ async def verify_authentication(
                 "user": {
                     "id": str(user.id),
                     "email": user.email,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
                     "full_name": user.full_name,
                     "is_verified": user.is_verified,
                     "roles": user_roles,

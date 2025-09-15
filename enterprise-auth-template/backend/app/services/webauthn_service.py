@@ -199,7 +199,7 @@ class WebAuthnService:
             user_dict = {
                 "id": str(user.id).encode('utf-8'),
                 "name": user.email,
-                "displayName": f"{user.first_name} {user.last_name}".strip() or user.email,
+                "displayName": user.full_name or user.email,
             }
 
             # Authenticator selection criteria for enterprise security

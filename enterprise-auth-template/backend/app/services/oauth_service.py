@@ -21,7 +21,12 @@ from app.core.config import get_settings
 from app.core.security import create_access_token, create_refresh_token
 from app.models.user import User
 from app.schemas.auth import OAuthProvider, OAuthUserInfo
-from app.services.auth_service import AuthService
+# Import new refactored services
+from app.services.auth.authentication_service import AuthenticationService
+from app.services.auth.registration_service import RegistrationService
+from app.repositories.user_repository import UserRepository
+from app.repositories.session_repository import SessionRepository
+from app.repositories.role_repository import RoleRepository
 
 settings = get_settings()
 logger = structlog.get_logger(__name__)
@@ -122,7 +127,13 @@ class OAuthService:
             db: Database session
         """
         self.db = db
-        self.auth_service = AuthService(db)
+        # Initialize repositories
+        self.user_repo = UserRepository(db)
+        self.session_repo = SessionRepository(db)
+        self.role_repo = RoleRepository(db)
+        # Initialize services
+        self.auth_service = AuthenticationService(db, self.user_repo, self.session_repo)
+        self.registration_service = RegistrationService(db, self.user_repo, self.role_repo)
         self.redirect_uri = f"{settings.FRONTEND_URL}/auth/callback"
 
         # Initialize OAuth client
@@ -478,16 +489,10 @@ class OAuthService:
                 await self.db.commit()
                 return user
 
-        # Parse name parts
-        name_parts = user_info.name.split(" ", 1) if user_info.name else ["", ""]
-        first_name = (
-            name_parts[0]
-            if name_parts
-            else (
-                user_info.email.split("@")[0] if user_info.email else f"{provider}_user"
-            )
+        # Get full name or generate one
+        full_name = user_info.name or (
+            user_info.email.split("@")[0] if user_info.email else f"{provider}_user"
         )
-        last_name = name_parts[1] if len(name_parts) > 1 else ""
 
         # Create new user
         user = User(
@@ -497,9 +502,7 @@ class OAuthService:
                 if user_info.email
                 else f"{provider}_{user_info.id}"
             ),
-            first_name=first_name,
-            last_name=last_name,
-            full_name=user_info.name,
+            full_name=full_name,
             avatar_url=user_info.picture,
             email_verified=user_info.email_verified,
             email_verified_at=(datetime.utcnow() if user_info.email_verified else None),

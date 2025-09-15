@@ -104,6 +104,22 @@ export const validationRules = {
     validate: (value: string) => value === password || 'Passwords do not match',
   }),
 
+  name: {
+    required: 'Name is required',
+    minLength: {
+      value: 2,
+      message: 'Name must be at least 2 characters',
+    },
+    maxLength: {
+      value: 100,
+      message: 'Name must not exceed 100 characters',
+    },
+    pattern: {
+      value: /^[a-zA-Z\s]+$/,
+      message: 'Name can only contain letters and spaces',
+    },
+  },
+
   firstName: {
     required: 'First name is required',
     minLength: {
@@ -161,6 +177,13 @@ export function isFormValid<T extends FieldValues>(
   // Check if all required fields have values
   const allFieldsHaveValues = requiredFields.every((field) => {
     const value = watchedValues[field];
+
+    // For boolean fields (checkboxes), check if true
+    if (typeof value === 'boolean') {
+      return value === true;
+    }
+
+    // For other fields, check if not empty
     return value !== undefined && value !== null && value !== '';
   });
 

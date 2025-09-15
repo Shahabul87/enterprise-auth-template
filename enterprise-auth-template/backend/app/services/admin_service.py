@@ -723,7 +723,7 @@ class AdminService:
         return UserManagementResponse(
             id=str(user.id),  # Convert UUID to string
             email=user.email,
-            name=user.full_name or f"{user.first_name} {user.last_name}",  # Use full_name or combine names
+            name=user.full_name,  # Use full_name directly
             is_active=user.is_active,
             is_verified=user.email_verified,
             is_superuser=user.is_superuser,

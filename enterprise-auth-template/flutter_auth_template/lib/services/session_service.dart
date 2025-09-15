@@ -6,6 +6,7 @@ import '../core/constants/api_constants.dart';
 import '../core/network/api_response.dart';
 import '../core/storage/secure_storage_service.dart';
 import '../domain/entities/user.dart';
+import '../data/models/auth_request.dart';
 import 'auth_service.dart';
 
 // Session Service Provider
@@ -63,7 +64,7 @@ class SessionService {
       // Try to get current user
       final userResponse = await _authService.getCurrentUser();
       if (userResponse.isSuccess) {
-        final user = userResponse.data!;
+        final user = userResponse.dataOrNull!;
         _updateState(SessionState.authenticated(user: user));
         _startTokenRefreshTimer();
         _startSessionCheckTimer();
@@ -74,7 +75,7 @@ class SessionService {
           // Try again after refresh
           final refreshedUserResponse = await _authService.getCurrentUser();
           if (refreshedUserResponse.isSuccess) {
-            final user = refreshedUserResponse.data!;
+            final user = refreshedUserResponse.dataOrNull!;
             _updateState(SessionState.authenticated(user: user));
             _startTokenRefreshTimer();
             _startSessionCheckTimer();
@@ -103,12 +104,12 @@ class SessionService {
       final response = await _authService.login(loginRequest);
 
       if (response.isSuccess) {
-        final user = response.data!;
+        final user = response.dataOrNull!;
         _updateState(SessionState.authenticated(user: user));
         _startTokenRefreshTimer();
         _startSessionCheckTimer();
       } else {
-        _updateState(SessionState.error(message: response.message));
+        _updateState(SessionState.error(message: response.errorMessage ?? ""));
       }
 
       return response;
@@ -136,12 +137,12 @@ class SessionService {
       final response = await _authService.register(registerRequest);
 
       if (response.isSuccess) {
-        final user = response.data!;
+        final user = response.dataOrNull!;
         _updateState(SessionState.authenticated(user: user));
         _startTokenRefreshTimer();
         _startSessionCheckTimer();
       } else {
-        _updateState(SessionState.error(message: response.message));
+        _updateState(SessionState.error(message: response.errorMessage ?? ""));
       }
 
       return response;
@@ -160,12 +161,12 @@ class SessionService {
       final response = await _authService.oauthLogin(request);
 
       if (response.isSuccess) {
-        final user = response.data!;
+        final user = response.dataOrNull!;
         _updateState(SessionState.authenticated(user: user));
         _startTokenRefreshTimer();
         _startSessionCheckTimer();
       } else {
-        _updateState(SessionState.error(message: response.message));
+        _updateState(SessionState.error(message: response.errorMessage ?? ""));
       }
 
       return response;
@@ -185,12 +186,12 @@ class SessionService {
       final response = await _authService.verify2FA(request);
 
       if (response.isSuccess) {
-        final user = response.data!;
+        final user = response.dataOrNull!;
         _updateState(SessionState.authenticated(user: user));
         _startTokenRefreshTimer();
         _startSessionCheckTimer();
       } else {
-        _updateState(SessionState.error(message: response.message));
+        _updateState(SessionState.error(message: response.errorMessage ?? ""));
       }
 
       return response;
@@ -209,12 +210,12 @@ class SessionService {
       final response = await _authService.verifyMagicLink(token);
 
       if (response.isSuccess) {
-        final user = response.data!;
+        final user = response.dataOrNull!;
         _updateState(SessionState.authenticated(user: user));
         _startTokenRefreshTimer();
         _startSessionCheckTimer();
       } else {
-        _updateState(SessionState.error(message: response.message));
+        _updateState(SessionState.error(message: response.errorMessage ?? ""));
       }
 
       return response;
@@ -270,7 +271,7 @@ class SessionService {
     try {
       final response = await _authService.getCurrentUser();
       if (response.isSuccess) {
-        final user = response.data!;
+        final user = response.dataOrNull!;
         updateUser(user);
         return true;
       } else {
@@ -279,7 +280,7 @@ class SessionService {
         if (refreshSuccess) {
           final refreshedResponse = await _authService.getCurrentUser();
           if (refreshedResponse.isSuccess) {
-            final user = refreshedResponse.data!;
+            final user = refreshedResponse.dataOrNull!;
             updateUser(user);
             return true;
           }
@@ -433,68 +434,7 @@ enum SessionStatus {
 }
 
 /// Login request (re-export for convenience)
-class LoginRequest {
-  final String email;
-  final String password;
-
-  LoginRequest({
-    required this.email,
-    required this.password,
-  });
-
-  Map<String, dynamic> toJson() => {
-    'email': email,
-    'password': password,
-  };
-}
 
 /// Register request (re-export for convenience)
-class RegisterRequest {
-  final String email;
-  final String password;
-  final String name;
 
-  RegisterRequest({
-    required this.email,
-    required this.password,
-    required this.name,
-  });
 
-  Map<String, dynamic> toJson() => {
-    'email': email,
-    'password': password,
-    'name': name,
-  };
-}
-
-/// OAuth login request (re-export for convenience)
-class OAuthLoginRequest {
-  final String provider;
-  final String accessToken;
-  final String? idToken;
-
-  OAuthLoginRequest({
-    required this.provider,
-    required this.accessToken,
-    this.idToken,
-  });
-
-  Map<String, dynamic> toJson() => {
-    'provider': provider,
-    'access_token': accessToken,
-    if (idToken != null) 'id_token': idToken,
-  };
-}
-
-/// Verify two-factor request (re-export for convenience)
-class VerifyTwoFactorRequest {
-  final String code;
-
-  VerifyTwoFactorRequest({
-    required this.code,
-  });
-
-  Map<String, dynamic> toJson() => {
-    'code': code,
-  };
-}

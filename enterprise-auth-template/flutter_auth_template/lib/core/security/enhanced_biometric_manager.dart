@@ -113,7 +113,7 @@ class EnhancedBiometricManager {
   /// Initialize biometric configuration
   Future<void> initialize() async {
     try {
-      final configJson = await storageService.read(_configKey);
+      final configJson = await storageService.get(_configKey);
       if (configJson != null) {
         _config = BiometricConfig.fromJson(jsonDecode(configJson));
       } else {
@@ -151,7 +151,7 @@ class EnhancedBiometricManager {
 
       // Generate biometric token
       final token = _generateBiometricToken();
-      await storageService.write(_biometricTokenKey, token);
+      await storageService.write(key: _biometricTokenKey, value: token);
 
       // Save fallback PIN if provided
       if (fallbackPin != null && fallbackPin.isNotEmpty) {
@@ -185,8 +185,8 @@ class EnhancedBiometricManager {
       }
 
       // Clear biometric data
-      await storageService.delete(_biometricTokenKey);
-      await storageService.delete(_fallbackPinKey);
+      await storageService.delete(key: _biometricTokenKey);
+      await storageService.delete(key: _fallbackPinKey);
 
       // Update configuration
       _config = BiometricConfig(enabled: false);
@@ -252,7 +252,7 @@ class EnhancedBiometricManager {
     }
 
     try {
-      final savedPin = await storageService.read(_fallbackPinKey);
+      final savedPin = await storageService.get(_fallbackPinKey);
       if (savedPin == null) {
         throw BiometricException('Fallback PIN not configured');
       }
@@ -307,9 +307,9 @@ class EnhancedBiometricManager {
 
   /// Reset biometric configuration
   Future<void> reset() async {
-    await storageService.delete(_configKey);
-    await storageService.delete(_biometricTokenKey);
-    await storageService.delete(_fallbackPinKey);
+    await storageService.delete(key: _configKey);
+    await storageService.delete(key: _biometricTokenKey);
+    await storageService.delete(key: _fallbackPinKey);
     _config = BiometricConfig();
     _sessionTimer?.cancel();
   }
@@ -361,16 +361,15 @@ class EnhancedBiometricManager {
 
   Future<void> _saveConfig() async {
     if (_config != null) {
-      await storageService.write(
-        _configKey,
-        jsonEncode(_config!.toJson()),
+      await storageService.write(key: 
+        _configKey, value: jsonEncode(_config!.toJson()),
       );
     }
   }
 
   Future<void> _saveFallbackPin(String pin) async {
     // In production, hash the PIN before storing
-    await storageService.write(_fallbackPinKey, pin);
+    await storageService.write(key: _fallbackPinKey, value: pin);
   }
 
   String _generateBiometricToken() {

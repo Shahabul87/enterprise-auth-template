@@ -32,8 +32,9 @@ class UserSession(Base):
     id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid4, index=True
     )
+    # Map to existing database column session_token
     session_id: Mapped[str] = mapped_column(
-        String(255), unique=True, nullable=False, index=True
+        "session_token", String(255), unique=True, nullable=False, index=True
     )
     user_id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -53,20 +54,16 @@ class UserSession(Base):
         String(45), nullable=True, index=True
     )
     user_agent: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    device_type: Mapped[Optional[str]] = mapped_column(
-        String(50), nullable=True
-    )  # mobile, desktop, tablet
-    browser: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    operating_system: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
 
-    # Location information (optional)
-    country: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    city: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-
-    # Session metadata (renamed to avoid SQLAlchemy conflict)
-    session_metadata: Mapped[Optional[dict]] = mapped_column(
-        JSONB, nullable=True, default=dict
-    )
+    # Optional columns that may not exist in database yet
+    # These are virtual columns - commented out until DB schema includes them
+    # Optional columns that may not exist in database yet - commented out until schema updated
+    # device_type: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)  # mobile, desktop, tablet
+    # browser: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    # operating_system: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    # country: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    # city: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    # session_metadata: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True, default=dict)
 
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
@@ -78,9 +75,8 @@ class UserSession(Base):
         nullable=False,
         index=True,
     )
-    ended_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    # Optional ended_at column - commented out until database schema includes it
+    # ended_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Relationships
     user: Mapped["User"] = relationship("User", back_populates="sessions")
@@ -101,7 +97,7 @@ class UserSession(Base):
     def end_session(self) -> None:
         """Mark the session as ended."""
         self.is_active = False
-        self.ended_at = datetime.utcnow()
+        # self.ended_at = datetime.utcnow()  # Commented until column exists in DB
 
     def update_activity(self) -> None:
         """Update the last activity timestamp."""

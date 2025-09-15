@@ -117,13 +117,16 @@ def create_application() -> FastAPI:
     )
     logger.info("Performance monitoring enabled")
 
-    # Add rate limiting middleware
-    redis_url = str(settings.REDIS_URL) if settings.REDIS_URL else None
-    if redis_url:
-        app.add_middleware(RateLimitMiddleware, redis_url=redis_url)
-        logger.info("Rate limiting enabled")
+    # Add rate limiting middleware (disabled in development)
+    if settings.ENVIRONMENT != "development":
+        redis_url = str(settings.REDIS_URL) if settings.REDIS_URL else None
+        if redis_url:
+            app.add_middleware(RateLimitMiddleware, redis_url=redis_url)
+            logger.info("Rate limiting enabled")
+        else:
+            logger.warning("Rate limiting disabled - Redis not configured")
     else:
-        logger.warning("Rate limiting disabled - Redis not configured")
+        logger.info("Rate limiting disabled in development mode")
 
     # Include API routers
     from app.api import api_router

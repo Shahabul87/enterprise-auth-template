@@ -112,10 +112,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
     );
   }
 
-  /// Logout current user
-  Future<void> logout() async {
+  /// Base logout method (will be overridden)
+  Future<void> _baseLogout() async {
     state = const AuthState.authenticating();
-    
+
     final response = await _authService.logout();
     state = const AuthState.unauthenticated();
   }
@@ -494,7 +494,7 @@ final currentUserProvider = Provider<User?>((ref) {
   return authState.when(
     unauthenticated: () => null,
     authenticating: () => null,
-    authenticated: (user, _) => user,
+    authenticated: (user, _, __) => user,
     error: (_) => null,
   );
 });
@@ -504,7 +504,7 @@ final isAuthenticatedProvider = Provider<bool>((ref) {
   return authState.when(
     unauthenticated: () => false,
     authenticating: () => false,
-    authenticated: (_, __) => true,
+    authenticated: (_, __, ___) => true,
     error: (_) => false,
   );
 });
@@ -514,7 +514,7 @@ final isLoadingProvider = Provider<bool>((ref) {
   return authState.when(
     unauthenticated: () => false,
     authenticating: () => true,
-    authenticated: (_, __) => false,
+    authenticated: (_, __, ___) => false,
     error: (_) => false,
   );
 });

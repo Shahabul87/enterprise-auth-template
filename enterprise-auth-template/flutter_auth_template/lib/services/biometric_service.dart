@@ -79,16 +79,16 @@ class BiometricService {
     try {
       final availabilityResponse = await checkBiometricAvailability();
       if (!availabilityResponse.isSuccess) {
-        return ApiResponse.error(message: availabilityResponse.message);
+        return ApiResponse.error(message: availabilityResponse.errorMessage ?? "");
       }
 
-      final availability = availabilityResponse.data!;
+      final availability = availabilityResponse.dataOrNull!;
       if (!availability.isAvailable) {
-        return ApiResponse.error(message: availability.reason);
+        return ApiResponse.error(message: availability.reason ?? "Biometric authentication is not available");
       }
 
       final bool didAuthenticate = await _localAuth.authenticate(
-        localizedFallbackTitle: 'Use PIN/Password',
+        localizedReason: 'Please authenticate to access your account',
         authMessages: const <AuthMessages>[
           AndroidAuthMessages(
             signInTitle: 'Biometric Authentication',
@@ -134,21 +134,21 @@ class BiometricService {
       // First check if biometrics are available
       final availabilityResponse = await checkBiometricAvailability();
       if (!availabilityResponse.isSuccess) {
-        return ApiResponse.error(message: availabilityResponse.message);
+        return ApiResponse.error(message: availabilityResponse.errorMessage ?? "");
       }
 
-      final availability = availabilityResponse.data!;
+      final availability = availabilityResponse.dataOrNull!;
       if (!availability.isAvailable) {
-        return ApiResponse.error(message: availability.reason);
+        return ApiResponse.error(message: availability.reason ?? "Biometric authentication is not available");
       }
 
       // Authenticate to enable biometric auth
       final authResponse = await authenticateWithBiometrics();
       if (!authResponse.isSuccess) {
-        return ApiResponse.error(message: authResponse.message);
+        return ApiResponse.error(message: authResponse.errorMessage ?? "");
       }
 
-      if (!authResponse.data!) {
+      if (!authResponse.dataOrNull!) {
         return const ApiResponse.error(
           message: 'Biometric authentication was not successful',
         );
@@ -205,12 +205,12 @@ class BiometricService {
           data: BiometricStatus(
             isDeviceSupported: false,
             isAppEnabled: false,
-            message: availabilityResponse.message,
+            message: availabilityResponse.errorMessage ?? "",
           ),
         );
       }
 
-      final availability = availabilityResponse.data!;
+      final availability = availabilityResponse.dataOrNull!;
       return ApiResponse.success(
         data: BiometricStatus(
           isDeviceSupported: availability.isAvailable,
@@ -218,7 +218,7 @@ class BiometricService {
           availableBiometrics: availability.availableBiometrics,
           message: availability.isAvailable
               ? 'Biometric authentication is available'
-              : availability.reason,
+              : (availability.reason ?? "Biometric authentication is not available"),
         ),
       );
     } catch (e) {
@@ -234,10 +234,10 @@ class BiometricService {
     try {
       final availabilityResponse = await checkBiometricAvailability();
       if (!availabilityResponse.isSuccess) {
-        return ApiResponse.error(message: availabilityResponse.message);
+        return ApiResponse.error(message: availabilityResponse.errorMessage ?? "");
       }
 
-      final availability = availabilityResponse.data!;
+      final availability = availabilityResponse.dataOrNull!;
       if (!availability.isAvailable) {
         // If biometrics aren't set up, we can't force setup but can guide user
         return ApiResponse.success(
@@ -250,7 +250,7 @@ class BiometricService {
       if (enableResponse.isSuccess) {
         return const ApiResponse.success(data: true);
       } else {
-        return ApiResponse.error(message: enableResponse.message);
+        return ApiResponse.error(message: enableResponse.errorMessage ?? "");
       }
     } catch (e) {
       return ApiResponse.error(

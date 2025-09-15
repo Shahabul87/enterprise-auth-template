@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part &apos;device_models.freezed.dart&apos;;
-part &apos;device_models.g.dart&apos;;
+part 'device_models.freezed.dart';
+part 'device_models.g.dart';
 
 @freezed
 class Device with _$Device {
@@ -24,10 +24,10 @@ class Device with _$Device {
     required DateTime updatedAt,
     DateTime? lastSeenAt,
     String? deviceFingerprint,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _Device;
 
-  factory Device.fromJson(Map&lt;String, dynamic&gt; json) =&gt; _$DeviceFromJson(json);
+  factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
 }
 
 @freezed
@@ -38,10 +38,10 @@ class DeviceRegistrationRequest with _$DeviceRegistrationRequest {
     required String platform,
     required String userAgent,
     String? deviceFingerprint,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _DeviceRegistrationRequest;
 
-  factory DeviceRegistrationRequest.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory DeviceRegistrationRequest.fromJson(Map<String, dynamic> json) =>
       _$DeviceRegistrationRequestFromJson(json);
 }
 
@@ -50,17 +50,17 @@ class DeviceUpdateRequest with _$DeviceUpdateRequest {
   const factory DeviceUpdateRequest({
     String? deviceName,
     bool? isTrusted,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _DeviceUpdateRequest;
 
-  factory DeviceUpdateRequest.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory DeviceUpdateRequest.fromJson(Map<String, dynamic> json) =>
       _$DeviceUpdateRequestFromJson(json);
 }
 
 @freezed
 class DeviceListResponse with _$DeviceListResponse {
   const factory DeviceListResponse({
-    required List&lt;Device&gt; devices,
+    required List<Device> devices,
     required int total,
     required int page,
     required int limit,
@@ -68,7 +68,7 @@ class DeviceListResponse with _$DeviceListResponse {
     required bool hasPrevious,
   }) = _DeviceListResponse;
 
-  factory DeviceListResponse.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory DeviceListResponse.fromJson(Map<String, dynamic> json) =>
       _$DeviceListResponseFromJson(json);
 }
 
@@ -79,12 +79,12 @@ class DeviceStats with _$DeviceStats {
     required int activeDevices,
     required int trustedDevices,
     required int unknownDevices,
-    required Map&lt;String, int&gt; devicesByPlatform,
-    required Map&lt;String, int&gt; devicesByType,
-    required List&lt;DeviceLocationStat&gt; topLocations,
+    required Map<String, int> devicesByPlatform,
+    required Map<String, int> devicesByType,
+    required List<DeviceLocationStat> topLocations,
   }) = _DeviceStats;
 
-  factory DeviceStats.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory DeviceStats.fromJson(Map<String, dynamic> json) =>
       _$DeviceStatsFromJson(json);
 }
 
@@ -96,7 +96,7 @@ class DeviceLocationStat with _$DeviceLocationStat {
     required double percentage,
   }) = _DeviceLocationStat;
 
-  factory DeviceLocationStat.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory DeviceLocationStat.fromJson(Map<String, dynamic> json) =>
       _$DeviceLocationStatFromJson(json);
 }
 
@@ -111,10 +111,10 @@ class DeviceSecurityAlert with _$DeviceSecurityAlert {
     required DateTime createdAt,
     required bool isResolved,
     DateTime? resolvedAt,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _DeviceSecurityAlert;
 
-  factory DeviceSecurityAlert.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory DeviceSecurityAlert.fromJson(Map<String, dynamic> json) =>
       _$DeviceSecurityAlertFromJson(json);
 }
 
@@ -148,34 +148,34 @@ extension DeviceTypeExtension on DeviceType {
   String get displayName {
     switch (this) {
       case DeviceType.mobile:
-        return &apos;Mobile&apos;;
+        return 'Mobile';
       case DeviceType.desktop:
-        return &apos;Desktop&apos;;
+        return 'Desktop';
       case DeviceType.tablet:
-        return &apos;Tablet&apos;;
+        return 'Tablet';
       case DeviceType.browser:
-        return &apos;Browser&apos;;
+        return 'Browser';
       case DeviceType.api:
-        return &apos;API Client&apos;;
+        return 'API Client';
       case DeviceType.unknown:
-        return &apos;Unknown&apos;;
+        return 'Unknown';
     }
   }
 
   String get iconName {
     switch (this) {
       case DeviceType.mobile:
-        return &apos;phone&apos;;
+        return 'phone';
       case DeviceType.desktop:
-        return &apos;computer&apos;;
+        return 'computer';
       case DeviceType.tablet:
-        return &apos;tablet&apos;;
+        return 'tablet';
       case DeviceType.browser:
-        return &apos;web&apos;;
+        return 'web';
       case DeviceType.api:
-        return &apos;code&apos;;
+        return 'code';
       case DeviceType.unknown:
-        return &apos;device_unknown&apos;;
+        return 'device_unknown';
     }
   }
 }
@@ -184,38 +184,38 @@ extension DevicePlatformExtension on DevicePlatform {
   String get displayName {
     switch (this) {
       case DevicePlatform.android:
-        return &apos;Android&apos;;
+        return 'Android';
       case DevicePlatform.ios:
-        return &apos;iOS&apos;;
+        return 'iOS';
       case DevicePlatform.windows:
-        return &apos;Windows&apos;;
+        return 'Windows';
       case DevicePlatform.macos:
-        return &apos;macOS&apos;;
+        return 'macOS';
       case DevicePlatform.linux:
-        return &apos;Linux&apos;;
+        return 'Linux';
       case DevicePlatform.web:
-        return &apos;Web&apos;;
+        return 'Web';
       case DevicePlatform.unknown:
-        return &apos;Unknown&apos;;
+        return 'Unknown';
     }
   }
 
   String get iconName {
     switch (this) {
       case DevicePlatform.android:
-        return &apos;android&apos;;
+        return 'android';
       case DevicePlatform.ios:
-        return &apos;apple&apos;;
+        return 'apple';
       case DevicePlatform.windows:
-        return &apos;windows&apos;;
+        return 'windows';
       case DevicePlatform.macos:
-        return &apos;apple&apos;;
+        return 'apple';
       case DevicePlatform.linux:
-        return &apos;linux&apos;;
+        return 'linux';
       case DevicePlatform.web:
-        return &apos;web&apos;;
+        return 'web';
       case DevicePlatform.unknown:
-        return &apos;device_unknown&apos;;
+        return 'device_unknown';
     }
   }
 }

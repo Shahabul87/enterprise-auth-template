@@ -139,7 +139,7 @@ class ResponseStandardizationMiddleware(BaseHTTPMiddleware):
             )
 
             response = JSONResponse(
-                content=error_response.model_dump(),
+                content=error_response.model_dump(mode='json'),
                 status_code=500
             )
             self._add_performance_headers(response, start_time)
@@ -205,7 +205,7 @@ class ResponseStandardizationMiddleware(BaseHTTPMiddleware):
             )
 
             return JSONResponse(
-                content=standardized_response.model_dump(),
+                content=standardized_response.model_dump(mode='json'),
                 status_code=response.status_code,
                 headers=dict(response.headers)
             )

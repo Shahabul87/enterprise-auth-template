@@ -89,8 +89,7 @@ class UserCRUDService:
             user = User(
                 email=registration_data.email,
                 hashed_password=password_hash,
-                first_name=registration_data.first_name,
-                last_name=registration_data.last_name,
+                full_name=registration_data.name,
                 is_active=True,  # Temporarily set to active for testing
                 is_verified=False,
                 is_superuser=False,
@@ -121,10 +120,9 @@ class UserCRUDService:
             return UserResponse(
                 id=str(user.id),
                 email=user.email,
-                first_name=user.first_name,
-                last_name=user.last_name,
-                is_active=user.is_active,
-                is_verified=user.is_verified,
+                full_name=user.full_name,
+                name=user.full_name,
+                email_verified=user.is_verified,
                 roles=["user"],
                 created_at=user.created_at.isoformat(),
                 updated_at=(user.updated_at.isoformat() if user.updated_at else None),
@@ -308,10 +306,9 @@ class UserCRUDService:
                     UserResponse(
                         id=str(user.id),
                         email=user.email,
-                        first_name=user.first_name,
-                        last_name=user.last_name,
-                        is_active=user.is_active,
-                        is_verified=user.is_verified,
+                        full_name=user.full_name,
+                        name=user.full_name,
+                        email_verified=user.is_verified,
                         roles=(
                             [role.name for role in user.roles] if include_roles else []
                         ),

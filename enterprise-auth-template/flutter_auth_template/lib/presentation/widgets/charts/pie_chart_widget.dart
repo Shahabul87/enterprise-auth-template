@@ -14,7 +14,7 @@ class PieChartData {
 }
 
 class PieChartWidget extends StatefulWidget {
-  final List&lt;PieChartData&gt; data;
+  final List<PieChartData> data;
   final bool showPercentages;
   final bool showLegend;
   final double radius;
@@ -28,21 +28,21 @@ class PieChartWidget extends StatefulWidget {
   });
 
   @override
-  State&lt;PieChartWidget&gt; createState() =&gt; _PieChartWidgetState();
+  State<PieChartWidget> createState() => _PieChartWidgetState();
 }
 
-class _PieChartWidgetState extends State&lt;PieChartWidget&gt; {
+class _PieChartWidgetState extends State<PieChartWidget> {
   int touchedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
     if (widget.data.isEmpty) {
       return const Center(
-        child: Text(&apos;No data available&apos;),
+        child: Text('No data available'),
       );
     }
 
-    final total = widget.data.fold&lt;double&gt;(0, (sum, item) =&gt; sum + item.value);
+    final total = widget.data.fold<double>(0, (sum, item) => sum + item.value);
 
     return Row(
       children: [
@@ -83,7 +83,7 @@ class _PieChartWidgetState extends State&lt;PieChartWidget&gt; {
     );
   }
 
-  List&lt;PieChartSectionData&gt; _buildSections(double total) {
+  List<PieChartSectionData> _buildSections(double total) {
     final colors = _generateColors(widget.data.length);
     
     return widget.data.asMap().entries.map((entry) {
@@ -97,7 +97,7 @@ class _PieChartWidgetState extends State&lt;PieChartWidget&gt; {
       return PieChartSectionData(
         color: data.color ?? colors[index],
         value: data.value,
-        title: widget.showPercentages ? &apos;${percentage.toStringAsFixed(1)}%&apos; : &apos;&apos;,
+        title: widget.showPercentages ? '${percentage.toStringAsFixed(1)}%' : '',
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,
@@ -145,7 +145,7 @@ class _PieChartWidgetState extends State&lt;PieChartWidget&gt; {
                       ),
                     ),
                     Text(
-                      &apos;${data.value.toStringAsFixed(0)} (${percentage.toStringAsFixed(1)}%)&apos;,
+                      '${data.value.toStringAsFixed(0)} (${percentage.toStringAsFixed(1)}%)',
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.grey[600],
@@ -161,7 +161,7 @@ class _PieChartWidgetState extends State&lt;PieChartWidget&gt; {
     );
   }
 
-  List&lt;Color&gt; _generateColors(int count) {
+  List<Color> _generateColors(int count) {
     return List.generate(count, (index) {
       final hue = (index * 360 / count) % 360;
       return HSLColor.fromAHSL(1.0, hue, 0.7, 0.6).toColor();

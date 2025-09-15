@@ -13,6 +13,7 @@ from app.core.database import Base
 
 if TYPE_CHECKING:
     from app.models.user import User
+    from app.models.api_key import APIKey
 
 
 class Organization(Base):
@@ -139,6 +140,12 @@ class Organization(Base):
         foreign_keys="User.organization_id",
         back_populates="organization",
         lazy="dynamic"
+    )
+
+    api_keys: Mapped[List["APIKey"]] = relationship(
+        "APIKey",
+        back_populates="organization",
+        cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:

@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part &apos;analytics_models.freezed.dart&apos;;
-part &apos;analytics_models.g.dart&apos;;
+part 'analytics_models.freezed.dart';
+part 'analytics_models.g.dart';
 
 @freezed
 class AnalyticsDashboard with _$AnalyticsDashboard {
@@ -13,7 +13,7 @@ class AnalyticsDashboard with _$AnalyticsDashboard {
     required SystemPerformance systemPerformance,
   }) = _AnalyticsDashboard;
 
-  factory AnalyticsDashboard.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory AnalyticsDashboard.fromJson(Map<String, dynamic> json) =>
       _$AnalyticsDashboardFromJson(json);
 }
 
@@ -26,13 +26,13 @@ class UserAnalytics with _$UserAnalytics {
     required int newUsersThisWeek,
     required int newUsersThisMonth,
     required double userGrowthRate,
-    required Map&lt;String, int&gt; usersByRole,
-    required Map&lt;String, int&gt; usersByStatus,
-    required List&lt;UserGrowthData&gt; userGrowthChart,
-    required List&lt;UserActivityData&gt; userActivityChart,
+    required Map<String, int> usersByRole,
+    required Map<String, int> usersByStatus,
+    required List<UserGrowthData> userGrowthChart,
+    required List<UserActivityData> userActivityChart,
   }) = _UserAnalytics;
 
-  factory UserAnalytics.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory UserAnalytics.fromJson(Map<String, dynamic> json) =>
       _$UserAnalyticsFromJson(json);
 }
 
@@ -43,13 +43,13 @@ class AuthenticationAnalytics with _$AuthenticationAnalytics {
     required int successfulLogins,
     required int failedLogins,
     required double loginSuccessRate,
-    required Map&lt;String, int&gt; loginsByMethod,
-    required Map&lt;String, int&gt; loginsByDevice,
-    required List&lt;LoginTrendData&gt; loginTrends,
-    required List&lt;AuthMethodUsage&gt; authMethodUsage,
+    required Map<String, int> loginsByMethod,
+    required Map<String, int> loginsByDevice,
+    required List<LoginTrendData> loginTrends,
+    required List<AuthMethodUsage> authMethodUsage,
   }) = _AuthenticationAnalytics;
 
-  factory AuthenticationAnalytics.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory AuthenticationAnalytics.fromJson(Map<String, dynamic> json) =>
       _$AuthenticationAnalyticsFromJson(json);
 }
 
@@ -61,12 +61,12 @@ class SecurityAnalytics with _$SecurityAnalytics {
     required int suspiciousActivities,
     required int activeDevices,
     required int trustedDevices,
-    required List&lt;SecurityIncident&gt; recentIncidents,
-    required Map&lt;String, int&gt; threatsByType,
-    required List&lt;SecurityTrendData&gt; securityTrends,
+    required List<SecurityIncident> recentIncidents,
+    required Map<String, int> threatsByType,
+    required List<SecurityTrendData> securityTrends,
   }) = _SecurityAnalytics;
 
-  factory SecurityAnalytics.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SecurityAnalytics.fromJson(Map<String, dynamic> json) =>
       _$SecurityAnalyticsFromJson(json);
 }
 
@@ -78,13 +78,13 @@ class ApiUsageAnalytics with _$ApiUsageAnalytics {
     required int failedRequests,
     required double averageResponseTime,
     required int activeApiKeys,
-    required Map&lt;String, int&gt; requestsByEndpoint,
-    required Map&lt;String, int&gt; requestsByStatusCode,
-    required List&lt;ApiUsageTrend&gt; usageTrends,
-    required List&lt;EndpointPerformance&gt; topEndpoints,
+    required Map<String, int> requestsByEndpoint,
+    required Map<String, int> requestsByStatusCode,
+    required List<ApiUsageTrend> usageTrends,
+    required List<EndpointPerformance> topEndpoints,
   }) = _ApiUsageAnalytics;
 
-  factory ApiUsageAnalytics.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ApiUsageAnalytics.fromJson(Map<String, dynamic> json) =>
       _$ApiUsageAnalyticsFromJson(json);
 }
 
@@ -97,11 +97,11 @@ class SystemPerformance with _$SystemPerformance {
     required int activeConnections,
     required double averageResponseTime,
     required double uptime,
-    required List&lt;PerformanceMetric&gt; performanceHistory,
+    required List<PerformanceMetric> performanceHistory,
     required SystemHealthStatus healthStatus,
   }) = _SystemPerformance;
 
-  factory SystemPerformance.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SystemPerformance.fromJson(Map<String, dynamic> json) =>
       _$SystemPerformanceFromJson(json);
 }
 
@@ -113,7 +113,7 @@ class UserGrowthData with _$UserGrowthData {
     required int totalUsers,
   }) = _UserGrowthData;
 
-  factory UserGrowthData.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory UserGrowthData.fromJson(Map<String, dynamic> json) =>
       _$UserGrowthDataFromJson(json);
 }
 
@@ -125,7 +125,7 @@ class UserActivityData with _$UserActivityData {
     required int loginCount,
   }) = _UserActivityData;
 
-  factory UserActivityData.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory UserActivityData.fromJson(Map<String, dynamic> json) =>
       _$UserActivityDataFromJson(json);
 }
 
@@ -138,7 +138,7 @@ class LoginTrendData with _$LoginTrendData {
     required int total,
   }) = _LoginTrendData;
 
-  factory LoginTrendData.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory LoginTrendData.fromJson(Map<String, dynamic> json) =>
       _$LoginTrendDataFromJson(json);
 }
 
@@ -151,7 +151,7 @@ class AuthMethodUsage with _$AuthMethodUsage {
     required String displayName,
   }) = _AuthMethodUsage;
 
-  factory AuthMethodUsage.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory AuthMethodUsage.fromJson(Map<String, dynamic> json) =>
       _$AuthMethodUsageFromJson(json);
 }
 
@@ -166,10 +166,10 @@ class SecurityIncident with _$SecurityIncident {
     required String status,
     String? userId,
     String? ipAddress,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _SecurityIncident;
 
-  factory SecurityIncident.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SecurityIncident.fromJson(Map<String, dynamic> json) =>
       _$SecurityIncidentFromJson(json);
 }
 
@@ -182,7 +182,7 @@ class SecurityTrendData with _$SecurityTrendData {
     required int suspiciousActivities,
   }) = _SecurityTrendData;
 
-  factory SecurityTrendData.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SecurityTrendData.fromJson(Map<String, dynamic> json) =>
       _$SecurityTrendDataFromJson(json);
 }
 
@@ -195,7 +195,7 @@ class ApiUsageTrend with _$ApiUsageTrend {
     required double responseTime,
   }) = _ApiUsageTrend;
 
-  factory ApiUsageTrend.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ApiUsageTrend.fromJson(Map<String, dynamic> json) =>
       _$ApiUsageTrendFromJson(json);
 }
 
@@ -210,7 +210,7 @@ class EndpointPerformance with _$EndpointPerformance {
     required double errorRate,
   }) = _EndpointPerformance;
 
-  factory EndpointPerformance.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory EndpointPerformance.fromJson(Map<String, dynamic> json) =>
       _$EndpointPerformanceFromJson(json);
 }
 
@@ -224,7 +224,7 @@ class PerformanceMetric with _$PerformanceMetric {
     required int activeConnections,
   }) = _PerformanceMetric;
 
-  factory PerformanceMetric.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory PerformanceMetric.fromJson(Map<String, dynamic> json) =>
       _$PerformanceMetricFromJson(json);
 }
 
@@ -236,7 +236,7 @@ class AnalyticsTimeRange with _$AnalyticsTimeRange {
     required String displayName,
   }) = _AnalyticsTimeRange;
 
-  factory AnalyticsTimeRange.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory AnalyticsTimeRange.fromJson(Map<String, dynamic> json) =>
       _$AnalyticsTimeRangeFromJson(json);
 }
 
@@ -245,12 +245,12 @@ class CustomAnalyticsQuery with _$CustomAnalyticsQuery {
   const factory CustomAnalyticsQuery({
     required String metric,
     required String aggregation,
-    required List&lt;AnalyticsFilter&gt; filters,
+    required List<AnalyticsFilter> filters,
     required String timeRange,
     String? groupBy,
   }) = _CustomAnalyticsQuery;
 
-  factory CustomAnalyticsQuery.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory CustomAnalyticsQuery.fromJson(Map<String, dynamic> json) =>
       _$CustomAnalyticsQueryFromJson(json);
 }
 
@@ -262,7 +262,7 @@ class AnalyticsFilter with _$AnalyticsFilter {
     required dynamic value,
   }) = _AnalyticsFilter;
 
-  factory AnalyticsFilter.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory AnalyticsFilter.fromJson(Map<String, dynamic> json) =>
       _$AnalyticsFilterFromJson(json);
 }
 
@@ -294,26 +294,26 @@ extension SystemHealthStatusExtension on SystemHealthStatus {
   String get displayName {
     switch (this) {
       case SystemHealthStatus.healthy:
-        return &apos;Healthy&apos;;
+        return 'Healthy';
       case SystemHealthStatus.warning:
-        return &apos;Warning&apos;;
+        return 'Warning';
       case SystemHealthStatus.critical:
-        return &apos;Critical&apos;;
+        return 'Critical';
       case SystemHealthStatus.unknown:
-        return &apos;Unknown&apos;;
+        return 'Unknown';
     }
   }
 
   String get colorName {
     switch (this) {
       case SystemHealthStatus.healthy:
-        return &apos;green&apos;;
+        return 'green';
       case SystemHealthStatus.warning:
-        return &apos;orange&apos;;
+        return 'orange';
       case SystemHealthStatus.critical:
-        return &apos;red&apos;;
+        return 'red';
       case SystemHealthStatus.unknown:
-        return &apos;gray&apos;;
+        return 'gray';
     }
   }
 }
@@ -322,17 +322,17 @@ extension AnalyticsTimeRangeTypeExtension on AnalyticsTimeRangeType {
   String get displayName {
     switch (this) {
       case AnalyticsTimeRangeType.realTime:
-        return &apos;Real Time&apos;;
+        return 'Real Time';
       case AnalyticsTimeRangeType.last24Hours:
-        return &apos;Last 24 Hours&apos;;
+        return 'Last 24 Hours';
       case AnalyticsTimeRangeType.last7Days:
-        return &apos;Last 7 Days&apos;;
+        return 'Last 7 Days';
       case AnalyticsTimeRangeType.last30Days:
-        return &apos;Last 30 Days&apos;;
+        return 'Last 30 Days';
       case AnalyticsTimeRangeType.last90Days:
-        return &apos;Last 90 Days&apos;;
+        return 'Last 90 Days';
       case AnalyticsTimeRangeType.custom:
-        return &apos;Custom Range&apos;;
+        return 'Custom Range';
     }
   }
 }

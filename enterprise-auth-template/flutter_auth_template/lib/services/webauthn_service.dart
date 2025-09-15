@@ -73,7 +73,7 @@ class WebAuthnService {
       );
 
       if (apiResponse.statusCode == 200) {
-        final data = apiResponse.data;
+        final data = apiResponse.dataOrNull;
         if (data is Map<String, dynamic> && data['success'] == true) {
           final message = data['data']?['message'] as String? ?? 'WebAuthn registration completed';
           return ApiResponse.success(data: message);

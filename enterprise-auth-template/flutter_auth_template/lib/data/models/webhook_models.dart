@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part &apos;webhook_models.freezed.dart&apos;;
-part &apos;webhook_models.g.dart&apos;;
+part 'webhook_models.freezed.dart';
+part 'webhook_models.g.dart';
 
 @freezed
 class Webhook with _$Webhook {
@@ -11,10 +11,10 @@ class Webhook with _$Webhook {
     required String description,
     required String url,
     required String secret,
-    required List&lt;String&gt; events,
+    required List<String> events,
     required bool isActive,
     required String httpMethod,
-    required Map&lt;String, String&gt; headers,
+    required Map<String, String> headers,
     required int timeoutSeconds,
     required int maxRetries,
     required bool verifyTls,
@@ -24,10 +24,10 @@ class Webhook with _$Webhook {
     WebhookStatus? status,
     int? successCount,
     int? failureCount,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _Webhook;
 
-  factory Webhook.fromJson(Map&lt;String, dynamic&gt; json) =&gt; _$WebhookFromJson(json);
+  factory Webhook.fromJson(Map<String, dynamic> json) => _$WebhookFromJson(json);
 }
 
 @freezed
@@ -37,17 +37,17 @@ class WebhookCreateRequest with _$WebhookCreateRequest {
     required String description,
     required String url,
     required String secret,
-    required List&lt;String&gt; events,
-    @Default(&apos;POST&apos;) String httpMethod,
-    @Default({}) Map&lt;String, String&gt; headers,
+    required List<String> events,
+    @Default('POST') String httpMethod,
+    @Default({}) Map<String, String> headers,
     @Default(30) int timeoutSeconds,
     @Default(3) int maxRetries,
     @Default(true) bool verifyTls,
     @Default(true) bool isActive,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _WebhookCreateRequest;
 
-  factory WebhookCreateRequest.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory WebhookCreateRequest.fromJson(Map<String, dynamic> json) =>
       _$WebhookCreateRequestFromJson(json);
 }
 
@@ -58,24 +58,24 @@ class WebhookUpdateRequest with _$WebhookUpdateRequest {
     String? description,
     String? url,
     String? secret,
-    List&lt;String&gt;? events,
+    List<String>? events,
     String? httpMethod,
-    Map&lt;String, String&gt;? headers,
+    Map<String, String>? headers,
     int? timeoutSeconds,
     int? maxRetries,
     bool? verifyTls,
     bool? isActive,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _WebhookUpdateRequest;
 
-  factory WebhookUpdateRequest.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory WebhookUpdateRequest.fromJson(Map<String, dynamic> json) =>
       _$WebhookUpdateRequestFromJson(json);
 }
 
 @freezed
 class WebhookListResponse with _$WebhookListResponse {
   const factory WebhookListResponse({
-    required List&lt;Webhook&gt; webhooks,
+    required List<Webhook> webhooks,
     required int total,
     required int page,
     required int limit,
@@ -83,7 +83,7 @@ class WebhookListResponse with _$WebhookListResponse {
     required bool hasPrevious,
   }) = _WebhookListResponse;
 
-  factory WebhookListResponse.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory WebhookListResponse.fromJson(Map<String, dynamic> json) =>
       _$WebhookListResponseFromJson(json);
 }
 
@@ -93,7 +93,7 @@ class WebhookDelivery with _$WebhookDelivery {
     required String id,
     required String webhookId,
     required String event,
-    required Map&lt;String, dynamic&gt; payload,
+    required Map<String, dynamic> payload,
     required int statusCode,
     required String response,
     required DateTime createdAt,
@@ -102,11 +102,11 @@ class WebhookDelivery with _$WebhookDelivery {
     required int attempt,
     String? error,
     int? responseTime,
-    Map&lt;String, String&gt;? requestHeaders,
-    Map&lt;String, String&gt;? responseHeaders,
+    Map<String, String>? requestHeaders,
+    Map<String, String>? responseHeaders,
   }) = _WebhookDelivery;
 
-  factory WebhookDelivery.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory WebhookDelivery.fromJson(Map<String, dynamic> json) =>
       _$WebhookDeliveryFromJson(json);
 }
 
@@ -117,11 +117,11 @@ class WebhookEvent with _$WebhookEvent {
     required String name,
     required String description,
     required String category,
-    required Map&lt;String, dynamic&gt; samplePayload,
+    required Map<String, dynamic> samplePayload,
     required bool isEnabled,
   }) = _WebhookEvent;
 
-  factory WebhookEvent.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory WebhookEvent.fromJson(Map<String, dynamic> json) =>
       _$WebhookEventFromJson(json);
 }
 
@@ -135,12 +135,12 @@ class WebhookStats with _$WebhookStats {
     required double successRate,
     required double averageResponseTime,
     required DateTime lastDelivery,
-    required Map&lt;String, int&gt; deliveriesByDay,
-    required Map&lt;String, int&gt; deliveriesByEvent,
-    required List&lt;WebhookDelivery&gt; recentDeliveries,
+    required Map<String, int> deliveriesByDay,
+    required Map<String, int> deliveriesByEvent,
+    required List<WebhookDelivery> recentDeliveries,
   }) = _WebhookStats;
 
-  factory WebhookStats.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory WebhookStats.fromJson(Map<String, dynamic> json) =>
       _$WebhookStatsFromJson(json);
 }
 
@@ -148,10 +148,10 @@ class WebhookStats with _$WebhookStats {
 class WebhookTestRequest with _$WebhookTestRequest {
   const factory WebhookTestRequest({
     required String event,
-    Map&lt;String, dynamic&gt;? customPayload,
+    Map<String, dynamic>? customPayload,
   }) = _WebhookTestRequest;
 
-  factory WebhookTestRequest.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory WebhookTestRequest.fromJson(Map<String, dynamic> json) =>
       _$WebhookTestRequestFromJson(json);
 }
 
@@ -163,11 +163,11 @@ class WebhookTestResponse with _$WebhookTestResponse {
     required String response,
     required int responseTime,
     String? error,
-    Map&lt;String, String&gt;? requestHeaders,
-    Map&lt;String, String&gt;? responseHeaders,
+    Map<String, String>? requestHeaders,
+    Map<String, String>? responseHeaders,
   }) = _WebhookTestResponse;
 
-  factory WebhookTestResponse.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory WebhookTestResponse.fromJson(Map<String, dynamic> json) =>
       _$WebhookTestResponseFromJson(json);
 }
 
@@ -179,13 +179,13 @@ class WebhookTemplate with _$WebhookTemplate {
     required String description,
     required String category,
     required String url,
-    required List&lt;String&gt; events,
-    required Map&lt;String, String&gt; headers,
-    required Map&lt;String, dynamic&gt; config,
+    required List<String> events,
+    required Map<String, String> headers,
+    required Map<String, dynamic> config,
     String? documentation,
   }) = _WebhookTemplate;
 
-  factory WebhookTemplate.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory WebhookTemplate.fromJson(Map<String, dynamic> json) =>
       _$WebhookTemplateFromJson(json);
 }
 
@@ -228,26 +228,26 @@ extension WebhookStatusExtension on WebhookStatus {
   String get displayName {
     switch (this) {
       case WebhookStatus.active:
-        return &apos;Active&apos;;
+        return 'Active';
       case WebhookStatus.inactive:
-        return &apos;Inactive&apos;;
+        return 'Inactive';
       case WebhookStatus.error:
-        return &apos;Error&apos;;
+        return 'Error';
       case WebhookStatus.disabled:
-        return &apos;Disabled&apos;;
+        return 'Disabled';
     }
   }
 
   String get colorName {
     switch (this) {
       case WebhookStatus.active:
-        return &apos;green&apos;;
+        return 'green';
       case WebhookStatus.inactive:
-        return &apos;orange&apos;;
+        return 'orange';
       case WebhookStatus.error:
-        return &apos;red&apos;;
+        return 'red';
       case WebhookStatus.disabled:
-        return &apos;gray&apos;;
+        return 'gray';
     }
   }
 }
@@ -256,37 +256,37 @@ extension WebhookEventTypeExtension on WebhookEventType {
   String get displayName {
     switch (this) {
       case WebhookEventType.userCreated:
-        return &apos;User Created&apos;;
+        return 'User Created';
       case WebhookEventType.userUpdated:
-        return &apos;User Updated&apos;;
+        return 'User Updated';
       case WebhookEventType.userDeleted:
-        return &apos;User Deleted&apos;;
+        return 'User Deleted';
       case WebhookEventType.userLogin:
-        return &apos;User Login&apos;;
+        return 'User Login';
       case WebhookEventType.userLogout:
-        return &apos;User Logout&apos;;
+        return 'User Logout';
       case WebhookEventType.roleAssigned:
-        return &apos;Role Assigned&apos;;
+        return 'Role Assigned';
       case WebhookEventType.roleRemoved:
-        return &apos;Role Removed&apos;;
+        return 'Role Removed';
       case WebhookEventType.passwordChanged:
-        return &apos;Password Changed&apos;;
+        return 'Password Changed';
       case WebhookEventType.emailVerified:
-        return &apos;Email Verified&apos;;
+        return 'Email Verified';
       case WebhookEventType.twoFactorEnabled:
-        return &apos;Two Factor Enabled&apos;;
+        return 'Two Factor Enabled';
       case WebhookEventType.deviceRegistered:
-        return &apos;Device Registered&apos;;
+        return 'Device Registered';
       case WebhookEventType.sessionExpired:
-        return &apos;Session Expired&apos;;
+        return 'Session Expired';
       case WebhookEventType.securityAlert:
-        return &apos;Security Alert&apos;;
+        return 'Security Alert';
       case WebhookEventType.auditLogCreated:
-        return &apos;Audit Log Created&apos;;
+        return 'Audit Log Created';
       case WebhookEventType.organizationCreated:
-        return &apos;Organization Created&apos;;
+        return 'Organization Created';
       case WebhookEventType.organizationUpdated:
-        return &apos;Organization Updated&apos;;
+        return 'Organization Updated';
     }
   }
 
@@ -325,34 +325,34 @@ extension WebhookCategoryExtension on WebhookCategory {
   String get displayName {
     switch (this) {
       case WebhookCategory.authentication:
-        return &apos;Authentication&apos;;
+        return 'Authentication';
       case WebhookCategory.userManagement:
-        return &apos;User Management&apos;;
+        return 'User Management';
       case WebhookCategory.security:
-        return &apos;Security&apos;;
+        return 'Security';
       case WebhookCategory.audit:
-        return &apos;Audit&apos;;
+        return 'Audit';
       case WebhookCategory.organization:
-        return &apos;Organization&apos;;
+        return 'Organization';
       case WebhookCategory.system:
-        return &apos;System&apos;;
+        return 'System';
     }
   }
 
   String get iconName {
     switch (this) {
       case WebhookCategory.authentication:
-        return &apos;lock&apos;;
+        return 'lock';
       case WebhookCategory.userManagement:
-        return &apos;people&apos;;
+        return 'people';
       case WebhookCategory.security:
-        return &apos;security&apos;;
+        return 'security';
       case WebhookCategory.audit:
-        return &apos;history&apos;;
+        return 'history';
       case WebhookCategory.organization:
-        return &apos;business&apos;;
+        return 'business';
       case WebhookCategory.system:
-        return &apos;settings&apos;;
+        return 'settings';
     }
   }
 }

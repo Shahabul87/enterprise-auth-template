@@ -296,8 +296,7 @@ class SMSService:
         # Create user
         user = User(
             phone_number=phone_number,
-            first_name=name.split()[0] if name else "User",
-            last_name=" ".join(name.split()[1:]) if len(name.split()) > 1 else "",
+            full_name=name or "User",
             email=email or f"{phone_number}@sms.local",
             is_phone_verified=True,
             is_active=True,

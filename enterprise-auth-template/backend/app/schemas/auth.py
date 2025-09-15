@@ -37,10 +37,7 @@ class RegisterRequest(BaseModel):
 
     email: EmailStr = Field(..., description="User email address")
     password: str = Field(..., min_length=8, description="User password")
-    name: str = Field(..., min_length=2, max_length=100, description="Full name")
-    # Keep original fields for backward compatibility
-    first_name: Optional[str] = Field(None, min_length=2, max_length=50, description="First name")
-    last_name: Optional[str] = Field(None, min_length=2, max_length=50, description="Last name")
+    full_name: str = Field(..., min_length=2, max_length=100, description="Full name")
     confirm_password: Optional[str] = Field(None, description="Password confirmation")
     agree_to_terms: Optional[bool] = Field(True, description="Agreement to terms and conditions")
 
@@ -88,8 +85,7 @@ class RegisterRequest(BaseModel):
                 "email": "newuser@example.com",
                 "password": "SecurePassword123!",
                 "confirm_password": "SecurePassword123!",
-                "first_name": "John",
-                "last_name": "Doe",
+                "full_name": "John Doe",
                 "agree_to_terms": True,
             }
         }
@@ -101,38 +97,60 @@ class UserResponse(BaseModel):
 
     id: str = Field(..., description="User ID")
     email: str = Field(..., description="User email address")
-    name: str = Field(..., description="Full name - matches Flutter expectation")
+    full_name: str = Field(..., description="Full name")
+    name: str = Field(..., description="Display name for Flutter compatibility")
     profile_picture: Optional[str] = Field(None, description="Profile picture URL", alias="profilePicture")
-    is_email_verified: bool = Field(..., description="Whether email is verified", alias="isEmailVerified")
-    is_two_factor_enabled: bool = Field(False, description="Whether 2FA is enabled", alias="isTwoFactorEnabled")
+    email_verified: bool = Field(..., description="Whether email is verified", alias="isEmailVerified")
+    two_factor_enabled: bool = Field(False, description="Whether 2FA is enabled", alias="isTwoFactorEnabled")
     roles: list[str] = Field(default_factory=list, description="User roles")
     permissions: list[str] = Field(default_factory=list, description="User permissions")
     created_at: str = Field(..., description="Account creation timestamp", alias="createdAt")
     updated_at: str = Field(..., description="Last update timestamp", alias="updatedAt")
     last_login_at: Optional[str] = Field(None, description="Last login timestamp", alias="lastLoginAt")
-
-    # Keep original fields for backward compatibility
-    first_name: Optional[str] = Field(None, description="First name")
-    last_name: Optional[str] = Field(None, description="Last name")
-    is_active: Optional[bool] = Field(True, description="Whether user account is active")
-    is_verified: Optional[bool] = Field(None, description="Whether email is verified (deprecated)")
-    last_login: Optional[str] = Field(None, description="Last login timestamp (deprecated)")
+    is_active: bool = Field(True, description="Whether user account is active")
 
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
                 "id": "123e4567-e89b-12d3-a456-426614174000",
                 "email": "user@example.com",
-                "first_name": "John",
-                "last_name": "Doe",
+                "full_name": "John Doe",
+                "name": "John Doe",
+                "email_verified": False,
+                "two_factor_enabled": False,
                 "is_active": True,
-                "is_verified": True,
                 "roles": ["user"],
+                "permissions": ["user:read"],
                 "created_at": "2024-01-01T00:00:00Z",
-                "last_login": "2024-01-01T12:00:00Z",
+                "updated_at": "2024-01-01T00:00:00Z",
+                "last_login_at": "2024-01-01T12:00:00Z",
             }
         }
     )
+
+    @classmethod
+    def from_db_user(cls, user, roles: list = None, permissions: list = None):
+        """Create UserResponse from database User model."""
+        # Compute display name
+        display_name = user.full_name
+        if not display_name:
+            display_name = user.email.split("@")[0]  # Fallback to email username
+
+        return cls(
+            id=str(user.id),
+            email=user.email,
+            full_name=user.full_name,
+            name=display_name,
+            profile_picture=user.avatar_url,
+            email_verified=user.email_verified,
+            two_factor_enabled=user.two_factor_enabled,
+            roles=roles or [],
+            permissions=permissions or [],
+            created_at=user.created_at.isoformat() if hasattr(user, 'created_at') and user.created_at else "",
+            updated_at=user.updated_at.isoformat() if hasattr(user, 'updated_at') and user.updated_at else "",
+            last_login_at=user.last_login.isoformat() if hasattr(user, 'last_login') and user.last_login else None,
+            is_active=user.is_active
+        )
 
 
 class AuthResponseData(BaseModel):

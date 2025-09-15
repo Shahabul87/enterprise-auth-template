@@ -131,11 +131,9 @@ def setup_logging() -> None:
     if settings.ENVIRONMENT == "development":
         logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
 
-    # Set SQLAlchemy logging level
-    if settings.DEBUG:
-        logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
-    else:
-        logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
+    # Set SQLAlchemy logging level - Keep it quiet even in development
+    logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
+    logging.getLogger("sqlalchemy.engine.Engine").setLevel(logging.WARNING)
 
     # Set httpx logging level (for OAuth requests)
     logging.getLogger("httpx").setLevel(logging.WARNING)

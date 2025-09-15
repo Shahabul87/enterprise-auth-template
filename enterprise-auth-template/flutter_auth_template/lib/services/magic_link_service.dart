@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uni_links/uni_links.dart';
+import 'package:app_links/app_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/constants/api_constants.dart';
@@ -30,7 +30,7 @@ class MagicLinkService {
   final SecureStorageService _secureStorage;
 
   // Deep link stream
-  StreamSubscription<String>? _linkSubscription;
+  StreamSubscription<Uri>? _linkSubscription;
   final StreamController<MagicLinkEvent> _eventController =
       StreamController<MagicLinkEvent>.broadcast();
 
@@ -99,12 +99,12 @@ class MagicLinkService {
       _isProcessingMagicLink = false;
 
       if (response.isSuccess) {
-        final user = response.data!;
+        final user = response.dataOrNull!;
         _eventController.add(MagicLinkEvent.verified(user: user));
         return response;
       } else {
         _eventController.add(MagicLinkEvent.error(
-          message: response.message,
+          message: response.errorMessage ?? "",
           token: token,
         ));
         return response;
@@ -230,9 +230,10 @@ class MagicLinkService {
     }
 
     try {
-      _linkSubscription = linkStream.listen(
-        (String link) {
-          _handleIncomingLink(link);
+      final appLinks = AppLinks();
+      _linkSubscription = appLinks.uriLinkStream.listen(
+        (Uri uri) {
+          _handleIncomingLink(uri.toString());
         },
         onError: (err) {
           debugPrint('Deep link error: $err');
@@ -252,7 +253,9 @@ class MagicLinkService {
   /// Check for initial deep link when app is launched
   Future<void> _checkInitialLink() async {
     try {
-      final String? initialLink = await getInitialLink();
+      final appLinks = AppLinks();
+      final Uri? initialUri = await appLinks.getInitialLink();
+      final String? initialLink = initialUri?.toString();
       if (initialLink != null) {
         _handleIncomingLink(initialLink);
       }

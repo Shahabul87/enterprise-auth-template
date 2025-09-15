@@ -6,29 +6,29 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../core/services/websocket_service.dart';
 import '../core/errors/app_exception.dart';
 
-part &apos;websocket_provider.freezed.dart&apos;;
+part 'websocket_provider.freezed.dart';
 
 @freezed
 class WebSocketState with _$WebSocketState {
   const factory WebSocketState({
     @Default(WebSocketState.disconnected) WebSocketState connectionState,
-    @Default([]) List&lt;WebSocketEvent&gt; recentEvents,
-    @Default([]) List&lt;WebSocketEvent&gt; notifications,
-    @Default([]) List&lt;String&gt; errors,
+    @Default([]) List<WebSocketEvent> recentEvents,
+    @Default([]) List<WebSocketEvent> notifications,
+    @Default([]) List<String> errors,
     @Default(0) int unreadNotificationCount,
     @Default(false) bool isAutoReconnectEnabled,
   }) = _WebSocketState;
 }
 
-class WebSocketNotifier extends StateNotifier&lt;WebSocketState&gt; {
+class WebSocketNotifier extends StateNotifier<WebSocketState> {
   WebSocketNotifier() : super(const WebSocketState()) {
     _initialize();
   }
 
   final WebSocketService _webSocketService = WebSocketService();
-  StreamSubscription&lt;WebSocketState&gt;? _stateSubscription;
-  StreamSubscription&lt;WebSocketEvent&gt;? _eventSubscription;
-  StreamSubscription&lt;String&gt;? _errorSubscription;
+  StreamSubscription<WebSocketState>? _stateSubscription;
+  StreamSubscription<WebSocketEvent>? _eventSubscription;
+  StreamSubscription<String>? _errorSubscription;
 
   void _initialize() {
     // Listen to connection state changes
@@ -50,7 +50,7 @@ class WebSocketNotifier extends StateNotifier&lt;WebSocketState&gt; {
       (error) {
         final updatedErrors = [...state.errors, error];
         // Keep only last 10 errors
-        if (updatedErrors.length &gt; 10) {
+        if (updatedErrors.length > 10) {
           updatedErrors.removeAt(0);
         }
         state = state.copyWith(errors: updatedErrors);
@@ -62,18 +62,18 @@ class WebSocketNotifier extends StateNotifier&lt;WebSocketState&gt; {
     // Add to recent events
     final recentEvents = [event, ...state.recentEvents];
     // Keep only last 50 events
-    if (recentEvents.length &gt; 50) {
+    if (recentEvents.length > 50) {
       recentEvents.removeLast();
     }
 
     // Handle notifications specifically
-    List&lt;WebSocketEvent&gt; notifications = state.notifications;
+    List<WebSocketEvent> notifications = state.notifications;
     int unreadCount = state.unreadNotificationCount;
 
     if (event.type == WebSocketEventType.notification) {
       notifications = [event, ...notifications];
       // Keep only last 100 notifications
-      if (notifications.length &gt; 100) {
+      if (notifications.length > 100) {
         notifications.removeLast();
       }
       unreadCount++;
@@ -87,27 +87,27 @@ class WebSocketNotifier extends StateNotifier&lt;WebSocketState&gt; {
   }
 
   /// Connect to WebSocket
-  Future&lt;void&gt; connect() async {
+  Future<void> connect() async {
     try {
       await _webSocketService.connect();
     } catch (e) {
-      final updatedErrors = [...state.errors, &apos;Connection failed: ${e.toString()}&apos;];
+      final updatedErrors = [...state.errors, 'Connection failed: ${e.toString()}'];
       state = state.copyWith(errors: updatedErrors);
     }
   }
 
   /// Disconnect from WebSocket
-  Future&lt;void&gt; disconnect() async {
+  Future<void> disconnect() async {
     await _webSocketService.disconnect();
     state = state.copyWith(isAutoReconnectEnabled: false);
   }
 
   /// Send message through WebSocket
-  Future&lt;void&gt; sendMessage(Map&lt;String, dynamic&gt; message) async {
+  Future<void> sendMessage(Map<String, dynamic> message) async {
     try {
       await _webSocketService.sendMessage(message);
     } catch (e) {
-      final updatedErrors = [...state.errors, &apos;Send failed: ${e.toString()}&apos;];
+      final updatedErrors = [...state.errors, 'Send failed: ${e.toString()}'];
       state = state.copyWith(errors: updatedErrors);
     }
   }
@@ -124,7 +124,7 @@ class WebSocketNotifier extends StateNotifier&lt;WebSocketState&gt; {
 
   /// Clear specific notification
   void clearNotification(int index) {
-    if (index &gt;= 0 &amp;&amp; index &lt; state.notifications.length) {
+    if (index >= 0 && index < state.notifications.length) {
       final notifications = [...state.notifications];
       notifications.removeAt(index);
       state = state.copyWith(notifications: notifications);
@@ -150,42 +150,42 @@ class WebSocketNotifier extends StateNotifier&lt;WebSocketState&gt; {
   }
 
   /// Get events by type
-  List&lt;WebSocketEvent&gt; getEventsByType(WebSocketEventType type) {
-    return state.recentEvents.where((event) =&gt; event.type == type).toList();
+  List<WebSocketEvent> getEventsByType(WebSocketEventType type) {
+    return state.recentEvents.where((event) => event.type == type).toList();
   }
 
   /// Get events for user
-  List&lt;WebSocketEvent&gt; getEventsForUser(String userId) {
-    return state.recentEvents.where((event) =&gt; event.userId == userId).toList();
+  List<WebSocketEvent> getEventsForUser(String userId) {
+    return state.recentEvents.where((event) => event.userId == userId).toList();
   }
 
   /// Get events for organization
-  List&lt;WebSocketEvent&gt; getEventsForOrganization(String organizationId) {
+  List<WebSocketEvent> getEventsForOrganization(String organizationId) {
     return state.recentEvents
-        .where((event) =&gt; event.organizationId == organizationId)
+        .where((event) => event.organizationId == organizationId)
         .toList();
   }
 
   /// Subscribe to specific event types
-  Stream&lt;WebSocketEvent&gt; subscribeToEventType(WebSocketEventType type) {
+  Stream<WebSocketEvent> subscribeToEventType(WebSocketEventType type) {
     return _webSocketService.subscribeToEventType(type);
   }
 
   /// Subscribe to user events
-  Stream&lt;WebSocketEvent&gt; subscribeToUserEvents(String userId) {
+  Stream<WebSocketEvent> subscribeToUserEvents(String userId) {
     return _webSocketService.subscribeToUserEvents(userId);
   }
 
   /// Subscribe to organization events
-  Stream&lt;WebSocketEvent&gt; subscribeToOrganizationEvents(String organizationId) {
+  Stream<WebSocketEvent> subscribeToOrganizationEvents(String organizationId) {
     return _webSocketService.subscribeToOrganizationEvents(organizationId);
   }
 
   /// Check if WebSocket is connected
-  bool get isConnected =&gt; _webSocketService.isConnected;
+  bool get isConnected => _webSocketService.isConnected;
 
   /// Get current connection state
-  WebSocketState get connectionState =&gt; _webSocketService.currentState;
+  WebSocketState get connectionState => _webSocketService.currentState;
 
   @override
   void dispose() {
@@ -198,58 +198,58 @@ class WebSocketNotifier extends StateNotifier&lt;WebSocketState&gt; {
 }
 
 // Provider definitions
-final webSocketProvider = StateNotifierProvider&lt;WebSocketNotifier, WebSocketState&gt;(
-  (ref) =&gt; WebSocketNotifier(),
+final webSocketProvider = StateNotifierProvider<WebSocketNotifier, WebSocketState>(
+  (ref) => WebSocketNotifier(),
 );
 
 // Specific stream providers for different event types
-final notificationStreamProvider = StreamProvider&lt;WebSocketEvent&gt;((ref) {
+final notificationStreamProvider = StreamProvider<WebSocketEvent>((ref) {
   final webSocketService = WebSocketService();
   return webSocketService.subscribeToEventType(WebSocketEventType.notification);
 });
 
-final sessionUpdateStreamProvider = StreamProvider&lt;WebSocketEvent&gt;((ref) {
+final sessionUpdateStreamProvider = StreamProvider<WebSocketEvent>((ref) {
   final webSocketService = WebSocketService();
   return webSocketService.subscribeToEventType(WebSocketEventType.sessionUpdate);
 });
 
-final userUpdateStreamProvider = StreamProvider&lt;WebSocketEvent&gt;((ref) {
+final userUpdateStreamProvider = StreamProvider<WebSocketEvent>((ref) {
   final webSocketService = WebSocketService();
   return webSocketService.subscribeToEventType(WebSocketEventType.userUpdate);
 });
 
-final systemAlertStreamProvider = StreamProvider&lt;WebSocketEvent&gt;((ref) {
+final systemAlertStreamProvider = StreamProvider<WebSocketEvent>((ref) {
   final webSocketService = WebSocketService();
   return webSocketService.subscribeToEventType(WebSocketEventType.systemAlert);
 });
 
-final deviceStatusStreamProvider = StreamProvider&lt;WebSocketEvent&gt;((ref) {
+final deviceStatusStreamProvider = StreamProvider<WebSocketEvent>((ref) {
   final webSocketService = WebSocketService();
   return webSocketService.subscribeToEventType(WebSocketEventType.deviceStatusUpdate);
 });
 
-final auditLogStreamProvider = StreamProvider&lt;WebSocketEvent&gt;((ref) {
+final auditLogStreamProvider = StreamProvider<WebSocketEvent>((ref) {
   final webSocketService = WebSocketService();
   return webSocketService.subscribeToEventType(WebSocketEventType.auditLog);
 });
 
-final organizationUpdateStreamProvider = StreamProvider&lt;WebSocketEvent&gt;((ref) {
+final organizationUpdateStreamProvider = StreamProvider<WebSocketEvent>((ref) {
   final webSocketService = WebSocketService();
   return webSocketService.subscribeToEventType(WebSocketEventType.organizationUpdate);
 });
 
 // Helper providers
-final unreadNotificationCountProvider = Provider&lt;int&gt;((ref) {
+final unreadNotificationCountProvider = Provider<int>((ref) {
   final webSocketState = ref.watch(webSocketProvider);
   return webSocketState.unreadNotificationCount;
 });
 
-final isWebSocketConnectedProvider = Provider&lt;bool&gt;((ref) {
+final isWebSocketConnectedProvider = Provider<bool>((ref) {
   final webSocketState = ref.watch(webSocketProvider);
   return webSocketState.connectionState == WebSocketState.connected;
 });
 
-final recentWebSocketErrorsProvider = Provider&lt;List&lt;String&gt;&gt;((ref) {
+final recentWebSocketErrorsProvider = Provider<List<String>>((ref) {
   final webSocketState = ref.watch(webSocketProvider);
   return webSocketState.errors;
 });

@@ -138,7 +138,7 @@ class MagicLinkNotifier extends StateNotifier<MagicLinkState> {
       } else {
         state = state.copyWith(
           isRequesting: false,
-          errorMessage: response.message,
+          errorMessage: response.errorMessage ?? "",
         );
         return false;
       }
@@ -171,7 +171,7 @@ class MagicLinkNotifier extends StateNotifier<MagicLinkState> {
       } else {
         state = state.copyWith(
           isVerifying: false,
-          errorMessage: response.message,
+          errorMessage: response.errorMessage ?? "",
         );
         return false;
       }
@@ -196,12 +196,12 @@ class MagicLinkNotifier extends StateNotifier<MagicLinkState> {
       if (response.isSuccess) {
         state = state.copyWith(
           email: email,
-          status: response.data,
+          status: response.dataOrNull,
           errorMessage: null,
         );
       } else {
         state = state.copyWith(
-          errorMessage: response.message,
+          errorMessage: response.errorMessage ?? "",
         );
       }
     } catch (e) {
@@ -219,7 +219,7 @@ class MagicLinkNotifier extends StateNotifier<MagicLinkState> {
       if (response.isSuccess) {
         return true;
       } else {
-        state = state.copyWith(errorMessage: response.message);
+        state = state.copyWith(errorMessage: response.errorMessage ?? "");
         return false;
       }
     } catch (e) {
@@ -271,11 +271,11 @@ final magicLinkStatusProvider = FutureProvider.family<MagicLinkStatus?, String>(
   final magicLinkService = ref.watch(magicLinkServiceProvider);
   final response = await magicLinkService.getMagicLinkStatus(email);
 
-  if (response.isSuccess) {
-    return response.data;
-  } else {
-    throw Exception(response.message);
-  }
+  return response.when(
+    success: (data, _) => data,
+    error: (message, _, __, ___) => throw Exception(message),
+    loading: () => throw Exception('Unexpected loading state'),
+  );
 });
 
 // Convenience providers

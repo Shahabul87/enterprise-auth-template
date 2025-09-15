@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../domain/entities/user.dart';
+import '../data/models/auth_request.dart';
 import '../services/session_service.dart';
 
 // Session State Provider
@@ -55,9 +56,17 @@ class SessionNotifier extends StateNotifier<SessionState> {
         password: password,
       );
 
-      if (!response.isSuccess) {
-        state = SessionState.error(message: response.message);
-      }
+      response.when(
+        success: (user, _) {
+          state = SessionState.authenticated(user: user);
+        },
+        error: (message, _, __, ___) {
+          state = SessionState.error(message: message);
+        },
+        loading: () {
+          state = const SessionState.initializing();
+        },
+      );
     } catch (e) {
       state = SessionState.error(message: e.toString());
     }
@@ -76,9 +85,17 @@ class SessionNotifier extends StateNotifier<SessionState> {
         name: name,
       );
 
-      if (!response.isSuccess) {
-        state = SessionState.error(message: response.message);
-      }
+      response.when(
+        success: (user, _) {
+          state = SessionState.authenticated(user: user);
+        },
+        error: (message, _, __, ___) {
+          state = SessionState.error(message: message);
+        },
+        loading: () {
+          state = const SessionState.initializing();
+        },
+      );
     } catch (e) {
       state = SessionState.error(message: e.toString());
     }
@@ -89,9 +106,17 @@ class SessionNotifier extends StateNotifier<SessionState> {
     try {
       final response = await _sessionService.oauthLogin(request);
 
-      if (!response.isSuccess) {
-        state = SessionState.error(message: response.message);
-      }
+      response.when(
+        success: (user, _) {
+          state = SessionState.authenticated(user: user);
+        },
+        error: (message, _, __, ___) {
+          state = SessionState.error(message: message);
+        },
+        loading: () {
+          state = const SessionState.initializing();
+        },
+      );
     } catch (e) {
       state = SessionState.error(message: e.toString());
     }
@@ -102,9 +127,17 @@ class SessionNotifier extends StateNotifier<SessionState> {
     try {
       final response = await _sessionService.verify2FA(code);
 
-      if (!response.isSuccess) {
-        state = SessionState.error(message: response.message);
-      }
+      response.when(
+        success: (user, _) {
+          state = SessionState.authenticated(user: user);
+        },
+        error: (message, _, __, ___) {
+          state = SessionState.error(message: message);
+        },
+        loading: () {
+          state = const SessionState.initializing();
+        },
+      );
     } catch (e) {
       state = SessionState.error(message: e.toString());
     }
@@ -115,9 +148,17 @@ class SessionNotifier extends StateNotifier<SessionState> {
     try {
       final response = await _sessionService.verifyMagicLink(token);
 
-      if (!response.isSuccess) {
-        state = SessionState.error(message: response.message);
-      }
+      response.when(
+        success: (user, _) {
+          state = SessionState.authenticated(user: user);
+        },
+        error: (message, _, __, ___) {
+          state = SessionState.error(message: message);
+        },
+        loading: () {
+          state = const SessionState.initializing();
+        },
+      );
     } catch (e) {
       state = SessionState.error(message: e.toString());
     }

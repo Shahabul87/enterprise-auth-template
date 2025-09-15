@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part &apos;api_key_models.freezed.dart&apos;;
-part &apos;api_key_models.g.dart&apos;;
+part 'api_key_models.freezed.dart';
+part 'api_key_models.g.dart';
 
 @freezed
 class ApiKey with _$ApiKey {
@@ -11,8 +11,8 @@ class ApiKey with _$ApiKey {
     required String description,
     required String keyPrefix,
     String? keyHash,
-    required List&lt;String&gt; permissions,
-    required List&lt;String&gt; scopes,
+    required List<String> permissions,
+    required List<String> scopes,
     required bool isActive,
     DateTime? expiresAt,
     required DateTime createdAt,
@@ -20,10 +20,10 @@ class ApiKey with _$ApiKey {
     DateTime? lastUsedAt,
     required int usageCount,
     String? ipWhitelist,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _ApiKey;
 
-  factory ApiKey.fromJson(Map&lt;String, dynamic&gt; json) =&gt; _$ApiKeyFromJson(json);
+  factory ApiKey.fromJson(Map<String, dynamic> json) => _$ApiKeyFromJson(json);
 }
 
 @freezed
@@ -31,14 +31,14 @@ class ApiKeyCreateRequest with _$ApiKeyCreateRequest {
   const factory ApiKeyCreateRequest({
     required String name,
     required String description,
-    required List&lt;String&gt; permissions,
-    required List&lt;String&gt; scopes,
+    required List<String> permissions,
+    required List<String> scopes,
     DateTime? expiresAt,
     String? ipWhitelist,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _ApiKeyCreateRequest;
 
-  factory ApiKeyCreateRequest.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ApiKeyCreateRequest.fromJson(Map<String, dynamic> json) =>
       _$ApiKeyCreateRequestFromJson(json);
 }
 
@@ -47,15 +47,15 @@ class ApiKeyUpdateRequest with _$ApiKeyUpdateRequest {
   const factory ApiKeyUpdateRequest({
     String? name,
     String? description,
-    List&lt;String&gt;? permissions,
-    List&lt;String&gt;? scopes,
+    List<String>? permissions,
+    List<String>? scopes,
     bool? isActive,
     DateTime? expiresAt,
     String? ipWhitelist,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _ApiKeyUpdateRequest;
 
-  factory ApiKeyUpdateRequest.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ApiKeyUpdateRequest.fromJson(Map<String, dynamic> json) =>
       _$ApiKeyUpdateRequestFromJson(json);
 }
 
@@ -67,14 +67,14 @@ class ApiKeyCreateResponse with _$ApiKeyCreateResponse {
     required String warning,
   }) = _ApiKeyCreateResponse;
 
-  factory ApiKeyCreateResponse.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ApiKeyCreateResponse.fromJson(Map<String, dynamic> json) =>
       _$ApiKeyCreateResponseFromJson(json);
 }
 
 @freezed
 class ApiKeyListResponse with _$ApiKeyListResponse {
   const factory ApiKeyListResponse({
-    required List&lt;ApiKey&gt; apiKeys,
+    required List<ApiKey> apiKeys,
     required int total,
     required int page,
     required int limit,
@@ -82,7 +82,7 @@ class ApiKeyListResponse with _$ApiKeyListResponse {
     required bool hasPrevious,
   }) = _ApiKeyListResponse;
 
-  factory ApiKeyListResponse.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ApiKeyListResponse.fromJson(Map<String, dynamic> json) =>
       _$ApiKeyListResponseFromJson(json);
 }
 
@@ -93,13 +93,13 @@ class ApiKeyUsageStats with _$ApiKeyUsageStats {
     required int totalRequests,
     required int successfulRequests,
     required int failedRequests,
-    required Map&lt;String, int&gt; requestsByEndpoint,
-    required Map&lt;String, int&gt; requestsByDay,
+    required Map<String, int> requestsByEndpoint,
+    required Map<String, int> requestsByDay,
     required DateTime lastUsed,
     required double averageResponseTime,
   }) = _ApiKeyUsageStats;
 
-  factory ApiKeyUsageStats.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ApiKeyUsageStats.fromJson(Map<String, dynamic> json) =>
       _$ApiKeyUsageStatsFromJson(json);
 }
 
@@ -111,10 +111,10 @@ class ApiKeyPermission with _$ApiKeyPermission {
     required String description,
     required String category,
     required bool isRequired,
-    List&lt;String&gt;? subPermissions,
+    List<String>? subPermissions,
   }) = _ApiKeyPermission;
 
-  factory ApiKeyPermission.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ApiKeyPermission.fromJson(Map<String, dynamic> json) =>
       _$ApiKeyPermissionFromJson(json);
 }
 
@@ -124,11 +124,11 @@ class ApiKeyScope with _$ApiKeyScope {
     required String id,
     required String name,
     required String description,
-    required List&lt;String&gt; endpoints,
+    required List<String> endpoints,
     required bool isDefault,
   }) = _ApiKeyScope;
 
-  factory ApiKeyScope.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ApiKeyScope.fromJson(Map<String, dynamic> json) =>
       _$ApiKeyScopeFromJson(json);
 }
 
@@ -144,11 +144,11 @@ class ApiKeyActivity with _$ApiKeyActivity {
     required String userAgent,
     required DateTime timestamp,
     required int responseTime,
-    Map&lt;String, dynamic&gt;? requestData,
-    Map&lt;String, dynamic&gt;? responseData,
+    Map<String, dynamic>? requestData,
+    Map<String, dynamic>? responseData,
   }) = _ApiKeyActivity;
 
-  factory ApiKeyActivity.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory ApiKeyActivity.fromJson(Map<String, dynamic> json) =>
       _$ApiKeyActivityFromJson(json);
 }
 
@@ -172,26 +172,26 @@ extension ApiKeyStatusExtension on ApiKeyStatus {
   String get displayName {
     switch (this) {
       case ApiKeyStatus.active:
-        return &apos;Active&apos;;
+        return 'Active';
       case ApiKeyStatus.inactive:
-        return &apos;Inactive&apos;;
+        return 'Inactive';
       case ApiKeyStatus.expired:
-        return &apos;Expired&apos;;
+        return 'Expired';
       case ApiKeyStatus.revoked:
-        return &apos;Revoked&apos;;
+        return 'Revoked';
     }
   }
 
   String get colorName {
     switch (this) {
       case ApiKeyStatus.active:
-        return &apos;green&apos;;
+        return 'green';
       case ApiKeyStatus.inactive:
-        return &apos;orange&apos;;
+        return 'orange';
       case ApiKeyStatus.expired:
-        return &apos;red&apos;;
+        return 'red';
       case ApiKeyStatus.revoked:
-        return &apos;red&apos;;
+        return 'red';
     }
   }
 }
@@ -200,34 +200,34 @@ extension ApiKeyPermissionCategoryExtension on ApiKeyPermissionCategory {
   String get displayName {
     switch (this) {
       case ApiKeyPermissionCategory.authentication:
-        return &apos;Authentication&apos;;
+        return 'Authentication';
       case ApiKeyPermissionCategory.userManagement:
-        return &apos;User Management&apos;;
+        return 'User Management';
       case ApiKeyPermissionCategory.dataAccess:
-        return &apos;Data Access&apos;;
+        return 'Data Access';
       case ApiKeyPermissionCategory.administration:
-        return &apos;Administration&apos;;
+        return 'Administration';
       case ApiKeyPermissionCategory.analytics:
-        return &apos;Analytics&apos;;
+        return 'Analytics';
       case ApiKeyPermissionCategory.webhooks:
-        return &apos;Webhooks&apos;;
+        return 'Webhooks';
     }
   }
 
   String get iconName {
     switch (this) {
       case ApiKeyPermissionCategory.authentication:
-        return &apos;lock&apos;;
+        return 'lock';
       case ApiKeyPermissionCategory.userManagement:
-        return &apos;people&apos;;
+        return 'people';
       case ApiKeyPermissionCategory.dataAccess:
-        return &apos;storage&apos;;
+        return 'storage';
       case ApiKeyPermissionCategory.administration:
-        return &apos;admin_panel_settings&apos;;
+        return 'admin_panel_settings';
       case ApiKeyPermissionCategory.analytics:
-        return &apos;analytics&apos;;
+        return 'analytics';
       case ApiKeyPermissionCategory.webhooks:
-        return &apos;webhook&apos;;
+        return 'webhook';
     }
   }
 }

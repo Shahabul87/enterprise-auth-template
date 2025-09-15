@@ -9,7 +9,7 @@ class ChartDataPoint {
 }
 
 class LineChartWidget extends StatelessWidget {
-  final List&lt;ChartDataPoint&gt; data;
+  final List<ChartDataPoint> data;
   final String title;
   final Color color;
   final bool showGrid;
@@ -30,7 +30,7 @@ class LineChartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (data.isEmpty) {
       return const Center(
-        child: Text(&apos;No data available&apos;),
+        child: Text('No data available'),
       );
     }
 
@@ -60,7 +60,7 @@ class LineChartWidget extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
-                    &apos;${date.day}/${date.month}&apos;,
+                    '${date.day}/${date.month}',
                     style: const TextStyle(fontSize: 10),
                   ),
                 );
@@ -76,7 +76,7 @@ class LineChartWidget extends StatelessWidget {
         ),
         lineBarsData: [
           LineChartBarData(
-            spots: data.map((point) =&gt; FlSpot(point.x, point.y)).toList(),
+            spots: data.map((point) => FlSpot(point.x, point.y)).toList(),
             isCurved: true,
             color: color,
             barWidth: strokeWidth,
@@ -97,7 +97,7 @@ class LineChartWidget extends StatelessWidget {
 
   double _getMaxY() {
     if (data.isEmpty) return 100;
-    return data.map((e) =&gt; e.y).reduce((a, b) =&gt; a &gt; b ? a : b);
+    return data.map((e) => e.y).reduce((a, b) => a > b ? a : b);
   }
 
   double _getBottomInterval() {

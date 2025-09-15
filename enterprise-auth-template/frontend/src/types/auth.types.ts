@@ -3,18 +3,24 @@
 export interface User {
   id: string;
   email: string;
-  first_name: string;
-  last_name: string;
+  full_name: string;
+  username?: string;
   is_active: boolean;
-  is_verified: boolean;
+  email_verified: boolean; // Changed from is_verified to match backend
   is_superuser: boolean;
+  two_factor_enabled: boolean;
   failed_login_attempts: number;
   last_login: string | null;
-  avatar_url?: string;
+  last_login_at?: string | null; // For backend compatibility
+  profile_picture?: string; // Standardized field name
+  avatar_url?: string; // Keep for backward compatibility
+  phone_number?: string;
+  is_phone_verified?: boolean;
   user_metadata: Record<string, unknown>;
   created_at: string;
   updated_at: string;
   roles: Role[];
+  permissions?: string[]; // Direct permissions array from backend
 }
 
 export interface Role {
@@ -83,6 +89,7 @@ export interface TokenData {
 export interface LoginRequest {
   email: string;
   password: string;
+  remember_me?: boolean; // Added for remember me functionality
 }
 
 export interface LoginResponse {
@@ -95,12 +102,27 @@ export interface LoginResponse {
   temp_token?: string | null;
 }
 
+// Standard API response wrapper
+export interface StandardResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+    details?: Record<string, unknown>;
+  };
+  metadata?: {
+    timestamp: string;
+    request_id: string;
+    version?: string;
+  };
+}
+
 export interface RegisterRequest {
   email: string;
   password: string;
-  confirm_password: string;
-  first_name: string;
-  last_name: string;
+  confirm_password?: string; // Optional for backend compatibility
+  name: string; // Will be used as full_name in backend
   agree_to_terms: boolean;
 }
 
@@ -120,6 +142,7 @@ export interface ResetPasswordRequest {
 export interface ConfirmResetPasswordRequest {
   token: string;
   new_password: string;
+  confirm_password: string; // Added to match backend schema
 }
 
 // Authentication context types
@@ -161,8 +184,7 @@ export interface RegisterFormData {
   email: string;
   password: string;
   confirmPassword: string;
-  first_name: string;
-  last_name: string;
+  name: string;
   terms: boolean;
 }
 

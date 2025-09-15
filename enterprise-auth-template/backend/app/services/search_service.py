@@ -131,7 +131,7 @@ class SearchService:
         # Searchable fields for each scope
         self.searchable_fields = {
             SearchScope.USERS: [
-                'email', 'first_name', 'last_name', 'phone_number',
+                'email', 'full_name', 'phone_number',
                 'created_at', 'last_login', 'is_active', 'is_verified'
             ],
             SearchScope.AUDIT_LOGS: [

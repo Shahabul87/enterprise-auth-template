@@ -100,16 +100,14 @@ export function storeAuthTokens(tokens: TokenPair): void {
   // Store access token (should be httpOnly in production)
   setCookie(AUTH_COOKIES.ACCESS_TOKEN, tokens.access_token, {
     expires,
-    secure: true,
-    sameSite: 'strict',
+    // Use protocol-aware defaults for dev friendliness
   });
 
   // Store refresh token with longer expiry
   const refreshExpires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
   setCookie(AUTH_COOKIES.REFRESH_TOKEN, tokens.refresh_token, {
     expires: refreshExpires,
-    secure: true,
-    sameSite: 'strict',
+    // Use protocol-aware defaults for dev friendliness
   });
 }
 

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'notification_models.freezed.dart';
@@ -14,15 +15,15 @@ class NotificationMessage with _$NotificationMessage {
     required DateTime createdAt,
     DateTime? readAt,
     DateTime? expiresAt,
-    Map&lt;String, dynamic&gt;? metadata,
-    List&lt;NotificationAction&gt;? actions,
+    Map<String, dynamic>? metadata,
+    List<NotificationAction>? actions,
     String? imageUrl,
     String? deepLink,
     @Default(false) bool isRead,
     @Default(false) bool isPersistent,
   }) = _NotificationMessage;
 
-  factory NotificationMessage.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationMessage.fromJson(Map<String, dynamic> json) =>
       _$NotificationMessageFromJson(json);
 }
 
@@ -33,10 +34,10 @@ class NotificationAction with _$NotificationAction {
     required String label,
     required NotificationActionType type,
     String? url,
-    Map&lt;String, dynamic&gt;? payload,
+    Map<String, dynamic>? payload,
   }) = _NotificationAction;
 
-  factory NotificationAction.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationAction.fromJson(Map<String, dynamic> json) =>
       _$NotificationActionFromJson(json);
 }
 
@@ -50,15 +51,15 @@ class NotificationTemplate with _$NotificationTemplate {
     required String titleTemplate,
     required String contentTemplate,
     NotificationPriority? defaultPriority,
-    List&lt;NotificationAction&gt;? defaultActions,
-    Map&lt;String, String&gt;? variables,
+    List<NotificationAction>? defaultActions,
+    Map<String, String>? variables,
     NotificationChannelSettings? channelSettings,
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _NotificationTemplate;
 
-  factory NotificationTemplate.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationTemplate.fromJson(Map<String, dynamic> json) =>
       _$NotificationTemplateFromJson(json);
 }
 
@@ -71,12 +72,12 @@ class NotificationChannelSettings with _$NotificationChannelSettings {
     @Default(false) bool push,
     @Default(false) bool webhook,
     String? webhookUrl,
-    Map&lt;String, dynamic&gt;? emailSettings,
-    Map&lt;String, dynamic&gt;? smsSettings,
-    Map&lt;String, dynamic&gt;? pushSettings,
+    Map<String, dynamic>? emailSettings,
+    Map<String, dynamic>? smsSettings,
+    Map<String, dynamic>? pushSettings,
   }) = _NotificationChannelSettings;
 
-  factory NotificationChannelSettings.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationChannelSettings.fromJson(Map<String, dynamic> json) =>
       _$NotificationChannelSettingsFromJson(json);
 }
 
@@ -85,17 +86,17 @@ class NotificationPreferences with _$NotificationPreferences {
   const factory NotificationPreferences({
     required String userId,
     @Default(true) bool globalEnabled,
-    Map&lt;NotificationType, NotificationChannelSettings&gt;? typeSettings,
-    Map&lt;NotificationPriority, bool&gt;? prioritySettings,
-    List&lt;String&gt;? mutedCategories,
+    Map<NotificationType, NotificationChannelSettings>? typeSettings,
+    Map<NotificationPriority, bool>? prioritySettings,
+    List<String>? mutedCategories,
     @Default(true) bool soundEnabled,
     @Default(true) bool vibrationEnabled,
-    @Default(&apos;08:00&apos;) String quietHoursStart,
-    @Default(&apos;22:00&apos;) String quietHoursEnd,
+    @Default('08:00') String quietHoursStart,
+    @Default('22:00') String quietHoursEnd,
     DateTime? updatedAt,
   }) = _NotificationPreferences;
 
-  factory NotificationPreferences.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationPreferences.fromJson(Map<String, dynamic> json) =>
       _$NotificationPreferencesFromJson(json);
 }
 
@@ -104,9 +105,9 @@ class NotificationBatch with _$NotificationBatch {
   const factory NotificationBatch({
     required String id,
     required String title,
-    required List&lt;String&gt; recipients,
+    required List<String> recipients,
     required NotificationTemplate template,
-    required Map&lt;String, dynamic&gt; variables,
+    required Map<String, dynamic> variables,
     required NotificationBatchStatus status,
     required DateTime createdAt,
     DateTime? scheduledAt,
@@ -114,11 +115,11 @@ class NotificationBatch with _$NotificationBatch {
     @Default(0) int totalCount,
     @Default(0) int successCount,
     @Default(0) int failureCount,
-    List&lt;NotificationDeliveryResult&gt;? results,
+    List<NotificationDeliveryResult>? results,
     String? errorMessage,
   }) = _NotificationBatch;
 
-  factory NotificationBatch.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationBatch.fromJson(Map<String, dynamic> json) =>
       _$NotificationBatchFromJson(json);
 }
 
@@ -126,13 +127,13 @@ class NotificationBatch with _$NotificationBatch {
 class NotificationDeliveryResult with _$NotificationDeliveryResult {
   const factory NotificationDeliveryResult({
     required String recipientId,
-    required List&lt;NotificationChannelResult&gt; channelResults,
+    required List<NotificationChannelResult> channelResults,
     required NotificationDeliveryStatus overallStatus,
     DateTime? deliveredAt,
     String? errorMessage,
   }) = _NotificationDeliveryResult;
 
-  factory NotificationDeliveryResult.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationDeliveryResult.fromJson(Map<String, dynamic> json) =>
       _$NotificationDeliveryResultFromJson(json);
 }
 
@@ -144,10 +145,10 @@ class NotificationChannelResult with _$NotificationChannelResult {
     DateTime? attemptedAt,
     DateTime? deliveredAt,
     String? errorMessage,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _NotificationChannelResult;
 
-  factory NotificationChannelResult.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationChannelResult.fromJson(Map<String, dynamic> json) =>
       _$NotificationChannelResultFromJson(json);
 }
 
@@ -158,13 +159,13 @@ class NotificationSubscription with _$NotificationSubscription {
     required String userId,
     required NotificationChannel channel,
     required String endpoint,
-    Map&lt;String, dynamic&gt;? credentials,
+    Map<String, dynamic>? credentials,
     @Default(true) bool isActive,
     DateTime? createdAt,
     DateTime? lastUsedAt,
   }) = _NotificationSubscription;
 
-  factory NotificationSubscription.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationSubscription.fromJson(Map<String, dynamic> json) =>
       _$NotificationSubscriptionFromJson(json);
 }
 
@@ -172,12 +173,12 @@ class NotificationSubscription with _$NotificationSubscription {
 class NotificationAnalytics with _$NotificationAnalytics {
   const factory NotificationAnalytics({
     required NotificationDeliveryStats deliveryStats,
-    required List&lt;NotificationTypeMetric&gt; typeMetrics,
-    required List&lt;NotificationChannelMetric&gt; channelMetrics,
+    required List<NotificationTypeMetric> typeMetrics,
+    required List<NotificationChannelMetric> channelMetrics,
     required NotificationEngagementMetrics engagement,
   }) = _NotificationAnalytics;
 
-  factory NotificationAnalytics.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationAnalytics.fromJson(Map<String, dynamic> json) =>
       _$NotificationAnalyticsFromJson(json);
 }
 
@@ -193,7 +194,7 @@ class NotificationDeliveryStats with _$NotificationDeliveryStats {
     required double averageDeliveryTime,
   }) = _NotificationDeliveryStats;
 
-  factory NotificationDeliveryStats.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationDeliveryStats.fromJson(Map<String, dynamic> json) =>
       _$NotificationDeliveryStatsFromJson(json);
 }
 
@@ -207,7 +208,7 @@ class NotificationTypeMetric with _$NotificationTypeMetric {
     required double averageEngagementTime,
   }) = _NotificationTypeMetric;
 
-  factory NotificationTypeMetric.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationTypeMetric.fromJson(Map<String, dynamic> json) =>
       _$NotificationTypeMetricFromJson(json);
 }
 
@@ -222,7 +223,7 @@ class NotificationChannelMetric with _$NotificationChannelMetric {
     required double averageDeliveryTime,
   }) = _NotificationChannelMetric;
 
-  factory NotificationChannelMetric.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationChannelMetric.fromJson(Map<String, dynamic> json) =>
       _$NotificationChannelMetricFromJson(json);
 }
 
@@ -233,10 +234,10 @@ class NotificationEngagementMetrics with _$NotificationEngagementMetrics {
     required double clickThroughRate,
     required int totalClicks,
     required int totalDismissals,
-    Map&lt;String, int&gt;? actionCounts,
+    Map<String, int>? actionCounts,
   }) = _NotificationEngagementMetrics;
 
-  factory NotificationEngagementMetrics.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory NotificationEngagementMetrics.fromJson(Map<String, dynamic> json) =>
       _$NotificationEngagementMetricsFromJson(json);
 }
 
@@ -247,17 +248,17 @@ class CreateNotificationRequest with _$CreateNotificationRequest {
     required String content,
     required NotificationType type,
     NotificationPriority? priority,
-    List&lt;String&gt;? recipients,
-    List&lt;NotificationAction&gt;? actions,
+    List<String>? recipients,
+    List<NotificationAction>? actions,
     String? imageUrl,
     String? deepLink,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
     DateTime? expiresAt,
     DateTime? scheduledAt,
     @Default(false) bool isPersistent,
   }) = _CreateNotificationRequest;
 
-  factory CreateNotificationRequest.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory CreateNotificationRequest.fromJson(Map<String, dynamic> json) =>
       _$CreateNotificationRequestFromJson(json);
 }
 
@@ -316,46 +317,46 @@ extension NotificationTypeExtension on NotificationType {
   String get displayName {
     switch (this) {
       case NotificationType.info:
-        return &apos;Information&apos;;
+        return 'Information';
       case NotificationType.warning:
-        return &apos;Warning&apos;;
+        return 'Warning';
       case NotificationType.error:
-        return &apos;Error&apos;;
+        return 'Error';
       case NotificationType.success:
-        return &apos;Success&apos;;
+        return 'Success';
       case NotificationType.security:
-        return &apos;Security&apos;;
+        return 'Security';
       case NotificationType.system:
-        return &apos;System&apos;;
+        return 'System';
       case NotificationType.marketing:
-        return &apos;Marketing&apos;;
+        return 'Marketing';
       case NotificationType.reminder:
-        return &apos;Reminder&apos;;
+        return 'Reminder';
       case NotificationType.announcement:
-        return &apos;Announcement&apos;;
+        return 'Announcement';
     }
   }
 
   String get icon {
     switch (this) {
       case NotificationType.info:
-        return &apos;info&apos;;
+        return 'info';
       case NotificationType.warning:
-        return &apos;warning&apos;;
+        return 'warning';
       case NotificationType.error:
-        return &apos;error&apos;;
+        return 'error';
       case NotificationType.success:
-        return &apos;check_circle&apos;;
+        return 'check_circle';
       case NotificationType.security:
-        return &apos;security&apos;;
+        return 'security';
       case NotificationType.system:
-        return &apos;settings&apos;;
+        return 'settings';
       case NotificationType.marketing:
-        return &apos;campaign&apos;;
+        return 'campaign';
       case NotificationType.reminder:
-        return &apos;schedule&apos;;
+        return 'schedule';
       case NotificationType.announcement:
-        return &apos;announcement&apos;;
+        return 'announcement';
     }
   }
 
@@ -387,13 +388,13 @@ extension NotificationPriorityExtension on NotificationPriority {
   String get displayName {
     switch (this) {
       case NotificationPriority.low:
-        return &apos;Low&apos;;
+        return 'Low';
       case NotificationPriority.normal:
-        return &apos;Normal&apos;;
+        return 'Normal';
       case NotificationPriority.high:
-        return &apos;High&apos;;
+        return 'High';
       case NotificationPriority.urgent:
-        return &apos;Urgent&apos;;
+        return 'Urgent';
     }
   }
 
@@ -415,30 +416,30 @@ extension NotificationChannelExtension on NotificationChannel {
   String get displayName {
     switch (this) {
       case NotificationChannel.inApp:
-        return &apos;In-App&apos;;
+        return 'In-App';
       case NotificationChannel.email:
-        return &apos;Email&apos;;
+        return 'Email';
       case NotificationChannel.sms:
-        return &apos;SMS&apos;;
+        return 'SMS';
       case NotificationChannel.push:
-        return &apos;Push&apos;;
+        return 'Push';
       case NotificationChannel.webhook:
-        return &apos;Webhook&apos;;
+        return 'Webhook';
     }
   }
 
   String get icon {
     switch (this) {
       case NotificationChannel.inApp:
-        return &apos;notifications&apos;;
+        return 'notifications';
       case NotificationChannel.email:
-        return &apos;email&apos;;
+        return 'email';
       case NotificationChannel.sms:
-        return &apos;sms&apos;;
+        return 'sms';
       case NotificationChannel.push:
-        return &apos;mobile_friendly&apos;;
+        return 'mobile_friendly';
       case NotificationChannel.webhook:
-        return &apos;webhook&apos;;
+        return 'webhook';
     }
   }
 }
@@ -447,17 +448,17 @@ extension NotificationBatchStatusExtension on NotificationBatchStatus {
   String get displayName {
     switch (this) {
       case NotificationBatchStatus.draft:
-        return &apos;Draft&apos;;
+        return 'Draft';
       case NotificationBatchStatus.scheduled:
-        return &apos;Scheduled&apos;;
+        return 'Scheduled';
       case NotificationBatchStatus.processing:
-        return &apos;Processing&apos;;
+        return 'Processing';
       case NotificationBatchStatus.completed:
-        return &apos;Completed&apos;;
+        return 'Completed';
       case NotificationBatchStatus.failed:
-        return &apos;Failed&apos;;
+        return 'Failed';
       case NotificationBatchStatus.cancelled:
-        return &apos;Cancelled&apos;;
+        return 'Cancelled';
     }
   }
 
@@ -483,15 +484,15 @@ extension NotificationDeliveryStatusExtension on NotificationDeliveryStatus {
   String get displayName {
     switch (this) {
       case NotificationDeliveryStatus.pending:
-        return &apos;Pending&apos;;
+        return 'Pending';
       case NotificationDeliveryStatus.sent:
-        return &apos;Sent&apos;;
+        return 'Sent';
       case NotificationDeliveryStatus.delivered:
-        return &apos;Delivered&apos;;
+        return 'Delivered';
       case NotificationDeliveryStatus.failed:
-        return &apos;Failed&apos;;
+        return 'Failed';
       case NotificationDeliveryStatus.read:
-        return &apos;Read&apos;;
+        return 'Read';
     }
   }
 

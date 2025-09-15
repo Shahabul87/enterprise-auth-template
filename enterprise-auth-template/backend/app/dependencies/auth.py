@@ -168,12 +168,17 @@ async def get_current_user(
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-        if not user.is_verified:
+        # Import settings to check if email verification is required
+        from app.core.config import get_settings
+        settings = get_settings()
+
+        if settings.should_enforce_email_verification() and not user.email_verified:
             logger.warning(
                 "Unverified user attempted access",
                 user_id=str(user.id),
                 email=user.email,
                 path=request.url.path,
+                verification_enforced=settings.should_enforce_email_verification(),
             )
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -194,13 +199,19 @@ async def get_current_user(
             token_source=token_source,
         )
 
+        # Extract first_name and last_name from full_name
+        full_name = user.full_name or ""
+        name_parts = full_name.split()
+        first_name = name_parts[0] if name_parts else ""
+        last_name = " ".join(name_parts[1:]) if len(name_parts) > 1 else ""
+
         return CurrentUser(
             id=str(user.id),
             email=user.email,
-            first_name=user.first_name,
-            last_name=user.last_name,
+            first_name=first_name,
+            last_name=last_name,
             is_active=user.is_active,
-            is_verified=user.is_verified,
+            is_verified=user.email_verified,
             is_superuser=user.is_superuser,
             roles=role_names,
             permissions=current_permissions,
@@ -262,7 +273,7 @@ async def get_current_user_optional(
         # Get user from database with roles
         stmt = (
             select(User)
-            .where(User.id == token_data.user_id)
+            .where(User.id == token_data.sub)
             .options(selectinload(User.roles).selectinload(Role.permissions))
         )
         result = await db.execute(stmt)
@@ -280,14 +291,20 @@ async def get_current_user_optional(
                     permissions.extend([perm.name for perm in role.permissions])
         permissions = list(set(permissions))  # Remove duplicates
 
+        # Extract first_name and last_name from full_name
+        full_name = user.full_name or ""
+        name_parts = full_name.split()
+        first_name = name_parts[0] if name_parts else ""
+        last_name = " ".join(name_parts[1:]) if len(name_parts) > 1 else ""
+
         # Create CurrentUser instance
         return CurrentUser(
             id=str(user.id),
             email=user.email,
-            first_name=user.first_name,
-            last_name=user.last_name,
+            first_name=first_name,
+            last_name=last_name,
             is_active=user.is_active,
-            is_verified=user.is_verified,
+            is_verified=user.email_verified,
             is_superuser=user.is_superuser,
             roles=roles,
             permissions=permissions,

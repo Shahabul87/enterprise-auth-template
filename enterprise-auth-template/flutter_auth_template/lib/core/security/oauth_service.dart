@@ -21,24 +21,12 @@ class OAuthService {
   }
 
   void _initializeGoogleSignIn() {
-    // TODO: Fix Google Sign-In initialization
-    // Current issue: Flutter analyzer not recognizing GoogleSignIn constructor
-    // This is likely due to version compatibility or platform-specific configuration
-    // For now, using a placeholder implementation
-
-    developer.log(
-      'Google Sign-In initialization skipped due to analyzer compatibility issues',
-      name: 'OAuthService',
-      level: 900,
+    _googleSignIn = GoogleSignIn(
+      scopes: [
+        'email',
+        'profile',
+      ],
     );
-
-    // Create a stub implementation that will be replaced when platform is configured
-    _googleSignIn = _createStubGoogleSignIn();
-  }
-
-  // Stub implementation for development/testing
-  dynamic _createStubGoogleSignIn() {
-    return _StubGoogleSignIn();
   }
 
   /// Google Sign-In Methods
@@ -61,16 +49,14 @@ class OAuthService {
   /// Perform Google Sign-In
   Future<GoogleSignInAccount?> signInWithGoogle() async {
     try {
-      // Note: Using dynamic typing as workaround for analyzer issues
-      final dynamic googleSignIn = _googleSignIn;
+      final googleSignIn = _googleSignIn;
 
       // Check if already signed in
-      GoogleSignInAccount? account =
-          googleSignIn.currentUser as GoogleSignInAccount?;
+      GoogleSignInAccount? account = googleSignIn.currentUser;
 
       if (account == null) {
         // Perform sign-in
-        account = await googleSignIn.signIn() as GoogleSignInAccount?;
+        account = await googleSignIn.signIn();
       }
 
       if (account == null) {
@@ -106,12 +92,11 @@ class OAuthService {
   /// Get Google authentication token
   Future<String?> getGoogleAuthToken(GoogleSignInAccount account) async {
     try {
-      // Using dynamic for analyzer compatibility
-      final dynamic auth = await account.authentication;
+      final auth = await account.authentication;
 
       // For backend integration, we typically need the ID token
-      final String? idToken = auth.idToken as String?;
-      final String? accessToken = auth.accessToken as String?;
+      final String? idToken = auth.idToken;
+      final String? accessToken = auth.accessToken;
 
       developer.log('Google auth token obtained', name: 'OAuthService');
 
@@ -220,7 +205,7 @@ class OAuthService {
           level: 1000,
         );
 
-        return OAuthCallbackResult.error(
+        return OAuthCallbackResult.errorMessage(
           error: error,
           description: errorDescription ?? 'OAuth authentication failed',
         );
@@ -236,7 +221,7 @@ class OAuthService {
           name: 'OAuthService',
           level: 1000,
         );
-        return const OAuthCallbackResult.error(
+        return const OAuthCallbackResult.errorMessage(
           error: 'invalid_callback',
           description: 'Authorization code not found in callback',
         );
@@ -255,7 +240,7 @@ class OAuthService {
         level: 1000,
       );
 
-      return OAuthCallbackResult.error(
+      return OAuthCallbackResult.errorMessage(
         error: 'parse_error',
         description: 'Failed to parse OAuth callback',
       );
@@ -306,7 +291,7 @@ class OAuthCallbackResult {
   const OAuthCallbackResult.success({required String code, String? state})
     : this._(isSuccess: true, code: code, state: state);
 
-  const OAuthCallbackResult.error({
+  const OAuthCallbackResult.errorMessage({
     required String error,
     required String description,
   }) : this._(isSuccess: false, error: error, description: description);
@@ -316,28 +301,8 @@ class OAuthCallbackResult {
     if (isSuccess) {
       return 'OAuthCallbackResult.success(code: ${code?.substring(0, 10)}..., state: $state)';
     } else {
-      return 'OAuthCallbackResult.error(error: $error, description: $description)';
+      return 'OAuthCallbackResult.errorMessage(error: $error, description: $description)';
     }
   }
 }
 
-/// Stub implementation for Google Sign-In
-/// TODO: Replace with actual GoogleSignIn when platform configuration is complete
-class _StubGoogleSignIn {
-  GoogleSignInAccount? get currentUser => null;
-
-  Future<GoogleSignInAccount?> signIn() async {
-    developer.log(
-      'Stub Google Sign-In called - not functional',
-      name: 'StubGoogleSignIn',
-    );
-    return null;
-  }
-
-  Future<void> signOut() async {
-    developer.log(
-      'Stub Google Sign-Out called - not functional',
-      name: 'StubGoogleSignIn',
-    );
-  }
-}

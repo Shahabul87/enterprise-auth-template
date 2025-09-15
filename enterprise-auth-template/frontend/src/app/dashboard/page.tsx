@@ -71,9 +71,9 @@ export default function DashboardPage(): JSX.Element {
               <div>
                 <span className='text-sm font-medium'>Verified:</span>
                 <span
-                  className={`ml-2 text-sm ${user.is_verified ? 'text-green-600' : 'text-yellow-600'}`}
+                  className={`ml-2 text-sm ${user.email_verified ? 'text-green-600' : 'text-yellow-600'}`}
                 >
-                  {user.is_verified ? 'Yes' : 'No'}
+                  {user.email_verified ? 'Yes' : 'No'}
                 </span>
               </div>
               <div>

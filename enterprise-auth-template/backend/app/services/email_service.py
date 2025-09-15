@@ -200,7 +200,7 @@ class EmailService:
             bool: True if email sent successfully
         """
         verification_url = (
-            f"{self.frontend_url}/auth/verify-email?token={verification_token}"
+            f"{self.frontend_url}/auth/verify?token={verification_token}"
         )
         subject = f"Verify your {self.app_name} account"
 

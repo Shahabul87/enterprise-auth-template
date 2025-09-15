@@ -18,9 +18,11 @@ from fastapi import (
 )
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db_session
+from app.core.config import get_settings
 from app.core.security import verify_token
 from app.middleware.csrf_protection import get_csrf_token_for_client
 from app.models.user import User
@@ -35,6 +37,12 @@ from app.schemas.auth import (
     AuthResponseData,
 )
 from app.schemas.response import StandardResponse
+from app.core.error_handling import (
+    ErrorCategory,
+    create_detailed_error_response,
+    ProgressTracker,
+    FallbackAuthManager,
+)
 from app.utils.response_helpers import (
     generate_request_id,
     login_success_response,
@@ -42,6 +50,7 @@ from app.utils.response_helpers import (
     user_profile_response,
     message_response,
     permissions_response,
+    success_response,
     invalid_credentials_error,
     email_already_exists_error,
     account_locked_error,
@@ -51,18 +60,72 @@ from app.utils.response_helpers import (
     server_error,
     invalid_token_error,
 )
-from app.services.auth_service import (
-    AccountLockedError,
+# Import new refactored services
+from app.services.auth.authentication_service import (
+    AuthenticationService,
     AuthenticationError,
-    AuthService,
+    AccountLockedError,
     EmailNotVerifiedError,
 )
+from app.services.auth.registration_service import (
+    RegistrationService,
+    RegistrationError,
+)
+from app.services.auth.password_management_service import (
+    PasswordManagementService,
+    PasswordManagementError,
+)
+from app.services.auth.email_verification_service import (
+    EmailVerificationService,
+    EmailVerificationError,
+)
+from app.repositories.user_repository import UserRepository
+from app.repositories.session_repository import SessionRepository
+from app.repositories.role_repository import RoleRepository
 
 bearer_scheme = HTTPBearer()
 
 logger = structlog.get_logger(__name__)
 
 router = APIRouter()
+@router.get(
+    "/me",
+    response_model=StandardResponse[dict]
+)
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    db: AsyncSession = Depends(get_db_session),
+) -> StandardResponse[dict]:
+    """
+    Return the current authenticated user's profile.
+
+    Expects a valid Bearer access token.
+    """
+    if not credentials:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required")
+
+    try:
+        token_data = verify_token(credentials.credentials, "access")
+        if not token_data:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
+
+        stmt = select(User).where(User.id == token_data.sub)
+        result = await db.execute(stmt)
+        user = result.scalar_one_or_none()
+        if not user:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+
+        request_id = generate_request_id()
+        return user_profile_response(user, request_id)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Failed to fetch current user", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=server_error("Failed to retrieve user profile").model_dump(),
+        )
+
 
 
 @router.post(
@@ -95,13 +158,16 @@ async def register(
     logger.info("User registration attempt", email=user_data.email)
 
     try:
-        auth_service = AuthService(db)
+        # Use new repository pattern and registration service
+        user_repo = UserRepository(db)
+        role_repo = RoleRepository(db)
+        registration_service = RegistrationService(db, user_repo, role_repo)
 
         # Get client information
         ip_address = request.client.host if request.client else None
         user_agent = request.headers.get("user-agent")
 
-        user = await auth_service.register_user(
+        user = await registration_service.register_user(
             registration_data=user_data,
             ip_address=ip_address,
             user_agent=user_agent,
@@ -114,7 +180,14 @@ async def register(
         )
 
         request_id = generate_request_id()
-        return user_profile_response(user, request_id)
+
+        # Return a clear success message with instructions
+        return message_response(
+            f"Registration successful! We've sent a verification email to {user.email}. "
+            f"Please check your inbox (including spam folder) and click the verification link to activate your account. "
+            f"The link will expire in 24 hours.",
+            request_id
+        )
 
     except ValueError as e:
         logger.warning(
@@ -122,20 +195,44 @@ async def register(
             email=user_data.email,
             error=str(e),
         )
+
+        # Determine specific error type
+        error_code = "validation_error"
         if "email already exists" in str(e).lower():
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=email_already_exists_error(user_data.email).model_dump()
-            )
+            error_code = "email_already_exists"
+        elif "password" in str(e).lower():
+            error_code = "weak_password"
+        elif "email" in str(e).lower() and "invalid" in str(e).lower():
+            error_code = "invalid_email_format"
+
+        error_response = create_detailed_error_response(
+            error_code=error_code,
+            error_category=ErrorCategory.VALIDATION,
+            context={"field": "email" if "email" in str(e).lower() else "password"},
+            user_id=None
+        )
+
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=validation_error(str(e)).model_dump()
+            detail=error_response
         )
+
     except AuthenticationError as e:
         logger.error("User registration failed", email=user_data.email, error=str(e))
+
+        # For now, use the existing server_error function until we fix the relationship issue
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=server_error("Registration failed. Please try again.").model_dump(),
+            detail=server_error("Registration failed. Please try again.").model_dump(mode='json'),
+        )
+
+    except Exception as e:
+        logger.error("Unexpected error during registration", email=user_data.email, error=str(e))
+
+        # For now, use the existing server_error function until we fix the relationship issue
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=server_error("Registration failed. Please try again.").model_dump(mode='json'),
         )
 
 
@@ -170,7 +267,10 @@ async def login(
     logger.info("User login attempt", email=credentials.email)
 
     try:
-        auth_service = AuthService(db)
+        # Use new repository pattern and authentication service
+        user_repo = UserRepository(db)
+        session_repo = SessionRepository(db)
+        auth_service = AuthenticationService(db, user_repo, session_repo)
 
         # Get client information
         ip_address = request.client.host if request.client else None
@@ -182,6 +282,9 @@ async def login(
             ip_address=ip_address,
             user_agent=user_agent,
         )
+
+        # Get the raw User model for response formatting
+        user = await user_repo.find_by_email_with_roles(credentials.email)
 
         request_id = generate_request_id()
 
@@ -203,7 +306,7 @@ async def login(
             )
 
             return login_success_response(
-                user=auth_result.user,
+                user=user,  # Pass raw User model instead of UserResponse
                 access_token=auth_result.access_token,
                 refresh_token=auth_result.refresh_token,
                 expires_in=15 * 60,  # 15 minutes
@@ -215,7 +318,7 @@ async def login(
                 key="access_token",
                 value=auth_result.access_token,
                 httponly=True,
-                secure=True,  # HTTPS only in production
+                secure=(request.url.scheme == "https"),  # HTTPS in prod, dev-friendly locally
                 samesite="lax",  # CSRF protection
                 max_age=15 * 60,  # 15 minutes (same as token expiry)
                 path="/",
@@ -226,10 +329,10 @@ async def login(
                 key="refresh_token",
                 value=auth_result.refresh_token,
                 httponly=True,
-                secure=True,  # HTTPS only in production
+                secure=(request.url.scheme == "https"),  # HTTPS in prod, dev-friendly locally
                 samesite="lax",  # CSRF protection
                 max_age=30 * 24 * 60 * 60,  # 30 days (same as token expiry)
-                path="/auth/refresh",  # Restrict to refresh endpoint
+                path=f"{get_settings().API_V1_PREFIX}/auth/refresh",  # Restrict to refresh endpoint
             )
 
             logger.info(
@@ -243,7 +346,7 @@ async def login(
             # Return standardized response without tokens (they're in cookies)
             from app.utils.response_helpers import format_user_response
             return login_success_response(
-                user=auth_result.user,
+                user=user,  # Use the raw User model, not auth_result.user (which is UserResponse)
                 access_token="",  # Empty since it's in cookie
                 refresh_token=None,
                 expires_in=15 * 60,
@@ -256,25 +359,83 @@ async def login(
             email=credentials.email,
             error=str(e),
         )
+
+        error_response = create_detailed_error_response(
+            error_code="account_locked",
+            error_category=ErrorCategory.AUTHENTICATION,
+            context={"email": credentials.email},
+            user_id=None
+        )
+
         raise HTTPException(
             status_code=status.HTTP_423_LOCKED,
-            detail=account_locked_error().model_dump()
+            detail=error_response
         )
+
     except EmailNotVerifiedError as e:
         logger.warning(
             "Login attempt with unverified email",
             email=credentials.email,
             error=str(e),
         )
+
+        error_response = create_detailed_error_response(
+            error_code="account_not_verified",
+            error_category=ErrorCategory.AUTHENTICATION,
+            context={"email": credentials.email},
+            user_id=None
+        )
+
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=email_not_verified_error().model_dump()
+            detail=error_response
         )
+
     except AuthenticationError as e:
         logger.warning("User login failed", email=credentials.email, error=str(e))
+
+        # Check specific error type
+        error_code = "invalid_credentials"
+        if "disabled" in str(e).lower():
+            error_code = "account_disabled"
+        elif "rate limit" in str(e).lower():
+            error_code = "rate_limit_exceeded"
+
+        error_response = create_detailed_error_response(
+            error_code=error_code,
+            error_category=ErrorCategory.AUTHENTICATION,
+            context={"email": credentials.email},
+            user_id=None
+        )
+
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=invalid_credentials_error().model_dump(),
+            detail=error_response
+        )
+
+    except Exception as e:
+        logger.error("Unexpected error during login", email=credentials.email, error=str(e))
+
+        error_code = "unexpected_error"
+        error_category = ErrorCategory.SYSTEM
+
+        if "database" in str(e).lower():
+            error_code = "database_connection_failed"
+            error_category = ErrorCategory.DATABASE
+        elif "network" in str(e).lower() or "timeout" in str(e).lower():
+            error_code = "network_timeout"
+            error_category = ErrorCategory.NETWORK
+
+        error_response = create_detailed_error_response(
+            error_code=error_code,
+            error_category=error_category,
+            context={"operation": "login"},
+            user_id=None
+        )
+
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=error_response
         )
 
 
@@ -306,7 +467,10 @@ async def refresh_token(
         HTTPException: If refresh token is invalid or expired
     """
     try:
-        auth_service = AuthService(db)
+        # Use new repository pattern and authentication service
+        user_repo = UserRepository(db)
+        session_repo = SessionRepository(db)
+        auth_service = AuthenticationService(db, user_repo, session_repo)
 
         # Get client information
         ip_address = request.client.host if request.client else None
@@ -369,7 +533,7 @@ async def refresh_token(
                 key="access_token",
                 value=token_data["access_token"],
                 httponly=True,
-                secure=True,
+                secure=(request.url.scheme == "https"),
                 samesite="lax",
                 max_age=15 * 60,  # 15 minutes
                 path="/",
@@ -381,10 +545,10 @@ async def refresh_token(
                     key="refresh_token",
                     value=token_data["refresh_token"],
                     httponly=True,
-                    secure=True,
+                    secure=(request.url.scheme == "https"),
                     samesite="lax",
                     max_age=30 * 24 * 60 * 60,  # 30 days
-                    path="/auth/refresh",
+                    path=f"{get_settings().API_V1_PREFIX}/auth/refresh",
                 )
 
             logger.debug(
@@ -405,7 +569,7 @@ async def refresh_token(
         if request.cookies.get("access_token"):
             response.delete_cookie(key="access_token", path="/")
         if request.cookies.get("refresh_token"):
-            response.delete_cookie(key="refresh_token", path="/auth/refresh")
+            response.delete_cookie(key="refresh_token", path=f"{get_settings().API_V1_PREFIX}/auth/refresh")
 
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -440,7 +604,10 @@ async def logout(
         dict: Success message with cleanup confirmation
     """
     try:
-        auth_service = AuthService(db)
+        # Use new repository pattern and authentication service
+        user_repo = UserRepository(db)
+        session_repo = SessionRepository(db)
+        auth_service = AuthenticationService(db, user_repo, session_repo)
 
         # Extract tokens from cookies (primary) or Authorization header (fallback)
         access_token = request.cookies.get("access_token")
@@ -479,16 +646,16 @@ async def logout(
             key="access_token",
             path="/",
             httponly=True,
-            secure=True,
+            secure=(request.url.scheme == "https"),
             samesite="lax",
         )
 
         # Clear refresh token cookie
         response.delete_cookie(
             key="refresh_token",
-            path="/auth/refresh",
+            path=f"{get_settings().API_V1_PREFIX}/auth/refresh",
             httponly=True,
-            secure=True,
+            secure=(request.url.scheme == "https"),
             samesite="lax",
         )
 
@@ -520,7 +687,7 @@ async def logout(
 
         # Still clear cookies even if token invalidation failed
         response.delete_cookie(key="access_token", path="/")
-        response.delete_cookie(key="refresh_token", path="/auth/refresh")
+        response.delete_cookie(key="refresh_token", path=f"{get_settings().API_V1_PREFIX}/auth/refresh")
         response.delete_cookie(key="refresh_token", path="/")
 
         # Always return success for security reasons (don't leak internal errors)
@@ -556,14 +723,16 @@ async def forgot_password(
     logger.info("Password reset requested", email=reset_request.email)
 
     try:
-        auth_service = AuthService(db)
+        # Use new repository pattern and password management service
+        user_repo = UserRepository(db)
+        password_service = PasswordManagementService(db, user_repo)
 
         # Get client information for audit
         ip_address = request.client.host if request.client else None
         user_agent = request.headers.get("user-agent")
 
         # Request password reset (handles token generation and email sending)
-        await auth_service.request_password_reset(
+        await password_service.request_password_reset(
             email=reset_request.email,
             ip_address=ip_address,
             user_agent=user_agent,
@@ -611,14 +780,16 @@ async def reset_password(
         HTTPException: If token is invalid or expired
     """
     try:
-        auth_service = AuthService(db)
+        # Use new repository pattern and password management service
+        user_repo = UserRepository(db)
+        password_service = PasswordManagementService(db, user_repo)
 
         # Get client information for audit
         ip_address = request.client.host if request.client else None
         user_agent = request.headers.get("user-agent")
 
         # Reset password using the token
-        await auth_service.reset_password(
+        await password_service.reset_password(
             reset_token=reset_data.token,
             new_password=reset_data.new_password,
             ip_address=ip_address,
@@ -676,13 +847,15 @@ async def verify_email(
         HTTPException: If token is invalid or expired
     """
     try:
-        auth_service = AuthService(db)
+        # Use new repository pattern and email verification service
+        user_repo = UserRepository(db)
+        email_service = EmailVerificationService(db, user_repo)
 
         # Get client information
         ip_address = request.client.host if request.client else None
         user_agent = request.headers.get("user-agent")
 
-        await auth_service.verify_email(
+        await email_service.verify_email(
             verification_token=token,
             ip_address=ip_address,
             user_agent=user_agent,
@@ -693,6 +866,14 @@ async def verify_email(
         request_id = generate_request_id()
         return message_response("Email verified successfully", request_id)
 
+    except EmailVerificationError as e:
+        logger.warning(
+            "Email verification failed", token=token[:8] + "...", error=str(e)
+        )
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=validation_error(str(e)).model_dump()
+        )
     except ValueError as e:
         logger.warning(
             "Email verification failed", token=token[:8] + "...", error=str(e)
@@ -700,6 +881,17 @@ async def verify_email(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=validation_error(str(e)).model_dump()
+        )
+    except Exception as e:
+        logger.error(
+            "Unexpected error during email verification",
+            token=token[:8] + "...",
+            error=str(e),
+            error_type=type(e).__name__
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=internal_error().model_dump()
         )
 
 
@@ -728,14 +920,16 @@ async def resend_verification(
     logger.info("Email verification resend requested", email=verification_request.email)
 
     try:
-        auth_service = AuthService(db)
+        # Use new repository pattern and email verification service
+        user_repo = UserRepository(db)
+        email_service = EmailVerificationService(db, user_repo)
 
         # Get client information for audit
         ip_address = request.client.host if request.client else None
         user_agent = request.headers.get("user-agent")
 
         # Resend verification email
-        await auth_service.resend_verification_email(
+        await email_service.resend_verification_email(
             email=verification_request.email,
             ip_address=ip_address,
             user_agent=user_agent,
@@ -845,6 +1039,70 @@ async def get_user_permissions(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=server_error("Failed to retrieve permissions").model_dump(),
+        )
+
+
+@router.get(
+    "/roles",
+    response_model=StandardResponse[List[str]]
+)
+async def get_user_roles(
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    db: AsyncSession = Depends(get_db_session),
+) -> StandardResponse[List[str]]:
+    """
+    Get current user's roles.
+
+    Returns a list of role names for the authenticated user.
+
+    Args:
+        credentials: Bearer token credentials
+        db: Database session
+
+    Returns:
+        List[str]: List of role names
+    """
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required",
+        )
+
+    try:
+        # Verify and decode token
+        token_data = verify_token(credentials.credentials, "access")
+
+        if not token_data:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired token",
+            )
+
+        # Get user with roles
+        stmt = select(User).options(selectinload(User.roles)).where(User.id == token_data.sub)
+        result = await db.execute(stmt)
+        user = result.scalar_one_or_none()
+
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found",
+            )
+
+        # Extract role names
+        roles = [role.name for role in user.roles] if user.roles else []
+
+        # Return roles
+        request_id = generate_request_id()
+        return success_response(roles, request_id)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Failed to get user roles", error=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=server_error("Failed to retrieve user roles").model_dump(),
         )
 
 

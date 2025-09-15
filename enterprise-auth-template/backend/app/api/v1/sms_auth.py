@@ -14,7 +14,12 @@ import re
 
 from app.core.database import get_db_session
 from app.services.sms_service import SMSService
-from app.services.auth_service import AuthService
+# Import new refactored services
+from app.services.auth.authentication_service import AuthenticationService
+from app.services.auth.registration_service import RegistrationService
+from app.repositories.user_repository import UserRepository
+from app.repositories.session_repository import SessionRepository
+from app.repositories.role_repository import RoleRepository
 from app.schemas.response import StandardResponse
 from app.schemas.auth import AuthResponseData
 from app.core.exceptions import ValidationError
@@ -203,8 +208,11 @@ async def sms_login(
     """
     try:
         sms_service = SMSService(db)
-        auth_service = AuthService(db)
-        
+        # Use new authentication service
+        user_repo = UserRepository(db)
+        session_repo = SessionRepository(db)
+        auth_service = AuthenticationService(db, user_repo, session_repo)
+
         # Verify and login
         user = await sms_service.login_with_phone(
             phone_number=request.phone_number,
@@ -213,41 +221,38 @@ async def sms_login(
         
         if not user:
             return error_response("Invalid credentials or phone number not registered")
-        
-        # Generate tokens
-        access_token = auth_service.create_access_token(user_id=str(user.id))
-        refresh_token = auth_service.create_refresh_token(user_id=str(user.id))
-        
+
         # Get client info
         client_ip = req.client.host if req.client else "unknown"
         user_agent = req.headers.get("user-agent", "unknown")
-        
-        # Create session
-        await auth_service.create_user_session(
+
+        # Create session and generate tokens using new service
+        auth_result = await auth_service._create_user_session(
             user=user,
-            refresh_token=refresh_token,
             ip_address=client_ip,
             user_agent=user_agent
         )
-        
+
+        access_token = auth_result.access_token
+        refresh_token = auth_result.refresh_token
+
         logger.info(
             "User logged in via SMS",
             user_id=str(user.id),
             phone_number=request.phone_number[:3] + "****"
         )
-        
+
         return success_response(
             data=AuthResponseData(
                 access_token=access_token,
                 refresh_token=refresh_token,
                 token_type="bearer",
-                expires_in=auth_service.access_token_expire_minutes * 60,
+                expires_in=auth_result.expires_in,
                 user={
                     "id": str(user.id),
                     "phone_number": user.phone_number,
                     "email": user.email,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
+                    "full_name": user.full_name,
                     "is_active": user.is_active
                 }
             ),
@@ -281,8 +286,11 @@ async def sms_register(
     """
     try:
         sms_service = SMSService(db)
-        auth_service = AuthService(db)
-        
+        # Use new registration service
+        user_repo = UserRepository(db)
+        role_repo = RoleRepository(db)
+        registration_service = RegistrationService(db, user_repo, role_repo)
+
         # Register user
         user = await sms_service.register_with_phone(
             phone_number=request.phone_number,
@@ -290,41 +298,40 @@ async def sms_register(
             name=request.name,
             email=request.email
         )
-        
-        # Generate tokens
-        access_token = auth_service.create_access_token(user_id=str(user.id))
-        refresh_token = auth_service.create_refresh_token(user_id=str(user.id))
-        
+
         # Get client info
         client_ip = req.client.host if req.client else "unknown"
         user_agent = req.headers.get("user-agent", "unknown")
-        
-        # Create session
-        await auth_service.create_user_session(
+
+        # Create session and generate tokens using authentication service
+        # (registration service creates user, auth service creates session)
+        auth_service = AuthenticationService(db, user_repo, SessionRepository(db))
+        auth_result = await auth_service._create_user_session(
             user=user,
-            refresh_token=refresh_token,
             ip_address=client_ip,
             user_agent=user_agent
         )
-        
+
+        access_token = auth_result.access_token
+        refresh_token = auth_result.refresh_token
+
         logger.info(
             "User registered via SMS",
             user_id=str(user.id),
             phone_number=request.phone_number[:3] + "****"
         )
-        
+
         return success_response(
             data=AuthResponseData(
                 access_token=access_token,
                 refresh_token=refresh_token,
                 token_type="bearer",
-                expires_in=auth_service.access_token_expire_minutes * 60,
+                expires_in=auth_result.expires_in,
                 user={
                     "id": str(user.id),
                     "phone_number": user.phone_number,
                     "email": user.email,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
+                    "full_name": user.full_name,
                     "is_active": user.is_active
                 }
             ),

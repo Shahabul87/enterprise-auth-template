@@ -240,8 +240,7 @@ async def create_admin_user(session: AsyncSession, roles: dict[str, Role]) -> Us
         admin_user = User(
             email=admin_email,
             hashed_password=pwd_context.hash(admin_password),
-            first_name="System",
-            last_name="Administrator",
+            full_name="System Administrator",
             is_active=True,
             is_verified=True,
             is_superuser=True,
@@ -306,8 +305,7 @@ async def create_test_user(session: AsyncSession, roles: dict[str, Role]) -> Use
         test_user = User(
             email=user_email,
             hashed_password=pwd_context.hash(user_password),
-            first_name="Test",
-            last_name="User",
+            full_name="Test User",
             is_active=True,
             is_verified=True,
             is_superuser=False,

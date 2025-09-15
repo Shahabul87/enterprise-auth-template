@@ -13,22 +13,18 @@ class UserBase(BaseModel):
     """Base user model with common fields."""
 
     email: EmailStr = Field(..., description="User email address")
-    first_name: str = Field(..., min_length=2, max_length=50, description="First name")
-    last_name: str = Field(..., min_length=2, max_length=50, description="Last name")
+    full_name: str = Field(..., min_length=2, max_length=255, description="Full name")
 
 
 class UserUpdate(BaseModel):
     """User profile update data."""
 
-    first_name: Optional[str] = Field(
-        None, min_length=2, max_length=50, description="First name"
-    )
-    last_name: Optional[str] = Field(
-        None, min_length=2, max_length=50, description="Last name"
+    full_name: Optional[str] = Field(
+        None, min_length=2, max_length=255, description="Full name"
     )
 
     model_config = ConfigDict(
-        json_schema_extra={"example": {"first_name": "John", "last_name": "Doe"}}
+        json_schema_extra={"example": {"full_name": "John Doe"}}
     )
 
 
@@ -37,10 +33,9 @@ class UserResponse(BaseModel):
 
     id: str = Field(..., description="User ID")
     email: str = Field(..., description="User email address")
-    first_name: str = Field(..., description="First name")
-    last_name: str = Field(..., description="Last name")
+    full_name: str = Field(..., description="Full name")
     is_active: bool = Field(..., description="Whether user account is active")
-    is_verified: bool = Field(..., description="Whether email is verified")
+    email_verified: bool = Field(..., description="Whether email is verified")
     roles: List[str] = Field(..., description="User roles")
     created_at: Optional[str] = Field(None, description="Account creation timestamp")
     updated_at: Optional[str] = Field(None, description="Last update timestamp")
@@ -51,10 +46,9 @@ class UserResponse(BaseModel):
             "example": {
                 "id": "123e4567-e89b-12d3-a456-426614174000",
                 "email": "user@example.com",
-                "first_name": "John",
-                "last_name": "Doe",
+                "full_name": "John Doe",
                 "is_active": True,
-                "is_verified": True,
+                "email_verified": True,
                 "roles": ["user"],
                 "created_at": "2024-01-01T00:00:00Z",
                 "updated_at": "2024-01-01T12:00:00Z",
@@ -79,19 +73,17 @@ class UserListResponse(BaseModel):
                     {
                         "id": "123e4567-e89b-12d3-a456-426614174000",
                         "email": "user1@example.com",
-                        "first_name": "John",
-                        "last_name": "Doe",
+                        "full_name": "John Doe",
                         "is_active": True,
-                        "is_verified": True,
+                        "email_verified": True,
                         "roles": ["user"],
                     },
                     {
                         "id": "123e4567-e89b-12d3-a456-426614174001",
                         "email": "admin@example.com",
-                        "first_name": "Admin",
-                        "last_name": "User",
+                        "full_name": "Admin User",
                         "is_active": True,
-                        "is_verified": True,
+                        "email_verified": True,
                         "roles": ["admin", "user"],
                     },
                 ],
@@ -117,11 +109,8 @@ class UserAdminUpdate(BaseModel):
     """Admin user update data (more fields than regular user update)."""
 
     email: Optional[EmailStr] = Field(None, description="User email address")
-    first_name: Optional[str] = Field(
-        None, min_length=2, max_length=50, description="First name"
-    )
-    last_name: Optional[str] = Field(
-        None, min_length=2, max_length=50, description="Last name"
+    full_name: Optional[str] = Field(
+        None, min_length=2, max_length=100, description="Full name"
     )
     is_active: Optional[bool] = Field(
         None, description="Whether user account is active"
@@ -133,10 +122,9 @@ class UserAdminUpdate(BaseModel):
         json_schema_extra={
             "example": {
                 "email": "user@example.com",
-                "first_name": "John",
-                "last_name": "Doe",
+                "full_name": "John Doe",
                 "is_active": True,
-                "is_verified": True,
+                "email_verified": True,
                 "roles": ["user", "moderator"],
             }
         }

@@ -14,7 +14,7 @@ class BarChartData {
 }
 
 class BarChartWidget extends StatefulWidget {
-  final List&lt;BarChartData&gt; data;
+  final List<BarChartData> data;
   final String title;
   final Color color;
   final bool showGrid;
@@ -30,17 +30,17 @@ class BarChartWidget extends StatefulWidget {
   });
 
   @override
-  State&lt;BarChartWidget&gt; createState() =&gt; _BarChartWidgetState();
+  State<BarChartWidget> createState() => _BarChartWidgetState();
 }
 
-class _BarChartWidgetState extends State&lt;BarChartWidget&gt; {
+class _BarChartWidgetState extends State<BarChartWidget> {
   int touchedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
     if (widget.data.isEmpty) {
       return const Center(
-        child: Text(&apos;No data available&apos;),
+        child: Text('No data available'),
       );
     }
 
@@ -70,7 +70,7 @@ class _BarChartWidgetState extends State&lt;BarChartWidget&gt; {
               showTitles: true,
               getTitlesWidget: (double value, TitleMeta meta) {
                 final index = value.toInt();
-                if (index &gt;= 0 &amp;&amp; index &lt; widget.data.length) {
+                if (index >= 0 && index < widget.data.length) {
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
@@ -82,7 +82,7 @@ class _BarChartWidgetState extends State&lt;BarChartWidget&gt; {
                     ),
                   );
                 }
-                return const Text(&apos;&apos;);
+                return const Text('');
               },
               reservedSize: 38,
             ),
@@ -111,7 +111,7 @@ class _BarChartWidgetState extends State&lt;BarChartWidget&gt; {
     );
   }
 
-  List&lt;BarChartGroupData&gt; _buildBarGroups() {
+  List<BarChartGroupData> _buildBarGroups() {
     return widget.data.asMap().entries.map((entry) {
       final index = entry.key;
       final data = entry.value;
@@ -135,22 +135,22 @@ class _BarChartWidgetState extends State&lt;BarChartWidget&gt; {
             ),
           ),
         ],
-        showingTooltipIndicators: widget.showValues &amp;&amp; isTouched ? [0] : [],
+        showingTooltipIndicators: widget.showValues && isTouched ? [0] : [],
       );
     }).toList();
   }
 
   double _getMaxY() {
     if (widget.data.isEmpty) return 100;
-    return widget.data.map((e) =&gt; e.value).reduce((a, b) =&gt; a &gt; b ? a : b);
+    return widget.data.map((e) => e.value).reduce((a, b) => a > b ? a : b);
   }
 
   double _getLeftInterval() {
     final maxY = _getMaxY();
-    if (maxY &lt;= 10) return 1;
-    if (maxY &lt;= 50) return 5;
-    if (maxY &lt;= 100) return 10;
-    if (maxY &lt;= 500) return 50;
+    if (maxY <= 10) return 1;
+    if (maxY <= 50) return 5;
+    if (maxY <= 100) return 10;
+    if (maxY <= 500) return 50;
     return 100;
   }
 }

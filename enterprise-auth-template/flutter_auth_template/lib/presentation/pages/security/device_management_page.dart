@@ -13,14 +13,14 @@ class DeviceManagementPage extends ConsumerStatefulWidget {
   const DeviceManagementPage({super.key});
 
   @override
-  ConsumerState&lt;DeviceManagementPage&gt; createState() =&gt; _DeviceManagementPageState();
+  ConsumerState<DeviceManagementPage> createState() => _DeviceManagementPageState();
 }
 
-class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&gt;
+class _DeviceManagementPageState extends ConsumerState<DeviceManagementPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _searchController = TextEditingController();
-  String _searchQuery = &apos;&apos;;
+  String _searchQuery = '';
   bool _showTrustedOnly = false;
   bool _showActiveOnly = false;
 
@@ -41,13 +41,13 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(&apos;Device Management&apos;),
+        title: const Text('Device Management'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: &apos;Devices&apos;, icon: Icon(Icons.devices)),
-            Tab(text: &apos;Security&apos;, icon: Icon(Icons.security)),
-            Tab(text: &apos;Statistics&apos;, icon: Icon(Icons.analytics)),
+            Tab(text: 'Devices', icon: Icon(Icons.devices)),
+            Tab(text: 'Security', icon: Icon(Icons.security)),
+            Tab(text: 'Statistics', icon: Icon(Icons.analytics)),
           ],
         ),
       ),
@@ -91,7 +91,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
           TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: &apos;Search devices...&apos;,
+              hintText: 'Search devices...',
               prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -102,7 +102,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
                       onPressed: () {
                         _searchController.clear();
                         setState(() {
-                          _searchQuery = &apos;&apos;;
+                          _searchQuery = '';
                         });
                       },
                     )
@@ -118,7 +118,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
           Row(
             children: [
               FilterChip(
-                label: const Text(&apos;Trusted Only&apos;),
+                label: const Text('Trusted Only'),
                 selected: _showTrustedOnly,
                 onSelected: (selected) {
                   setState(() {
@@ -128,7 +128,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
               ),
               const SizedBox(width: 8),
               FilterChip(
-                label: const Text(&apos;Active Only&apos;),
+                label: const Text('Active Only'),
                 selected: _showActiveOnly,
                 onSelected: (selected) {
                   setState(() {
@@ -140,7 +140,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
               ElevatedButton.icon(
                 onPressed: _refreshDevices,
                 icon: const Icon(Icons.refresh),
-                label: const Text(&apos;Refresh&apos;),
+                label: const Text('Refresh'),
               ),
             ],
           ),
@@ -150,7 +150,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
   }
 
   Widget _buildDeviceList() {
-    return FutureBuilder&lt;DeviceListResponse&gt;(
+    return FutureBuilder<DeviceListResponse>(
       future: _loadDevices(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -169,7 +169,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  &apos;Failed to load devices&apos;,
+                  'Failed to load devices',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 8),
@@ -181,7 +181,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _refreshDevices,
-                  child: const Text(&apos;Retry&apos;),
+                  child: const Text('Retry'),
                 ),
               ],
             ),
@@ -192,8 +192,8 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
         if (deviceList.devices.isEmpty) {
           return const EmptyState(
             icon: Icons.devices_other,
-            title: &apos;No Devices Found&apos;,
-            description: &apos;No devices match your search criteria.&apos;,
+            title: 'No Devices Found',
+            description: 'No devices match your search criteria.',
           );
         }
 
@@ -224,9 +224,9 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(&apos;${device.platform} • ${device.browser ?? &apos;Unknown&apos;}&apos;),
+            Text('${device.platform} • ${device.browser ?? 'Unknown'}'),
             Text(
-              &apos;Last seen: ${_formatDateTime(device.lastSeenAt)}&apos;,
+              'Last seen: ${_formatDateTime(device.lastSeenAt)}',
               style: TextStyle(
                 fontSize: 12,
                 color: Theme.of(context).textTheme.bodySmall?.color,
@@ -239,44 +239,44 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
           children: [
             _buildStatusChip(device),
             const SizedBox(width: 8),
-            PopupMenuButton&lt;String&gt;(
-              onSelected: (value) =&gt; _handleDeviceAction(value, device),
-              itemBuilder: (context) =&gt; [
+            PopupMenuButton<String>(
+              onSelected: (value) => _handleDeviceAction(value, device),
+              itemBuilder: (context) => [
                 const PopupMenuItem(
-                  value: &apos;view&apos;,
+                  value: 'view',
                   child: ListTile(
                     leading: Icon(Icons.visibility),
-                    title: Text(&apos;View Details&apos;),
+                    title: Text('View Details'),
                   ),
                 ),
                 if (!device.isTrusted)
                   const PopupMenuItem(
-                    value: &apos;trust&apos;,
+                    value: 'trust',
                     child: ListTile(
                       leading: Icon(Icons.verified_user),
-                      title: Text(&apos;Trust Device&apos;),
+                      title: Text('Trust Device'),
                     ),
                   )
                 else
                   const PopupMenuItem(
-                    value: &apos;untrust&apos;,
+                    value: 'untrust',
                     child: ListTile(
                       leading: Icon(Icons.verified_user_outlined),
-                      title: Text(&apos;Untrust Device&apos;),
+                      title: Text('Untrust Device'),
                     ),
                   ),
                 PopupMenuItem(
-                  value: device.isActive ? &apos;block&apos; : &apos;unblock&apos;,
+                  value: device.isActive ? 'block' : 'unblock',
                   child: ListTile(
                     leading: Icon(device.isActive ? Icons.block : Icons.check_circle),
-                    title: Text(device.isActive ? &apos;Block Device&apos; : &apos;Unblock Device&apos;),
+                    title: Text(device.isActive ? 'Block Device' : 'Unblock Device'),
                   ),
                 ),
                 const PopupMenuItem(
-                  value: &apos;delete&apos;,
+                  value: 'delete',
                   child: ListTile(
                     leading: Icon(Icons.delete, color: Colors.red),
-                    title: Text(&apos;Delete Device&apos;, style: TextStyle(color: Colors.red)),
+                    title: Text('Delete Device', style: TextStyle(color: Colors.red)),
                   ),
                 ),
               ],
@@ -284,7 +284,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
           ],
         ),
         isThreeLine: true,
-        onTap: () =&gt; _showDeviceDetails(device),
+        onTap: () => _showDeviceDetails(device),
       ),
     );
   }
@@ -292,16 +292,16 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
   Widget _buildDeviceIcon(Device device) {
     IconData iconData;
     switch (device.deviceType.toLowerCase()) {
-      case &apos;mobile&apos;:
+      case 'mobile':
         iconData = Icons.smartphone;
         break;
-      case &apos;desktop&apos;:
+      case 'desktop':
         iconData = Icons.computer;
         break;
-      case &apos;tablet&apos;:
+      case 'tablet':
         iconData = Icons.tablet;
         break;
-      case &apos;browser&apos;:
+      case 'browser':
         iconData = Icons.web;
         break;
       default:
@@ -327,13 +327,13 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
 
     if (!device.isActive) {
       color = Colors.red;
-      label = &apos;Blocked&apos;;
+      label = 'Blocked';
     } else if (device.isTrusted) {
       color = Colors.green;
-      label = &apos;Trusted&apos;;
+      label = 'Trusted';
     } else {
       color = Colors.orange;
-      label = &apos;Unverified&apos;;
+      label = 'Unverified';
     }
 
     return Container(
@@ -355,7 +355,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
   }
 
   Widget _buildSecurityTab() {
-    return FutureBuilder&lt;List&lt;DeviceSecurityAlert&gt;&gt;(
+    return FutureBuilder<List<DeviceSecurityAlert>>(
       future: _loadSecurityAlerts(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -363,15 +363,15 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
         }
 
         if (snapshot.hasError) {
-          return const Center(child: Text(&apos;Failed to load security alerts&apos;));
+          return const Center(child: Text('Failed to load security alerts'));
         }
 
         final alerts = snapshot.data!;
         if (alerts.isEmpty) {
           return const EmptyState(
             icon: Icons.security,
-            title: &apos;No Security Alerts&apos;,
-            description: &apos;No security alerts found for your devices.&apos;,
+            title: 'No Security Alerts',
+            description: 'No security alerts found for your devices.',
           );
         }
 
@@ -392,11 +392,11 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
     IconData severityIcon;
 
     switch (alert.severity.toLowerCase()) {
-      case &apos;high&apos;:
+      case 'high':
         severityColor = Colors.red;
         severityIcon = Icons.warning;
         break;
-      case &apos;medium&apos;:
+      case 'medium':
         severityColor = Colors.orange;
         severityIcon = Icons.info;
         break;
@@ -437,8 +437,8 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
         trailing: alert.isResolved
             ? const Icon(Icons.check_circle, color: Colors.green)
             : TextButton(
-                onPressed: () =&gt; _resolveSecurityAlert(alert.id),
-                child: const Text(&apos;Resolve&apos;),
+                onPressed: () => _resolveSecurityAlert(alert.id),
+                child: const Text('Resolve'),
               ),
         isThreeLine: true,
       ),
@@ -446,7 +446,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
   }
 
   Widget _buildStatisticsTab() {
-    return FutureBuilder&lt;DeviceStats&gt;(
+    return FutureBuilder<DeviceStats>(
       future: _loadDeviceStats(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -454,7 +454,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
         }
 
         if (snapshot.hasError) {
-          return const Center(child: Text(&apos;Failed to load statistics&apos;));
+          return const Center(child: Text('Failed to load statistics'));
         }
 
         final stats = snapshot.data!;
@@ -484,10 +484,10 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
       mainAxisSpacing: 16,
       childAspectRatio: 1.5,
       children: [
-        _buildStatCard(&apos;Total Devices&apos;, stats.totalDevices.toString(), Icons.devices),
-        _buildStatCard(&apos;Active Devices&apos;, stats.activeDevices.toString(), Icons.check_circle),
-        _buildStatCard(&apos;Trusted Devices&apos;, stats.trustedDevices.toString(), Icons.verified_user),
-        _buildStatCard(&apos;Unknown Devices&apos;, stats.unknownDevices.toString(), Icons.help_outline),
+        _buildStatCard('Total Devices', stats.totalDevices.toString(), Icons.devices),
+        _buildStatCard('Active Devices', stats.activeDevices.toString(), Icons.check_circle),
+        _buildStatCard('Trusted Devices', stats.trustedDevices.toString(), Icons.verified_user),
+        _buildStatCard('Unknown Devices', stats.unknownDevices.toString(), Icons.help_outline),
       ],
     );
   }
@@ -526,11 +526,11 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              &apos;Devices by Platform&apos;,
+              'Devices by Platform',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
-            ...stats.devicesByPlatform.entries.map((entry) =&gt; _buildPlatformRow(entry.key, entry.value, stats.totalDevices)),
+            ...stats.devicesByPlatform.entries.map((entry) => _buildPlatformRow(entry.key, entry.value, stats.totalDevices)),
           ],
         ),
       ),
@@ -556,7 +556,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
           ),
           Expanded(
             child: Text(
-              &apos;$count ($percentage%)&apos;,
+              '$count ($percentage%)',
               textAlign: TextAlign.right,
               style: const TextStyle(fontSize: 12),
             ),
@@ -574,14 +574,14 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              &apos;Top Locations&apos;,
+              'Top Locations',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
-            ...stats.topLocations.map((location) =&gt; ListTile(
+            ...stats.topLocations.map((location) => ListTile(
                   leading: const Icon(Icons.location_on),
                   title: Text(location.location),
-                  trailing: Text(&apos;${location.count} devices&apos;),
+                  trailing: Text('${location.count} devices'),
                 )),
           ],
         ),
@@ -589,7 +589,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
     );
   }
 
-  Future&lt;DeviceListResponse&gt; _loadDevices() async {
+  Future<DeviceListResponse> _loadDevices() async {
     final deviceService = ref.read(deviceApiServiceProvider);
     return await deviceService.getUserDevices(
       isActive: _showActiveOnly ? true : null,
@@ -597,17 +597,17 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
     );
   }
 
-  Future&lt;List&lt;DeviceSecurityAlert&gt;&gt; _loadSecurityAlerts() async {
+  Future<List<DeviceSecurityAlert>> _loadSecurityAlerts() async {
     final deviceService = ref.read(deviceApiServiceProvider);
     return await deviceService.getDeviceSecurityAlerts();
   }
 
-  Future&lt;DeviceStats&gt; _loadDeviceStats() async {
+  Future<DeviceStats> _loadDeviceStats() async {
     final deviceService = ref.read(deviceApiServiceProvider);
     return await deviceService.getDeviceStats();
   }
 
-  Future&lt;void&gt; _refreshDevices() async {
+  Future<void> _refreshDevices() async {
     setState(() {});
   }
 
@@ -616,73 +616,73 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
 
     try {
       switch (action) {
-        case &apos;view&apos;:
+        case 'view':
           _showDeviceDetails(device);
           break;
-        case &apos;trust&apos;:
+        case 'trust':
           await deviceService.trustDevice(device.id);
           _refreshDevices();
-          _showSnackBar(&apos;Device trusted successfully&apos;);
+          _showSnackBar('Device trusted successfully');
           break;
-        case &apos;untrust&apos;:
+        case 'untrust':
           await deviceService.untrustDevice(device.id);
           _refreshDevices();
-          _showSnackBar(&apos;Device untrusted successfully&apos;);
+          _showSnackBar('Device untrusted successfully');
           break;
-        case &apos;block&apos;:
+        case 'block':
           await deviceService.blockDevice(device.id);
           _refreshDevices();
-          _showSnackBar(&apos;Device blocked successfully&apos;);
+          _showSnackBar('Device blocked successfully');
           break;
-        case &apos;unblock&apos;:
+        case 'unblock':
           await deviceService.unblockDevice(device.id);
           _refreshDevices();
-          _showSnackBar(&apos;Device unblocked successfully&apos;);
+          _showSnackBar('Device unblocked successfully');
           break;
-        case &apos;delete&apos;:
+        case 'delete':
           final confirmed = await _showConfirmDialog(
-            &apos;Delete Device&apos;,
-            &apos;Are you sure you want to delete this device?&apos;,
+            'Delete Device',
+            'Are you sure you want to delete this device?',
           );
           if (confirmed) {
             await deviceService.deleteDevice(device.id);
             _refreshDevices();
-            _showSnackBar(&apos;Device deleted successfully&apos;);
+            _showSnackBar('Device deleted successfully');
           }
           break;
       }
     } catch (e) {
-      _showSnackBar(&apos;Failed to perform action: ${e.toString()}&apos;);
+      _showSnackBar('Failed to perform action: ${e.toString()}');
     }
   }
 
   void _showDeviceDetails(Device device) {
     showDialog(
       context: context,
-      builder: (context) =&gt; AlertDialog(
+      builder: (context) => AlertDialog(
         title: Text(device.deviceName),
         content: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildDetailRow(&apos;Device Type&apos;, device.deviceType),
-              _buildDetailRow(&apos;Platform&apos;, device.platform),
-              _buildDetailRow(&apos;Browser&apos;, device.browser ?? &apos;Unknown&apos;),
-              _buildDetailRow(&apos;OS&apos;, device.os ?? &apos;Unknown&apos;),
-              _buildDetailRow(&apos;IP Address&apos;, device.ipAddress),
-              _buildDetailRow(&apos;Location&apos;, device.location ?? &apos;Unknown&apos;),
-              _buildDetailRow(&apos;Status&apos;, device.isActive ? &apos;Active&apos; : &apos;Blocked&apos;),
-              _buildDetailRow(&apos;Trusted&apos;, device.isTrusted ? &apos;Yes&apos; : &apos;No&apos;),
-              _buildDetailRow(&apos;Created&apos;, _formatDateTime(device.createdAt)),
-              _buildDetailRow(&apos;Last Seen&apos;, _formatDateTime(device.lastSeenAt)),
+              _buildDetailRow('Device Type', device.deviceType),
+              _buildDetailRow('Platform', device.platform),
+              _buildDetailRow('Browser', device.browser ?? 'Unknown'),
+              _buildDetailRow('OS', device.os ?? 'Unknown'),
+              _buildDetailRow('IP Address', device.ipAddress),
+              _buildDetailRow('Location', device.location ?? 'Unknown'),
+              _buildDetailRow('Status', device.isActive ? 'Active' : 'Blocked'),
+              _buildDetailRow('Trusted', device.isTrusted ? 'Yes' : 'No'),
+              _buildDetailRow('Created', _formatDateTime(device.createdAt)),
+              _buildDetailRow('Last Seen', _formatDateTime(device.lastSeenAt)),
             ],
           ),
         ),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(),
-            child: const Text(&apos;Close&apos;),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),
@@ -702,37 +702,37 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          Expanded(child: Text(value ?? &apos;N/A&apos;)),
+          Expanded(child: Text(value ?? 'N/A')),
         ],
       ),
     );
   }
 
-  Future&lt;void&gt; _resolveSecurityAlert(String alertId) async {
+  Future<void> _resolveSecurityAlert(String alertId) async {
     try {
       final deviceService = ref.read(deviceApiServiceProvider);
       await deviceService.resolveSecurityAlert(alertId);
       setState(() {});
-      _showSnackBar(&apos;Security alert resolved&apos;);
+      _showSnackBar('Security alert resolved');
     } catch (e) {
-      _showSnackBar(&apos;Failed to resolve alert: ${e.toString()}&apos;);
+      _showSnackBar('Failed to resolve alert: ${e.toString()}');
     }
   }
 
-  Future&lt;bool&gt; _showConfirmDialog(String title, String message) async {
-    return await showDialog&lt;bool&gt;(
+  Future<bool> _showConfirmDialog(String title, String message) async {
+    return await showDialog<bool>(
           context: context,
-          builder: (context) =&gt; AlertDialog(
+          builder: (context) => AlertDialog(
             title: Text(title),
             content: Text(message),
             actions: [
               TextButton(
-                onPressed: () =&gt; Navigator.of(context).pop(false),
-                child: const Text(&apos;Cancel&apos;),
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
               ),
               ElevatedButton(
-                onPressed: () =&gt; Navigator.of(context).pop(true),
-                child: const Text(&apos;Confirm&apos;),
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Confirm'),
               ),
             ],
           ),
@@ -747,7 +747,7 @@ class _DeviceManagementPageState extends ConsumerState&lt;DeviceManagementPage&g
   }
 
   String _formatDateTime(DateTime? dateTime) {
-    if (dateTime == null) return &apos;Never&apos;;
-    return &apos;${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, &apos;0&apos;)}&apos;;
+    if (dateTime == null) return 'Never';
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }

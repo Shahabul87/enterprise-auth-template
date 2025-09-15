@@ -33,7 +33,8 @@ class RefreshToken(Base):
     id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid4, index=True
     )
-    token_id: Mapped[str] = mapped_column(
+    # Database has token_hash instead of token_id
+    token_hash: Mapped[str] = mapped_column(
         String(255), unique=True, nullable=False, index=True
     )
     user_id: Mapped[UUID] = mapped_column(
@@ -47,10 +48,12 @@ class RefreshToken(Base):
     expires_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, index=True
     )
-    is_revoked: Mapped[bool] = mapped_column(default=False, nullable=False)
+    # Database has revoked_at instead of is_revoked
+    revoked_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
 
-    # Device/session tracking
-    device_info: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    # Device/session tracking (match actual DB schema)
     ip_address: Mapped[Optional[str]] = mapped_column(
         String(45), nullable=True
     )  # IPv6 support
@@ -60,12 +63,18 @@ class RefreshToken(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
-    used_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
 
     # Relationships
     user: Mapped["User"] = relationship("User", back_populates="refresh_tokens")
+
+    @property
+    def is_valid(self) -> bool:
+        """Check if the refresh token is valid (not revoked and not expired)."""
+        now = datetime.utcnow()
+        return (
+            self.revoked_at is None and
+            self.expires_at > now
+        )
 
     def __repr__(self) -> str:
         return f"<RefreshToken(id={self.id}, user_id={self.user_id}, expires_at={self.expires_at})>"

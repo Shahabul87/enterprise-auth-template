@@ -11,10 +11,12 @@ from uuid import uuid4
 
 from sqlalchemy import (
     Boolean,
+    Column,
     DateTime,
     ForeignKey,
     Integer,
     String,
+    Table,
     Text,
     UniqueConstraint,
 )
@@ -24,6 +26,15 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
 from app.core.database import Base
+from app.core.security import get_password_hash
+
+# Simple association table for User-Role many-to-many relationship
+user_roles_table = Table(
+    "user_roles_association",
+    Base.metadata,
+    Column("user_id", UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True),
+    Column("role_id", UUID(as_uuid=True), ForeignKey("roles.id", ondelete="CASCADE"), primary_key=True),
+)
 
 if TYPE_CHECKING:
     from app.models.audit import AuditLog
@@ -60,12 +71,10 @@ class User(Base):
     )
 
     # Profile information
-    first_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    last_name: Mapped[str] = mapped_column(String(100), nullable=False)
     username: Mapped[Optional[str]] = mapped_column(
         String(100), unique=True, nullable=True
     )
-    full_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    full_name: Mapped[str] = mapped_column(String(255), nullable=False)
     avatar_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     # Phone number for SMS authentication
@@ -100,7 +109,7 @@ class User(Base):
     )
 
     # Account status
-    is_active: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     email_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
@@ -167,18 +176,9 @@ class User(Base):
     # Relationships
     roles: Mapped[List["Role"]] = relationship(
         "Role",
-        secondary="user_roles",
+        secondary="user_roles_association",
         back_populates="users",
-        lazy="selectin",
-        primaryjoin="User.id == user_roles.c.user_id",
-        secondaryjoin="user_roles.c.role_id == Role.id",
-    )
-
-    user_roles: Mapped[List["UserRole"]] = relationship(
-        "UserRole",
-        back_populates="user",
-        cascade="all, delete-orphan",
-        foreign_keys="[UserRole.user_id]",
+        lazy="selectin"
     )
 
     refresh_tokens: Mapped[List["RefreshToken"]] = relationship(
@@ -225,6 +225,38 @@ class User(Base):
     def __repr__(self) -> str:
         return f"<User(id={self.id}, email={self.email})>"
 
+    def set_password(self, password: str) -> None:
+        """
+        Set the user's password by hashing it.
+
+        Args:
+            password: Plain text password to hash
+        """
+        self.hashed_password = get_password_hash(password)
+
+    def to_dict(self) -> dict:
+        """
+        Convert user model to dictionary for repository operations.
+
+        Returns:
+            dict: User data as dictionary
+        """
+        return {
+            "email": self.email,
+            "hashed_password": self.hashed_password,
+            "username": self.username,
+            "full_name": self.full_name,
+            "is_active": self.is_active,
+            "is_verified": self.is_verified,
+            "is_superuser": self.is_superuser,
+            "email_verified": self.email_verified,
+            "phone_number": self.phone_number,
+            "is_phone_verified": self.is_phone_verified,
+            "avatar_url": self.avatar_url,
+            "organization_id": self.organization_id,
+            "user_metadata": self.user_metadata,
+        }
+
     @property
     def is_locked(self) -> bool:
         """Check if account is currently locked."""
@@ -260,7 +292,7 @@ class User(Base):
 
         stmt = (
             select(cls)
-            .options(selectinload(cls.roles).selectinload(Role.permissions))
+            .options(selectinload(cls.roles).selectinload("permissions"))
             .where(cls.id == user_id)
         )
         result = await db.execute(stmt)
@@ -285,7 +317,7 @@ class User(Base):
 
         stmt = (
             select(cls)
-            .options(selectinload(cls.roles).selectinload(Role.permissions))
+            .options(selectinload(cls.roles).selectinload("permissions"))
             .where(cls.email == email)
         )
         result = await db.execute(stmt)
@@ -326,12 +358,13 @@ class User(Base):
 
 class UserRole(Base):
     """
-    Association table for User-Role many-to-many relationship.
+    Audit table for tracking User-Role assignments.
 
     Tracks when roles were assigned and by whom for audit purposes.
+    Note: The actual many-to-many relationship uses user_roles_association table.
     """
 
-    __tablename__ = "user_roles"
+    __tablename__ = "user_role_audit"
 
     id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid4
@@ -353,15 +386,6 @@ class UserRole(Base):
     )
     assigned_by: Mapped[Optional[UUID]] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
-    )
-
-    # Relationships
-    user: Mapped["User"] = relationship(
-        "User", back_populates="user_roles", foreign_keys=[user_id]
-    )
-    role: Mapped["Role"] = relationship("Role", back_populates="user_roles")
-    assigned_by_user: Mapped[Optional["User"]] = relationship(
-        "User", foreign_keys=[assigned_by]
     )
 
     def __repr__(self) -> str:
@@ -394,9 +418,9 @@ class RolePermission(Base):
     )
 
     # Relationships
-    role: Mapped["Role"] = relationship("Role", back_populates="role_permissions")
+    role: Mapped["Role"] = relationship("Role", overlaps="permissions,roles")
     permission: Mapped["Permission"] = relationship(
-        "Permission", back_populates="role_permissions"
+        "Permission", overlaps="permissions,roles"
     )
 
     def __repr__(self) -> str:

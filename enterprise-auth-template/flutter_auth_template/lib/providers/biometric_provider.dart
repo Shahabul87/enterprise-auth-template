@@ -8,11 +8,11 @@ final biometricStatusProvider = FutureProvider<BiometricStatus>((ref) async {
   final biometricService = ref.watch(biometricServiceProvider);
   final response = await biometricService.getBiometricStatus();
 
-  if (response.isSuccess) {
-    return response.data!;
-  } else {
-    throw Exception(response.message);
-  }
+  return response.when(
+    success: (data, _) => data,
+    error: (message, _, __, ___) => throw Exception(message),
+    loading: () => throw Exception('Unexpected loading state'),
+  );
 });
 
 // Biometric Settings Notifier Provider
@@ -76,7 +76,7 @@ class BiometricSettingsNotifier extends StateNotifier<BiometricSettings> {
       final response = await _biometricService.getBiometricStatus();
 
       if (response.isSuccess) {
-        final status = response.data!;
+        final status = response.dataOrNull!;
         state = BiometricSettings(
           isEnabled: status.isAppEnabled,
           isDeviceSupported: status.isDeviceSupported,
@@ -85,7 +85,7 @@ class BiometricSettingsNotifier extends StateNotifier<BiometricSettings> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          errorMessage: response.message,
+          errorMessage: response.errorMessage ?? "",
         );
       }
     } catch (e) {
@@ -119,7 +119,7 @@ class BiometricSettingsNotifier extends StateNotifier<BiometricSettings> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          errorMessage: response.message,
+          errorMessage: response.errorMessage ?? "",
         );
         return false;
       }
@@ -148,7 +148,7 @@ class BiometricSettingsNotifier extends StateNotifier<BiometricSettings> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          errorMessage: response.message,
+          errorMessage: response.errorMessage ?? "",
         );
         return false;
       }
@@ -180,9 +180,9 @@ class BiometricSettingsNotifier extends StateNotifier<BiometricSettings> {
       state = state.copyWith(isLoading: false);
 
       if (response.isSuccess) {
-        return response.data!;
+        return response.dataOrNull!;
       } else {
-        state = state.copyWith(errorMessage: response.message);
+        state = state.copyWith(errorMessage: response.errorMessage ?? "");
         return false;
       }
     } catch (e) {
@@ -199,9 +199,9 @@ class BiometricSettingsNotifier extends StateNotifier<BiometricSettings> {
     final response = await _biometricService.checkBiometricAvailability();
 
     if (response.isSuccess) {
-      return response.data!;
+      return response.dataOrNull!;
     } else {
-      throw Exception(response.message);
+      throw Exception(response.errorMessage ?? "");
     }
   }
 
@@ -215,12 +215,12 @@ class BiometricSettingsNotifier extends StateNotifier<BiometricSettings> {
       state = state.copyWith(isLoading: false);
 
       if (response.isSuccess) {
-        if (response.data!) {
+        if (response.dataOrNull!) {
           state = state.copyWith(isEnabled: true);
         }
-        return response.data!;
+        return response.dataOrNull!;
       } else {
-        state = state.copyWith(errorMessage: response.message);
+        state = state.copyWith(errorMessage: response.errorMessage ?? "");
         return false;
       }
     } catch (e) {

@@ -155,8 +155,7 @@ class OrganizationMemberResponse(BaseModel):
     id: str = Field(..., description="Member ID")
     user_id: str = Field(..., description="User ID")
     email: str = Field(..., description="Member email")
-    first_name: str = Field(..., description="Member first name")
-    last_name: str = Field(..., description="Member last name")
+    full_name: str = Field(..., description="Member full name")
     role: str = Field(..., description="Member role")
     status: str = Field(..., description="Membership status")
     joined_at: str = Field(..., description="Join timestamp")
@@ -526,8 +525,7 @@ async def list_organization_members(
                 id=f"member-{i}",
                 user_id=f"user-{i}",
                 email=f"member{i}@example.com",
-                first_name=f"Member",
-                last_name=f"{i}",
+                full_name=f"Member {i}",
                 role="member" if i > 1 else "admin",
                 status="active",
                 joined_at=datetime.utcnow().isoformat(),
@@ -609,7 +607,7 @@ async def invite_organization_member(
             role=invite_request.role.value,
             status="pending",
             message=invite_request.message,
-            invited_by=f"{current_user.first_name} {current_user.last_name}",
+            invited_by=current_user.full_name,
             invited_at=datetime.utcnow().isoformat(),
             expires_at=(datetime.utcnow() + timedelta(days=7)).isoformat()
         )
@@ -674,8 +672,7 @@ async def update_organization_member(
             id=member_id,
             user_id=f"user-{member_id}",
             email="member@example.com",
-            first_name="Member",
-            last_name="Name",
+            full_name="Member Name",
             role=member_update.role.value,
             status="active",
             joined_at="2024-01-01T00:00:00Z",

@@ -12,14 +12,14 @@ class ApiKeyManagementPage extends ConsumerStatefulWidget {
   const ApiKeyManagementPage({super.key});
 
   @override
-  ConsumerState&lt;ApiKeyManagementPage&gt; createState() =&gt; _ApiKeyManagementPageState();
+  ConsumerState<ApiKeyManagementPage> createState() => _ApiKeyManagementPageState();
 }
 
-class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&gt;
+class _ApiKeyManagementPageState extends ConsumerState<ApiKeyManagementPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _searchController = TextEditingController();
-  String _searchQuery = &apos;&apos;;
+  String _searchQuery = '';
   bool _showActiveOnly = false;
 
   @override
@@ -39,13 +39,13 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(&apos;API Key Management&apos;),
+        title: const Text('API Key Management'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: &apos;API Keys&apos;, icon: Icon(Icons.key)),
-            Tab(text: &apos;Usage&apos;, icon: Icon(Icons.analytics)),
-            Tab(text: &apos;Documentation&apos;, icon: Icon(Icons.description)),
+            Tab(text: 'API Keys', icon: Icon(Icons.key)),
+            Tab(text: 'Usage', icon: Icon(Icons.analytics)),
+            Tab(text: 'Documentation', icon: Icon(Icons.description)),
           ],
         ),
       ),
@@ -60,7 +60,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
       floatingActionButton: FloatingActionButton(
         onPressed: _showCreateApiKeyDialog,
         child: const Icon(Icons.add),
-        tooltip: &apos;Create API Key&apos;,
+        tooltip: 'Create API Key',
       ),
     );
   }
@@ -94,7 +94,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
           TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: &apos;Search API keys...&apos;,
+              hintText: 'Search API keys...',
               prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -105,7 +105,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
                       onPressed: () {
                         _searchController.clear();
                         setState(() {
-                          _searchQuery = &apos;&apos;;
+                          _searchQuery = '';
                         });
                       },
                     )
@@ -121,7 +121,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
           Row(
             children: [
               FilterChip(
-                label: const Text(&apos;Active Only&apos;),
+                label: const Text('Active Only'),
                 selected: _showActiveOnly,
                 onSelected: (selected) {
                   setState(() {
@@ -133,7 +133,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
               ElevatedButton.icon(
                 onPressed: _refreshApiKeys,
                 icon: const Icon(Icons.refresh),
-                label: const Text(&apos;Refresh&apos;),
+                label: const Text('Refresh'),
               ),
             ],
           ),
@@ -143,7 +143,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
   }
 
   Widget _buildApiKeysList() {
-    return FutureBuilder&lt;ApiKeyListResponse&gt;(
+    return FutureBuilder<ApiKeyListResponse>(
       future: _loadApiKeys(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -158,8 +158,8 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
         if (apiKeyList.apiKeys.isEmpty) {
           return const EmptyState(
             icon: Icons.key,
-            title: &apos;No API Keys Found&apos;,
-            description: &apos;Create your first API key to get started with the API.&apos;,
+            title: 'No API Keys Found',
+            description: 'Create your first API key to get started with the API.',
           );
         }
 
@@ -197,7 +197,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
                 _buildStatusChip(apiKey),
                 const SizedBox(width: 8),
                 Text(
-                  &apos;Created: ${_formatDateTime(apiKey.createdAt)}&apos;,
+                  'Created: ${_formatDateTime(apiKey.createdAt)}',
                   style: TextStyle(
                     fontSize: 12,
                     color: Theme.of(context).textTheme.bodySmall?.color,
@@ -207,56 +207,56 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
             ),
           ],
         ),
-        trailing: PopupMenuButton&lt;String&gt;(
-          onSelected: (value) =&gt; _handleApiKeyAction(value, apiKey),
-          itemBuilder: (context) =&gt; [
+        trailing: PopupMenuButton<String>(
+          onSelected: (value) => _handleApiKeyAction(value, apiKey),
+          itemBuilder: (context) => [
             const PopupMenuItem(
-              value: &apos;view&apos;,
+              value: 'view',
               child: ListTile(
                 leading: Icon(Icons.visibility),
-                title: Text(&apos;View Details&apos;),
+                title: Text('View Details'),
               ),
             ),
             const PopupMenuItem(
-              value: &apos;copy&apos;,
+              value: 'copy',
               child: ListTile(
                 leading: Icon(Icons.copy),
-                title: Text(&apos;Copy Key Prefix&apos;),
+                title: Text('Copy Key Prefix'),
               ),
             ),
             PopupMenuItem(
-              value: apiKey.isActive ? &apos;deactivate&apos; : &apos;activate&apos;,
+              value: apiKey.isActive ? 'deactivate' : 'activate',
               child: ListTile(
                 leading: Icon(apiKey.isActive ? Icons.pause : Icons.play_arrow),
-                title: Text(apiKey.isActive ? &apos;Deactivate&apos; : &apos;Activate&apos;),
+                title: Text(apiKey.isActive ? 'Deactivate' : 'Activate'),
               ),
             ),
             const PopupMenuItem(
-              value: &apos;rotate&apos;,
+              value: 'rotate',
               child: ListTile(
                 leading: Icon(Icons.refresh),
-                title: Text(&apos;Rotate Key&apos;),
+                title: Text('Rotate Key'),
               ),
             ),
             const PopupMenuItem(
-              value: &apos;usage&apos;,
+              value: 'usage',
               child: ListTile(
                 leading: Icon(Icons.analytics),
-                title: Text(&apos;View Usage&apos;),
+                title: Text('View Usage'),
               ),
             ),
             const PopupMenuItem(
-              value: &apos;edit&apos;,
+              value: 'edit',
               child: ListTile(
                 leading: Icon(Icons.edit),
-                title: Text(&apos;Edit&apos;),
+                title: Text('Edit'),
               ),
             ),
             const PopupMenuItem(
-              value: &apos;delete&apos;,
+              value: 'delete',
               child: ListTile(
                 leading: Icon(Icons.delete, color: Colors.red),
-                title: Text(&apos;Delete&apos;, style: TextStyle(color: Colors.red)),
+                title: Text('Delete', style: TextStyle(color: Colors.red)),
               ),
             ),
           ],
@@ -267,14 +267,14 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildDetailRow(&apos;Key Prefix&apos;, apiKey.keyPrefix),
-                _buildDetailRow(&apos;Permissions&apos;, apiKey.permissions.join(&apos;, &apos;)),
-                _buildDetailRow(&apos;Scopes&apos;, apiKey.scopes.join(&apos;, &apos;)),
-                _buildDetailRow(&apos;Usage Count&apos;, apiKey.usageCount.toString()),
-                _buildDetailRow(&apos;Last Used&apos;, _formatDateTime(apiKey.lastUsedAt)),
-                _buildDetailRow(&apos;Expires&apos;, apiKey.expiresAt != null ? _formatDateTime(apiKey.expiresAt) : &apos;Never&apos;),
+                _buildDetailRow('Key Prefix', apiKey.keyPrefix),
+                _buildDetailRow('Permissions', apiKey.permissions.join(', ')),
+                _buildDetailRow('Scopes', apiKey.scopes.join(', ')),
+                _buildDetailRow('Usage Count', apiKey.usageCount.toString()),
+                _buildDetailRow('Last Used', _formatDateTime(apiKey.lastUsedAt)),
+                _buildDetailRow('Expires', apiKey.expiresAt != null ? _formatDateTime(apiKey.expiresAt) : 'Never'),
                 if (apiKey.ipWhitelist != null)
-                  _buildDetailRow(&apos;IP Whitelist&apos;, apiKey.ipWhitelist!),
+                  _buildDetailRow('IP Whitelist', apiKey.ipWhitelist!),
               ],
             ),
           ),
@@ -290,7 +290,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
     if (!apiKey.isActive) {
       iconData = Icons.key_off;
       iconColor = Colors.grey;
-    } else if (apiKey.expiresAt != null &amp;&amp; apiKey.expiresAt!.isBefore(DateTime.now())) {
+    } else if (apiKey.expiresAt != null && apiKey.expiresAt!.isBefore(DateTime.now())) {
       iconData = Icons.key;
       iconColor = Colors.red;
     } else {
@@ -314,13 +314,13 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
 
     if (!apiKey.isActive) {
       color = Colors.grey;
-      label = &apos;Inactive&apos;;
-    } else if (apiKey.expiresAt != null &amp;&amp; apiKey.expiresAt!.isBefore(DateTime.now())) {
+      label = 'Inactive';
+    } else if (apiKey.expiresAt != null && apiKey.expiresAt!.isBefore(DateTime.now())) {
       color = Colors.red;
-      label = &apos;Expired&apos;;
+      label = 'Expired';
     } else {
       color = Colors.green;
-      label = &apos;Active&apos;;
+      label = 'Active';
     }
 
     return Container(
@@ -355,7 +355,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
             ),
           ),
           Expanded(
-            child: Text(value ?? &apos;N/A&apos;),
+            child: Text(value ?? 'N/A'),
           ),
         ],
       ),
@@ -363,7 +363,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
   }
 
   Widget _buildUsageTab() {
-    return FutureBuilder&lt;ApiKeyListResponse&gt;(
+    return FutureBuilder<ApiKeyListResponse>(
       future: _loadApiKeys(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -378,8 +378,8 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
         if (apiKeys.isEmpty) {
           return const EmptyState(
             icon: Icons.analytics,
-            title: &apos;No Usage Data&apos;,
-            description: &apos;Create API keys to view usage statistics.&apos;,
+            title: 'No Usage Data',
+            description: 'Create API keys to view usage statistics.',
           );
         }
 
@@ -415,8 +415,8 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
                   ),
                 ),
                 TextButton(
-                  onPressed: () =&gt; _showDetailedUsage(apiKey),
-                  child: const Text(&apos;View Details&apos;),
+                  onPressed: () => _showDetailedUsage(apiKey),
+                  child: const Text('View Details'),
                 ),
               ],
             ),
@@ -424,10 +424,10 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
             Row(
               children: [
                 Expanded(
-                  child: _buildUsageMetric(&apos;Total Requests&apos;, apiKey.usageCount.toString()),
+                  child: _buildUsageMetric('Total Requests', apiKey.usageCount.toString()),
                 ),
                 Expanded(
-                  child: _buildUsageMetric(&apos;Last Used&apos;, _formatDateTime(apiKey.lastUsedAt)),
+                  child: _buildUsageMetric('Last Used', _formatDateTime(apiKey.lastUsedAt)),
                 ),
               ],
             ),
@@ -435,13 +435,13 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
             LinearProgressIndicator(
               value: apiKey.usageCount / 10000, // Assuming 10k limit
               backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation&lt;Color&gt;(
-                apiKey.usageCount &gt; 8000 ? Colors.red : Colors.blue,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                apiKey.usageCount > 8000 ? Colors.red : Colors.blue,
               ),
             ),
             const SizedBox(height: 4),
             Text(
-              &apos;${apiKey.usageCount} / 10,000 requests&apos;,
+              '${apiKey.usageCount} / 10,000 requests',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -479,28 +479,28 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildDocSection(
-            &apos;Getting Started&apos;,
-            &apos;Learn how to authenticate and make your first API request.&apos;,
+            'Getting Started',
+            'Learn how to authenticate and make your first API request.',
             Icons.play_arrow,
           ),
           _buildDocSection(
-            &apos;Authentication&apos;,
-            &apos;Understand how to use API keys for secure access.&apos;,
+            'Authentication',
+            'Understand how to use API keys for secure access.',
             Icons.security,
           ),
           _buildDocSection(
-            &apos;Rate Limits&apos;,
-            &apos;Information about API rate limits and best practices.&apos;,
+            'Rate Limits',
+            'Information about API rate limits and best practices.',
             Icons.speed,
           ),
           _buildDocSection(
-            &apos;Error Codes&apos;,
-            &apos;Common error codes and their meanings.&apos;,
+            'Error Codes',
+            'Common error codes and their meanings.',
             Icons.error,
           ),
           _buildDocSection(
-            &apos;Examples&apos;,
-            &apos;Code examples in different programming languages.&apos;,
+            'Examples',
+            'Code examples in different programming languages.',
             Icons.code,
           ),
           const SizedBox(height: 24),
@@ -541,7 +541,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              &apos;Quick Start Example&apos;,
+              'Quick Start Example',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
@@ -553,19 +553,19 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
                 border: Border.all(color: Colors.grey[300]!),
               ),
               child: const Text(
-                &apos;&apos;&apos;curl -H &quot;Authorization: Bearer YOUR_API_KEY&quot; \\
-     -H &quot;Content-Type: application/json&quot; \\
-     https://api.example.com/v1/users&apos;&apos;&apos;,
-                style: TextStyle(fontFamily: &apos;monospace&apos;),
+                '''curl -H "Authorization: Bearer YOUR_API_KEY" \\
+     -H "Content-Type: application/json" \\
+     https://api.example.com/v1/users''',
+                style: TextStyle(fontFamily: 'monospace'),
               ),
             ),
             const SizedBox(height: 12),
             Row(
               children: [
                 ElevatedButton.icon(
-                  onPressed: () =&gt; _copyToClipboard(&apos;curl -H &quot;Authorization: Bearer YOUR_API_KEY&quot; -H &quot;Content-Type: application/json&quot; https://api.example.com/v1/users&apos;),
+                  onPressed: () => _copyToClipboard('curl -H "Authorization: Bearer YOUR_API_KEY" -H "Content-Type: application/json" https://api.example.com/v1/users'),
                   icon: const Icon(Icons.copy),
-                  label: const Text(&apos;Copy Example&apos;),
+                  label: const Text('Copy Example'),
                 ),
               ],
             ),
@@ -587,7 +587,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
           ),
           const SizedBox(height: 16),
           Text(
-            &apos;Failed to load API keys&apos;,
+            'Failed to load API keys',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 8),
@@ -599,14 +599,14 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _refreshApiKeys,
-            child: const Text(&apos;Retry&apos;),
+            child: const Text('Retry'),
           ),
         ],
       ),
     );
   }
 
-  Future&lt;ApiKeyListResponse&gt; _loadApiKeys() async {
+  Future<ApiKeyListResponse> _loadApiKeys() async {
     final apiKeyService = ref.read(apiKeyServiceProvider);
     return await apiKeyService.getApiKeys(
       isActive: _showActiveOnly ? true : null,
@@ -614,7 +614,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
     );
   }
 
-  Future&lt;void&gt; _refreshApiKeys() async {
+  Future<void> _refreshApiKeys() async {
     setState(() {});
   }
 
@@ -623,27 +623,27 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
 
     try {
       switch (action) {
-        case &apos;view&apos;:
+        case 'view':
           _showApiKeyDetails(apiKey);
           break;
-        case &apos;copy&apos;:
+        case 'copy':
           _copyToClipboard(apiKey.keyPrefix);
-          _showSnackBar(&apos;API key prefix copied to clipboard&apos;);
+          _showSnackBar('API key prefix copied to clipboard');
           break;
-        case &apos;activate&apos;:
+        case 'activate':
           await apiKeyService.activateApiKey(apiKey.id);
           _refreshApiKeys();
-          _showSnackBar(&apos;API key activated successfully&apos;);
+          _showSnackBar('API key activated successfully');
           break;
-        case &apos;deactivate&apos;:
+        case 'deactivate':
           await apiKeyService.deactivateApiKey(apiKey.id);
           _refreshApiKeys();
-          _showSnackBar(&apos;API key deactivated successfully&apos;);
+          _showSnackBar('API key deactivated successfully');
           break;
-        case &apos;rotate&apos;:
+        case 'rotate':
           final confirmed = await _showConfirmDialog(
-            &apos;Rotate API Key&apos;,
-            &apos;This will generate a new key. The old key will stop working immediately. Continue?&apos;,
+            'Rotate API Key',
+            'This will generate a new key. The old key will stop working immediately. Continue?',
           );
           if (confirmed) {
             final newKey = await apiKeyService.rotateApiKey(apiKey.id);
@@ -651,33 +651,33 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
             _refreshApiKeys();
           }
           break;
-        case &apos;usage&apos;:
+        case 'usage':
           _showDetailedUsage(apiKey);
           break;
-        case &apos;edit&apos;:
+        case 'edit':
           _showEditApiKeyDialog(apiKey);
           break;
-        case &apos;delete&apos;:
+        case 'delete':
           final confirmed = await _showConfirmDialog(
-            &apos;Delete API Key&apos;,
-            &apos;This action cannot be undone. Are you sure you want to delete this API key?&apos;,
+            'Delete API Key',
+            'This action cannot be undone. Are you sure you want to delete this API key?',
           );
           if (confirmed) {
             await apiKeyService.deleteApiKey(apiKey.id);
             _refreshApiKeys();
-            _showSnackBar(&apos;API key deleted successfully&apos;);
+            _showSnackBar('API key deleted successfully');
           }
           break;
       }
     } catch (e) {
-      _showSnackBar(&apos;Failed to perform action: ${e.toString()}&apos;);
+      _showSnackBar('Failed to perform action: ${e.toString()}');
     }
   }
 
   void _showCreateApiKeyDialog() {
     showDialog(
       context: context,
-      builder: (context) =&gt; _CreateApiKeyDialog(
+      builder: (context) => _CreateApiKeyDialog(
         onCreated: (apiKey) {
           _refreshApiKeys();
           _showNewApiKeyDialog(apiKey);
@@ -689,11 +689,11 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
   void _showEditApiKeyDialog(ApiKey apiKey) {
     showDialog(
       context: context,
-      builder: (context) =&gt; _EditApiKeyDialog(
+      builder: (context) => _EditApiKeyDialog(
         apiKey: apiKey,
         onUpdated: () {
           _refreshApiKeys();
-          _showSnackBar(&apos;API key updated successfully&apos;);
+          _showSnackBar('API key updated successfully');
         },
       ),
     );
@@ -703,13 +703,13 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) =&gt; AlertDialog(
-        title: const Text(&apos;API Key Created&apos;),
+      builder: (context) => AlertDialog(
+        title: const Text('API Key Created'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(&apos;Your new API key has been created. Please save it now as it will not be shown again.&apos;),
+            const Text('Your new API key has been created. Please save it now as it will not be shown again.'),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),
@@ -720,7 +720,7 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
               ),
               child: SelectableText(
                 response.plainTextKey,
-                style: const TextStyle(fontFamily: &apos;monospace&apos;),
+                style: const TextStyle(fontFamily: 'monospace'),
               ),
             ),
             const SizedBox(height: 12),
@@ -737,14 +737,14 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
           ElevatedButton.icon(
             onPressed: () {
               _copyToClipboard(response.plainTextKey);
-              _showSnackBar(&apos;API key copied to clipboard&apos;);
+              _showSnackBar('API key copied to clipboard');
             },
             icon: const Icon(Icons.copy),
-            label: const Text(&apos;Copy Key&apos;),
+            label: const Text('Copy Key'),
           ),
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(),
-            child: const Text(&apos;Close&apos;),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),
@@ -754,31 +754,31 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
   void _showApiKeyDetails(ApiKey apiKey) {
     showDialog(
       context: context,
-      builder: (context) =&gt; AlertDialog(
+      builder: (context) => AlertDialog(
         title: Text(apiKey.name),
         content: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildDetailRow(&apos;Description&apos;, apiKey.description),
-              _buildDetailRow(&apos;Key Prefix&apos;, apiKey.keyPrefix),
-              _buildDetailRow(&apos;Status&apos;, apiKey.isActive ? &apos;Active&apos; : &apos;Inactive&apos;),
-              _buildDetailRow(&apos;Permissions&apos;, apiKey.permissions.join(&apos;, &apos;)),
-              _buildDetailRow(&apos;Scopes&apos;, apiKey.scopes.join(&apos;, &apos;)),
-              _buildDetailRow(&apos;Usage Count&apos;, apiKey.usageCount.toString()),
-              _buildDetailRow(&apos;Created&apos;, _formatDateTime(apiKey.createdAt)),
-              _buildDetailRow(&apos;Last Used&apos;, _formatDateTime(apiKey.lastUsedAt)),
-              _buildDetailRow(&apos;Expires&apos;, apiKey.expiresAt != null ? _formatDateTime(apiKey.expiresAt) : &apos;Never&apos;),
+              _buildDetailRow('Description', apiKey.description),
+              _buildDetailRow('Key Prefix', apiKey.keyPrefix),
+              _buildDetailRow('Status', apiKey.isActive ? 'Active' : 'Inactive'),
+              _buildDetailRow('Permissions', apiKey.permissions.join(', ')),
+              _buildDetailRow('Scopes', apiKey.scopes.join(', ')),
+              _buildDetailRow('Usage Count', apiKey.usageCount.toString()),
+              _buildDetailRow('Created', _formatDateTime(apiKey.createdAt)),
+              _buildDetailRow('Last Used', _formatDateTime(apiKey.lastUsedAt)),
+              _buildDetailRow('Expires', apiKey.expiresAt != null ? _formatDateTime(apiKey.expiresAt) : 'Never'),
               if (apiKey.ipWhitelist != null)
-                _buildDetailRow(&apos;IP Whitelist&apos;, apiKey.ipWhitelist!),
+                _buildDetailRow('IP Whitelist', apiKey.ipWhitelist!),
             ],
           ),
         ),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(),
-            child: const Text(&apos;Close&apos;),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),
@@ -789,13 +789,13 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
     // TODO: Implement detailed usage view with charts
     showDialog(
       context: context,
-      builder: (context) =&gt; AlertDialog(
-        title: Text(&apos;${apiKey.name} Usage&apos;),
-        content: const Text(&apos;Detailed usage analytics coming soon...&apos;),
+      builder: (context) => AlertDialog(
+        title: Text('${apiKey.name} Usage'),
+        content: const Text('Detailed usage analytics coming soon...'),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(),
-            child: const Text(&apos;Close&apos;),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),
@@ -805,33 +805,33 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
   void _showDocumentationDetail(String title) {
     showDialog(
       context: context,
-      builder: (context) =&gt; AlertDialog(
+      builder: (context) => AlertDialog(
         title: Text(title),
-        content: Text(&apos;$title documentation coming soon...&apos;),
+        content: Text('$title documentation coming soon...'),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(),
-            child: const Text(&apos;Close&apos;),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),
     );
   }
 
-  Future&lt;bool&gt; _showConfirmDialog(String title, String message) async {
-    return await showDialog&lt;bool&gt;(
+  Future<bool> _showConfirmDialog(String title, String message) async {
+    return await showDialog<bool>(
           context: context,
-          builder: (context) =&gt; AlertDialog(
+          builder: (context) => AlertDialog(
             title: Text(title),
             content: Text(message),
             actions: [
               TextButton(
-                onPressed: () =&gt; Navigator.of(context).pop(false),
-                child: const Text(&apos;Cancel&apos;),
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
               ),
               ElevatedButton(
-                onPressed: () =&gt; Navigator.of(context).pop(true),
-                child: const Text(&apos;Confirm&apos;),
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Confirm'),
               ),
             ],
           ),
@@ -850,8 +850,8 @@ class _ApiKeyManagementPageState extends ConsumerState&lt;ApiKeyManagementPage&g
   }
 
   String _formatDateTime(DateTime? dateTime) {
-    if (dateTime == null) return &apos;Never&apos;;
-    return &apos;${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, &apos;0&apos;)}&apos;;
+    if (dateTime == null) return 'Never';
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }
 
@@ -861,24 +861,24 @@ class _CreateApiKeyDialog extends ConsumerStatefulWidget {
   const _CreateApiKeyDialog({required this.onCreated});
 
   @override
-  ConsumerState&lt;_CreateApiKeyDialog&gt; createState() =&gt; _CreateApiKeyDialogState();
+  ConsumerState<_CreateApiKeyDialog> createState() => _CreateApiKeyDialogState();
 }
 
-class _CreateApiKeyDialogState extends ConsumerState&lt;_CreateApiKeyDialog&gt; {
-  final _formKey = GlobalKey&lt;FormState&gt;();
+class _CreateApiKeyDialogState extends ConsumerState<_CreateApiKeyDialog> {
+  final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _ipWhitelistController = TextEditingController();
   
   DateTime? _expiresAt;
-  List&lt;String&gt; _selectedPermissions = [];
-  List&lt;String&gt; _selectedScopes = [];
+  List<String> _selectedPermissions = [];
+  List<String> _selectedScopes = [];
   bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text(&apos;Create API Key&apos;),
+      title: const Text('Create API Key'),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -890,12 +890,12 @@ class _CreateApiKeyDialogState extends ConsumerState&lt;_CreateApiKeyDialog&gt; 
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(
-                    labelText: &apos;Name&apos;,
-                    hintText: &apos;Enter API key name&apos;,
+                    labelText: 'Name',
+                    hintText: 'Enter API key name',
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return &apos;Name is required&apos;;
+                      return 'Name is required';
                     }
                     return null;
                   },
@@ -904,13 +904,13 @@ class _CreateApiKeyDialogState extends ConsumerState&lt;_CreateApiKeyDialog&gt; 
                 TextFormField(
                   controller: _descriptionController,
                   decoration: const InputDecoration(
-                    labelText: &apos;Description&apos;,
-                    hintText: &apos;Describe what this API key will be used for&apos;,
+                    labelText: 'Description',
+                    hintText: 'Describe what this API key will be used for',
                   ),
                   maxLines: 2,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return &apos;Description is required&apos;;
+                      return 'Description is required';
                     }
                     return null;
                   },
@@ -919,31 +919,31 @@ class _CreateApiKeyDialogState extends ConsumerState&lt;_CreateApiKeyDialog&gt; 
                 TextFormField(
                   controller: _ipWhitelistController,
                   decoration: const InputDecoration(
-                    labelText: &apos;IP Whitelist (Optional)&apos;,
-                    hintText: &apos;Comma-separated IP addresses&apos;,
+                    labelText: 'IP Whitelist (Optional)',
+                    hintText: 'Comma-separated IP addresses',
                   ),
                 ),
                 const SizedBox(height: 16),
                 ListTile(
-                  title: const Text(&apos;Expires At&apos;),
-                  subtitle: Text(_expiresAt != null ? _expiresAt.toString() : &apos;Never&apos;),
+                  title: const Text('Expires At'),
+                  subtitle: Text(_expiresAt != null ? _expiresAt.toString() : 'Never'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextButton(
                         onPressed: _selectExpirationDate,
-                        child: const Text(&apos;Set&apos;),
+                        child: const Text('Set'),
                       ),
                       if (_expiresAt != null)
                         IconButton(
                           icon: const Icon(Icons.clear),
-                          onPressed: () =&gt; setState(() =&gt; _expiresAt = null),
+                          onPressed: () => setState(() => _expiresAt = null),
                         ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text(&apos;Permissions and scopes will be configured after creation.&apos;),
+                const Text('Permissions and scopes will be configured after creation.'),
               ],
             ),
           ),
@@ -951,8 +951,8 @@ class _CreateApiKeyDialogState extends ConsumerState&lt;_CreateApiKeyDialog&gt; 
       ),
       actions: [
         TextButton(
-          onPressed: _isLoading ? null : () =&gt; Navigator.of(context).pop(),
-          child: const Text(&apos;Cancel&apos;),
+          onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _createApiKey,
@@ -962,13 +962,13 @@ class _CreateApiKeyDialogState extends ConsumerState&lt;_CreateApiKeyDialog&gt; 
                   height: 16,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Text(&apos;Create&apos;),
+              : const Text('Create'),
         ),
       ],
     );
   }
 
-  Future&lt;void&gt; _selectExpirationDate() async {
+  Future<void> _selectExpirationDate() async {
     final date = await showDatePicker(
       context: context,
       initialDate: DateTime.now().add(const Duration(days: 90)),
@@ -976,14 +976,14 @@ class _CreateApiKeyDialogState extends ConsumerState&lt;_CreateApiKeyDialog&gt; 
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
     if (date != null) {
-      setState(() =&gt; _expiresAt = date);
+      setState(() => _expiresAt = date);
     }
   }
 
-  Future&lt;void&gt; _createApiKey() async {
+  Future<void> _createApiKey() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() =&gt; _isLoading = true);
+    setState(() => _isLoading = true);
 
     try {
       final apiKeyService = ref.read(apiKeyServiceProvider);
@@ -991,7 +991,7 @@ class _CreateApiKeyDialogState extends ConsumerState&lt;_CreateApiKeyDialog&gt; 
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim(),
         permissions: _selectedPermissions,
-        scopes: _selectedScopes.isNotEmpty ? _selectedScopes : [&apos;read&apos;],
+        scopes: _selectedScopes.isNotEmpty ? _selectedScopes : ['read'],
         expiresAt: _expiresAt,
         ipWhitelist: _ipWhitelistController.text.trim().isNotEmpty
             ? _ipWhitelistController.text.trim()
@@ -1003,10 +1003,10 @@ class _CreateApiKeyDialogState extends ConsumerState&lt;_CreateApiKeyDialog&gt; 
       Navigator.of(context).pop();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(&apos;Failed to create API key: ${e.toString()}&apos;)),
+        SnackBar(content: Text('Failed to create API key: ${e.toString()}')),
       );
     } finally {
-      setState(() =&gt; _isLoading = false);
+      setState(() => _isLoading = false);
     }
   }
 }
@@ -1018,11 +1018,11 @@ class _EditApiKeyDialog extends ConsumerStatefulWidget {
   const _EditApiKeyDialog({required this.apiKey, required this.onUpdated});
 
   @override
-  ConsumerState&lt;_EditApiKeyDialog&gt; createState() =&gt; _EditApiKeyDialogState();
+  ConsumerState<_EditApiKeyDialog> createState() => _EditApiKeyDialogState();
 }
 
-class _EditApiKeyDialogState extends ConsumerState&lt;_EditApiKeyDialog&gt; {
-  final _formKey = GlobalKey&lt;FormState&gt;();
+class _EditApiKeyDialogState extends ConsumerState<_EditApiKeyDialog> {
+  final _formKey = GlobalKey<FormState>();
   late final _nameController = TextEditingController(text: widget.apiKey.name);
   late final _descriptionController = TextEditingController(text: widget.apiKey.description);
   late final _ipWhitelistController = TextEditingController(text: widget.apiKey.ipWhitelist);
@@ -1033,7 +1033,7 @@ class _EditApiKeyDialogState extends ConsumerState&lt;_EditApiKeyDialog&gt; {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text(&apos;Edit API Key&apos;),
+      title: const Text('Edit API Key'),
       content: Form(
         key: _formKey,
         child: SizedBox(
@@ -1043,10 +1043,10 @@ class _EditApiKeyDialogState extends ConsumerState&lt;_EditApiKeyDialog&gt; {
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: &apos;Name&apos;),
+                decoration: const InputDecoration(labelText: 'Name'),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return &apos;Name is required&apos;;
+                    return 'Name is required';
                   }
                   return null;
                 },
@@ -1054,11 +1054,11 @@ class _EditApiKeyDialogState extends ConsumerState&lt;_EditApiKeyDialog&gt; {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(labelText: &apos;Description&apos;),
+                decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 2,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return &apos;Description is required&apos;;
+                    return 'Description is required';
                   }
                   return null;
                 },
@@ -1067,8 +1067,8 @@ class _EditApiKeyDialogState extends ConsumerState&lt;_EditApiKeyDialog&gt; {
               TextFormField(
                 controller: _ipWhitelistController,
                 decoration: const InputDecoration(
-                  labelText: &apos;IP Whitelist (Optional)&apos;,
-                  hintText: &apos;Comma-separated IP addresses&apos;,
+                  labelText: 'IP Whitelist (Optional)',
+                  hintText: 'Comma-separated IP addresses',
                 ),
               ),
             ],
@@ -1077,8 +1077,8 @@ class _EditApiKeyDialogState extends ConsumerState&lt;_EditApiKeyDialog&gt; {
       ),
       actions: [
         TextButton(
-          onPressed: _isLoading ? null : () =&gt; Navigator.of(context).pop(),
-          child: const Text(&apos;Cancel&apos;),
+          onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _updateApiKey,
@@ -1088,16 +1088,16 @@ class _EditApiKeyDialogState extends ConsumerState&lt;_EditApiKeyDialog&gt; {
                   height: 16,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Text(&apos;Update&apos;),
+              : const Text('Update'),
         ),
       ],
     );
   }
 
-  Future&lt;void&gt; _updateApiKey() async {
+  Future<void> _updateApiKey() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() =&gt; _isLoading = true);
+    setState(() => _isLoading = true);
 
     try {
       final apiKeyService = ref.read(apiKeyServiceProvider);
@@ -1114,10 +1114,10 @@ class _EditApiKeyDialogState extends ConsumerState&lt;_EditApiKeyDialog&gt; {
       Navigator.of(context).pop();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(&apos;Failed to update API key: ${e.toString()}&apos;)),
+        SnackBar(content: Text('Failed to update API key: ${e.toString()}')),
       );
     } finally {
-      setState(() =&gt; _isLoading = false);
+      setState(() => _isLoading = false);
     }
   }
 }

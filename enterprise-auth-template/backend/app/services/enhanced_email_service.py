@@ -255,7 +255,7 @@ class EnhancedEmailService:
         verification_token: str,
     ) -> bool:
         """Send email verification link."""
-        verification_url = f"{self.frontend_url}/auth/verify-email?token={verification_token}"
+        verification_url = f"{self.frontend_url}/auth/verify?token={verification_token}"
 
         context = {
             "user_name": user_name,

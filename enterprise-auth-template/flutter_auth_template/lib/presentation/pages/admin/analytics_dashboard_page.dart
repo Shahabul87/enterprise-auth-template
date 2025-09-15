@@ -12,10 +12,10 @@ class AnalyticsDashboardPage extends ConsumerStatefulWidget {
   const AnalyticsDashboardPage({super.key});
 
   @override
-  ConsumerState&lt;AnalyticsDashboardPage&gt; createState() =&gt; _AnalyticsDashboardPageState();
+  ConsumerState<AnalyticsDashboardPage> createState() => _AnalyticsDashboardPageState();
 }
 
-class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPage&gt;
+class _AnalyticsDashboardPageState extends ConsumerState<AnalyticsDashboardPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   AnalyticsTimeRangeType _selectedTimeRange = AnalyticsTimeRangeType.last7Days;
@@ -39,13 +39,13 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(&apos;Analytics Dashboard&apos;),
+        title: const Text('Analytics Dashboard'),
         actions: [
           _buildTimeRangeSelector(),
           IconButton(
             icon: Icon(_isRealTimeEnabled ? Icons.pause : Icons.play_arrow),
             onPressed: _toggleRealTime,
-            tooltip: _isRealTimeEnabled ? &apos;Pause Real-time&apos; : &apos;Enable Real-time&apos;,
+            tooltip: _isRealTimeEnabled ? 'Pause Real-time' : 'Enable Real-time',
           ),
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -56,11 +56,11 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           controller: _tabController,
           isScrollable: true,
           tabs: const [
-            Tab(text: &apos;Overview&apos;, icon: Icon(Icons.dashboard)),
-            Tab(text: &apos;Users&apos;, icon: Icon(Icons.people)),
-            Tab(text: &apos;Authentication&apos;, icon: Icon(Icons.login)),
-            Tab(text: &apos;Security&apos;, icon: Icon(Icons.security)),
-            Tab(text: &apos;API Usage&apos;, icon: Icon(Icons.api)),
+            Tab(text: 'Overview', icon: Icon(Icons.dashboard)),
+            Tab(text: 'Users', icon: Icon(Icons.people)),
+            Tab(text: 'Authentication', icon: Icon(Icons.login)),
+            Tab(text: 'Security', icon: Icon(Icons.security)),
+            Tab(text: 'API Usage', icon: Icon(Icons.api)),
           ],
         ),
       ),
@@ -77,13 +77,13 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
       floatingActionButton: FloatingActionButton(
         onPressed: _showCustomQueryDialog,
         child: const Icon(Icons.analytics),
-        tooltip: &apos;Custom Query&apos;,
+        tooltip: 'Custom Query',
       ),
     );
   }
 
   Widget _buildTimeRangeSelector() {
-    return PopupMenuButton&lt;AnalyticsTimeRangeType&gt;(
+    return PopupMenuButton<AnalyticsTimeRangeType>(
       icon: const Icon(Icons.date_range),
       onSelected: (range) {
         setState(() {
@@ -93,7 +93,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           }
         });
       },
-      itemBuilder: (context) =&gt; AnalyticsTimeRangeType.values.map((range) {
+      itemBuilder: (context) => AnalyticsTimeRangeType.values.map((range) {
         return PopupMenuItem(
           value: range,
           child: Row(
@@ -112,7 +112,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
   }
 
   Widget _buildOverviewTab() {
-    return FutureBuilder&lt;AnalyticsDashboard&gt;(
+    return FutureBuilder<AnalyticsDashboard>(
       future: _loadDashboardData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -154,32 +154,32 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
       childAspectRatio: 1.5,
       children: [
         _buildKPICard(
-          &apos;Total Users&apos;,
+          'Total Users',
           dashboard.userAnalytics.totalUsers.toString(),
           Icons.people,
-          dashboard.userAnalytics.userGrowthRate &gt;= 0 ? Colors.green : Colors.red,
-          &apos;${dashboard.userAnalytics.userGrowthRate.toStringAsFixed(1)}%&apos;,
+          dashboard.userAnalytics.userGrowthRate >= 0 ? Colors.green : Colors.red,
+          '${dashboard.userAnalytics.userGrowthRate.toStringAsFixed(1)}%',
         ),
         _buildKPICard(
-          &apos;Active Users&apos;,
+          'Active Users',
           dashboard.userAnalytics.activeUsers.toString(),
           Icons.person,
           Colors.blue,
-          &apos;${(dashboard.userAnalytics.activeUsers / dashboard.userAnalytics.totalUsers * 100).toStringAsFixed(1)}%&apos;,
+          '${(dashboard.userAnalytics.activeUsers / dashboard.userAnalytics.totalUsers * 100).toStringAsFixed(1)}%',
         ),
         _buildKPICard(
-          &apos;Login Success Rate&apos;,
-          &apos;${dashboard.authenticationAnalytics.loginSuccessRate.toStringAsFixed(1)}%&apos;,
+          'Login Success Rate',
+          '${dashboard.authenticationAnalytics.loginSuccessRate.toStringAsFixed(1)}%',
           Icons.login,
-          dashboard.authenticationAnalytics.loginSuccessRate &gt;= 95 ? Colors.green : Colors.orange,
-          &apos;${dashboard.authenticationAnalytics.totalLogins} logins&apos;,
+          dashboard.authenticationAnalytics.loginSuccessRate >= 95 ? Colors.green : Colors.orange,
+          '${dashboard.authenticationAnalytics.totalLogins} logins',
         ),
         _buildKPICard(
-          &apos;Security Incidents&apos;,
+          'Security Incidents',
           dashboard.securityAnalytics.securityIncidents.toString(),
           Icons.security,
           dashboard.securityAnalytics.securityIncidents == 0 ? Colors.green : Colors.red,
-          &apos;${dashboard.securityAnalytics.blockedAttempts} blocked&apos;,
+          '${dashboard.securityAnalytics.blockedAttempts} blocked',
         ),
       ],
     );
@@ -259,7 +259,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
             Row(
               children: [
                 Text(
-                  &apos;System Health&apos;,
+                  'System Health',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const Spacer(),
@@ -284,10 +284,10 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(child: _buildMetricIndicator(&apos;CPU&apos;, performance.cpuUsage, &apos;%&apos;)),
-                Expanded(child: _buildMetricIndicator(&apos;Memory&apos;, performance.memoryUsage, &apos;%&apos;)),
-                Expanded(child: _buildMetricIndicator(&apos;Disk&apos;, performance.diskUsage, &apos;%&apos;)),
-                Expanded(child: _buildMetricIndicator(&apos;Response&apos;, performance.averageResponseTime, &apos;ms&apos;)),
+                Expanded(child: _buildMetricIndicator('CPU', performance.cpuUsage, '%')),
+                Expanded(child: _buildMetricIndicator('Memory', performance.memoryUsage, '%')),
+                Expanded(child: _buildMetricIndicator('Disk', performance.diskUsage, '%')),
+                Expanded(child: _buildMetricIndicator('Response', performance.averageResponseTime, 'ms')),
               ],
             ),
           ],
@@ -298,22 +298,22 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
 
   Widget _buildMetricIndicator(String label, double value, String unit) {
     Color color;
-    if (unit == &apos;%&apos;) {
-      color = value &gt; 80 ? Colors.red : value &gt; 60 ? Colors.orange : Colors.green;
+    if (unit == '%') {
+      color = value > 80 ? Colors.red : value > 60 ? Colors.orange : Colors.green;
     } else {
-      color = value &gt; 1000 ? Colors.red : value &gt; 500 ? Colors.orange : Colors.green;
+      color = value > 1000 ? Colors.red : value > 500 ? Colors.orange : Colors.green;
     }
 
     return Column(
       children: [
         CircularProgressIndicator(
-          value: unit == &apos;%&apos; ? value / 100 : (value / 2000).clamp(0.0, 1.0),
+          value: unit == '%' ? value / 100 : (value / 2000).clamp(0.0, 1.0),
           backgroundColor: Colors.grey[300],
-          valueColor: AlwaysStoppedAnimation&lt;Color&gt;(color),
+          valueColor: AlwaysStoppedAnimation<Color>(color),
         ),
         const SizedBox(height: 8),
         Text(
-          &apos;${value.toStringAsFixed(unit == &apos;%&apos; ? 1 : 0)}$unit&apos;,
+          '${value.toStringAsFixed(unit == '%' ? 1 : 0)}$unit',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: color,
@@ -335,27 +335,27 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              &apos;Quick Insights&apos;,
+              'Quick Insights',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
             _buildInsightTile(
               Icons.trending_up,
-              &apos;User Growth&apos;,
-              &apos;${dashboard.userAnalytics.newUsersToday} new users today&apos;,
+              'User Growth',
+              '${dashboard.userAnalytics.newUsersToday} new users today',
               Colors.green,
             ),
             _buildInsightTile(
               Icons.warning,
-              &apos;Security Alerts&apos;,
-              &apos;${dashboard.securityAnalytics.securityIncidents} incidents this week&apos;,
-              dashboard.securityAnalytics.securityIncidents &gt; 0 ? Colors.red : Colors.green,
+              'Security Alerts',
+              '${dashboard.securityAnalytics.securityIncidents} incidents this week',
+              dashboard.securityAnalytics.securityIncidents > 0 ? Colors.red : Colors.green,
             ),
             _buildInsightTile(
               Icons.api,
-              &apos;API Performance&apos;,
-              &apos;${dashboard.apiUsageAnalytics.averageResponseTime.toStringAsFixed(0)}ms avg response time&apos;,
-              dashboard.apiUsageAnalytics.averageResponseTime &lt; 200 ? Colors.green : Colors.orange,
+              'API Performance',
+              '${dashboard.apiUsageAnalytics.averageResponseTime.toStringAsFixed(0)}ms avg response time',
+              dashboard.apiUsageAnalytics.averageResponseTime < 200 ? Colors.green : Colors.orange,
             ),
           ],
         ),
@@ -379,7 +379,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
   }
 
   Widget _buildUsersTab() {
-    return FutureBuilder&lt;UserAnalytics&gt;(
+    return FutureBuilder<UserAnalytics>(
       future: _loadUserAnalytics(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -422,10 +422,10 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
       mainAxisSpacing: 16,
       childAspectRatio: 1.5,
       children: [
-        _buildStatCard(&apos;Total Users&apos;, analytics.totalUsers.toString(), Icons.people),
-        _buildStatCard(&apos;Active Users&apos;, analytics.activeUsers.toString(), Icons.person),
-        _buildStatCard(&apos;New Today&apos;, analytics.newUsersToday.toString(), Icons.person_add),
-        _buildStatCard(&apos;New This Week&apos;, analytics.newUsersThisWeek.toString(), Icons.trending_up),
+        _buildStatCard('Total Users', analytics.totalUsers.toString(), Icons.people),
+        _buildStatCard('Active Users', analytics.activeUsers.toString(), Icons.person),
+        _buildStatCard('New Today', analytics.newUsersToday.toString(), Icons.person_add),
+        _buildStatCard('New This Week', analytics.newUsersThisWeek.toString(), Icons.trending_up),
       ],
     );
   }
@@ -464,7 +464,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              &apos;User Growth Trend&apos;,
+              'User Growth Trend',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
@@ -472,12 +472,12 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
               height: 200,
               child: LineChartWidget(
                 data: analytics.userGrowthChart
-                    .map((data) =&gt; ChartDataPoint(
+                    .map((data) => ChartDataPoint(
                           x: data.date.millisecondsSinceEpoch.toDouble(),
                           y: data.newUsers.toDouble(),
                         ))
                     .toList(),
-                title: &apos;New Users&apos;,
+                title: 'New Users',
                 color: Colors.blue,
               ),
             ),
@@ -495,7 +495,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              &apos;User Distribution by Role&apos;,
+              'User Distribution by Role',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
@@ -503,7 +503,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
               height: 200,
               child: PieChartWidget(
                 data: analytics.usersByRole.entries
-                    .map((entry) =&gt; PieChartData(
+                    .map((entry) => PieChartData(
                           label: entry.key,
                           value: entry.value.toDouble(),
                         ))
@@ -524,7 +524,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              &apos;User Activity&apos;,
+              'User Activity',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
@@ -532,12 +532,12 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
               height: 200,
               child: BarChartWidget(
                 data: analytics.userActivityChart
-                    .map((data) =&gt; BarChartData(
-                          label: &apos;${data.timestamp.hour}:00&apos;,
+                    .map((data) => BarChartData(
+                          label: '${data.timestamp.hour}:00',
                           value: data.activeUsers.toDouble(),
                         ))
                     .toList(),
-                title: &apos;Active Users&apos;,
+                title: 'Active Users',
                 color: Colors.green,
               ),
             ),
@@ -548,7 +548,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
   }
 
   Widget _buildAuthenticationTab() {
-    return FutureBuilder&lt;AuthenticationAnalytics&gt;(
+    return FutureBuilder<AuthenticationAnalytics>(
       future: _loadAuthenticationAnalytics(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -589,10 +589,10 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
       mainAxisSpacing: 16,
       childAspectRatio: 1.5,
       children: [
-        _buildStatCard(&apos;Total Logins&apos;, analytics.totalLogins.toString(), Icons.login),
-        _buildStatCard(&apos;Success Rate&apos;, &apos;${analytics.loginSuccessRate.toStringAsFixed(1)}%&apos;, Icons.check_circle),
-        _buildStatCard(&apos;Successful&apos;, analytics.successfulLogins.toString(), Icons.verified),
-        _buildStatCard(&apos;Failed&apos;, analytics.failedLogins.toString(), Icons.error),
+        _buildStatCard('Total Logins', analytics.totalLogins.toString(), Icons.login),
+        _buildStatCard('Success Rate', '${analytics.loginSuccessRate.toStringAsFixed(1)}%', Icons.check_circle),
+        _buildStatCard('Successful', analytics.successfulLogins.toString(), Icons.verified),
+        _buildStatCard('Failed', analytics.failedLogins.toString(), Icons.error),
       ],
     );
   }
@@ -605,7 +605,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              &apos;Login Trends&apos;,
+              'Login Trends',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
@@ -613,12 +613,12 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
               height: 200,
               child: LineChartWidget(
                 data: analytics.loginTrends
-                    .map((data) =&gt; ChartDataPoint(
+                    .map((data) => ChartDataPoint(
                           x: data.date.millisecondsSinceEpoch.toDouble(),
                           y: data.successful.toDouble(),
                         ))
                     .toList(),
-                title: &apos;Successful Logins&apos;,
+                title: 'Successful Logins',
                 color: Colors.green,
               ),
             ),
@@ -636,7 +636,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              &apos;Authentication Methods&apos;,
+              'Authentication Methods',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
@@ -644,7 +644,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
               height: 200,
               child: PieChartWidget(
                 data: analytics.authMethodUsage
-                    .map((method) =&gt; PieChartData(
+                    .map((method) => PieChartData(
                           label: method.displayName,
                           value: method.count.toDouble(),
                         ))
@@ -658,7 +658,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
   }
 
   Widget _buildSecurityTab() {
-    return FutureBuilder&lt;SecurityAnalytics&gt;(
+    return FutureBuilder<SecurityAnalytics>(
       future: _loadSecurityAnalytics(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -699,10 +699,10 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
       mainAxisSpacing: 16,
       childAspectRatio: 1.5,
       children: [
-        _buildStatCard(&apos;Incidents&apos;, analytics.securityIncidents.toString(), Icons.warning),
-        _buildStatCard(&apos;Blocked&apos;, analytics.blockedAttempts.toString(), Icons.block),
-        _buildStatCard(&apos;Suspicious&apos;, analytics.suspiciousActivities.toString(), Icons.flag),
-        _buildStatCard(&apos;Active Devices&apos;, analytics.activeDevices.toString(), Icons.devices),
+        _buildStatCard('Incidents', analytics.securityIncidents.toString(), Icons.warning),
+        _buildStatCard('Blocked', analytics.blockedAttempts.toString(), Icons.block),
+        _buildStatCard('Suspicious', analytics.suspiciousActivities.toString(), Icons.flag),
+        _buildStatCard('Active Devices', analytics.activeDevices.toString(), Icons.devices),
       ],
     );
   }
@@ -715,7 +715,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              &apos;Security Trends&apos;,
+              'Security Trends',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
@@ -723,12 +723,12 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
               height: 200,
               child: LineChartWidget(
                 data: analytics.securityTrends
-                    .map((data) =&gt; ChartDataPoint(
+                    .map((data) => ChartDataPoint(
                           x: data.date.millisecondsSinceEpoch.toDouble(),
                           y: data.incidents.toDouble(),
                         ))
                     .toList(),
-                title: &apos;Security Incidents&apos;,
+                title: 'Security Incidents',
                 color: Colors.red,
               ),
             ),
@@ -746,11 +746,11 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              &apos;Recent Security Incidents&apos;,
+              'Recent Security Incidents',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
-            ...analytics.recentIncidents.take(5).map((incident) =&gt; _buildIncidentTile(incident)),
+            ...analytics.recentIncidents.take(5).map((incident) => _buildIncidentTile(incident)),
           ],
         ),
       ),
@@ -760,10 +760,10 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
   Widget _buildIncidentTile(SecurityIncident incident) {
     Color severityColor;
     switch (incident.severity.toLowerCase()) {
-      case &apos;high&apos;:
+      case 'high':
         severityColor = Colors.red;
         break;
-      case &apos;medium&apos;:
+      case 'medium':
         severityColor = Colors.orange;
         break;
       default:
@@ -789,7 +789,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
   }
 
   Widget _buildApiUsageTab() {
-    return FutureBuilder&lt;ApiUsageAnalytics&gt;(
+    return FutureBuilder<ApiUsageAnalytics>(
       future: _loadApiUsageAnalytics(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -830,10 +830,10 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
       mainAxisSpacing: 16,
       childAspectRatio: 1.5,
       children: [
-        _buildStatCard(&apos;Total Requests&apos;, analytics.totalRequests.toString(), Icons.api),
-        _buildStatCard(&apos;Success Rate&apos;, &apos;${((analytics.successfulRequests / analytics.totalRequests) * 100).toStringAsFixed(1)}%&apos;, Icons.check_circle),
-        _buildStatCard(&apos;Avg Response&apos;, &apos;${analytics.averageResponseTime.toStringAsFixed(0)}ms&apos;, Icons.timer),
-        _buildStatCard(&apos;Active Keys&apos;, analytics.activeApiKeys.toString(), Icons.key),
+        _buildStatCard('Total Requests', analytics.totalRequests.toString(), Icons.api),
+        _buildStatCard('Success Rate', '${((analytics.successfulRequests / analytics.totalRequests) * 100).toStringAsFixed(1)}%', Icons.check_circle),
+        _buildStatCard('Avg Response', '${analytics.averageResponseTime.toStringAsFixed(0)}ms', Icons.timer),
+        _buildStatCard('Active Keys', analytics.activeApiKeys.toString(), Icons.key),
       ],
     );
   }
@@ -846,7 +846,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              &apos;API Usage Trends&apos;,
+              'API Usage Trends',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
@@ -854,12 +854,12 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
               height: 200,
               child: LineChartWidget(
                 data: analytics.usageTrends
-                    .map((data) =&gt; ChartDataPoint(
+                    .map((data) => ChartDataPoint(
                           x: data.timestamp.millisecondsSinceEpoch.toDouble(),
                           y: data.requests.toDouble(),
                         ))
                     .toList(),
-                title: &apos;API Requests&apos;,
+                title: 'API Requests',
                 color: Colors.purple,
               ),
             ),
@@ -877,11 +877,11 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              &apos;Top API Endpoints&apos;,
+              'Top API Endpoints',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
-            ...analytics.topEndpoints.take(5).map((endpoint) =&gt; _buildEndpointTile(endpoint)),
+            ...analytics.topEndpoints.take(5).map((endpoint) => _buildEndpointTile(endpoint)),
           ],
         ),
       ),
@@ -898,14 +898,14 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
         ),
         child: Icon(Icons.api, color: Theme.of(context).primaryColor),
       ),
-      title: Text(&apos;${endpoint.method} ${endpoint.endpoint}&apos;),
+      title: Text('${endpoint.method} ${endpoint.endpoint}'),
       subtitle: Text(
-        &apos;${endpoint.requestCount} requests • ${endpoint.averageResponseTime.toStringAsFixed(0)}ms avg&apos;,
+        '${endpoint.requestCount} requests • ${endpoint.averageResponseTime.toStringAsFixed(0)}ms avg',
       ),
       trailing: Text(
-        &apos;${endpoint.errorRate.toStringAsFixed(1)}% error&apos;,
+        '${endpoint.errorRate.toStringAsFixed(1)}% error',
         style: TextStyle(
-          color: endpoint.errorRate &gt; 5 ? Colors.red : Colors.green,
+          color: endpoint.errorRate > 5 ? Colors.red : Colors.green,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -924,7 +924,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           ),
           const SizedBox(height: 16),
           Text(
-            &apos;Failed to load analytics&apos;,
+            'Failed to load analytics',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 8),
@@ -936,7 +936,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _refreshData,
-            child: const Text(&apos;Retry&apos;),
+            child: const Text('Retry'),
           ),
         ],
       ),
@@ -944,7 +944,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
   }
 
   // Data loading methods
-  Future&lt;AnalyticsDashboard&gt; _loadDashboardData() async {
+  Future<AnalyticsDashboard> _loadDashboardData() async {
     final analyticsService = ref.read(analyticsApiServiceProvider);
     return await analyticsService.getDashboardAnalytics(
       startDate: _getStartDate(),
@@ -952,7 +952,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
     );
   }
 
-  Future&lt;UserAnalytics&gt; _loadUserAnalytics() async {
+  Future<UserAnalytics> _loadUserAnalytics() async {
     final analyticsService = ref.read(analyticsApiServiceProvider);
     return await analyticsService.getUserAnalytics(
       startDate: _getStartDate(),
@@ -960,7 +960,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
     );
   }
 
-  Future&lt;AuthenticationAnalytics&gt; _loadAuthenticationAnalytics() async {
+  Future<AuthenticationAnalytics> _loadAuthenticationAnalytics() async {
     final analyticsService = ref.read(analyticsApiServiceProvider);
     return await analyticsService.getAuthenticationAnalytics(
       startDate: _getStartDate(),
@@ -968,7 +968,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
     );
   }
 
-  Future&lt;SecurityAnalytics&gt; _loadSecurityAnalytics() async {
+  Future<SecurityAnalytics> _loadSecurityAnalytics() async {
     final analyticsService = ref.read(analyticsApiServiceProvider);
     return await analyticsService.getSecurityAnalytics(
       startDate: _getStartDate(),
@@ -976,7 +976,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
     );
   }
 
-  Future&lt;ApiUsageAnalytics&gt; _loadApiUsageAnalytics() async {
+  Future<ApiUsageAnalytics> _loadApiUsageAnalytics() async {
     final analyticsService = ref.read(analyticsApiServiceProvider);
     return await analyticsService.getApiUsageAnalytics(
       startDate: _getStartDate(),
@@ -1031,7 +1031,7 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
     // TODO: Implement real-time updates using WebSocket
   }
 
-  Future&lt;void&gt; _refreshData() async {
+  Future<void> _refreshData() async {
     setState(() {});
   }
 
@@ -1058,13 +1058,13 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
     // TODO: Implement custom query builder
     showDialog(
       context: context,
-      builder: (context) =&gt; AlertDialog(
-        title: const Text(&apos;Custom Query&apos;),
-        content: const Text(&apos;Custom query builder coming soon...&apos;),
+      builder: (context) => AlertDialog(
+        title: const Text('Custom Query'),
+        content: const Text('Custom query builder coming soon...'),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(),
-            child: const Text(&apos;Close&apos;),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),
@@ -1072,6 +1072,6 @@ class _AnalyticsDashboardPageState extends ConsumerState&lt;AnalyticsDashboardPa
   }
 
   String _formatDateTime(DateTime dateTime) {
-    return &apos;${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, &apos;0&apos;)}&apos;;
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }

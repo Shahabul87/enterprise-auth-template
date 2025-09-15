@@ -8,6 +8,8 @@
 import { create } from 'zustand';
 import { devtools, persist, subscribeWithSelector } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import type { 
   User, 
   TokenPair, 
@@ -88,7 +90,7 @@ export interface AuthState {
   // Actions
   initialize: () => Promise<void>;
   login: (credentials: LoginRequest) => Promise<ApiResponse<LoginResponse>>;
-  register: (userData: RegisterRequest) => Promise<ApiResponse<User>>;
+  register: (userData: RegisterRequest) => Promise<ApiResponse<{ message: string }>>;
   logout: () => Promise<void>;
   refreshToken: () => Promise<boolean>;
   refreshAccessToken: () => Promise<string | null>;
@@ -221,25 +223,54 @@ export const useAuthStore = create<AuthState>()(
               const response = await AuthAPI.login(credentials);
               
               if (response.success && response.data) {
-                const { user, access_token, refresh_token, token_type, expires_in } = response.data;
-                
+                const data: any = response.data;
+                const accessToken = data.accessToken ?? data.access_token ?? '';
+                const refreshToken = data.refreshToken ?? data.refresh_token ?? '';
+                const expiresIn = data.expiresIn ?? data.expires_in ?? 900;
+                const backendUser = data.user ?? {};
+
                 const tokenPair: TokenPair = {
-                  access_token,
-                  refresh_token,
-                  token_type,
-                  expires_in,
+                  access_token: accessToken,
+                  refresh_token: refreshToken,
+                  token_type: 'bearer',
+                  expires_in: expiresIn,
                 };
-                
+
                 // Store tokens
                 storeAuthTokens(tokenPair);
-                
+
                 // Update state
                 set((state) => {
-                  state.user = user;
+                  const u: any = backendUser;
+                  state.user = {
+                    id: String(u.id ?? ''),
+                    email: String(u.email ?? ''),
+                    full_name: String(u.full_name ?? u.name ?? ''),
+                    username: u.username,
+                    is_active: Boolean(u.is_active ?? true),
+                    // Fix: Check backend field first (email_verified), then camelCase aliases
+                    email_verified: Boolean(u.email_verified ?? u.isEmailVerified ?? u.is_verified ?? false),
+                    is_superuser: Boolean(u.is_superuser ?? false),
+                    two_factor_enabled: Boolean(u.two_factor_enabled ?? u.isTwoFactorEnabled ?? false),
+                    failed_login_attempts: Number(u.failed_login_attempts ?? 0),
+                    last_login: (u.last_login ?? u.lastLoginAt ?? null),
+                    profile_picture: u.profilePicture ?? u.avatar_url,
+                    avatar_url: u.avatar_url,
+                    phone_number: u.phone_number,
+                    is_phone_verified: u.is_phone_verified,
+                    user_metadata: u.user_metadata ?? {},
+                    created_at: String(u.created_at ?? u.createdAt ?? new Date().toISOString()),
+                    updated_at: String(u.updated_at ?? u.updatedAt ?? new Date().toISOString()),
+                    roles: [],
+                    permissions: Array.isArray(u.permissions) ? u.permissions : [],
+                  } as any;
                   state.tokens = tokenPair;
-                  state.accessToken = access_token;
+                  state.accessToken = accessToken;
                   state.isAuthenticated = true;
-                  state.isEmailVerified = user.is_verified ?? false;
+                  // Fix: Check backend field first (email_verified), then camelCase aliases
+                  state.isEmailVerified = Boolean(
+                    backendUser?.email_verified ?? backendUser?.isEmailVerified ?? backendUser?.is_verified ?? false
+                  );
                   state.session = {
                     loginTime: new Date(),
                     lastActivity: new Date(),
@@ -293,17 +324,13 @@ export const useAuthStore = create<AuthState>()(
               state.isLoading = true;
               state.error = null;
             });
-            
+
             try {
               const response = await AuthAPI.register(userData);
-              
+
               if (response.success) {
-                // Auto-login after registration
-                await get().login({
-                  email: userData.email,
-                  password: userData.password,
-                });
-                
+                // Registration successful - return the message
+                // Don't auto-login; user needs to verify email first
                 return response;
               } else {
                 const error: AuthError = {
@@ -311,12 +338,12 @@ export const useAuthStore = create<AuthState>()(
                   message: response.error?.message || 'Registration failed',
                   timestamp: new Date(),
                 };
-                
+
                 set((state) => {
                   state.error = error;
                   state.authErrors.push(error);
                 });
-                
+
                 return response;
               }
             } catch (error) {
@@ -325,12 +352,12 @@ export const useAuthStore = create<AuthState>()(
                 message: error instanceof Error ? error.message : 'An error occurred during registration',
                 timestamp: new Date(),
               };
-              
+
               set((state) => {
                 state.error = authError;
                 state.authErrors.push(authError);
               });
-              
+
               throw error;
             } finally {
               set((state) => {
@@ -365,13 +392,23 @@ export const useAuthStore = create<AuthState>()(
               });
               
               if (response.success && response.data) {
-                const newTokens = response.data;
-                
+                const data: any = response.data;
+                const newAccessToken = data.accessToken ?? data.access_token;
+                const newRefreshToken = data.refreshToken ?? data.refresh_token ?? currentTokens.refresh_token;
+                const expiresIn = data.expiresIn ?? data.expires_in ?? currentTokens.expires_in ?? 900;
+                const newTokens: TokenPair = {
+                  access_token: newAccessToken,
+                  refresh_token: newRefreshToken,
+                  token_type: 'bearer',
+                  expires_in: expiresIn,
+                };
+
                 // Store new tokens
                 storeAuthTokens(newTokens);
-                
+
                 set((state) => {
                   state.tokens = newTokens;
+                  state.accessToken = newAccessToken;
                 });
                 
                 // Reset refresh timer
@@ -506,7 +543,8 @@ export const useAuthStore = create<AuthState>()(
               if (response.success && response.data) {
                 set((state) => {
                   state.user = response.data || null;
-                  state.isEmailVerified = response.data?.is_verified ?? false;
+                  const u: any = response.data;
+                  state.isEmailVerified = Boolean(u?.email_verified ?? u?.is_verified ?? u?.isEmailVerified ?? false);
                 });
               }
             } catch (error) {
@@ -691,12 +729,15 @@ export function useRequireAuth(redirectTo = '/auth/login') {
 
 export function useGuestOnly(redirectTo = '/dashboard') {
   const store = useAuthStore();
-  const router = typeof window !== 'undefined' ? require('next/navigation').useRouter() : null;
+  const router = useRouter();
 
-  // Redirect if authenticated after initialization
-  if (store.isInitialized && store.isAuthenticated && router) {
-    router.push(redirectTo);
-  }
+  // Use useEffect to avoid state updates during render
+  useEffect(() => {
+    // Redirect if authenticated after initialization
+    if (store.isInitialized && store.isAuthenticated) {
+      router.push(redirectTo);
+    }
+  }, [store.isInitialized, store.isAuthenticated, router, redirectTo]);
 
   return store;
 }

@@ -4,7 +4,7 @@ class ApiConstants {
   // Base URLs - Now dynamic based on environment
   static String get baseUrl => Environment.apiBaseUrl;
   static const String apiVersion = 'v1';
-  static const String apiPath = '/api/$apiVersion';
+  static const String apiPath = '/api/$apiVersion/$apiVersion';  // Double v1 due to backend router config
 
   // Full API URL
   static String get apiUrl => '$baseUrl$apiPath';
@@ -66,6 +66,8 @@ class ApiConstants {
   static const String magicLinkRequestPath = '$magicLinksBasePath/request';
   static const String magicLinkVerifyPath =
       '$magicLinksBasePath/verify/{token}';
+  static const String magicLinkStatusPath = '$magicLinksBasePath/status';
+  static const String magicLinkCancelPath = '$magicLinksBasePath/cancel';
 
   // Two-Factor Authentication endpoints
   static const String twoFactorBasePath = '/2fa';
@@ -98,6 +100,9 @@ class ApiConstants {
   static const String adminExportUsersPath = '$adminBasePath/exports/users';
   static const String adminExportAuditLogsPath =
       '$adminBasePath/exports/audit-logs';
+
+  // API Keys endpoints
+  static const String apiKeysPath = '$adminBasePath/api-keys';
 
   // Health endpoint
   static const String healthPath = '/health';

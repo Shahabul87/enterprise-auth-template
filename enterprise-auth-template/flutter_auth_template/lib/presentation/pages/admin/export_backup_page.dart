@@ -5,21 +5,21 @@ import '../../../data/services/export_api_service.dart';
 import '../../widgets/common/loading_widget.dart';
 import '../../widgets/common/error_widget.dart';
 
-final exportApiServiceProvider = Provider((ref) =&gt; ExportApiService());
+final exportApiServiceProvider = Provider((ref) => ExportApiService());
 
 class ExportBackupPage extends ConsumerStatefulWidget {
   const ExportBackupPage({super.key});
 
   @override
-  ConsumerState&lt;ExportBackupPage&gt; createState() =&gt; _ExportBackupPageState();
+  ConsumerState<ExportBackupPage> createState() => _ExportBackupPageState();
 }
 
-class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt; 
+class _ExportBackupPageState extends ConsumerState<ExportBackupPage> 
     with TickerProviderStateMixin {
   late TabController _tabController;
-  List&lt;ExportJob&gt; _exportJobs = [];
-  List&lt;BackupJob&gt; _backupJobs = [];
-  List&lt;RestorePoint&gt; _restorePoints = [];
+  List<ExportJob> _exportJobs = [];
+  List<BackupJob> _backupJobs = [];
+  List<RestorePoint> _restorePoints = [];
   bool _isLoading = true;
   String? _error;
 
@@ -36,7 +36,7 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
     super.dispose();
   }
 
-  Future&lt;void&gt; _loadData() async {
+  Future<void> _loadData() async {
     try {
       setState(() {
         _isLoading = true;
@@ -52,9 +52,9 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
 
       if (mounted) {
         setState(() {
-          _exportJobs = results[0] as List&lt;ExportJob&gt;;
-          _backupJobs = results[1] as List&lt;BackupJob&gt;;
-          _restorePoints = results[2] as List&lt;RestorePoint&gt;;
+          _exportJobs = results[0] as List<ExportJob>;
+          _backupJobs = results[1] as List<BackupJob>;
+          _restorePoints = results[2] as List<RestorePoint>;
           _isLoading = false;
         });
       }
@@ -87,13 +87,13 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(&apos;Export &amp; Backup&apos;),
+        title: const Text('Export & Backup'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: &apos;Exports&apos;),
-            Tab(text: &apos;Backups&apos;),
-            Tab(text: &apos;Restore Points&apos;),
+            Tab(text: 'Exports'),
+            Tab(text: 'Backups'),
+            Tab(text: 'Restore Points'),
           ],
         ),
       ),
@@ -106,8 +106,8 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () =&gt; _showActionMenu(context),
-        label: const Text(&apos;Create&apos;),
+        onPressed: () => _showActionMenu(context),
+        label: const Text('Create'),
         icon: const Icon(Icons.add),
       ),
     );
@@ -121,8 +121,8 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
           children: [
             Icon(Icons.file_download, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text(&apos;No export jobs found&apos;),
-            Text(&apos;Create a new export to get started&apos;),
+            Text('No export jobs found'),
+            Text('Create a new export to get started'),
           ],
         ),
       );
@@ -154,55 +154,55 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(&apos;Format: ${job.format.displayName}&apos;),
-                Text(&apos;Created: ${_formatDateTime(job.createdAt)}&apos;),
+                Text('Format: ${job.format.displayName}'),
+                Text('Created: ${_formatDateTime(job.createdAt)}'),
                 if (job.completedAt != null)
-                  Text(&apos;Completed: ${_formatDateTime(job.completedAt!)}&apos;),
+                  Text('Completed: ${_formatDateTime(job.completedAt!)}'),
               ],
             ),
-            trailing: PopupMenuButton&lt;String&gt;(
-              onSelected: (action) =&gt; _handleExportAction(action, job),
-              itemBuilder: (context) =&gt; [
+            trailing: PopupMenuButton<String>(
+              onSelected: (action) => _handleExportAction(action, job),
+              itemBuilder: (context) => [
                 if (job.status == ExportStatus.completed) ...[
                   const PopupMenuItem(
-                    value: &apos;download&apos;,
+                    value: 'download',
                     child: Row(
                       children: [
                         Icon(Icons.download),
                         SizedBox(width: 8),
-                        Text(&apos;Download&apos;),
+                        Text('Download'),
                       ],
                     ),
                   ),
                   const PopupMenuItem(
-                    value: &apos;share&apos;,
+                    value: 'share',
                     child: Row(
                       children: [
                         Icon(Icons.share),
                         SizedBox(width: 8),
-                        Text(&apos;Share&apos;),
+                        Text('Share'),
                       ],
                     ),
                   ),
                 ],
                 if (job.status == ExportStatus.pending || job.status == ExportStatus.running)
                   const PopupMenuItem(
-                    value: &apos;cancel&apos;,
+                    value: 'cancel',
                     child: Row(
                       children: [
                         Icon(Icons.cancel),
                         SizedBox(width: 8),
-                        Text(&apos;Cancel&apos;),
+                        Text('Cancel'),
                       ],
                     ),
                   ),
                 const PopupMenuItem(
-                  value: &apos;delete&apos;,
+                  value: 'delete',
                   child: Row(
                     children: [
                       Icon(Icons.delete, color: Colors.red),
                       SizedBox(width: 8),
-                      Text(&apos;Delete&apos;, style: TextStyle(color: Colors.red)),
+                      Text('Delete', style: TextStyle(color: Colors.red)),
                     ],
                   ),
                 ),
@@ -217,7 +217,7 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
                 children: [
                   LinearProgressIndicator(value: job.progress / 100),
                   const SizedBox(height: 8),
-                  Text(&apos;Progress: ${job.progress.toStringAsFixed(1)}%&apos;),
+                  Text('Progress: ${job.progress.toStringAsFixed(1)}%'),
                 ],
               ),
             ),
@@ -229,15 +229,15 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
               child: Row(
                 children: [
                   Expanded(
-                    child: _buildStatCard(&apos;Records&apos;, job.recordCount.toString()),
+                    child: _buildStatCard('Records', job.recordCount.toString()),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: _buildStatCard(&apos;Size&apos;, _formatFileSize(job.fileSize)),
+                    child: _buildStatCard('Size', _formatFileSize(job.fileSize)),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: _buildStatCard(&apos;Duration&apos;, _formatDuration(job.duration)),
+                    child: _buildStatCard('Duration', _formatDuration(job.duration)),
                   ),
                 ],
               ),
@@ -253,13 +253,13 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    &apos;Error:&apos;,
+                    'Error:',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.red,
                     ),
                   ),
-                  Text(job.errorMessage ?? &apos;Unknown error&apos;),
+                  Text(job.errorMessage ?? 'Unknown error'),
                 ],
               ),
             ),
@@ -277,8 +277,8 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
           children: [
             Icon(Icons.backup, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text(&apos;No backup jobs found&apos;),
-            Text(&apos;Create a backup schedule to get started&apos;),
+            Text('No backup jobs found'),
+            Text('Create a backup schedule to get started'),
           ],
         ),
       );
@@ -310,17 +310,17 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(&apos;Type: ${job.type.displayName}&apos;),
-                Text(&apos;Schedule: ${job.schedule.displayName}&apos;),
+                Text('Type: ${job.type.displayName}'),
+                Text('Schedule: ${job.schedule.displayName}'),
                 if (job.lastRunAt != null)
-                  Text(&apos;Last run: ${_formatDateTime(job.lastRunAt!)}&apos;),
+                  Text('Last run: ${_formatDateTime(job.lastRunAt!)}'),
                 if (job.nextRunAt != null)
-                  Text(&apos;Next run: ${_formatDateTime(job.nextRunAt!)}&apos;),
+                  Text('Next run: ${_formatDateTime(job.nextRunAt!)}'),
               ],
             ),
             trailing: Switch(
               value: job.isEnabled,
-              onChanged: (value) =&gt; _toggleBackupJob(job, value),
+              onChanged: (value) => _toggleBackupJob(job, value),
             ),
           ),
           if (job.retentionPolicy != null) ...[
@@ -331,7 +331,7 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
                 children: [
                   const Icon(Icons.schedule, size: 16),
                   const SizedBox(width: 8),
-                  Text(&apos;Retention: ${job.retentionPolicy!.displayName}&apos;),
+                  Text('Retention: ${job.retentionPolicy!.displayName}'),
                 ],
               ),
             ),
@@ -344,7 +344,7 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(width: 16),
-                  Text(&apos;Backup in progress...&apos;),
+                  Text('Backup in progress...'),
                 ],
               ),
             ),
@@ -362,8 +362,8 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
           children: [
             Icon(Icons.restore, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text(&apos;No restore points available&apos;),
-            Text(&apos;Create backups to generate restore points&apos;),
+            Text('No restore points available'),
+            Text('Create backups to generate restore points'),
           ],
         ),
       );
@@ -391,45 +391,45 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
                 color: Colors.white,
               ),
             ),
-            title: Text(&apos;${point.type.displayName} - ${_formatDateTime(point.createdAt)}&apos;),
+            title: Text('${point.type.displayName} - ${_formatDateTime(point.createdAt)}'),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(&apos;Size: ${_formatFileSize(point.size)}&apos;),
+                Text('Size: ${_formatFileSize(point.size)}'),
                 if (point.description.isNotEmpty)
-                  Text(&apos;Description: ${point.description}&apos;),
+                  Text('Description: ${point.description}'),
               ],
             ),
-            trailing: PopupMenuButton&lt;String&gt;(
-              onSelected: (action) =&gt; _handleRestorePointAction(action, point),
-              itemBuilder: (context) =&gt; [
+            trailing: PopupMenuButton<String>(
+              onSelected: (action) => _handleRestorePointAction(action, point),
+              itemBuilder: (context) => [
                 const PopupMenuItem(
-                  value: &apos;restore&apos;,
+                  value: 'restore',
                   child: Row(
                     children: [
                       Icon(Icons.restore),
                       SizedBox(width: 8),
-                      Text(&apos;Restore&apos;),
+                      Text('Restore'),
                     ],
                   ),
                 ),
                 const PopupMenuItem(
-                  value: &apos;download&apos;,
+                  value: 'download',
                   child: Row(
                     children: [
                       Icon(Icons.download),
                       SizedBox(width: 8),
-                      Text(&apos;Download&apos;),
+                      Text('Download'),
                     ],
                   ),
                 ),
                 const PopupMenuItem(
-                  value: &apos;delete&apos;,
+                  value: 'delete',
                   child: Row(
                     children: [
                       Icon(Icons.delete, color: Colors.red),
                       SizedBox(width: 8),
-                      Text(&apos;Delete&apos;, style: TextStyle(color: Colors.red)),
+                      Text('Delete', style: TextStyle(color: Colors.red)),
                     ],
                   ),
                 ),
@@ -442,15 +442,15 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
             child: Row(
               children: [
                 Expanded(
-                  child: _buildStatCard(&apos;Tables&apos;, point.metadata[&apos;tables&apos;] ?? &apos;0&apos;),
+                  child: _buildStatCard('Tables', point.metadata['tables'] ?? '0'),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: _buildStatCard(&apos;Records&apos;, point.metadata[&apos;records&apos;] ?? &apos;0&apos;),
+                  child: _buildStatCard('Records', point.metadata['records'] ?? '0'),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: _buildStatCard(&apos;Version&apos;, point.metadata[&apos;version&apos;] ?? &apos;1.0&apos;),
+                  child: _buildStatCard('Version', point.metadata['version'] ?? '1.0'),
                 ),
               ],
             ),
@@ -491,12 +491,12 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
   void _showActionMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (context) =&gt; Column(
+      builder: (context) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
             leading: const Icon(Icons.file_download),
-            title: const Text(&apos;Create Export&apos;),
+            title: const Text('Create Export'),
             onTap: () {
               Navigator.pop(context);
               _showCreateExportDialog();
@@ -504,7 +504,7 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
           ),
           ListTile(
             leading: const Icon(Icons.backup),
-            title: const Text(&apos;Schedule Backup&apos;),
+            title: const Text('Schedule Backup'),
             onTap: () {
               Navigator.pop(context);
               _showCreateBackupDialog();
@@ -512,7 +512,7 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
           ),
           ListTile(
             leading: const Icon(Icons.restore),
-            title: const Text(&apos;Create Restore Point&apos;),
+            title: const Text('Create Restore Point'),
             onTap: () {
               Navigator.pop(context);
               _createRestorePoint();
@@ -526,20 +526,20 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
   void _showCreateExportDialog() {
     showDialog(
       context: context,
-      builder: (context) =&gt; _CreateExportDialog(
+      builder: (context) => _CreateExportDialog(
         onSubmit: (request) async {
           try {
             await ref.read(exportApiServiceProvider).createExportJob(request);
             _loadData();
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text(&apos;Export job created&apos;)),
+                const SnackBar(content: Text('Export job created')),
               );
             }
           } catch (e) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+                SnackBar(content: Text('Error: ${e.toString()}')),
               );
             }
           }
@@ -551,20 +551,20 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
   void _showCreateBackupDialog() {
     showDialog(
       context: context,
-      builder: (context) =&gt; _CreateBackupDialog(
+      builder: (context) => _CreateBackupDialog(
         onSubmit: (request) async {
           try {
             await ref.read(exportApiServiceProvider).createBackupJob(request);
             _loadData();
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text(&apos;Backup job created&apos;)),
+                const SnackBar(content: Text('Backup job created')),
               );
             }
           } catch (e) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+                SnackBar(content: Text('Error: ${e.toString()}')),
               );
             }
           }
@@ -576,18 +576,18 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
   void _createRestorePoint() async {
     try {
       await ref.read(exportApiServiceProvider).createRestorePoint(
-        &apos;Manual restore point - ${DateTime.now().toIso8601String()}&apos;,
+        'Manual restore point - ${DateTime.now().toIso8601String()}',
       );
       _loadData();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text(&apos;Restore point created&apos;)),
+          const SnackBar(content: Text('Restore point created')),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+          SnackBar(content: Text('Error: ${e.toString()}')),
         );
       }
     }
@@ -598,23 +598,23 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
     
     try {
       switch (action) {
-        case &apos;download&apos;:
+        case 'download':
           await service.downloadExport(job.id);
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text(&apos;Download started&apos;)),
+              const SnackBar(content: Text('Download started')),
             );
           }
           break;
-        case &apos;share&apos;:
+        case 'share':
           // Implement share functionality
           break;
-        case &apos;cancel&apos;:
+        case 'cancel':
           await service.cancelExportJob(job.id);
           _loadData();
           break;
-        case &apos;delete&apos;:
-          final confirmed = await _showDeleteConfirmation(&apos;export job&apos;);
+        case 'delete':
+          final confirmed = await _showDeleteConfirmation('export job');
           if (confirmed) {
             await service.deleteExportJob(job.id);
             _loadData();
@@ -624,7 +624,7 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+          SnackBar(content: Text('Error: ${e.toString()}')),
         );
       }
     }
@@ -635,27 +635,27 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
     
     try {
       switch (action) {
-        case &apos;restore&apos;:
+        case 'restore':
           final confirmed = await _showRestoreConfirmation();
           if (confirmed) {
             await service.restoreFromPoint(point.id);
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text(&apos;Restore initiated&apos;)),
+                const SnackBar(content: Text('Restore initiated')),
               );
             }
           }
           break;
-        case &apos;download&apos;:
+        case 'download':
           await service.downloadRestorePoint(point.id);
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text(&apos;Download started&apos;)),
+              const SnackBar(content: Text('Download started')),
             );
           }
           break;
-        case &apos;delete&apos;:
-          final confirmed = await _showDeleteConfirmation(&apos;restore point&apos;);
+        case 'delete':
+          final confirmed = await _showDeleteConfirmation('restore point');
           if (confirmed) {
             await service.deleteRestorePoint(point.id);
             _loadData();
@@ -665,7 +665,7 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+          SnackBar(content: Text('Error: ${e.toString()}')),
         );
       }
     }
@@ -678,50 +678,50 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+          SnackBar(content: Text('Error: ${e.toString()}')),
         );
       }
     }
   }
 
-  Future&lt;bool&gt; _showDeleteConfirmation(String itemType) async {
-    return await showDialog&lt;bool&gt;(
+  Future<bool> _showDeleteConfirmation(String itemType) async {
+    return await showDialog<bool>(
       context: context,
-      builder: (context) =&gt; AlertDialog(
-        title: Text(&apos;Delete ${itemType[0].toUpperCase()}${itemType.substring(1)}&apos;),
-        content: Text(&apos;Are you sure you want to delete this $itemType?&apos;),
+      builder: (context) => AlertDialog(
+        title: Text('Delete ${itemType[0].toUpperCase()}${itemType.substring(1)}'),
+        content: Text('Are you sure you want to delete this $itemType?'),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(false),
-            child: const Text(&apos;Cancel&apos;),
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(true),
+            onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text(&apos;Delete&apos;),
+            child: const Text('Delete'),
           ),
         ],
       ),
     ) ?? false;
   }
 
-  Future&lt;bool&gt; _showRestoreConfirmation() async {
-    return await showDialog&lt;bool&gt;(
+  Future<bool> _showRestoreConfirmation() async {
+    return await showDialog<bool>(
       context: context,
-      builder: (context) =&gt; AlertDialog(
-        title: const Text(&apos;Restore Database&apos;),
+      builder: (context) => AlertDialog(
+        title: const Text('Restore Database'),
         content: const Text(
-          &apos;This will restore your database to the selected point. All data created after this point will be lost. Are you sure?&apos;,
+          'This will restore your database to the selected point. All data created after this point will be lost. Are you sure?',
         ),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(false),
-            child: const Text(&apos;Cancel&apos;),
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(true),
+            onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text(&apos;Restore&apos;),
+            child: const Text('Restore'),
           ),
         ],
       ),
@@ -729,20 +729,20 @@ class _ExportBackupPageState extends ConsumerState&lt;ExportBackupPage&gt;
   }
 
   String _formatDateTime(DateTime dateTime) {
-    return &apos;${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, &apos;0&apos;)}&apos;;
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 
   String _formatFileSize(int bytes) {
-    if (bytes &lt; 1024) return &apos;${bytes}B&apos;;
-    if (bytes &lt; 1024 * 1024) return &apos;${(bytes / 1024).toStringAsFixed(1)}KB&apos;;
-    if (bytes &lt; 1024 * 1024 * 1024) return &apos;${(bytes / (1024 * 1024)).toStringAsFixed(1)}MB&apos;;
-    return &apos;${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)}GB&apos;;
+    if (bytes < 1024) return '${bytes}B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)}KB';
+    if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)}MB';
+    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)}GB';
   }
 
   String _formatDuration(int seconds) {
-    if (seconds &lt; 60) return &apos;${seconds}s&apos;;
-    if (seconds &lt; 3600) return &apos;${(seconds / 60).toStringAsFixed(1)}m&apos;;
-    return &apos;${(seconds / 3600).toStringAsFixed(1)}h&apos;;
+    if (seconds < 60) return '${seconds}s';
+    if (seconds < 3600) return '${(seconds / 60).toStringAsFixed(1)}m';
+    return '${(seconds / 3600).toStringAsFixed(1)}h';
   }
 }
 
@@ -752,31 +752,31 @@ class _CreateExportDialog extends StatefulWidget {
   const _CreateExportDialog({required this.onSubmit});
 
   @override
-  State&lt;_CreateExportDialog&gt; createState() =&gt; _CreateExportDialogState();
+  State<_CreateExportDialog> createState() => _CreateExportDialogState();
 }
 
-class _CreateExportDialogState extends State&lt;_CreateExportDialog&gt; {
+class _CreateExportDialogState extends State<_CreateExportDialog> {
   ExportType _selectedType = ExportType.users;
   ExportFormat _selectedFormat = ExportFormat.csv;
-  final Set&lt;String&gt; _selectedFilters = {};
+  final Set<String> _selectedFilters = {};
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text(&apos;Create Export&apos;),
+      title: const Text('Create Export'),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            DropdownButtonFormField&lt;ExportType&gt;(
+            DropdownButtonFormField<ExportType>(
               decoration: const InputDecoration(
-                labelText: &apos;Data Type&apos;,
+                labelText: 'Data Type',
                 border: OutlineInputBorder(),
               ),
               value: _selectedType,
               items: ExportType.values.map(
-                (type) =&gt; DropdownMenuItem(
+                (type) => DropdownMenuItem(
                   value: type,
                   child: Text(type.displayName),
                 ),
@@ -790,14 +790,14 @@ class _CreateExportDialogState extends State&lt;_CreateExportDialog&gt; {
               },
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField&lt;ExportFormat&gt;(
+            DropdownButtonFormField<ExportFormat>(
               decoration: const InputDecoration(
-                labelText: &apos;Format&apos;,
+                labelText: 'Format',
                 border: OutlineInputBorder(),
               ),
               value: _selectedFormat,
               items: ExportFormat.values.map(
-                (format) =&gt; DropdownMenuItem(
+                (format) => DropdownMenuItem(
                   value: format,
                   child: Text(format.displayName),
                 ),
@@ -815,8 +815,8 @@ class _CreateExportDialogState extends State&lt;_CreateExportDialog&gt; {
       ),
       actions: [
         TextButton(
-          onPressed: () =&gt; Navigator.of(context).pop(),
-          child: const Text(&apos;Cancel&apos;),
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: () {
@@ -828,7 +828,7 @@ class _CreateExportDialogState extends State&lt;_CreateExportDialog&gt; {
             widget.onSubmit(request);
             Navigator.of(context).pop();
           },
-          child: const Text(&apos;Create&apos;),
+          child: const Text('Create'),
         ),
       ],
     );
@@ -841,10 +841,10 @@ class _CreateBackupDialog extends StatefulWidget {
   const _CreateBackupDialog({required this.onSubmit});
 
   @override
-  State&lt;_CreateBackupDialog&gt; createState() =&gt; _CreateBackupDialogState();
+  State<_CreateBackupDialog> createState() => _CreateBackupDialogState();
 }
 
-class _CreateBackupDialogState extends State&lt;_CreateBackupDialog&gt; {
+class _CreateBackupDialogState extends State<_CreateBackupDialog> {
   final _nameController = TextEditingController();
   BackupType _selectedType = BackupType.full;
   BackupSchedule _selectedSchedule = BackupSchedule.manual;
@@ -859,7 +859,7 @@ class _CreateBackupDialogState extends State&lt;_CreateBackupDialog&gt; {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text(&apos;Schedule Backup&apos;),
+      title: const Text('Schedule Backup'),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
@@ -868,19 +868,19 @@ class _CreateBackupDialogState extends State&lt;_CreateBackupDialog&gt; {
             TextFormField(
               controller: _nameController,
               decoration: const InputDecoration(
-                labelText: &apos;Backup Name&apos;,
+                labelText: 'Backup Name',
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField&lt;BackupType&gt;(
+            DropdownButtonFormField<BackupType>(
               decoration: const InputDecoration(
-                labelText: &apos;Backup Type&apos;,
+                labelText: 'Backup Type',
                 border: OutlineInputBorder(),
               ),
               value: _selectedType,
               items: BackupType.values.map(
-                (type) =&gt; DropdownMenuItem(
+                (type) => DropdownMenuItem(
                   value: type,
                   child: Text(type.displayName),
                 ),
@@ -894,14 +894,14 @@ class _CreateBackupDialogState extends State&lt;_CreateBackupDialog&gt; {
               },
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField&lt;BackupSchedule&gt;(
+            DropdownButtonFormField<BackupSchedule>(
               decoration: const InputDecoration(
-                labelText: &apos;Schedule&apos;,
+                labelText: 'Schedule',
                 border: OutlineInputBorder(),
               ),
               value: _selectedSchedule,
               items: BackupSchedule.values.map(
-                (schedule) =&gt; DropdownMenuItem(
+                (schedule) => DropdownMenuItem(
                   value: schedule,
                   child: Text(schedule.displayName),
                 ),
@@ -915,19 +915,19 @@ class _CreateBackupDialogState extends State&lt;_CreateBackupDialog&gt; {
               },
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField&lt;RetentionPolicy&gt;(
+            DropdownButtonFormField<RetentionPolicy>(
               decoration: const InputDecoration(
-                labelText: &apos;Retention Policy&apos;,
+                labelText: 'Retention Policy',
                 border: OutlineInputBorder(),
               ),
               value: _selectedRetention,
               items: [
                 const DropdownMenuItem(
                   value: null,
-                  child: Text(&apos;No retention policy&apos;),
+                  child: Text('No retention policy'),
                 ),
                 ...RetentionPolicy.values.map(
-                  (policy) =&gt; DropdownMenuItem(
+                  (policy) => DropdownMenuItem(
                     value: policy,
                     child: Text(policy.displayName),
                   ),
@@ -944,8 +944,8 @@ class _CreateBackupDialogState extends State&lt;_CreateBackupDialog&gt; {
       ),
       actions: [
         TextButton(
-          onPressed: () =&gt; Navigator.of(context).pop(),
-          child: const Text(&apos;Cancel&apos;),
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: () {
@@ -958,7 +958,7 @@ class _CreateBackupDialogState extends State&lt;_CreateBackupDialog&gt; {
             widget.onSubmit(request);
             Navigator.of(context).pop();
           },
-          child: const Text(&apos;Create&apos;),
+          child: const Text('Create'),
         ),
       ],
     );

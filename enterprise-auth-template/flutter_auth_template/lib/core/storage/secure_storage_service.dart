@@ -37,6 +37,11 @@ class SecureStorageService {
     return await _storage.read(key: _accessTokenKey);
   }
 
+  /// Get token (alias for getAccessToken, used by WebSocket service)
+  Future<String?> getToken() async {
+    return await getAccessToken();
+  }
+
   /// Remove access token
   Future<void> removeAccessToken() async {
     await _storage.delete(key: _accessTokenKey);
@@ -86,6 +91,16 @@ class SecureStorageService {
   Future<bool> getBiometricEnabled() async {
     final value = await _storage.read(key: _biometricEnabledKey);
     return value == 'true';
+  }
+
+  /// Store biometric enabled preference (alias)
+  Future<void> storeBiometricEnabled(bool enabled) async {
+    await setBiometricEnabled(enabled);
+  }
+
+  /// Check if biometric is enabled (alias)
+  Future<bool> isBiometricEnabled() async {
+    return await getBiometricEnabled();
   }
 
   /// Store device ID

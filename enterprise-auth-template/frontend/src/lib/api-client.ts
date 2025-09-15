@@ -21,6 +21,7 @@ class ApiClient {
     this.timeout = config.timeout || 30000; // 30 seconds default
     this.defaultHeaders = {
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
       ...config.headers,
     };
   }

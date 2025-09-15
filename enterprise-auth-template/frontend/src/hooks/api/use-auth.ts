@@ -248,7 +248,7 @@ export const useAuthState = (token?: string) => {
     error,
     isAdmin: roles?.includes('admin') || user?.is_superuser || false,
     isSuperuser: user?.is_superuser || false,
-    isVerified: user?.is_verified || false,
+    isVerified: user?.email_verified || false,
     isActive: user?.is_active || false,
   };
 };

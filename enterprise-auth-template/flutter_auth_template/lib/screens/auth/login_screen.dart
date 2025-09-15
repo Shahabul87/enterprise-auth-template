@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../providers/session_provider.dart';
+import '../../providers/session_provider.dart' as session;
 import '../../providers/biometric_provider.dart';
 import '../../providers/magic_link_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../data/models/auth_request.dart';
 import '../../widgets/common/custom_text_field.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/loading_overlay.dart';
@@ -43,7 +44,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     try {
-      await ref.read(sessionNotifierProvider.notifier).login(
+      await ref.read(session.sessionNotifierProvider.notifier).login(
             email: _emailController.text.trim(),
             password: _passwordController.text,
           );
@@ -114,22 +115,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final oauthService = ref.read(oauthServiceProvider);
       final googleResult = await oauthService.signInWithGoogle();
 
-      if (googleResult.isSuccess) {
-        final result = googleResult.data!;
+      final result = googleResult.when(
+        success: (data, _) => data,
+        error: (message, _, __, ___) => throw Exception(message),
+        loading: () => throw Exception('Unexpected loading state'),
+      );
         final oauthRequest = OAuthLoginRequest(
           provider: 'google',
-          accessToken: result.accessToken,
-          idToken: result.idToken,
+          code: result.accessToken,
+          state: result.idToken,
         );
 
-        await ref.read(sessionNotifierProvider.notifier).oauthLogin(oauthRequest);
+        await ref.read(session.sessionNotifierProvider.notifier).oauthLogin(oauthRequest);
 
         if (mounted) {
           context.go('/dashboard');
         }
-      } else {
-        throw Exception(googleResult.message);
-      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -249,8 +250,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final sessionState = ref.watch(currentSessionProvider);
-    final isAuthLoading = ref.watch(isLoadingProvider);
+    final sessionState = ref.watch(session.currentSessionProvider);
+    final isAuthLoading = ref.watch(session.isLoadingProvider);
     final canUseBiometric = ref.watch(biometricCanUseProvider);
     final biometricSupported = ref.watch(biometricSupportedProvider);
 

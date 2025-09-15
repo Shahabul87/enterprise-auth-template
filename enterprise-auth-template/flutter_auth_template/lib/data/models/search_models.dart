@@ -7,30 +7,30 @@ part 'search_models.g.dart';
 class SearchQuery with _$SearchQuery {
   const factory SearchQuery({
     required String query,
-    @Default([]) List&lt;String&gt; filters,
+    @Default([]) List<String> filters,
     @Default(SearchType.global) SearchType type,
     @Default(0) int page,
     @Default(20) int limit,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _SearchQuery;
 
-  factory SearchQuery.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SearchQuery.fromJson(Map<String, dynamic> json) =>
       _$SearchQueryFromJson(json);
 }
 
 @freezed
 class SearchResult with _$SearchResult {
   const factory SearchResult({
-    required List&lt;SearchResultItem&gt; items,
+    required List<SearchResultItem> items,
     required int totalCount,
     required int page,
     required int limit,
     required double processingTime,
-    Map&lt;String, List&lt;SearchSuggestion&gt;&gt;? suggestions,
-    List&lt;SearchFacet&gt;? facets,
+    Map<String, List<SearchSuggestion>>? suggestions,
+    List<SearchFacet>? facets,
   }) = _SearchResult;
 
-  factory SearchResult.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SearchResult.fromJson(Map<String, dynamic> json) =>
       _$SearchResultFromJson(json);
 }
 
@@ -43,12 +43,12 @@ class SearchResultItem with _$SearchResultItem {
     required SearchItemType type,
     required double score,
     required DateTime lastModified,
-    Map&lt;String, dynamic&gt;? metadata,
-    List&lt;String&gt;? highlights,
+    Map<String, dynamic>? metadata,
+    List<String>? highlights,
     String? thumbnailUrl,
   }) = _SearchResultItem;
 
-  factory SearchResultItem.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SearchResultItem.fromJson(Map<String, dynamic> json) =>
       _$SearchResultItemFromJson(json);
 }
 
@@ -61,7 +61,7 @@ class SearchSuggestion with _$SearchSuggestion {
     SearchSuggestionType? type,
   }) = _SearchSuggestion;
 
-  factory SearchSuggestion.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SearchSuggestion.fromJson(Map<String, dynamic> json) =>
       _$SearchSuggestionFromJson(json);
 }
 
@@ -70,11 +70,11 @@ class SearchFacet with _$SearchFacet {
   const factory SearchFacet({
     required String name,
     required String displayName,
-    required List&lt;SearchFacetValue&gt; values,
+    required List<SearchFacetValue> values,
     SearchFacetType? type,
   }) = _SearchFacet;
 
-  factory SearchFacet.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SearchFacet.fromJson(Map<String, dynamic> json) =>
       _$SearchFacetFromJson(json);
 }
 
@@ -87,7 +87,7 @@ class SearchFacetValue with _$SearchFacetValue {
     @Default(false) bool selected,
   }) = _SearchFacetValue;
 
-  factory SearchFacetValue.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SearchFacetValue.fromJson(Map<String, dynamic> json) =>
       _$SearchFacetValueFromJson(json);
 }
 
@@ -104,10 +104,10 @@ class SearchIndex with _$SearchIndex {
     DateTime? lastIndexedAt,
     required int documentCount,
     required int size,
-    Map&lt;String, dynamic&gt;? settings,
+    Map<String, dynamic>? settings,
   }) = _SearchIndex;
 
-  factory SearchIndex.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SearchIndex.fromJson(Map<String, dynamic> json) =>
       _$SearchIndexFromJson(json);
 }
 
@@ -118,12 +118,12 @@ class SearchIndexSettings with _$SearchIndexSettings {
     @Default(true) bool enableHighlighting,
     @Default(true) bool enableSuggestions,
     @Default(true) bool enableFacets,
-    @Default([]) List&lt;String&gt; searchableFields,
-    @Default([]) List&lt;String&gt; facetFields,
-    Map&lt;String, double&gt;? fieldWeights,
+    @Default([]) List<String> searchableFields,
+    @Default([]) List<String> facetFields,
+    Map<String, double>? fieldWeights,
   }) = _SearchIndexSettings;
 
-  factory SearchIndexSettings.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SearchIndexSettings.fromJson(Map<String, dynamic> json) =>
       _$SearchIndexSettingsFromJson(json);
 }
 
@@ -133,30 +133,30 @@ class SavedSearch with _$SavedSearch {
     required String id,
     required String name,
     required String query,
-    required List&lt;String&gt; filters,
+    required List<String> filters,
     required SearchType type,
     required DateTime createdAt,
     required DateTime updatedAt,
     required String userId,
     @Default(false) bool isPublic,
     String? description,
-    Map&lt;String, dynamic&gt;? metadata,
+    Map<String, dynamic>? metadata,
   }) = _SavedSearch;
 
-  factory SavedSearch.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SavedSearch.fromJson(Map<String, dynamic> json) =>
       _$SavedSearchFromJson(json);
 }
 
 @freezed
 class SearchAnalytics with _$SearchAnalytics {
   const factory SearchAnalytics({
-    required List&lt;SearchQueryMetric&gt; topQueries,
-    required List&lt;SearchResultMetric&gt; topResults,
+    required List<SearchQueryMetric> topQueries,
+    required List<SearchResultMetric> topResults,
     required SearchPerformanceMetric performance,
     required SearchUsageMetric usage,
   }) = _SearchAnalytics;
 
-  factory SearchAnalytics.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SearchAnalytics.fromJson(Map<String, dynamic> json) =>
       _$SearchAnalyticsFromJson(json);
 }
 
@@ -170,7 +170,7 @@ class SearchQueryMetric with _$SearchQueryMetric {
     DateTime? lastSearched,
   }) = _SearchQueryMetric;
 
-  factory SearchQueryMetric.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SearchQueryMetric.fromJson(Map<String, dynamic> json) =>
       _$SearchQueryMetricFromJson(json);
 }
 
@@ -185,7 +185,7 @@ class SearchResultMetric with _$SearchResultMetric {
     DateTime? lastClicked,
   }) = _SearchResultMetric;
 
-  factory SearchResultMetric.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SearchResultMetric.fromJson(Map<String, dynamic> json) =>
       _$SearchResultMetricFromJson(json);
 }
 
@@ -199,7 +199,7 @@ class SearchPerformanceMetric with _$SearchPerformanceMetric {
     required int failedQueries,
   }) = _SearchPerformanceMetric;
 
-  factory SearchPerformanceMetric.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SearchPerformanceMetric.fromJson(Map<String, dynamic> json) =>
       _$SearchPerformanceMetricFromJson(json);
 }
 
@@ -210,10 +210,10 @@ class SearchUsageMetric with _$SearchUsageMetric {
     required int weeklyQueries,
     required int monthlyQueries,
     required int uniqueUsers,
-    required List&lt;int&gt; queryTrends,
+    required List<int> queryTrends,
   }) = _SearchUsageMetric;
 
-  factory SearchUsageMetric.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
+  factory SearchUsageMetric.fromJson(Map<String, dynamic> json) =>
       _$SearchUsageMetricFromJson(json);
 }
 
@@ -267,34 +267,34 @@ extension SearchTypeExtension on SearchType {
   String get displayName {
     switch (this) {
       case SearchType.global:
-        return &apos;Global Search&apos;;
+        return 'Global Search';
       case SearchType.users:
-        return &apos;Users&apos;;
+        return 'Users';
       case SearchType.documents:
-        return &apos;Documents&apos;;
+        return 'Documents';
       case SearchType.logs:
-        return &apos;Logs&apos;;
+        return 'Logs';
       case SearchType.settings:
-        return &apos;Settings&apos;;
+        return 'Settings';
       case SearchType.analytics:
-        return &apos;Analytics&apos;;
+        return 'Analytics';
     }
   }
 
   String get endpoint {
     switch (this) {
       case SearchType.global:
-        return &apos;/search&apos;;
+        return '/search';
       case SearchType.users:
-        return &apos;/search/users&apos;;
+        return '/search/users';
       case SearchType.documents:
-        return &apos;/search/documents&apos;;
+        return '/search/documents';
       case SearchType.logs:
-        return &apos;/search/logs&apos;;
+        return '/search/logs';
       case SearchType.settings:
-        return &apos;/search/settings&apos;;
+        return '/search/settings';
       case SearchType.analytics:
-        return &apos;/search/analytics&apos;;
+        return '/search/analytics';
     }
   }
 }
@@ -303,42 +303,42 @@ extension SearchItemTypeExtension on SearchItemType {
   String get displayName {
     switch (this) {
       case SearchItemType.user:
-        return &apos;User&apos;;
+        return 'User';
       case SearchItemType.document:
-        return &apos;Document&apos;;
+        return 'Document';
       case SearchItemType.logEntry:
-        return &apos;Log Entry&apos;;
+        return 'Log Entry';
       case SearchItemType.setting:
-        return &apos;Setting&apos;;
+        return 'Setting';
       case SearchItemType.report:
-        return &apos;Report&apos;;
+        return 'Report';
       case SearchItemType.webhook:
-        return &apos;Webhook&apos;;
+        return 'Webhook';
       case SearchItemType.apiKey:
-        return &apos;API Key&apos;;
+        return 'API Key';
       case SearchItemType.session:
-        return &apos;Session&apos;;
+        return 'Session';
     }
   }
 
   String get icon {
     switch (this) {
       case SearchItemType.user:
-        return &apos;person&apos;;
+        return 'person';
       case SearchItemType.document:
-        return &apos;description&apos;;
+        return 'description';
       case SearchItemType.logEntry:
-        return &apos;list_alt&apos;;
+        return 'list_alt';
       case SearchItemType.setting:
-        return &apos;settings&apos;;
+        return 'settings';
       case SearchItemType.report:
-        return &apos;assessment&apos;;
+        return 'assessment';
       case SearchItemType.webhook:
-        return &apos;webhook&apos;;
+        return 'webhook';
       case SearchItemType.apiKey:
-        return &apos;vpn_key&apos;;
+        return 'vpn_key';
       case SearchItemType.session:
-        return &apos;schedule&apos;;
+        return 'schedule';
     }
   }
 }
@@ -347,13 +347,13 @@ extension SearchIndexStatusExtension on SearchIndexStatus {
   String get displayName {
     switch (this) {
       case SearchIndexStatus.active:
-        return &apos;Active&apos;;
+        return 'Active';
       case SearchIndexStatus.indexing:
-        return &apos;Indexing&apos;;
+        return 'Indexing';
       case SearchIndexStatus.paused:
-        return &apos;Paused&apos;;
+        return 'Paused';
       case SearchIndexStatus.error:
-        return &apos;Error&apos;;
+        return 'Error';
     }
   }
 }

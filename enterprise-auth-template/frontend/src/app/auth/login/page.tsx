@@ -2,6 +2,7 @@
 
 import { useGuestOnly } from '@/stores/auth.store';
 import { EnhancedLoginForm } from '@/components/auth/enhanced-login-form';
+import { AuthHeader } from '@/components/layout/auth-header';
 
 export default function LoginPage(): JSX.Element {
   const { isLoading } = useGuestOnly('/dashboard');
@@ -15,18 +16,11 @@ export default function LoginPage(): JSX.Element {
   }
 
   return (
-    <div className='flex flex-col min-h-screen bg-muted/50'>
-      <header className='border-b bg-background'>
-        <div className='container mx-auto px-4 py-4'>
-          <h1 className='text-xl font-bold text-primary'>Enterprise Auth Template</h1>
-        </div>
-      </header>
-
-      <div className='flex-1 flex items-center justify-center p-4'>
-        <div className='w-full max-w-md'>
-          <EnhancedLoginForm />
-        </div>
+    <>
+      <AuthHeader />
+      <div className='flex items-center justify-center min-h-screen pt-16 p-4'>
+        <EnhancedLoginForm />
       </div>
-    </div>
+    </>
   );
 }

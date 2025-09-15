@@ -36,20 +36,22 @@ async function handleResponse<T>(response: Response): Promise<T> {
 
 export const authApi = {
   async login(credentials: LoginRequest): Promise<LoginResponse> {
-    const formData = new FormData();
-    formData.append('username', credentials.username);
-    formData.append('password', credentials.password);
-
-    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: credentials.email,
+        password: credentials.password,
+      }),
     });
 
     return handleResponse<LoginResponse>(response);
   },
 
   async register(userData: RegisterRequest): Promise<LoginResponse> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -61,7 +63,7 @@ export const authApi = {
   },
 
   async refreshToken(): Promise<TokenRefreshResponse> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/refresh`, {
       method: 'POST',
       credentials: 'include',
     });
@@ -70,7 +72,7 @@ export const authApi = {
   },
 
   async logout(): Promise<void> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/logout`, {
       method: 'POST',
       credentials: 'include',
     });
@@ -81,7 +83,7 @@ export const authApi = {
   },
 
   async getCurrentUser(token: string): Promise<User> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -91,7 +93,7 @@ export const authApi = {
   },
 
   async requestPasswordReset(data: PasswordResetRequest): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/password-reset/request`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/password-reset/request`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -103,7 +105,7 @@ export const authApi = {
   },
 
   async confirmPasswordReset(data: PasswordResetConfirm): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/password-reset/confirm`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/password-reset/confirm`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -115,7 +117,7 @@ export const authApi = {
   },
 
   async changePassword(data: ChangePasswordRequest, token: string): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/change-password`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -128,7 +130,7 @@ export const authApi = {
   },
 
   async verifyEmail(token: string): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/verify-email?token=${token}`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/verify-email?token=${token}`, {
       method: 'POST',
     });
 
@@ -136,7 +138,7 @@ export const authApi = {
   },
 
   async resendVerificationEmail(email: string): Promise<{ message: string }> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/resend-verification`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/resend-verification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

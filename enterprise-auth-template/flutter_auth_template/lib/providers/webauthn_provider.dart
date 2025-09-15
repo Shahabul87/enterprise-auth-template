@@ -11,7 +11,7 @@ final webAuthnCredentialsProvider = FutureProvider<List<WebAuthnCredential>>((re
   if (response.isSuccess) {
     return response.data!;
   } else {
-    throw Exception(response.message);
+    throw Exception(response.errorMessage ?? "");
   }
 });
 
@@ -100,7 +100,7 @@ class WebAuthnNotifier extends StateNotifier<WebAuthnState> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          errorMessage: response.message,
+          errorMessage: response.errorMessage ?? "",
         );
       }
     } catch (e) {
@@ -132,7 +132,7 @@ class WebAuthnNotifier extends StateNotifier<WebAuthnState> {
       } else {
         state = state.copyWith(
           isRegistering: false,
-          errorMessage: response.message,
+          errorMessage: response.errorMessage ?? "",
         );
         return null;
       }
@@ -171,7 +171,7 @@ class WebAuthnNotifier extends StateNotifier<WebAuthnState> {
       if (apiResponse.isSuccess) {
         state = state.copyWith(
           isRegistering: false,
-          successMessage: apiResponse.data!,
+          successMessage: apiResponse.dataOrNull!,
           registrationOptions: null,
         );
 
@@ -181,7 +181,7 @@ class WebAuthnNotifier extends StateNotifier<WebAuthnState> {
       } else {
         state = state.copyWith(
           isRegistering: false,
-          errorMessage: apiResponse.message,
+          errorMessage: apiResponse.errorMessage ?? "",
         );
         return false;
       }
@@ -217,7 +217,7 @@ class WebAuthnNotifier extends StateNotifier<WebAuthnState> {
       } else {
         state = state.copyWith(
           isAuthenticating: false,
-          errorMessage: response.message,
+          errorMessage: response.errorMessage ?? "",
         );
         return null;
       }
@@ -265,7 +265,7 @@ class WebAuthnNotifier extends StateNotifier<WebAuthnState> {
       } else {
         state = state.copyWith(
           isAuthenticating: false,
-          errorMessage: apiResponse.message,
+          errorMessage: apiResponse.errorMessage ?? "",
         );
         return false;
       }
@@ -297,7 +297,7 @@ class WebAuthnNotifier extends StateNotifier<WebAuthnState> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          errorMessage: response.message,
+          errorMessage: response.errorMessage ?? "",
         );
         return false;
       }
@@ -335,7 +335,7 @@ class WebAuthnNotifier extends StateNotifier<WebAuthnState> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          errorMessage: response.message,
+          errorMessage: response.errorMessage ?? "",
         );
         return false;
       }

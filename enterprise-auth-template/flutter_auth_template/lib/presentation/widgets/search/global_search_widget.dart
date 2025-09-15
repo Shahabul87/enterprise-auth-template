@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/models/search_models.dart';
 import '../../../data/services/search_api_service.dart';
 
-final searchApiServiceProvider = Provider((ref) =&gt; SearchApiService());
+final searchApiServiceProvider = Provider((ref) => SearchApiService());
 
 class GlobalSearchWidget extends ConsumerStatefulWidget {
   final Function(SearchResultItem)? onItemTap;
@@ -18,26 +18,26 @@ class GlobalSearchWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState&lt;GlobalSearchWidget&gt; createState() =&gt; _GlobalSearchWidgetState();
+  ConsumerState<GlobalSearchWidget> createState() => _GlobalSearchWidgetState();
 }
 
-class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
+class _GlobalSearchWidgetState extends ConsumerState<GlobalSearchWidget> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   SearchType _selectedType = SearchType.global;
-  List&lt;SearchResultItem&gt; _results = [];
-  List&lt;SearchSuggestion&gt; _suggestions = [];
-  List&lt;String&gt; _recentSearches = [];
-  List&lt;SavedSearch&gt; _savedSearches = [];
+  List<SearchResultItem> _results = [];
+  List<SearchSuggestion> _suggestions = [];
+  List<String> _recentSearches = [];
+  List<SavedSearch> _savedSearches = [];
   bool _isLoading = false;
   bool _showSuggestions = false;
-  String _currentQuery = &apos;&apos;;
+  String _currentQuery = '';
 
   @override
   void initState() {
     super.initState();
     _selectedType = widget.initialSearchType ?? SearchType.global;
-    _searchController.text = widget.initialQuery ?? &apos;&apos;;
+    _searchController.text = widget.initialQuery ?? '';
     _searchFocusNode.addListener(_onFocusChanged);
     _loadInitialData();
     
@@ -55,7 +55,7 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
   }
 
   void _onFocusChanged() {
-    if (_searchFocusNode.hasFocus &amp;&amp; _searchController.text.isEmpty) {
+    if (_searchFocusNode.hasFocus && _searchController.text.isEmpty) {
       setState(() {
         _showSuggestions = true;
       });
@@ -66,7 +66,7 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
     }
   }
 
-  Future&lt;void&gt; _loadInitialData() async {
+  Future<void> _loadInitialData() async {
     try {
       final service = ref.read(searchApiServiceProvider);
       final results = await Future.wait([
@@ -76,17 +76,17 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
 
       if (mounted) {
         setState(() {
-          _recentSearches = results[0] as List&lt;String&gt;;
-          _savedSearches = results[1] as List&lt;SavedSearch&gt;;
+          _recentSearches = results[0] as List<String>;
+          _savedSearches = results[1] as List<SavedSearch>;
         });
       }
     } catch (e) {
       // Handle error silently for initial data
-      print(&apos;Failed to load initial search data: $e&apos;);
+      print('Failed to load initial search data: $e');
     }
   }
 
-  Future&lt;void&gt; _performSearch() async {
+  Future<void> _performSearch() async {
     final query = _searchController.text.trim();
     if (query.isEmpty) {
       setState(() {
@@ -124,13 +124,13 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
           _isLoading = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(&apos;Search failed: ${e.toString()}&apos;)),
+          SnackBar(content: Text('Search failed: ${e.toString()}')),
         );
       }
     }
   }
 
-  Future&lt;void&gt; _getSuggestions(String query) async {
+  Future<void> _getSuggestions(String query) async {
     if (query.isEmpty) {
       setState(() {
         _suggestions = [];
@@ -149,7 +149,7 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
       }
     } catch (e) {
       // Handle suggestion errors silently
-      print(&apos;Failed to get suggestions: $e&apos;);
+      print('Failed to get suggestions: $e');
     }
   }
 
@@ -221,7 +221,7 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
                   controller: _searchController,
                   focusNode: _searchFocusNode,
                   decoration: InputDecoration(
-                    hintText: &apos;Search ${_selectedType.displayName.toLowerCase()}...&apos;,
+                    hintText: 'Search ${_selectedType.displayName.toLowerCase()}...',
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
@@ -243,13 +243,13 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
                       _getSuggestions(value);
                     }
                   },
-                  onSubmitted: (_) =&gt; _performSearch(),
+                  onSubmitted: (_) => _performSearch(),
                 ),
               ),
               const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: _performSearch,
-                child: const Text(&apos;Search&apos;),
+                child: const Text('Search'),
               ),
             ],
           ),
@@ -257,7 +257,7 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: SearchType.values.map((type) =&gt; Padding(
+              children: SearchType.values.map((type) => Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: FilterChip(
                   label: Text(type.displayName),
@@ -288,8 +288,8 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (_suggestions.isNotEmpty) ...[
-              _buildSectionHeader(&apos;Suggestions&apos;),
-              ..._suggestions.map((suggestion) =&gt; ListTile(
+              _buildSectionHeader('Suggestions'),
+              ..._suggestions.map((suggestion) => ListTile(
                     leading: const Icon(Icons.search),
                     title: Text(suggestion.text),
                     onTap: () {
@@ -299,8 +299,8 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
                   )),
             ],
             if (_recentSearches.isNotEmpty) ...[
-              _buildSectionHeader(&apos;Recent Searches&apos;),
-              ..._recentSearches.map((query) =&gt; ListTile(
+              _buildSectionHeader('Recent Searches'),
+              ..._recentSearches.map((query) => ListTile(
                     leading: const Icon(Icons.history),
                     title: Text(query),
                     trailing: IconButton(
@@ -320,7 +320,7 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
               if (_recentSearches.isNotEmpty)
                 ListTile(
                   leading: const Icon(Icons.clear_all),
-                  title: const Text(&apos;Clear search history&apos;),
+                  title: const Text('Clear search history'),
                   onTap: () async {
                     try {
                       await ref.read(searchApiServiceProvider).clearSearchHistory();
@@ -330,7 +330,7 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
                     } catch (e) {
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(&apos;Failed to clear history: $e&apos;)),
+                          SnackBar(content: Text('Failed to clear history: $e')),
                         );
                       }
                     }
@@ -338,21 +338,21 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
                 ),
             ],
             if (_savedSearches.isNotEmpty) ...[
-              _buildSectionHeader(&apos;Saved Searches&apos;),
-              ..._savedSearches.map((saved) =&gt; ListTile(
+              _buildSectionHeader('Saved Searches'),
+              ..._savedSearches.map((saved) => ListTile(
                     leading: const Icon(Icons.bookmark),
                     title: Text(saved.name),
                     subtitle: Text(saved.query),
-                    trailing: PopupMenuButton&lt;String&gt;(
-                      onSelected: (action) =&gt; _handleSavedSearchAction(action, saved),
-                      itemBuilder: (context) =&gt; [
+                    trailing: PopupMenuButton<String>(
+                      onSelected: (action) => _handleSavedSearchAction(action, saved),
+                      itemBuilder: (context) => [
                         const PopupMenuItem(
-                          value: &apos;delete&apos;,
+                          value: 'delete',
                           child: Row(
                             children: [
                               Icon(Icons.delete, color: Colors.red),
                               SizedBox(width: 8),
-                              Text(&apos;Delete&apos;, style: TextStyle(color: Colors.red)),
+                              Text('Delete', style: TextStyle(color: Colors.red)),
                             ],
                           ),
                         ),
@@ -378,7 +378,7 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
       );
     }
 
-    if (_results.isEmpty &amp;&amp; _searchController.text.isNotEmpty) {
+    if (_results.isEmpty && _searchController.text.isNotEmpty) {
       return Expanded(
         child: Center(
           child: Column(
@@ -387,15 +387,15 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
               const Icon(Icons.search_off, size: 64, color: Colors.grey),
               const SizedBox(height: 16),
               Text(
-                &apos;No results found for &quot;${_searchController.text}&quot;&apos;,
+                'No results found for "${_searchController.text}"',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
-              const Text(&apos;Try different keywords or search type&apos;),
+              const Text('Try different keywords or search type'),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () =&gt; _showSaveSearchDialog(),
-                child: const Text(&apos;Save this search&apos;),
+                onPressed: () => _showSaveSearchDialog(),
+                child: const Text('Save this search'),
               ),
             ],
           ),
@@ -450,7 +450,7 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  &apos;Score: ${item.score.toStringAsFixed(2)}&apos;,
+                  'Score: ${item.score.toStringAsFixed(2)}',
                   style: const TextStyle(fontSize: 10, color: Colors.grey),
                 ),
               ],
@@ -465,12 +465,12 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
                   width: 40,
                   height: 40,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =&gt;
+                  errorBuilder: (context, error, stackTrace) =>
                       const Icon(Icons.broken_image),
                 ),
               )
             : null,
-        onTap: () =&gt; _onResultTap(item, index),
+        onTap: () => _onResultTap(item, index),
       ),
     );
   }
@@ -509,21 +509,21 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
   }
 
   void _handleSavedSearchAction(String action, SavedSearch saved) async {
-    if (action == &apos;delete&apos;) {
+    if (action == 'delete') {
       try {
         await ref.read(searchApiServiceProvider).deleteSavedSearch(saved.id);
         setState(() {
-          _savedSearches.removeWhere((s) =&gt; s.id == saved.id);
+          _savedSearches.removeWhere((s) => s.id == saved.id);
         });
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text(&apos;Saved search deleted&apos;)),
+            const SnackBar(content: Text('Saved search deleted')),
           );
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(&apos;Failed to delete: $e&apos;)),
+            SnackBar(content: Text('Failed to delete: $e')),
           );
         }
       }
@@ -537,16 +537,16 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
 
     showDialog(
       context: context,
-      builder: (context) =&gt; StatefulBuilder(
-        builder: (context, setState) =&gt; AlertDialog(
-          title: const Text(&apos;Save Search&apos;),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Save Search'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: nameController,
                 decoration: const InputDecoration(
-                  labelText: &apos;Search Name&apos;,
+                  labelText: 'Search Name',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -554,33 +554,33 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
               TextField(
                 controller: descriptionController,
                 decoration: const InputDecoration(
-                  labelText: &apos;Description (optional)&apos;,
+                  labelText: 'Description (optional)',
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
               ),
               const SizedBox(height: 16),
               CheckboxListTile(
-                title: const Text(&apos;Make public&apos;),
+                title: const Text('Make public'),
                 value: isPublic,
-                onChanged: (value) =&gt; setState(() =&gt; isPublic = value ?? false),
+                onChanged: (value) => setState(() => isPublic = value ?? false),
               ),
             ],
           ),
           actions: [
             TextButton(
-              onPressed: () =&gt; Navigator.of(context).pop(),
-              child: const Text(&apos;Cancel&apos;),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: nameController.text.isEmpty
                   ? null
-                  : () =&gt; _savePermanentSearch(
+                  : () => _savePermanentSearch(
                         nameController.text,
                         descriptionController.text,
                         isPublic,
                       ),
-              child: const Text(&apos;Save&apos;),
+              child: const Text('Save'),
             ),
           ],
         ),
@@ -606,14 +606,14 @@ class _GlobalSearchWidgetState extends ConsumerState&lt;GlobalSearchWidget&gt; {
       if (mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text(&apos;Search saved successfully&apos;)),
+          const SnackBar(content: Text('Search saved successfully')),
         );
       }
     } catch (e) {
       if (mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(&apos;Failed to save search: $e&apos;)),
+          SnackBar(content: Text('Failed to save search: $e')),
         );
       }
     }

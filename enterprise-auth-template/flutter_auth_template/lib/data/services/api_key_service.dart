@@ -6,7 +6,7 @@ import '../../core/network/api_client.dart';
 import '../../core/errors/app_exception.dart';
 import '../models/api_key_models.dart';
 
-final apiKeyServiceProvider = Provider&lt;ApiKeyService&gt;((ref) {
+final apiKeyServiceProvider = Provider<ApiKeyService>((ref) {
   return ApiKeyService(ref.read(apiClientProvider));
 });
 
@@ -16,32 +16,32 @@ class ApiKeyService {
   ApiKeyService(this._apiClient);
 
   /// Get all API keys for current user
-  Future&lt;ApiKeyListResponse&gt; getApiKeys({
+  Future<ApiKeyListResponse> getApiKeys({
     int page = 1,
     int limit = 20,
     bool? isActive,
     String? search,
   }) async {
     try {
-      final queryParams = &lt;String, dynamic&gt;{
-        &apos;page&apos;: page,
-        &apos;limit&apos;: limit,
+      final queryParams = <String, dynamic>{
+        'page': page,
+        'limit': limit,
       };
 
-      if (isActive != null) queryParams[&apos;is_active&apos;] = isActive;
-      if (search != null &amp;&amp; search.isNotEmpty) queryParams[&apos;search&apos;] = search;
+      if (isActive != null) queryParams['is_active'] = isActive;
+      if (search != null && search.isNotEmpty) queryParams['search'] = search;
 
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
+      final response = await _apiClient.get<Map<String, dynamic>>(
         ApiConstants.apiKeysPath,
         queryParameters: queryParams,
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return ApiKeyListResponse.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return ApiKeyListResponse.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get API keys&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get API keys',
         null,
         response.statusCode ?? 500,
       );
@@ -51,18 +51,18 @@ class ApiKeyService {
   }
 
   /// Get API key by ID
-  Future&lt;ApiKey&gt; getApiKey(String apiKeyId) async {
+  Future<ApiKey> getApiKey(String apiKeyId) async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.apiKeysPath}/$apiKeyId&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.apiKeysPath}/$apiKeyId',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return ApiKey.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return ApiKey.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get API key&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get API key',
         null,
         response.statusCode ?? 500,
       );
@@ -72,19 +72,19 @@ class ApiKeyService {
   }
 
   /// Create new API key
-  Future&lt;ApiKeyCreateResponse&gt; createApiKey(ApiKeyCreateRequest request) async {
+  Future<ApiKeyCreateResponse> createApiKey(ApiKeyCreateRequest request) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
+      final response = await _apiClient.post<Map<String, dynamic>>(
         ApiConstants.apiKeysPath,
         data: request.toJson(),
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return ApiKeyCreateResponse.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return ApiKeyCreateResponse.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to create API key&apos;,
+        response.data!['error']?['message'] ?? 'Failed to create API key',
         null,
         response.statusCode ?? 500,
       );
@@ -94,22 +94,22 @@ class ApiKeyService {
   }
 
   /// Update API key
-  Future&lt;ApiKey&gt; updateApiKey(
+  Future<ApiKey> updateApiKey(
     String apiKeyId,
     ApiKeyUpdateRequest request,
   ) async {
     try {
-      final response = await _apiClient.put&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.apiKeysPath}/$apiKeyId&apos;,
+      final response = await _apiClient.put<Map<String, dynamic>>(
+        '${ApiConstants.apiKeysPath}/$apiKeyId',
         data: request.toJson(),
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return ApiKey.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return ApiKey.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to update API key&apos;,
+        response.data!['error']?['message'] ?? 'Failed to update API key',
         null,
         response.statusCode ?? 500,
       );
@@ -119,15 +119,15 @@ class ApiKeyService {
   }
 
   /// Delete API key
-  Future&lt;void&gt; deleteApiKey(String apiKeyId) async {
+  Future<void> deleteApiKey(String apiKeyId) async {
     try {
-      final response = await _apiClient.delete&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.apiKeysPath}/$apiKeyId&apos;,
+      final response = await _apiClient.delete<Map<String, dynamic>>(
+        '${ApiConstants.apiKeysPath}/$apiKeyId',
       );
 
-      if (response.data![&apos;success&apos;] != true) {
+      if (response.data!['success'] != true) {
         throw ServerException(
-          response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to delete API key&apos;,
+          response.data!['error']?['message'] ?? 'Failed to delete API key',
           null,
           response.statusCode ?? 500,
         );
@@ -138,18 +138,18 @@ class ApiKeyService {
   }
 
   /// Activate API key
-  Future&lt;ApiKey&gt; activateApiKey(String apiKeyId) async {
+  Future<ApiKey> activateApiKey(String apiKeyId) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.apiKeysPath}/$apiKeyId/activate&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.apiKeysPath}/$apiKeyId/activate',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return ApiKey.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return ApiKey.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to activate API key&apos;,
+        response.data!['error']?['message'] ?? 'Failed to activate API key',
         null,
         response.statusCode ?? 500,
       );
@@ -159,18 +159,18 @@ class ApiKeyService {
   }
 
   /// Deactivate API key
-  Future&lt;ApiKey&gt; deactivateApiKey(String apiKeyId) async {
+  Future<ApiKey> deactivateApiKey(String apiKeyId) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.apiKeysPath}/$apiKeyId/deactivate&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.apiKeysPath}/$apiKeyId/deactivate',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return ApiKey.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return ApiKey.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to deactivate API key&apos;,
+        response.data!['error']?['message'] ?? 'Failed to deactivate API key',
         null,
         response.statusCode ?? 500,
       );
@@ -180,18 +180,18 @@ class ApiKeyService {
   }
 
   /// Rotate API key
-  Future&lt;ApiKeyCreateResponse&gt; rotateApiKey(String apiKeyId) async {
+  Future<ApiKeyCreateResponse> rotateApiKey(String apiKeyId) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.apiKeysPath}/$apiKeyId/rotate&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.apiKeysPath}/$apiKeyId/rotate',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return ApiKeyCreateResponse.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return ApiKeyCreateResponse.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to rotate API key&apos;,
+        response.data!['error']?['message'] ?? 'Failed to rotate API key',
         null,
         response.statusCode ?? 500,
       );
@@ -201,32 +201,32 @@ class ApiKeyService {
   }
 
   /// Get API key usage statistics
-  Future&lt;ApiKeyUsageStats&gt; getApiKeyUsageStats(
+  Future<ApiKeyUsageStats> getApiKeyUsageStats(
     String apiKeyId, {
     DateTime? startDate,
     DateTime? endDate,
   }) async {
     try {
-      final queryParams = &lt;String, dynamic&gt;{};
+      final queryParams = <String, dynamic>{};
 
       if (startDate != null) {
-        queryParams[&apos;start_date&apos;] = startDate.toIso8601String();
+        queryParams['start_date'] = startDate.toIso8601String();
       }
       if (endDate != null) {
-        queryParams[&apos;end_date&apos;] = endDate.toIso8601String();
+        queryParams['end_date'] = endDate.toIso8601String();
       }
 
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.apiKeysPath}/$apiKeyId/usage&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.apiKeysPath}/$apiKeyId/usage',
         queryParameters: queryParams.isNotEmpty ? queryParams : null,
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return ApiKeyUsageStats.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return ApiKeyUsageStats.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get usage stats&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get usage stats',
         null,
         response.statusCode ?? 500,
       );
@@ -236,7 +236,7 @@ class ApiKeyService {
   }
 
   /// Get API key activity logs
-  Future&lt;List&lt;ApiKeyActivity&gt;&gt; getApiKeyActivity(
+  Future<List<ApiKeyActivity>> getApiKeyActivity(
     String apiKeyId, {
     int page = 1,
     int limit = 50,
@@ -244,32 +244,32 @@ class ApiKeyService {
     DateTime? endDate,
   }) async {
     try {
-      final queryParams = &lt;String, dynamic&gt;{
-        &apos;page&apos;: page,
-        &apos;limit&apos;: limit,
+      final queryParams = <String, dynamic>{
+        'page': page,
+        'limit': limit,
       };
 
       if (startDate != null) {
-        queryParams[&apos;start_date&apos;] = startDate.toIso8601String();
+        queryParams['start_date'] = startDate.toIso8601String();
       }
       if (endDate != null) {
-        queryParams[&apos;end_date&apos;] = endDate.toIso8601String();
+        queryParams['end_date'] = endDate.toIso8601String();
       }
 
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.apiKeysPath}/$apiKeyId/activity&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.apiKeysPath}/$apiKeyId/activity',
         queryParameters: queryParams,
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        final activityList = response.data![&apos;data&apos;] as List;
+      if (response.data!['success'] == true) {
+        final activityList = response.data!['data'] as List;
         return activityList
-            .map((activity) =&gt; ApiKeyActivity.fromJson(activity))
+            .map((activity) => ApiKeyActivity.fromJson(activity))
             .toList();
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get activity logs&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get activity logs',
         null,
         response.statusCode ?? 500,
       );
@@ -279,21 +279,21 @@ class ApiKeyService {
   }
 
   /// Get available permissions for API keys
-  Future&lt;List&lt;ApiKeyPermission&gt;&gt; getAvailablePermissions() async {
+  Future<List<ApiKeyPermission>> getAvailablePermissions() async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.apiKeysPath}/permissions&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.apiKeysPath}/permissions',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        final permissionList = response.data![&apos;data&apos;] as List;
+      if (response.data!['success'] == true) {
+        final permissionList = response.data!['data'] as List;
         return permissionList
-            .map((permission) =&gt; ApiKeyPermission.fromJson(permission))
+            .map((permission) => ApiKeyPermission.fromJson(permission))
             .toList();
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get permissions&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get permissions',
         null,
         response.statusCode ?? 500,
       );
@@ -303,21 +303,21 @@ class ApiKeyService {
   }
 
   /// Get available scopes for API keys
-  Future&lt;List&lt;ApiKeyScope&gt;&gt; getAvailableScopes() async {
+  Future<List<ApiKeyScope>> getAvailableScopes() async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.apiKeysPath}/scopes&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.apiKeysPath}/scopes',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        final scopeList = response.data![&apos;data&apos;] as List;
+      if (response.data!['success'] == true) {
+        final scopeList = response.data!['data'] as List;
         return scopeList
-            .map((scope) =&gt; ApiKeyScope.fromJson(scope))
+            .map((scope) => ApiKeyScope.fromJson(scope))
             .toList();
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get scopes&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get scopes',
         null,
         response.statusCode ?? 500,
       );
@@ -327,19 +327,19 @@ class ApiKeyService {
   }
 
   /// Test API key
-  Future&lt;Map&lt;String, dynamic&gt;&gt; testApiKey(String apiKey) async {
+  Future<Map<String, dynamic>> testApiKey(String apiKey) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.apiKeysPath}/test&apos;,
-        data: {&apos;api_key&apos;: apiKey},
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.apiKeysPath}/test',
+        data: {'api_key': apiKey},
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return response.data![&apos;data&apos;];
+      if (response.data!['success'] == true) {
+        return response.data!['data'];
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;API key test failed&apos;,
+        response.data!['error']?['message'] ?? 'API key test failed',
         null,
         response.statusCode ?? 500,
       );
@@ -351,12 +351,12 @@ class ApiKeyService {
   AppException _handleDioException(DioException exception) {
     if (exception.response?.data != null) {
       final data = exception.response!.data;
-      final message = data[&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Unknown error occurred&apos;;
+      final message = data['error']?['message'] ?? 'Unknown error occurred';
       return ServerException(message, null, exception.response?.statusCode ?? 500);
     }
 
     return NetworkException(
-      exception.message ?? &apos;Network error occurred&apos;,
+      exception.message ?? 'Network error occurred',
       exception.requestOptions.path,
     );
   }

@@ -401,6 +401,7 @@ def verify_token(token: str, expected_type: str = "access") -> Optional[TokenDat
             token,
             settings.SECRET_KEY,
             algorithms=[settings.ALGORITHM],
+            audience=settings.FRONTEND_URL,  # Validate audience claim
             # Validate standard claims
             options={
                 "verify_signature": True,
@@ -410,6 +411,7 @@ def verify_token(token: str, expected_type: str = "access") -> Optional[TokenDat
                 "require_exp": True,
                 "require_iat": True,
                 "require_sub": True,
+                "verify_aud": True,  # Verify audience
             },
         )
 
@@ -563,17 +565,19 @@ def verify_token(token: str, expected_type: str = "access") -> Optional[TokenDat
         )
         return None
 
-    except jwt.ExpiredSignatureError:
-        logger.debug("Token expired during verification")
-        return None
-    except jwt.InvalidTokenError as e:
-        logger.warning(
-            "Invalid token format or signature",
-            error=str(e),
-            error_type=type(e).__name__,
-        )
-        return None
     except JWTError as e:
+        # Handle all JWT errors including expired tokens, invalid signatures, etc.
+        error_msg = str(e).lower()
+        if "signature" in error_msg and "expired" in error_msg:
+            logger.debug("Token expired during verification")
+        else:
+            logger.warning(
+                "JWT verification failed",
+                error=str(e),
+                error_type=type(e).__name__,
+            )
+        return None
+    except Exception as e:
         logger.warning(
             "JWT verification failed",
             error=str(e),

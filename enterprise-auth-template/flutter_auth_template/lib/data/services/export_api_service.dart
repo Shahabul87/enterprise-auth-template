@@ -6,7 +6,7 @@ import '../../core/network/api_client.dart';
 import '../../core/errors/app_exception.dart';
 import '../models/export_models.dart';
 
-final exportApiServiceProvider = Provider&lt;ExportApiService&gt;((ref) {
+final exportApiServiceProvider = Provider<ExportApiService>((ref) {
   return ExportApiService(ref.read(apiClientProvider));
 });
 
@@ -16,19 +16,19 @@ class ExportApiService {
   ExportApiService(this._apiClient);
 
   /// Create export job
-  Future&lt;ExportJob&gt; createExportJob(ExportRequest request) async {
+  Future<ExportJob> createExportJob(ExportRequest request) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/exports&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/exports',
         data: request.toJson(),
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return ExportJob.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return ExportJob.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to create export job&apos;,
+        response.data!['error']?['message'] ?? 'Failed to create export job',
         null,
         response.statusCode ?? 500,
       );
@@ -38,7 +38,7 @@ class ExportApiService {
   }
 
   /// Get export jobs
-  Future&lt;ExportJobList&gt; getExportJobs({
+  Future<ExportJobList> getExportJobs({
     int page = 1,
     int limit = 20,
     ExportStatus? status,
@@ -47,31 +47,31 @@ class ExportApiService {
     DateTime? endDate,
   }) async {
     try {
-      final queryParams = &lt;String, dynamic&gt;{
-        &apos;page&apos;: page,
-        &apos;limit&apos;: limit,
+      final queryParams = <String, dynamic>{
+        'page': page,
+        'limit': limit,
       };
 
-      if (status != null) queryParams[&apos;status&apos;] = status.name;
-      if (type != null) queryParams[&apos;type&apos;] = type.name;
+      if (status != null) queryParams['status'] = status.name;
+      if (type != null) queryParams['type'] = type.name;
       if (startDate != null) {
-        queryParams[&apos;start_date&apos;] = startDate.toIso8601String();
+        queryParams['start_date'] = startDate.toIso8601String();
       }
       if (endDate != null) {
-        queryParams[&apos;end_date&apos;] = endDate.toIso8601String();
+        queryParams['end_date'] = endDate.toIso8601String();
       }
 
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/exports&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/exports',
         queryParameters: queryParams,
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return ExportJobList.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return ExportJobList.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get export jobs&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get export jobs',
         null,
         response.statusCode ?? 500,
       );
@@ -81,18 +81,18 @@ class ExportApiService {
   }
 
   /// Get export job by ID
-  Future&lt;ExportJob&gt; getExportJob(String jobId) async {
+  Future<ExportJob> getExportJob(String jobId) async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/exports/$jobId&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/exports/$jobId',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return ExportJob.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return ExportJob.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get export job&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get export job',
         null,
         response.statusCode ?? 500,
       );
@@ -102,18 +102,18 @@ class ExportApiService {
   }
 
   /// Cancel export job
-  Future&lt;ExportJob&gt; cancelExportJob(String jobId) async {
+  Future<ExportJob> cancelExportJob(String jobId) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/exports/$jobId/cancel&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/exports/$jobId/cancel',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return ExportJob.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return ExportJob.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to cancel export job&apos;,
+        response.data!['error']?['message'] ?? 'Failed to cancel export job',
         null,
         response.statusCode ?? 500,
       );
@@ -123,18 +123,18 @@ class ExportApiService {
   }
 
   /// Download export file
-  Future&lt;String&gt; downloadExportFile(String jobId) async {
+  Future<String> downloadExportFile(String jobId) async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/exports/$jobId/download&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/exports/$jobId/download',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return response.data![&apos;data&apos;][&apos;download_url&apos;];
+      if (response.data!['success'] == true) {
+        return response.data!['data']['download_url'];
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get download URL&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get download URL',
         null,
         response.statusCode ?? 500,
       );
@@ -144,15 +144,15 @@ class ExportApiService {
   }
 
   /// Delete export job
-  Future&lt;void&gt; deleteExportJob(String jobId) async {
+  Future<void> deleteExportJob(String jobId) async {
     try {
-      final response = await _apiClient.delete&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/exports/$jobId&apos;,
+      final response = await _apiClient.delete<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/exports/$jobId',
       );
 
-      if (response.data![&apos;success&apos;] != true) {
+      if (response.data!['success'] != true) {
         throw ServerException(
-          response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to delete export job&apos;,
+          response.data!['error']?['message'] ?? 'Failed to delete export job',
           null,
           response.statusCode ?? 500,
         );
@@ -163,31 +163,31 @@ class ExportApiService {
   }
 
   /// Get export statistics
-  Future&lt;ExportStats&gt; getExportStats({
+  Future<ExportStats> getExportStats({
     DateTime? startDate,
     DateTime? endDate,
   }) async {
     try {
-      final queryParams = &lt;String, dynamic&gt;{};
+      final queryParams = <String, dynamic>{};
 
       if (startDate != null) {
-        queryParams[&apos;start_date&apos;] = startDate.toIso8601String();
+        queryParams['start_date'] = startDate.toIso8601String();
       }
       if (endDate != null) {
-        queryParams[&apos;end_date&apos;] = endDate.toIso8601String();
+        queryParams['end_date'] = endDate.toIso8601String();
       }
 
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/exports/stats&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/exports/stats',
         queryParameters: queryParams.isNotEmpty ? queryParams : null,
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return ExportStats.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return ExportStats.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get export statistics&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get export statistics',
         null,
         response.statusCode ?? 500,
       );
@@ -199,19 +199,19 @@ class ExportApiService {
   // Backup Methods
 
   /// Create backup job
-  Future&lt;BackupJob&gt; createBackupJob(BackupRequest request) async {
+  Future<BackupJob> createBackupJob(BackupRequest request) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/backups&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/backups',
         data: request.toJson(),
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return BackupJob.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return BackupJob.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to create backup job&apos;,
+        response.data!['error']?['message'] ?? 'Failed to create backup job',
         null,
         response.statusCode ?? 500,
       );
@@ -221,35 +221,35 @@ class ExportApiService {
   }
 
   /// Get backup jobs
-  Future&lt;List&lt;BackupJob&gt;&gt; getBackupJobs({
+  Future<List<BackupJob>> getBackupJobs({
     int page = 1,
     int limit = 20,
     BackupStatus? status,
     BackupType? type,
   }) async {
     try {
-      final queryParams = &lt;String, dynamic&gt;{
-        &apos;page&apos;: page,
-        &apos;limit&apos;: limit,
+      final queryParams = <String, dynamic>{
+        'page': page,
+        'limit': limit,
       };
 
-      if (status != null) queryParams[&apos;status&apos;] = status.name;
-      if (type != null) queryParams[&apos;type&apos;] = type.name;
+      if (status != null) queryParams['status'] = status.name;
+      if (type != null) queryParams['type'] = type.name;
 
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/backups&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/backups',
         queryParameters: queryParams,
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        final backupList = response.data![&apos;data&apos;] as List;
+      if (response.data!['success'] == true) {
+        final backupList = response.data!['data'] as List;
         return backupList
-            .map((backup) =&gt; BackupJob.fromJson(backup))
+            .map((backup) => BackupJob.fromJson(backup))
             .toList();
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get backup jobs&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get backup jobs',
         null,
         response.statusCode ?? 500,
       );
@@ -259,18 +259,18 @@ class ExportApiService {
   }
 
   /// Get backup job by ID
-  Future&lt;BackupJob&gt; getBackupJob(String jobId) async {
+  Future<BackupJob> getBackupJob(String jobId) async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/backups/$jobId&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/backups/$jobId',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return BackupJob.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return BackupJob.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get backup job&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get backup job',
         null,
         response.statusCode ?? 500,
       );
@@ -280,18 +280,18 @@ class ExportApiService {
   }
 
   /// Download backup file
-  Future&lt;String&gt; downloadBackupFile(String jobId) async {
+  Future<String> downloadBackupFile(String jobId) async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/backups/$jobId/download&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/backups/$jobId/download',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return response.data![&apos;data&apos;][&apos;download_url&apos;];
+      if (response.data!['success'] == true) {
+        return response.data!['data']['download_url'];
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get backup download URL&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get backup download URL',
         null,
         response.statusCode ?? 500,
       );
@@ -301,15 +301,15 @@ class ExportApiService {
   }
 
   /// Delete backup
-  Future&lt;void&gt; deleteBackup(String jobId) async {
+  Future<void> deleteBackup(String jobId) async {
     try {
-      final response = await _apiClient.delete&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/backups/$jobId&apos;,
+      final response = await _apiClient.delete<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/backups/$jobId',
       );
 
-      if (response.data![&apos;success&apos;] != true) {
+      if (response.data!['success'] != true) {
         throw ServerException(
-          response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to delete backup&apos;,
+          response.data!['error']?['message'] ?? 'Failed to delete backup',
           null,
           response.statusCode ?? 500,
         );
@@ -320,19 +320,19 @@ class ExportApiService {
   }
 
   /// Create restore job
-  Future&lt;RestoreJob&gt; createRestoreJob(RestoreRequest request) async {
+  Future<RestoreJob> createRestoreJob(RestoreRequest request) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/restores&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/restores',
         data: request.toJson(),
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return RestoreJob.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return RestoreJob.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to create restore job&apos;,
+        response.data!['error']?['message'] ?? 'Failed to create restore job',
         null,
         response.statusCode ?? 500,
       );
@@ -342,33 +342,33 @@ class ExportApiService {
   }
 
   /// Get restore jobs
-  Future&lt;List&lt;RestoreJob&gt;&gt; getRestoreJobs({
+  Future<List<RestoreJob>> getRestoreJobs({
     int page = 1,
     int limit = 20,
     RestoreStatus? status,
   }) async {
     try {
-      final queryParams = &lt;String, dynamic&gt;{
-        &apos;page&apos;: page,
-        &apos;limit&apos;: limit,
+      final queryParams = <String, dynamic>{
+        'page': page,
+        'limit': limit,
       };
 
-      if (status != null) queryParams[&apos;status&apos;] = status.name;
+      if (status != null) queryParams['status'] = status.name;
 
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/restores&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/restores',
         queryParameters: queryParams,
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        final restoreList = response.data![&apos;data&apos;] as List;
+      if (response.data!['success'] == true) {
+        final restoreList = response.data!['data'] as List;
         return restoreList
-            .map((restore) =&gt; RestoreJob.fromJson(restore))
+            .map((restore) => RestoreJob.fromJson(restore))
             .toList();
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get restore jobs&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get restore jobs',
         null,
         response.statusCode ?? 500,
       );
@@ -378,18 +378,18 @@ class ExportApiService {
   }
 
   /// Get restore job by ID
-  Future&lt;RestoreJob&gt; getRestoreJob(String jobId) async {
+  Future<RestoreJob> getRestoreJob(String jobId) async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/restores/$jobId&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/restores/$jobId',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return RestoreJob.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return RestoreJob.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get restore job&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get restore job',
         null,
         response.statusCode ?? 500,
       );
@@ -399,18 +399,18 @@ class ExportApiService {
   }
 
   /// Cancel restore job
-  Future&lt;RestoreJob&gt; cancelRestoreJob(String jobId) async {
+  Future<RestoreJob> cancelRestoreJob(String jobId) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/restores/$jobId/cancel&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/restores/$jobId/cancel',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return RestoreJob.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return RestoreJob.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to cancel restore job&apos;,
+        response.data!['error']?['message'] ?? 'Failed to cancel restore job',
         null,
         response.statusCode ?? 500,
       );
@@ -420,18 +420,18 @@ class ExportApiService {
   }
 
   /// Validate backup file
-  Future&lt;Map&lt;String, dynamic&gt;&gt; validateBackupFile(String jobId) async {
+  Future<Map<String, dynamic>> validateBackupFile(String jobId) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/backups/$jobId/validate&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/backups/$jobId/validate',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return response.data![&apos;data&apos;];
+      if (response.data!['success'] == true) {
+        return response.data!['data'];
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to validate backup file&apos;,
+        response.data!['error']?['message'] ?? 'Failed to validate backup file',
         null,
         response.statusCode ?? 500,
       );
@@ -441,18 +441,18 @@ class ExportApiService {
   }
 
   /// Get export templates
-  Future&lt;List&lt;Map&lt;String, dynamic&gt;&gt;&gt; getExportTemplates() async {
+  Future<List<Map<String, dynamic>>> getExportTemplates() async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.adminBasePath}/exports/templates&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.adminBasePath}/exports/templates',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return (response.data![&apos;data&apos;] as List).cast&lt;Map&lt;String, dynamic&gt;&gt;();
+      if (response.data!['success'] == true) {
+        return (response.data!['data'] as List).cast<Map<String, dynamic>>();
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get export templates&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get export templates',
         null,
         response.statusCode ?? 500,
       );
@@ -464,12 +464,12 @@ class ExportApiService {
   AppException _handleDioException(DioException exception) {
     if (exception.response?.data != null) {
       final data = exception.response!.data;
-      final message = data[&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Unknown error occurred&apos;;
+      final message = data['error']?['message'] ?? 'Unknown error occurred';
       return ServerException(message, null, exception.response?.statusCode ?? 500);
     }
 
     return NetworkException(
-      exception.message ?? &apos;Network error occurred&apos;,
+      exception.message ?? 'Network error occurred',
       exception.requestOptions.path,
     );
   }

@@ -6,7 +6,7 @@ import '../../core/network/api_client.dart';
 import '../../core/errors/app_exception.dart';
 import '../models/webhook_models.dart';
 
-final webhookApiServiceProvider = Provider&lt;WebhookApiService&gt;((ref) {
+final webhookApiServiceProvider = Provider<WebhookApiService>((ref) {
   return WebhookApiService(ref.read(apiClientProvider));
 });
 
@@ -16,7 +16,7 @@ class WebhookApiService {
   WebhookApiService(this._apiClient);
 
   /// Get all webhooks
-  Future&lt;WebhookListResponse&gt; getWebhooks({
+  Future<WebhookListResponse> getWebhooks({
     int page = 1,
     int limit = 20,
     bool? isActive,
@@ -24,26 +24,26 @@ class WebhookApiService {
     String? search,
   }) async {
     try {
-      final queryParams = &lt;String, dynamic&gt;{
-        &apos;page&apos;: page,
-        &apos;limit&apos;: limit,
+      final queryParams = <String, dynamic>{
+        'page': page,
+        'limit': limit,
       };
 
-      if (isActive != null) queryParams[&apos;is_active&apos;] = isActive;
-      if (event != null) queryParams[&apos;event&apos;] = event;
-      if (search != null &amp;&amp; search.isNotEmpty) queryParams[&apos;search&apos;] = search;
+      if (isActive != null) queryParams['is_active'] = isActive;
+      if (event != null) queryParams['event'] = event;
+      if (search != null && search.isNotEmpty) queryParams['search'] = search;
 
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
+      final response = await _apiClient.get<Map<String, dynamic>>(
         ApiConstants.webhooksPath,
         queryParameters: queryParams,
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return WebhookListResponse.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return WebhookListResponse.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get webhooks&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get webhooks',
         null,
         response.statusCode ?? 500,
       );
@@ -53,18 +53,18 @@ class WebhookApiService {
   }
 
   /// Get webhook by ID
-  Future&lt;Webhook&gt; getWebhook(String webhookId) async {
+  Future<Webhook> getWebhook(String webhookId) async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/$webhookId&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/$webhookId',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Webhook.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Webhook.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get webhook&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get webhook',
         null,
         response.statusCode ?? 500,
       );
@@ -74,19 +74,19 @@ class WebhookApiService {
   }
 
   /// Create new webhook
-  Future&lt;Webhook&gt; createWebhook(WebhookCreateRequest request) async {
+  Future<Webhook> createWebhook(WebhookCreateRequest request) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
+      final response = await _apiClient.post<Map<String, dynamic>>(
         ApiConstants.webhooksPath,
         data: request.toJson(),
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Webhook.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Webhook.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to create webhook&apos;,
+        response.data!['error']?['message'] ?? 'Failed to create webhook',
         null,
         response.statusCode ?? 500,
       );
@@ -96,22 +96,22 @@ class WebhookApiService {
   }
 
   /// Update webhook
-  Future&lt;Webhook&gt; updateWebhook(
+  Future<Webhook> updateWebhook(
     String webhookId,
     WebhookUpdateRequest request,
   ) async {
     try {
-      final response = await _apiClient.put&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/$webhookId&apos;,
+      final response = await _apiClient.put<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/$webhookId',
         data: request.toJson(),
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Webhook.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Webhook.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to update webhook&apos;,
+        response.data!['error']?['message'] ?? 'Failed to update webhook',
         null,
         response.statusCode ?? 500,
       );
@@ -121,15 +121,15 @@ class WebhookApiService {
   }
 
   /// Delete webhook
-  Future&lt;void&gt; deleteWebhook(String webhookId) async {
+  Future<void> deleteWebhook(String webhookId) async {
     try {
-      final response = await _apiClient.delete&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/$webhookId&apos;,
+      final response = await _apiClient.delete<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/$webhookId',
       );
 
-      if (response.data![&apos;success&apos;] != true) {
+      if (response.data!['success'] != true) {
         throw ServerException(
-          response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to delete webhook&apos;,
+          response.data!['error']?['message'] ?? 'Failed to delete webhook',
           null,
           response.statusCode ?? 500,
         );
@@ -140,18 +140,18 @@ class WebhookApiService {
   }
 
   /// Enable webhook
-  Future&lt;Webhook&gt; enableWebhook(String webhookId) async {
+  Future<Webhook> enableWebhook(String webhookId) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/$webhookId/enable&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/$webhookId/enable',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Webhook.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Webhook.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to enable webhook&apos;,
+        response.data!['error']?['message'] ?? 'Failed to enable webhook',
         null,
         response.statusCode ?? 500,
       );
@@ -161,18 +161,18 @@ class WebhookApiService {
   }
 
   /// Disable webhook
-  Future&lt;Webhook&gt; disableWebhook(String webhookId) async {
+  Future<Webhook> disableWebhook(String webhookId) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/$webhookId/disable&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/$webhookId/disable',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Webhook.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Webhook.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to disable webhook&apos;,
+        response.data!['error']?['message'] ?? 'Failed to disable webhook',
         null,
         response.statusCode ?? 500,
       );
@@ -182,22 +182,22 @@ class WebhookApiService {
   }
 
   /// Test webhook
-  Future&lt;WebhookTestResponse&gt; testWebhook(
+  Future<WebhookTestResponse> testWebhook(
     String webhookId,
     WebhookTestRequest request,
   ) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/$webhookId/test&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/$webhookId/test',
         data: request.toJson(),
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return WebhookTestResponse.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return WebhookTestResponse.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to test webhook&apos;,
+        response.data!['error']?['message'] ?? 'Failed to test webhook',
         null,
         response.statusCode ?? 500,
       );
@@ -207,7 +207,7 @@ class WebhookApiService {
   }
 
   /// Get webhook deliveries
-  Future&lt;List&lt;WebhookDelivery&gt;&gt; getWebhookDeliveries(
+  Future<List<WebhookDelivery>> getWebhookDeliveries(
     String webhookId, {
     int page = 1,
     int limit = 50,
@@ -216,33 +216,33 @@ class WebhookApiService {
     bool? success,
   }) async {
     try {
-      final queryParams = &lt;String, dynamic&gt;{
-        &apos;page&apos;: page,
-        &apos;limit&apos;: limit,
+      final queryParams = <String, dynamic>{
+        'page': page,
+        'limit': limit,
       };
 
       if (startDate != null) {
-        queryParams[&apos;start_date&apos;] = startDate.toIso8601String();
+        queryParams['start_date'] = startDate.toIso8601String();
       }
       if (endDate != null) {
-        queryParams[&apos;end_date&apos;] = endDate.toIso8601String();
+        queryParams['end_date'] = endDate.toIso8601String();
       }
-      if (success != null) queryParams[&apos;success&apos;] = success;
+      if (success != null) queryParams['success'] = success;
 
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/$webhookId/deliveries&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/$webhookId/deliveries',
         queryParameters: queryParams,
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        final deliveryList = response.data![&apos;data&apos;] as List;
+      if (response.data!['success'] == true) {
+        final deliveryList = response.data!['data'] as List;
         return deliveryList
-            .map((delivery) =&gt; WebhookDelivery.fromJson(delivery))
+            .map((delivery) => WebhookDelivery.fromJson(delivery))
             .toList();
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get deliveries&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get deliveries',
         null,
         response.statusCode ?? 500,
       );
@@ -252,32 +252,32 @@ class WebhookApiService {
   }
 
   /// Get webhook statistics
-  Future&lt;WebhookStats&gt; getWebhookStats(
+  Future<WebhookStats> getWebhookStats(
     String webhookId, {
     DateTime? startDate,
     DateTime? endDate,
   }) async {
     try {
-      final queryParams = &lt;String, dynamic&gt;{};
+      final queryParams = <String, dynamic>{};
 
       if (startDate != null) {
-        queryParams[&apos;start_date&apos;] = startDate.toIso8601String();
+        queryParams['start_date'] = startDate.toIso8601String();
       }
       if (endDate != null) {
-        queryParams[&apos;end_date&apos;] = endDate.toIso8601String();
+        queryParams['end_date'] = endDate.toIso8601String();
       }
 
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/$webhookId/stats&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/$webhookId/stats',
         queryParameters: queryParams.isNotEmpty ? queryParams : null,
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return WebhookStats.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return WebhookStats.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get webhook stats&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get webhook stats',
         null,
         response.statusCode ?? 500,
       );
@@ -287,21 +287,21 @@ class WebhookApiService {
   }
 
   /// Retry webhook delivery
-  Future&lt;WebhookDelivery&gt; retryWebhookDelivery(
+  Future<WebhookDelivery> retryWebhookDelivery(
     String webhookId,
     String deliveryId,
   ) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/$webhookId/deliveries/$deliveryId/retry&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/$webhookId/deliveries/$deliveryId/retry',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return WebhookDelivery.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return WebhookDelivery.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to retry delivery&apos;,
+        response.data!['error']?['message'] ?? 'Failed to retry delivery',
         null,
         response.statusCode ?? 500,
       );
@@ -311,21 +311,21 @@ class WebhookApiService {
   }
 
   /// Get available webhook events
-  Future&lt;List&lt;WebhookEvent&gt;&gt; getAvailableEvents() async {
+  Future<List<WebhookEvent>> getAvailableEvents() async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/events&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/events',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        final eventList = response.data![&apos;data&apos;] as List;
+      if (response.data!['success'] == true) {
+        final eventList = response.data!['data'] as List;
         return eventList
-            .map((event) =&gt; WebhookEvent.fromJson(event))
+            .map((event) => WebhookEvent.fromJson(event))
             .toList();
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get available events&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get available events',
         null,
         response.statusCode ?? 500,
       );
@@ -335,21 +335,21 @@ class WebhookApiService {
   }
 
   /// Get webhook templates
-  Future&lt;List&lt;WebhookTemplate&gt;&gt; getWebhookTemplates() async {
+  Future<List<WebhookTemplate>> getWebhookTemplates() async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/templates&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/templates',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        final templateList = response.data![&apos;data&apos;] as List;
+      if (response.data!['success'] == true) {
+        final templateList = response.data!['data'] as List;
         return templateList
-            .map((template) =&gt; WebhookTemplate.fromJson(template))
+            .map((template) => WebhookTemplate.fromJson(template))
             .toList();
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get webhook templates&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get webhook templates',
         null,
         response.statusCode ?? 500,
       );
@@ -359,22 +359,22 @@ class WebhookApiService {
   }
 
   /// Create webhook from template
-  Future&lt;Webhook&gt; createWebhookFromTemplate(
+  Future<Webhook> createWebhookFromTemplate(
     String templateId,
-    Map&lt;String, dynamic&gt; config,
+    Map<String, dynamic> config,
   ) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/templates/$templateId/create&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/templates/$templateId/create',
         data: config,
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Webhook.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Webhook.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to create webhook from template&apos;,
+        response.data!['error']?['message'] ?? 'Failed to create webhook from template',
         null,
         response.statusCode ?? 500,
       );
@@ -384,19 +384,19 @@ class WebhookApiService {
   }
 
   /// Validate webhook URL
-  Future&lt;Map&lt;String, dynamic&gt;&gt; validateWebhookUrl(String url) async {
+  Future<Map<String, dynamic>> validateWebhookUrl(String url) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/validate&apos;,
-        data: {&apos;url&apos;: url},
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/validate',
+        data: {'url': url},
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return response.data![&apos;data&apos;];
+      if (response.data!['success'] == true) {
+        return response.data!['data'];
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to validate webhook URL&apos;,
+        response.data!['error']?['message'] ?? 'Failed to validate webhook URL',
         null,
         response.statusCode ?? 500,
       );
@@ -406,18 +406,18 @@ class WebhookApiService {
   }
 
   /// Generate webhook secret
-  Future&lt;String&gt; generateWebhookSecret() async {
+  Future<String> generateWebhookSecret() async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.webhooksPath}/generate-secret&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.webhooksPath}/generate-secret',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return response.data![&apos;data&apos;][&apos;secret&apos;];
+      if (response.data!['success'] == true) {
+        return response.data!['data']['secret'];
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to generate webhook secret&apos;,
+        response.data!['error']?['message'] ?? 'Failed to generate webhook secret',
         null,
         response.statusCode ?? 500,
       );
@@ -429,12 +429,12 @@ class WebhookApiService {
   AppException _handleDioException(DioException exception) {
     if (exception.response?.data != null) {
       final data = exception.response!.data;
-      final message = data[&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Unknown error occurred&apos;;
+      final message = data['error']?['message'] ?? 'Unknown error occurred';
       return ServerException(message, null, exception.response?.statusCode ?? 500);
     }
 
     return NetworkException(
-      exception.message ?? &apos;Network error occurred&apos;,
+      exception.message ?? 'Network error occurred',
       exception.requestOptions.path,
     );
   }

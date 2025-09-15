@@ -74,7 +74,7 @@ def error_response(
 
 def format_user_response(user: User, include_permissions: bool = False) -> Dict[str, Any]:
     """
-    Format a User model to match Flutter expectations.
+    Format a User model to match Flutter expectations using the UserResponse schema.
 
     Args:
         user: SQLAlchemy User model instance
@@ -83,49 +83,69 @@ def format_user_response(user: User, include_permissions: bool = False) -> Dict[
     Returns:
         Dict: Formatted user data matching Flutter User entity
     """
-    # Combine first_name and last_name into name for Flutter
-    full_name = f"{user.first_name} {user.last_name}".strip()
-    if not full_name:
-        full_name = user.email.split("@")[0]  # Fallback to email username
-
-    user_data = {
-        "id": str(user.id),
-        "email": user.email,
-        "name": full_name,
-        "profilePicture": getattr(user, 'profile_picture', None),
-        "isEmailVerified": user.is_verified,
-        "isTwoFactorEnabled": getattr(user, 'is_2fa_enabled', False),
-        "roles": [role.name for role in user.roles] if hasattr(user, 'roles') and user.roles else ["user"],
-        "permissions": [],  # Will be populated below if needed
-        "createdAt": user.created_at.isoformat() if user.created_at else None,
-        "updatedAt": user.updated_at.isoformat() if user.updated_at else None,
-        "lastLoginAt": user.last_login.isoformat() if user.last_login else None,
-    }
-
+    # Get permissions from roles if needed
+    permissions = []
     if include_permissions:
-        # Get permissions from roles
-        permissions = set()
+        permissions_set = set()
         if hasattr(user, 'roles') and user.roles:
             for role in user.roles:
                 if hasattr(role, 'permissions'):
                     for permission in role.permissions:
-                        permissions.add(f"{permission.resource}:{permission.action}")
+                        permissions_set.add(f"{permission.resource}:{permission.action}")
 
         # Add default permissions for authenticated users
-        permissions.update(["profile:read", "profile:write"])
+        permissions_set.update(["profile:read", "profile:write"])
 
         # Add role-based permissions
         user_roles = [role.name for role in user.roles] if hasattr(user, 'roles') and user.roles else []
         for role_name in user_roles:
             if role_name in ["admin", "super_admin"]:
-                permissions.update([
+                permissions_set.update([
                     "users:read", "users:write", "users:delete",
                     "admin:access", "roles:manage"
                 ])
             elif role_name == "moderator":
-                permissions.update(["users:read", "content:manage"])
+                permissions_set.update(["users:read", "content:manage"])
 
-        user_data["permissions"] = list(permissions)
+        permissions = list(permissions_set)
+
+    # Get roles list
+    roles = [role.name for role in user.roles] if hasattr(user, 'roles') and user.roles else []
+
+    # Compute display name - User model only has full_name, not first_name/last_name
+    full_name = user.full_name or ""
+    if full_name:
+        display_name = full_name
+        # Try to split full_name into first and last
+        name_parts = full_name.split()
+        first_name = name_parts[0] if name_parts else ""
+        last_name = " ".join(name_parts[1:]) if len(name_parts) > 1 else ""
+    else:
+        display_name = user.email.split("@")[0]  # Fallback to email username
+        first_name = ""
+        last_name = ""
+
+    # Manually create the response dict with correct field names and aliases
+    user_data = {
+        "id": str(user.id),
+        "email": user.email,
+        "first_name": first_name,
+        "last_name": last_name,
+        "full_name": full_name,
+        "name": display_name,
+        "profilePicture": user.avatar_url,  # Use alias name directly
+        "isEmailVerified": user.email_verified,  # Use alias name directly
+        "isTwoFactorEnabled": user.two_factor_enabled,  # Use alias name directly
+        "roles": roles,
+        "permissions": permissions,
+        "createdAt": user.created_at.isoformat() if user.created_at else "",  # Use alias name directly
+        "updatedAt": user.updated_at.isoformat() if user.updated_at else "",  # Use alias name directly
+        "lastLoginAt": user.last_login.isoformat() if user.last_login else None,  # Use alias name directly
+        "is_active": user.is_active,
+        # Backward compatibility fields
+        "is_verified": user.email_verified,
+        "last_login": user.last_login.isoformat() if user.last_login else None,
+    }
 
     return user_data
 

@@ -10,7 +10,7 @@ import 'package:flutter_auth_template/services/auth_service.dart';
 import 'package:flutter_auth_template/services/oauth_service.dart';
 import 'package:flutter_auth_template/core/storage/secure_storage_service.dart';
 import 'package:flutter_auth_template/data/models/auth_request.dart';
-import 'package:flutter_auth_template/data/models/user.dart';
+import 'package:flutter_auth_template/domain/entities/user.dart';
 import 'package:flutter_auth_template/core/network/api_response.dart';
 
 import '../test/services/auth_service_test.mocks.dart';

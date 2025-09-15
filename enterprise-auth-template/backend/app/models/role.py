@@ -88,7 +88,7 @@ class Role(Base):
 
     users: Mapped[List["User"]] = relationship(
         "User",
-        secondary="user_roles",
+        secondary="user_roles_association",
         back_populates="roles",
         lazy="dynamic"
     )

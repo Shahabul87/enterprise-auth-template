@@ -18,12 +18,12 @@ class WebhookManagementPage extends ConsumerStatefulWidget {
 class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage> 
     with TickerProviderStateMixin {
   late TabController _tabController;
-  List&lt;Webhook&gt; _webhooks = [];
-  List&lt;WebhookDelivery&gt; _deliveries = [];
-  List&lt;WebhookTemplate&gt; _templates = [];
+  List<Webhook> _webhooks = [];
+  List<WebhookDelivery> _deliveries = [];
+  List<WebhookTemplate> _templates = [];
   bool _isLoading = true;
   String? _error;
-  String _searchQuery = &apos;&apos;;
+  String _searchQuery = '';
   WebhookEventType? _selectedEventFilter;
   WebhookStatus? _selectedStatusFilter;
 
@@ -40,7 +40,7 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
     super.dispose();
   }
 
-  Future&lt;void&gt; _loadData() async {
+  Future<void> _loadData() async {
     try {
       setState(() {
         _isLoading = true;
@@ -56,9 +56,9 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
 
       if (mounted) {
         setState(() {
-          _webhooks = results[0] as List&lt;Webhook&gt;;
-          _deliveries = results[1] as List&lt;WebhookDelivery&gt;;
-          _templates = results[2] as List&lt;WebhookTemplate&gt;;
+          _webhooks = results[0] as List<Webhook>;
+          _deliveries = results[1] as List<WebhookDelivery>;
+          _templates = results[2] as List<WebhookTemplate>;
           _isLoading = false;
         });
       }
@@ -91,13 +91,13 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(&apos;Webhook Management&apos;),
+        title: const Text('Webhook Management'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: &apos;Webhooks&apos;),
-            Tab(text: &apos;Deliveries&apos;),
-            Tab(text: &apos;Templates&apos;),
+            Tab(text: 'Webhooks'),
+            Tab(text: 'Deliveries'),
+            Tab(text: 'Templates'),
           ],
         ),
       ),
@@ -128,7 +128,7 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
       final matchesStatus = _selectedStatusFilter == null ||
           webhook.status == _selectedStatusFilter!;
       
-      return matchesSearch &amp;&amp; matchesEvent &amp;&amp; matchesStatus;
+      return matchesSearch && matchesEvent && matchesStatus;
     }).toList();
 
     return Column(
@@ -136,7 +136,7 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
         _buildWebhookFilters(),
         Expanded(
           child: filteredWebhooks.isEmpty
-              ? const Center(child: Text(&apos;No webhooks found&apos;))
+              ? const Center(child: Text('No webhooks found'))
               : ListView.builder(
                   itemCount: filteredWebhooks.length,
                   itemBuilder: (context, index) {
@@ -156,7 +156,7 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
         children: [
           TextField(
             decoration: const InputDecoration(
-              hintText: &apos;Search webhooks...&apos;,
+              hintText: 'Search webhooks...',
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(),
             ),
@@ -170,19 +170,19 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
           Row(
             children: [
               Expanded(
-                child: DropdownButtonFormField&lt;WebhookEventType&gt;(
+                child: DropdownButtonFormField<WebhookEventType>(
                   decoration: const InputDecoration(
-                    labelText: &apos;Event Type&apos;,
+                    labelText: 'Event Type',
                     border: OutlineInputBorder(),
                   ),
                   value: _selectedEventFilter,
                   items: [
                     const DropdownMenuItem(
                       value: null,
-                      child: Text(&apos;All Events&apos;),
+                      child: Text('All Events'),
                     ),
                     ...WebhookEventType.values.map(
-                      (type) =&gt; DropdownMenuItem(
+                      (type) => DropdownMenuItem(
                         value: type,
                         child: Text(type.displayName),
                       ),
@@ -197,19 +197,19 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: DropdownButtonFormField&lt;WebhookStatus&gt;(
+                child: DropdownButtonFormField<WebhookStatus>(
                   decoration: const InputDecoration(
-                    labelText: &apos;Status&apos;,
+                    labelText: 'Status',
                     border: OutlineInputBorder(),
                   ),
                   value: _selectedStatusFilter,
                   items: [
                     const DropdownMenuItem(
                       value: null,
-                      child: Text(&apos;All Status&apos;),
+                      child: Text('All Status'),
                     ),
                     ...WebhookStatus.values.map(
-                      (status) =&gt; DropdownMenuItem(
+                      (status) => DropdownMenuItem(
                         value: status,
                         child: Text(status.displayName),
                       ),
@@ -248,7 +248,7 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
             const SizedBox(height: 4),
             Wrap(
               spacing: 4,
-              children: webhook.events.map((event) =&gt; Chip(
+              children: webhook.events.map((event) => Chip(
                 label: Text(
                   event.displayName,
                   style: const TextStyle(fontSize: 10),
@@ -258,31 +258,31 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
             ),
           ],
         ),
-        trailing: PopupMenuButton&lt;String&gt;(
-          onSelected: (action) =&gt; _handleWebhookAction(action, webhook),
-          itemBuilder: (context) =&gt; [
+        trailing: PopupMenuButton<String>(
+          onSelected: (action) => _handleWebhookAction(action, webhook),
+          itemBuilder: (context) => [
             const PopupMenuItem(
-              value: &apos;edit&apos;,
+              value: 'edit',
               child: Row(
                 children: [
                   Icon(Icons.edit),
                   SizedBox(width: 8),
-                  Text(&apos;Edit&apos;),
+                  Text('Edit'),
                 ],
               ),
             ),
             const PopupMenuItem(
-              value: &apos;test&apos;,
+              value: 'test',
               child: Row(
                 children: [
                   Icon(Icons.play_arrow),
                   SizedBox(width: 8),
-                  Text(&apos;Test&apos;),
+                  Text('Test'),
                 ],
               ),
             ),
             PopupMenuItem(
-              value: webhook.status == WebhookStatus.active ? &apos;disable&apos; : &apos;enable&apos;,
+              value: webhook.status == WebhookStatus.active ? 'disable' : 'enable',
               child: Row(
                 children: [
                   Icon(webhook.status == WebhookStatus.active 
@@ -290,18 +290,18 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
                       : Icons.play_arrow),
                   const SizedBox(width: 8),
                   Text(webhook.status == WebhookStatus.active 
-                      ? &apos;Disable&apos; 
-                      : &apos;Enable&apos;),
+                      ? 'Disable' 
+                      : 'Enable'),
                 ],
               ),
             ),
             const PopupMenuItem(
-              value: &apos;delete&apos;,
+              value: 'delete',
               child: Row(
                 children: [
                   Icon(Icons.delete, color: Colors.red),
                   SizedBox(width: 8),
-                  Text(&apos;Delete&apos;, style: TextStyle(color: Colors.red)),
+                  Text('Delete', style: TextStyle(color: Colors.red)),
                 ],
               ),
             ),
@@ -315,24 +315,24 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
               children: [
                 if (webhook.description.isNotEmpty) ...[
                   const Text(
-                    &apos;Description:&apos;,
+                    'Description:',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(webhook.description),
                   const SizedBox(height: 8),
                 ],
                 const Text(
-                  &apos;Statistics:&apos;,
+                  'Statistics:',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Row(
                   children: [
-                    _buildStatChip(&apos;Success&apos;, webhook.successCount.toString(), Colors.green),
+                    _buildStatChip('Success', webhook.successCount.toString(), Colors.green),
                     const SizedBox(width: 8),
-                    _buildStatChip(&apos;Failed&apos;, webhook.failureCount.toString(), Colors.red),
+                    _buildStatChip('Failed', webhook.failureCount.toString(), Colors.red),
                     const SizedBox(width: 8),
-                    _buildStatChip(&apos;Last Success&apos;, 
-                        webhook.lastSuccessAt?.toString().split(&apos; &apos;)[0] ?? &apos;Never&apos;, 
+                    _buildStatChip('Last Success', 
+                        webhook.lastSuccessAt?.toString().split(' ')[0] ?? 'Never', 
                         Colors.blue),
                   ],
                 ),
@@ -372,21 +372,21 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
                 color: Colors.white,
               ),
             ),
-            title: Text(&apos;${delivery.eventType.displayName} → ${delivery.webhookName}&apos;),
+            title: Text('${delivery.eventType.displayName} → ${delivery.webhookName}'),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(&apos;Attempt ${delivery.attemptCount} of ${delivery.maxAttempts}&apos;),
-                Text(&apos;${delivery.createdAt}&apos;),
+                Text('Attempt ${delivery.attemptCount} of ${delivery.maxAttempts}'),
+                Text('${delivery.createdAt}'),
                 if (delivery.errorMessage != null)
                   Text(
-                    &apos;Error: ${delivery.errorMessage}&apos;,
+                    'Error: ${delivery.errorMessage}',
                     style: const TextStyle(color: Colors.red),
                   ),
               ],
             ),
-            trailing: Text(&apos;${delivery.responseTime}ms&apos;),
-            onTap: () =&gt; _showDeliveryDetails(delivery),
+            trailing: Text('${delivery.responseTime}ms'),
+            onTap: () => _showDeliveryDetails(delivery),
           ),
         );
       },
@@ -412,7 +412,7 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
                 const SizedBox(height: 4),
                 Wrap(
                   spacing: 4,
-                  children: template.supportedEvents.map((event) =&gt; Chip(
+                  children: template.supportedEvents.map((event) => Chip(
                     label: Text(
                       event.displayName,
                       style: const TextStyle(fontSize: 10),
@@ -422,26 +422,26 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
                 ),
               ],
             ),
-            trailing: PopupMenuButton&lt;String&gt;(
-              onSelected: (action) =&gt; _handleTemplateAction(action, template),
-              itemBuilder: (context) =&gt; [
+            trailing: PopupMenuButton<String>(
+              onSelected: (action) => _handleTemplateAction(action, template),
+              itemBuilder: (context) => [
                 const PopupMenuItem(
-                  value: &apos;use&apos;,
+                  value: 'use',
                   child: Row(
                     children: [
                       Icon(Icons.rocket_launch),
                       SizedBox(width: 8),
-                      Text(&apos;Use Template&apos;),
+                      Text('Use Template'),
                     ],
                   ),
                 ),
                 const PopupMenuItem(
-                  value: &apos;view&apos;,
+                  value: 'view',
                   child: Row(
                     children: [
                       Icon(Icons.visibility),
                       SizedBox(width: 8),
-                      Text(&apos;View Code&apos;),
+                      Text('View Code'),
                     ],
                   ),
                 ),
@@ -458,26 +458,26 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
     
     try {
       switch (action) {
-        case &apos;edit&apos;:
+        case 'edit':
           _showEditWebhookDialog(webhook);
           break;
-        case &apos;test&apos;:
+        case 'test':
           await service.testWebhook(webhook.id);
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text(&apos;Test webhook sent&apos;)),
+              const SnackBar(content: Text('Test webhook sent')),
             );
           }
           break;
-        case &apos;enable&apos;:
-        case &apos;disable&apos;:
-          final newStatus = action == &apos;enable&apos; 
+        case 'enable':
+        case 'disable':
+          final newStatus = action == 'enable' 
               ? WebhookStatus.active 
               : WebhookStatus.inactive;
           await service.updateWebhookStatus(webhook.id, newStatus);
           _loadData();
           break;
-        case &apos;delete&apos;:
+        case 'delete':
           final confirmed = await _showDeleteConfirmation(webhook.name);
           if (confirmed) {
             await service.deleteWebhook(webhook.id);
@@ -488,7 +488,7 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+          SnackBar(content: Text('Error: ${e.toString()}')),
         );
       }
     }
@@ -496,10 +496,10 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
 
   void _handleTemplateAction(String action, WebhookTemplate template) {
     switch (action) {
-      case &apos;use&apos;:
+      case 'use':
         _showCreateWebhookDialog(template: template);
         break;
-      case &apos;view&apos;:
+      case 'view':
         _showTemplateCode(template);
         break;
     }
@@ -508,7 +508,7 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
   void _showCreateWebhookDialog({WebhookTemplate? template}) {
     showDialog(
       context: context,
-      builder: (context) =&gt; _WebhookEditDialog(
+      builder: (context) => _WebhookEditDialog(
         onSaved: (webhook) {
           ref.read(webhookApiServiceProvider).createWebhook(webhook).then((_) {
             _loadData();
@@ -522,7 +522,7 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
   void _showEditWebhookDialog(Webhook webhook) {
     showDialog(
       context: context,
-      builder: (context) =&gt; _WebhookEditDialog(
+      builder: (context) => _WebhookEditDialog(
         webhook: webhook,
         onSaved: (updatedWebhook) {
           ref.read(webhookApiServiceProvider)
@@ -534,21 +534,21 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
     );
   }
 
-  Future&lt;bool&gt; _showDeleteConfirmation(String webhookName) async {
-    return await showDialog&lt;bool&gt;(
+  Future<bool> _showDeleteConfirmation(String webhookName) async {
+    return await showDialog<bool>(
       context: context,
-      builder: (context) =&gt; AlertDialog(
-        title: const Text(&apos;Delete Webhook&apos;),
-        content: Text(&apos;Are you sure you want to delete &quot;$webhookName&quot;?&apos;),
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Webhook'),
+        content: Text('Are you sure you want to delete "$webhookName"?'),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(false),
-            child: const Text(&apos;Cancel&apos;),
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(true),
+            onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text(&apos;Delete&apos;),
+            child: const Text('Delete'),
           ),
         ],
       ),
@@ -558,8 +558,8 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
   void _showDeliveryDetails(WebhookDelivery delivery) {
     showDialog(
       context: context,
-      builder: (context) =&gt; AlertDialog(
-        title: Text(&apos;Delivery Details&apos;),
+      builder: (context) => AlertDialog(
+        title: Text('Delivery Details'),
         content: SizedBox(
           width: double.maxFinite,
           child: SingleChildScrollView(
@@ -567,17 +567,17 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildDetailRow(&apos;Event&apos;, delivery.eventType.displayName),
-                _buildDetailRow(&apos;Webhook&apos;, delivery.webhookName),
-                _buildDetailRow(&apos;Status&apos;, delivery.status.displayName),
-                _buildDetailRow(&apos;Response Code&apos;, delivery.responseCode?.toString() ?? &apos;N/A&apos;),
-                _buildDetailRow(&apos;Response Time&apos;, &apos;${delivery.responseTime}ms&apos;),
-                _buildDetailRow(&apos;Attempt&apos;, &apos;${delivery.attemptCount}/${delivery.maxAttempts}&apos;),
+                _buildDetailRow('Event', delivery.eventType.displayName),
+                _buildDetailRow('Webhook', delivery.webhookName),
+                _buildDetailRow('Status', delivery.status.displayName),
+                _buildDetailRow('Response Code', delivery.responseCode?.toString() ?? 'N/A'),
+                _buildDetailRow('Response Time', '${delivery.responseTime}ms'),
+                _buildDetailRow('Attempt', '${delivery.attemptCount}/${delivery.maxAttempts}'),
                 if (delivery.errorMessage != null)
-                  _buildDetailRow(&apos;Error&apos;, delivery.errorMessage!),
+                  _buildDetailRow('Error', delivery.errorMessage!),
                 const SizedBox(height: 16),
                 const Text(
-                  &apos;Payload:&apos;,
+                  'Payload:',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Container(
@@ -589,7 +589,7 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
                   ),
                   child: Text(
                     delivery.payload,
-                    style: const TextStyle(fontFamily: &apos;monospace&apos;, fontSize: 12),
+                    style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
                   ),
                 ),
               ],
@@ -598,8 +598,8 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
         ),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(),
-            child: const Text(&apos;Close&apos;),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),
@@ -615,7 +615,7 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
           SizedBox(
             width: 100,
             child: Text(
-              &apos;$label:&apos;,
+              '$label:',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
@@ -628,8 +628,8 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
   void _showTemplateCode(WebhookTemplate template) {
     showDialog(
       context: context,
-      builder: (context) =&gt; AlertDialog(
-        title: Text(&apos;${template.name} Template&apos;),
+      builder: (context) => AlertDialog(
+        title: Text('${template.name} Template'),
         content: SizedBox(
           width: double.maxFinite,
           height: 400,
@@ -642,7 +642,7 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
               ),
               child: Text(
                 template.payload,
-                style: const TextStyle(fontFamily: &apos;monospace&apos;, fontSize: 12),
+                style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
               ),
             ),
           ),
@@ -652,14 +652,14 @@ class _WebhookManagementPageState extends ConsumerState<WebhookManagementPage>
             onPressed: () {
               Clipboard.setData(ClipboardData(text: template.payload));
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text(&apos;Template copied to clipboard&apos;)),
+                const SnackBar(content: Text('Template copied to clipboard')),
               );
             },
-            child: const Text(&apos;Copy&apos;),
+            child: const Text('Copy'),
           ),
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(),
-            child: const Text(&apos;Close&apos;),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),
@@ -679,31 +679,31 @@ class _WebhookEditDialog extends StatefulWidget {
   });
 
   @override
-  State&lt;_WebhookEditDialog&gt; createState() =&gt; _WebhookEditDialogState();
+  State<_WebhookEditDialog> createState() => _WebhookEditDialogState();
 }
 
-class _WebhookEditDialogState extends State&lt;_WebhookEditDialog&gt; {
-  final _formKey = GlobalKey&lt;FormState&gt;();
+class _WebhookEditDialogState extends State<_WebhookEditDialog> {
+  final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _urlController;
   late TextEditingController _descriptionController;
   late TextEditingController _secretController;
-  Set&lt;WebhookEventType&gt; _selectedEvents = {};
+  Set<WebhookEventType> _selectedEvents = {};
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(
-      text: widget.webhook?.name ?? widget.template?.name ?? &apos;&apos;,
+      text: widget.webhook?.name ?? widget.template?.name ?? '',
     );
     _urlController = TextEditingController(
-      text: widget.webhook?.url ?? &apos;&apos;,
+      text: widget.webhook?.url ?? '',
     );
     _descriptionController = TextEditingController(
-      text: widget.webhook?.description ?? widget.template?.description ?? &apos;&apos;,
+      text: widget.webhook?.description ?? widget.template?.description ?? '',
     );
     _secretController = TextEditingController(
-      text: widget.webhook?.secret ?? &apos;&apos;,
+      text: widget.webhook?.secret ?? '',
     );
     _selectedEvents = widget.webhook?.events.toSet() ?? 
         widget.template?.supportedEvents.toSet() ?? {};
@@ -721,7 +721,7 @@ class _WebhookEditDialogState extends State&lt;_WebhookEditDialog&gt; {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.webhook == null ? &apos;Create Webhook&apos; : &apos;Edit Webhook&apos;),
+      title: Text(widget.webhook == null ? 'Create Webhook' : 'Edit Webhook'),
       content: SizedBox(
         width: double.maxFinite,
         child: SingleChildScrollView(
@@ -733,12 +733,12 @@ class _WebhookEditDialogState extends State&lt;_WebhookEditDialog&gt; {
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(
-                    labelText: &apos;Name&apos;,
+                    labelText: 'Name',
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value?.isEmpty ?? true) {
-                      return &apos;Name is required&apos;;
+                      return 'Name is required';
                     }
                     return null;
                   },
@@ -747,16 +747,16 @@ class _WebhookEditDialogState extends State&lt;_WebhookEditDialog&gt; {
                 TextFormField(
                   controller: _urlController,
                   decoration: const InputDecoration(
-                    labelText: &apos;URL&apos;,
+                    labelText: 'URL',
                     border: OutlineInputBorder(),
-                    hintText: &apos;https://example.com/webhook&apos;,
+                    hintText: 'https://example.com/webhook',
                   ),
                   validator: (value) {
                     if (value?.isEmpty ?? true) {
-                      return &apos;URL is required&apos;;
+                      return 'URL is required';
                     }
                     if (!Uri.tryParse(value!)?.hasAbsolutePath ?? true) {
-                      return &apos;Invalid URL&apos;;
+                      return 'Invalid URL';
                     }
                     return null;
                   },
@@ -765,7 +765,7 @@ class _WebhookEditDialogState extends State&lt;_WebhookEditDialog&gt; {
                 TextFormField(
                   controller: _descriptionController,
                   decoration: const InputDecoration(
-                    labelText: &apos;Description&apos;,
+                    labelText: 'Description',
                     border: OutlineInputBorder(),
                   ),
                   maxLines: 3,
@@ -774,9 +774,9 @@ class _WebhookEditDialogState extends State&lt;_WebhookEditDialog&gt; {
                 TextFormField(
                   controller: _secretController,
                   decoration: const InputDecoration(
-                    labelText: &apos;Secret (optional)&apos;,
+                    labelText: 'Secret (optional)',
                     border: OutlineInputBorder(),
-                    hintText: &apos;Used for signature verification&apos;,
+                    hintText: 'Used for signature verification',
                   ),
                   obscureText: true,
                 ),
@@ -784,14 +784,14 @@ class _WebhookEditDialogState extends State&lt;_WebhookEditDialog&gt; {
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    &apos;Events:&apos;,
+                    'Events:',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
-                  children: WebhookEventType.values.map((event) =&gt; FilterChip(
+                  children: WebhookEventType.values.map((event) => FilterChip(
                     label: Text(event.displayName),
                     selected: _selectedEvents.contains(event),
                     onSelected: (selected) {
@@ -812,12 +812,12 @@ class _WebhookEditDialogState extends State&lt;_WebhookEditDialog&gt; {
       ),
       actions: [
         TextButton(
-          onPressed: () =&gt; Navigator.of(context).pop(),
-          child: const Text(&apos;Cancel&apos;),
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _selectedEvents.isEmpty ? null : _saveWebhook,
-          child: Text(widget.webhook == null ? &apos;Create&apos; : &apos;Save&apos;),
+          child: Text(widget.webhook == null ? 'Create' : 'Save'),
         ),
       ],
     );

@@ -15,21 +15,85 @@ import {
 } from '@/types';
 
 export class AuthAPI {
-  // User registration
-  static async register(userData: RegisterRequest): Promise<ApiResponse<User>> {
-    return apiClient.post<User>('/api/v1/auth/register', userData);
+  // Normalize backend (camelCase) auth payloads to frontend snake_case types
+  private static normalizeAuthData(data: any): LoginResponse {
+    const rawUser = data?.user ?? {};
+    const user: User = {
+      id: String(rawUser.id ?? rawUser.user_id ?? ''),
+      email: rawUser.email ?? '',
+      full_name: rawUser.full_name ?? rawUser.name ?? '',
+      username: rawUser.username,
+      is_active: rawUser.is_active ?? true,
+      email_verified: rawUser.email_verified ?? rawUser.isEmailVerified ?? rawUser.is_verified ?? false,
+      is_superuser: rawUser.is_superuser ?? false,
+      two_factor_enabled: rawUser.two_factor_enabled ?? rawUser.isTwoFactorEnabled ?? false,
+      failed_login_attempts: rawUser.failed_login_attempts ?? 0,
+      last_login: rawUser.last_login ?? rawUser.lastLoginAt ?? null,
+      last_login_at: rawUser.last_login_at ?? rawUser.lastLoginAt ?? undefined,
+      profile_picture: rawUser.profile_picture ?? rawUser.profilePicture,
+      avatar_url: rawUser.avatar_url,
+      phone_number: rawUser.phone_number,
+      is_phone_verified: rawUser.is_phone_verified,
+      user_metadata: rawUser.user_metadata ?? {},
+      created_at: rawUser.created_at ?? rawUser.createdAt ?? '',
+      updated_at: rawUser.updated_at ?? rawUser.updatedAt ?? '',
+      roles: rawUser.roles ?? [],
+      permissions: rawUser.permissions ?? [],
+    };
+
+    const access_token = data?.access_token ?? data?.accessToken ?? '';
+    const refresh_token = data?.refresh_token ?? data?.refreshToken ?? '';
+    const token_type = data?.token_type ?? data?.tokenType ?? 'bearer';
+    const expires_in = data?.expires_in ?? data?.expiresIn ?? 0;
+
+    return {
+      access_token,
+      refresh_token,
+      token_type,
+      expires_in,
+      user,
+      requires_2fa: data?.requires_2fa ?? false,
+      temp_token: data?.temp_token ?? data?.tempToken ?? null,
+    };
+  }
+  // User registration - backend returns a message, not user data
+  static async register(userData: RegisterRequest): Promise<ApiResponse<{ message: string }>> {
+    // Map frontend payload to backend schema (full_name expected)
+    const mapped = {
+      email: userData.email,
+      password: userData.password,
+      confirm_password: userData.confirm_password,
+      full_name: (userData as any).full_name ?? (userData as any).name,
+      agree_to_terms: userData.agree_to_terms,
+    };
+    return apiClient.post<{ message: string }>('/api/v1/auth/register', mapped);
   }
 
   // User login
-  static async login(credentials: LoginRequest): Promise<ApiResponse<LoginResponse>> {
-    return apiClient.post<LoginResponse>('/api/v1/auth/login', credentials);
+  static async login(credentials: LoginRequest): Promise<ApiResponse<any>> {
+    // Ask backend to return JSON tokens (no cookies)
+    const response = await apiClient.post<any>('/api/v1/auth/login?prefer_json_tokens=true', credentials);
+    if (!response.success || !response.data) return response;
+    // Backend wraps in StandardResponse, data contains auth fields in camelCase
+    const normalized = AuthAPI.normalizeAuthData(response.data);
+    return { success: true, data: normalized };
   }
 
   // Refresh access token
   static async refreshToken(
     refreshTokenData: RefreshTokenRequest
-  ): Promise<ApiResponse<TokenPair>> {
-    return apiClient.post<TokenPair>('/api/v1/auth/refresh', refreshTokenData);
+  ): Promise<ApiResponse<any>> {
+    // Prefer JSON token refresh (no cookies needed)
+    const response = await apiClient.post<any>('/api/v1/auth/refresh?prefer_json_tokens=true', refreshTokenData);
+    if (!response.success || !response.data) return response;
+    const data = response.data;
+    const tokenPair: TokenPair = {
+      access_token: data.access_token ?? data.accessToken ?? '',
+      refresh_token: data.refresh_token ?? data.refreshToken ?? '',
+      token_type: data.token_type ?? data.tokenType ?? 'bearer',
+      expires_in: data.expires_in ?? data.expiresIn ?? 0,
+    };
+    return { success: true, data: tokenPair };
   }
 
   // Logout (revoke tokens)
@@ -39,43 +103,47 @@ export class AuthAPI {
 
   // Get current user profile
   static async getCurrentUser(): Promise<ApiResponse<User>> {
-    return apiClient.get<User>('/api/v1/auth/me');
+    const response = await apiClient.get<any>('/api/v1/profile/me');
+    if (!response.success || !response.data) return response as ApiResponse<User>;
+    const normalized = AuthAPI.normalizeAuthData({ user: response.data });
+    return { success: true, data: normalized.user };
   }
 
   // Update current user profile
   static async updateProfile(userData: Partial<User>): Promise<ApiResponse<User>> {
-    return apiClient.patch<User>('/api/v1/auth/me', userData);
+    return apiClient.put<User>('/api/v1/profile/me', userData);
   }
 
   // Change password
   static async changePassword(
     passwordData: ChangePasswordRequest
   ): Promise<ApiResponse<{ message: string }>> {
-    return apiClient.post<{ message: string }>('/api/v1/auth/change-password', passwordData);
+    return apiClient.post<{ message: string }>('/api/v1/profile/change-password', passwordData);
   }
 
   // Request password reset
   static async requestPasswordReset(
     resetData: ResetPasswordRequest
   ): Promise<ApiResponse<{ message: string }>> {
-    return apiClient.post<{ message: string }>('/api/v1/auth/reset-password', resetData);
+    return apiClient.post<{ message: string }>('/api/v1/auth/forgot-password', resetData);
   }
 
   // Confirm password reset with token
   static async confirmPasswordReset(
     confirmData: ConfirmResetPasswordRequest
   ): Promise<ApiResponse<{ message: string }>> {
-    return apiClient.post<{ message: string }>('/api/v1/auth/reset-password/confirm', confirmData);
+    return apiClient.post<{ message: string }>('/api/v1/auth/reset-password', confirmData);
   }
 
   // Verify email address
   static async verifyEmail(token: string): Promise<ApiResponse<{ message: string }>> {
-    return apiClient.post<{ message: string }>('/api/v1/auth/verify-email', { token });
+    // Backend uses GET /verify-email/{token}
+    return apiClient.get<{ message: string }>(`/api/v1/auth/verify-email/${encodeURIComponent(token)}`);
   }
 
   // Resend email verification
   static async resendVerification(email: string): Promise<ApiResponse<{ message: string }>> {
-    return apiClient.post<{ message: string }>('/api/v1/auth/verify-email/resend', { email });
+    return apiClient.post<{ message: string }>('/api/v1/auth/resend-verification', { email });
   }
 
   // Check if email is available

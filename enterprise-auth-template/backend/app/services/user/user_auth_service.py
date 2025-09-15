@@ -209,10 +209,9 @@ class UserAuthService:
                 user=UserResponse(
                     id=str(user.id),
                     email=user.email,
-                    first_name=user.first_name,
-                    last_name=user.last_name,
-                    is_active=user.is_active,
-                    is_verified=user.is_verified,
+                    full_name=user.full_name,
+                    name=user.full_name,
+                    email_verified=user.is_verified,
                     roles=role_names,
                     created_at=user.created_at.isoformat(),
                     updated_at=(

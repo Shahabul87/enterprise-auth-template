@@ -5,24 +5,24 @@ import '../../../data/services/notification_api_service.dart';
 import '../../widgets/common/loading_widget.dart';
 import '../../widgets/common/error_widget.dart';
 
-final notificationApiServiceProvider = Provider((ref) =&gt; NotificationApiService());
+final notificationApiServiceProvider = Provider((ref) => NotificationApiService());
 
 class NotificationTemplatesPage extends ConsumerStatefulWidget {
   const NotificationTemplatesPage({super.key});
 
   @override
-  ConsumerState&lt;NotificationTemplatesPage&gt; createState() =&gt; _NotificationTemplatesPageState();
+  ConsumerState<NotificationTemplatesPage> createState() => _NotificationTemplatesPageState();
 }
 
-class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTemplatesPage&gt; 
+class _NotificationTemplatesPageState extends ConsumerState<NotificationTemplatesPage> 
     with TickerProviderStateMixin {
   late TabController _tabController;
-  List&lt;NotificationTemplate&gt; _templates = [];
-  List&lt;NotificationBatch&gt; _batches = [];
-  List&lt;NotificationSubscription&gt; _subscriptions = [];
+  List<NotificationTemplate> _templates = [];
+  List<NotificationBatch> _batches = [];
+  List<NotificationSubscription> _subscriptions = [];
   bool _isLoading = true;
   String? _error;
-  String _searchQuery = &apos;&apos;;
+  String _searchQuery = '';
   NotificationType? _selectedTypeFilter;
 
   @override
@@ -38,7 +38,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
     super.dispose();
   }
 
-  Future&lt;void&gt; _loadData() async {
+  Future<void> _loadData() async {
     try {
       setState(() {
         _isLoading = true;
@@ -54,9 +54,9 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
 
       if (mounted) {
         setState(() {
-          _templates = results[0] as List&lt;NotificationTemplate&gt;;
-          _batches = results[1] as List&lt;NotificationBatch&gt;;
-          _subscriptions = results[2] as List&lt;NotificationSubscription&gt;;
+          _templates = results[0] as List<NotificationTemplate>;
+          _batches = results[1] as List<NotificationBatch>;
+          _subscriptions = results[2] as List<NotificationSubscription>;
           _isLoading = false;
         });
       }
@@ -89,13 +89,13 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(&apos;Notification Management&apos;),
+        title: const Text('Notification Management'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: &apos;Templates&apos;),
-            Tab(text: &apos;Batches&apos;),
-            Tab(text: &apos;Subscriptions&apos;),
+            Tab(text: 'Templates'),
+            Tab(text: 'Batches'),
+            Tab(text: 'Subscriptions'),
           ],
         ),
       ),
@@ -108,8 +108,8 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () =&gt; _showCreateMenu(context),
-        label: const Text(&apos;Create&apos;),
+        onPressed: () => _showCreateMenu(context),
+        label: const Text('Create'),
         icon: const Icon(Icons.add),
       ),
     );
@@ -124,7 +124,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
       final matchesType = _selectedTypeFilter == null ||
           template.type == _selectedTypeFilter;
       
-      return matchesSearch &amp;&amp; matchesType;
+      return matchesSearch && matchesType;
     }).toList();
 
     return Column(
@@ -132,7 +132,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
         _buildTemplateFilters(),
         Expanded(
           child: filteredTemplates.isEmpty
-              ? const Center(child: Text(&apos;No templates found&apos;))
+              ? const Center(child: Text('No templates found'))
               : ListView.builder(
                   itemCount: filteredTemplates.length,
                   itemBuilder: (context, index) {
@@ -152,7 +152,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
         children: [
           TextField(
             decoration: const InputDecoration(
-              hintText: &apos;Search templates...&apos;,
+              hintText: 'Search templates...',
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(),
             ),
@@ -163,19 +163,19 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
             },
           ),
           const SizedBox(height: 16),
-          DropdownButtonFormField&lt;NotificationType&gt;(
+          DropdownButtonFormField<NotificationType>(
             decoration: const InputDecoration(
-              labelText: &apos;Filter by Type&apos;,
+              labelText: 'Filter by Type',
               border: OutlineInputBorder(),
             ),
             value: _selectedTypeFilter,
             items: [
               const DropdownMenuItem(
                 value: null,
-                child: Text(&apos;All Types&apos;),
+                child: Text('All Types'),
               ),
               ...NotificationType.values.map(
-                (type) =&gt; DropdownMenuItem(
+                (type) => DropdownMenuItem(
                   value: type,
                   child: Text(type.displayName),
                 ),
@@ -218,56 +218,56 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
             ),
           ],
         ),
-        trailing: PopupMenuButton&lt;String&gt;(
-          onSelected: (action) =&gt; _handleTemplateAction(action, template),
-          itemBuilder: (context) =&gt; [
+        trailing: PopupMenuButton<String>(
+          onSelected: (action) => _handleTemplateAction(action, template),
+          itemBuilder: (context) => [
             const PopupMenuItem(
-              value: &apos;edit&apos;,
+              value: 'edit',
               child: Row(
                 children: [
                   Icon(Icons.edit),
                   SizedBox(width: 8),
-                  Text(&apos;Edit&apos;),
+                  Text('Edit'),
                 ],
               ),
             ),
             const PopupMenuItem(
-              value: &apos;test&apos;,
+              value: 'test',
               child: Row(
                 children: [
                   Icon(Icons.send),
                   SizedBox(width: 8),
-                  Text(&apos;Send Test&apos;),
+                  Text('Send Test'),
                 ],
               ),
             ),
             const PopupMenuItem(
-              value: &apos;batch&apos;,
+              value: 'batch',
               child: Row(
                 children: [
                   Icon(Icons.batch_prediction),
                   SizedBox(width: 8),
-                  Text(&apos;Create Batch&apos;),
+                  Text('Create Batch'),
                 ],
               ),
             ),
             const PopupMenuItem(
-              value: &apos;clone&apos;,
+              value: 'clone',
               child: Row(
                 children: [
                   Icon(Icons.copy),
                   SizedBox(width: 8),
-                  Text(&apos;Clone&apos;),
+                  Text('Clone'),
                 ],
               ),
             ),
             const PopupMenuItem(
-              value: &apos;delete&apos;,
+              value: 'delete',
               child: Row(
                 children: [
                   Icon(Icons.delete, color: Colors.red),
                   SizedBox(width: 8),
-                  Text(&apos;Delete&apos;, style: TextStyle(color: Colors.red)),
+                  Text('Delete', style: TextStyle(color: Colors.red)),
                 ],
               ),
             ),
@@ -280,7 +280,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  &apos;Title Template:&apos;,
+                  'Title Template:',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Container(
@@ -294,7 +294,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
                   child: Text(template.titleTemplate),
                 ),
                 const Text(
-                  &apos;Content Template:&apos;,
+                  'Content Template:',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Container(
@@ -309,14 +309,14 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
                 ),
                 if (template.variables?.isNotEmpty ?? false) ...[
                   const Text(
-                    &apos;Variables:&apos;,
+                    'Variables:',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
                   Wrap(
                     spacing: 4,
-                    children: template.variables!.keys.map((key) =&gt; Chip(
-                      label: Text(&apos;{$key}&apos;, style: const TextStyle(fontSize: 10)),
+                    children: template.variables!.keys.map((key) => Chip(
+                      label: Text('{$key}', style: const TextStyle(fontSize: 10)),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     )).toList(),
                   ),
@@ -324,7 +324,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
                 if (template.channelSettings != null) ...[
                   const SizedBox(height: 8),
                   const Text(
-                    &apos;Channel Settings:&apos;,
+                    'Channel Settings:',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
@@ -339,16 +339,16 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
   }
 
   Widget _buildChannelSettings(NotificationChannelSettings settings) {
-    final enabledChannels = &lt;String&gt;[];
-    if (settings.inApp) enabledChannels.add(&apos;In-App&apos;);
-    if (settings.email) enabledChannels.add(&apos;Email&apos;);
-    if (settings.sms) enabledChannels.add(&apos;SMS&apos;);
-    if (settings.push) enabledChannels.add(&apos;Push&apos;);
-    if (settings.webhook) enabledChannels.add(&apos;Webhook&apos;);
+    final enabledChannels = <String>[];
+    if (settings.inApp) enabledChannels.add('In-App');
+    if (settings.email) enabledChannels.add('Email');
+    if (settings.sms) enabledChannels.add('SMS');
+    if (settings.push) enabledChannels.add('Push');
+    if (settings.webhook) enabledChannels.add('Webhook');
 
     return Wrap(
       spacing: 4,
-      children: enabledChannels.map((channel) =&gt; Chip(
+      children: enabledChannels.map((channel) => Chip(
         label: Text(channel, style: const TextStyle(fontSize: 10)),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         backgroundColor: Colors.green.withOpacity(0.2),
@@ -367,7 +367,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
   }
 
   Widget _buildBatchCard(NotificationBatch batch) {
-    final progress = batch.totalCount &gt; 0 
+    final progress = batch.totalCount > 0 
         ? (batch.successCount + batch.failureCount) / batch.totalCount 
         : 0.0;
 
@@ -387,35 +387,35 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(&apos;Recipients: ${batch.recipients.length}&apos;),
-                Text(&apos;Status: ${batch.status.displayName}&apos;),
-                Text(&apos;Created: ${_formatDateTime(batch.createdAt)}&apos;),
+                Text('Recipients: ${batch.recipients.length}'),
+                Text('Status: ${batch.status.displayName}'),
+                Text('Created: ${_formatDateTime(batch.createdAt)}'),
                 if (batch.scheduledAt != null)
-                  Text(&apos;Scheduled: ${_formatDateTime(batch.scheduledAt!)}&apos;),
+                  Text('Scheduled: ${_formatDateTime(batch.scheduledAt!)}'),
               ],
             ),
-            trailing: PopupMenuButton&lt;String&gt;(
-              onSelected: (action) =&gt; _handleBatchAction(action, batch),
-              itemBuilder: (context) =&gt; [
+            trailing: PopupMenuButton<String>(
+              onSelected: (action) => _handleBatchAction(action, batch),
+              itemBuilder: (context) => [
                 if (batch.status == NotificationBatchStatus.scheduled ||
                     batch.status == NotificationBatchStatus.draft)
                   const PopupMenuItem(
-                    value: &apos;cancel&apos;,
+                    value: 'cancel',
                     child: Row(
                       children: [
                         Icon(Icons.cancel),
                         SizedBox(width: 8),
-                        Text(&apos;Cancel&apos;),
+                        Text('Cancel'),
                       ],
                     ),
                   ),
                 const PopupMenuItem(
-                  value: &apos;details&apos;,
+                  value: 'details',
                   child: Row(
                     children: [
                       Icon(Icons.visibility),
                       SizedBox(width: 8),
-                      Text(&apos;View Details&apos;),
+                      Text('View Details'),
                     ],
                   ),
                 ),
@@ -430,7 +430,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
                 children: [
                   LinearProgressIndicator(value: progress),
                   const SizedBox(height: 8),
-                  Text(&apos;Progress: ${(progress * 100).toStringAsFixed(1)}%&apos;),
+                  Text('Progress: ${(progress * 100).toStringAsFixed(1)}%'),
                 ],
               ),
             ),
@@ -443,15 +443,15 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
               child: Row(
                 children: [
                   Expanded(
-                    child: _buildStatCard(&apos;Total&apos;, batch.totalCount.toString(), Colors.blue),
+                    child: _buildStatCard('Total', batch.totalCount.toString(), Colors.blue),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: _buildStatCard(&apos;Success&apos;, batch.successCount.toString(), Colors.green),
+                    child: _buildStatCard('Success', batch.successCount.toString(), Colors.green),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: _buildStatCard(&apos;Failed&apos;, batch.failureCount.toString(), Colors.red),
+                    child: _buildStatCard('Failed', batch.failureCount.toString(), Colors.red),
                   ),
                 ],
               ),
@@ -488,31 +488,31 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(subscription.endpoint),
-            Text(&apos;Created: ${_formatDateTime(subscription.createdAt!)}&apos;),
+            Text('Created: ${_formatDateTime(subscription.createdAt!)}'),
             if (subscription.lastUsedAt != null)
-              Text(&apos;Last used: ${_formatDateTime(subscription.lastUsedAt!)}&apos;),
+              Text('Last used: ${_formatDateTime(subscription.lastUsedAt!)}'),
           ],
         ),
-        trailing: PopupMenuButton&lt;String&gt;(
-          onSelected: (action) =&gt; _handleSubscriptionAction(action, subscription),
-          itemBuilder: (context) =&gt; [
+        trailing: PopupMenuButton<String>(
+          onSelected: (action) => _handleSubscriptionAction(action, subscription),
+          itemBuilder: (context) => [
             const PopupMenuItem(
-              value: &apos;test&apos;,
+              value: 'test',
               child: Row(
                 children: [
                   Icon(Icons.send),
                   SizedBox(width: 8),
-                  Text(&apos;Test&apos;),
+                  Text('Test'),
                 ],
               ),
             ),
             const PopupMenuItem(
-              value: &apos;delete&apos;,
+              value: 'delete',
               child: Row(
                 children: [
                   Icon(Icons.delete, color: Colors.red),
                   SizedBox(width: 8),
-                  Text(&apos;Delete&apos;, style: TextStyle(color: Colors.red)),
+                  Text('Delete', style: TextStyle(color: Colors.red)),
                 ],
               ),
             ),
@@ -555,12 +555,12 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
   void _showCreateMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (context) =&gt; Column(
+      builder: (context) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
             leading: const Icon(Icons.template_sharp),
-            title: const Text(&apos;Create Template&apos;),
+            title: const Text('Create Template'),
             onTap: () {
               Navigator.pop(context);
               _showCreateTemplateDialog();
@@ -568,7 +568,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
           ),
           ListTile(
             leading: const Icon(Icons.batch_prediction),
-            title: const Text(&apos;Create Batch&apos;),
+            title: const Text('Create Batch'),
             onTap: () {
               Navigator.pop(context);
               _showCreateBatchDialog();
@@ -576,7 +576,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
           ),
           ListTile(
             leading: const Icon(Icons.subscriptions),
-            title: const Text(&apos;Add Subscription&apos;),
+            title: const Text('Add Subscription'),
             onTap: () {
               Navigator.pop(context);
               _showCreateSubscriptionDialog();
@@ -590,20 +590,20 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
   void _showCreateTemplateDialog() {
     showDialog(
       context: context,
-      builder: (context) =&gt; _TemplateEditDialog(
+      builder: (context) => _TemplateEditDialog(
         onSaved: (template) async {
           try {
             await ref.read(notificationApiServiceProvider).createTemplate(template);
             _loadData();
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text(&apos;Template created successfully&apos;)),
+                const SnackBar(content: Text('Template created successfully')),
               );
             }
           } catch (e) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+                SnackBar(content: Text('Error: ${e.toString()}')),
               );
             }
           }
@@ -615,14 +615,14 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
   void _showCreateBatchDialog() {
     if (_templates.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(&apos;No templates available. Create a template first.&apos;)),
+        const SnackBar(content: Text('No templates available. Create a template first.')),
       );
       return;
     }
 
     showDialog(
       context: context,
-      builder: (context) =&gt; _BatchCreateDialog(
+      builder: (context) => _BatchCreateDialog(
         templates: _templates,
         onSaved: (title, recipients, templateId, variables, scheduledAt) async {
           try {
@@ -636,13 +636,13 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
             _loadData();
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text(&apos;Batch created successfully&apos;)),
+                const SnackBar(content: Text('Batch created successfully')),
               );
             }
           } catch (e) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+                SnackBar(content: Text('Error: ${e.toString()}')),
               );
             }
           }
@@ -654,7 +654,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
   void _showCreateSubscriptionDialog() {
     showDialog(
       context: context,
-      builder: (context) =&gt; _SubscriptionCreateDialog(
+      builder: (context) => _SubscriptionCreateDialog(
         onSaved: (channel, endpoint, credentials) async {
           try {
             await ref.read(notificationApiServiceProvider).createSubscription(
@@ -665,13 +665,13 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
             _loadData();
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text(&apos;Subscription created successfully&apos;)),
+                const SnackBar(content: Text('Subscription created successfully')),
               );
             }
           } catch (e) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+                SnackBar(content: Text('Error: ${e.toString()}')),
               );
             }
           }
@@ -685,10 +685,10 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
     
     try {
       switch (action) {
-        case &apos;edit&apos;:
+        case 'edit':
           _showEditTemplateDialog(template);
           break;
-        case &apos;test&apos;:
+        case 'test':
           await service.sendTestNotification(
             title: template.titleTemplate,
             content: template.contentTemplate,
@@ -696,25 +696,25 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
           );
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text(&apos;Test notification sent&apos;)),
+              const SnackBar(content: Text('Test notification sent')),
             );
           }
           break;
-        case &apos;batch&apos;:
+        case 'batch':
           // Open batch creation with this template selected
           _showCreateBatchDialog();
           break;
-        case &apos;clone&apos;:
+        case 'clone':
           final cloned = template.copyWith(
-            id: &apos;&apos;, // Will be assigned by server
-            name: &apos;${template.name} (Copy)&apos;,
+            id: '', // Will be assigned by server
+            name: '${template.name} (Copy)',
             createdAt: null,
             updatedAt: null,
           );
           await service.createTemplate(cloned);
           _loadData();
           break;
-        case &apos;delete&apos;:
+        case 'delete':
           final confirmed = await _showDeleteConfirmation(template.name);
           if (confirmed) {
             await service.deleteTemplate(template.id);
@@ -725,7 +725,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+          SnackBar(content: Text('Error: ${e.toString()}')),
         );
       }
     }
@@ -736,18 +736,18 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
     
     try {
       switch (action) {
-        case &apos;cancel&apos;:
+        case 'cancel':
           await service.cancelBatch(batch.id);
           _loadData();
           break;
-        case &apos;details&apos;:
+        case 'details':
           _showBatchDetails(batch);
           break;
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+          SnackBar(content: Text('Error: ${e.toString()}')),
         );
       }
     }
@@ -758,20 +758,20 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
     
     try {
       switch (action) {
-        case &apos;test&apos;:
+        case 'test':
           await service.sendTestNotification(
-            title: &apos;Test Notification&apos;,
-            content: &apos;This is a test notification for ${subscription.channel.displayName}&apos;,
+            title: 'Test Notification',
+            content: 'This is a test notification for ${subscription.channel.displayName}',
             channels: [subscription.channel],
           );
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text(&apos;Test notification sent&apos;)),
+              const SnackBar(content: Text('Test notification sent')),
             );
           }
           break;
-        case &apos;delete&apos;:
-          final confirmed = await _showDeleteConfirmation(&apos;subscription&apos;);
+        case 'delete':
+          final confirmed = await _showDeleteConfirmation('subscription');
           if (confirmed) {
             await service.deleteSubscription(subscription.id);
             _loadData();
@@ -781,7 +781,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+          SnackBar(content: Text('Error: ${e.toString()}')),
         );
       }
     }
@@ -790,7 +790,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
   void _showEditTemplateDialog(NotificationTemplate template) {
     showDialog(
       context: context,
-      builder: (context) =&gt; _TemplateEditDialog(
+      builder: (context) => _TemplateEditDialog(
         template: template,
         onSaved: (updatedTemplate) async {
           try {
@@ -799,13 +799,13 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
             _loadData();
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text(&apos;Template updated successfully&apos;)),
+                const SnackBar(content: Text('Template updated successfully')),
               );
             }
           } catch (e) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+                SnackBar(content: Text('Error: ${e.toString()}')),
               );
             }
           }
@@ -817,8 +817,8 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
   void _showBatchDetails(NotificationBatch batch) {
     showDialog(
       context: context,
-      builder: (context) =&gt; AlertDialog(
-        title: Text(&apos;Batch Details: ${batch.title}&apos;),
+      builder: (context) => AlertDialog(
+        title: Text('Batch Details: ${batch.title}'),
         content: SizedBox(
           width: double.maxFinite,
           child: SingleChildScrollView(
@@ -826,19 +826,19 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildDetailRow(&apos;Status&apos;, batch.status.displayName),
-                _buildDetailRow(&apos;Total Recipients&apos;, batch.totalCount.toString()),
-                _buildDetailRow(&apos;Successful&apos;, batch.successCount.toString()),
-                _buildDetailRow(&apos;Failed&apos;, batch.failureCount.toString()),
-                _buildDetailRow(&apos;Created&apos;, _formatDateTime(batch.createdAt)),
+                _buildDetailRow('Status', batch.status.displayName),
+                _buildDetailRow('Total Recipients', batch.totalCount.toString()),
+                _buildDetailRow('Successful', batch.successCount.toString()),
+                _buildDetailRow('Failed', batch.failureCount.toString()),
+                _buildDetailRow('Created', _formatDateTime(batch.createdAt)),
                 if (batch.scheduledAt != null)
-                  _buildDetailRow(&apos;Scheduled&apos;, _formatDateTime(batch.scheduledAt!)),
+                  _buildDetailRow('Scheduled', _formatDateTime(batch.scheduledAt!)),
                 if (batch.completedAt != null)
-                  _buildDetailRow(&apos;Completed&apos;, _formatDateTime(batch.completedAt!)),
+                  _buildDetailRow('Completed', _formatDateTime(batch.completedAt!)),
                 if (batch.errorMessage != null) ...[
                   const SizedBox(height: 8),
                   const Text(
-                    &apos;Error Message:&apos;,
+                    'Error Message:',
                     style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
                   ),
                   Text(batch.errorMessage!, style: const TextStyle(color: Colors.red)),
@@ -849,29 +849,29 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
         ),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(),
-            child: const Text(&apos;Close&apos;),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),
     );
   }
 
-  Future&lt;bool&gt; _showDeleteConfirmation(String itemName) async {
-    return await showDialog&lt;bool&gt;(
+  Future<bool> _showDeleteConfirmation(String itemName) async {
+    return await showDialog<bool>(
       context: context,
-      builder: (context) =&gt; AlertDialog(
-        title: const Text(&apos;Confirm Delete&apos;),
-        content: Text(&apos;Are you sure you want to delete &quot;$itemName&quot;?&apos;),
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Delete'),
+        content: Text('Are you sure you want to delete "$itemName"?'),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(false),
-            child: const Text(&apos;Cancel&apos;),
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(true),
+            onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text(&apos;Delete&apos;),
+            child: const Text('Delete'),
           ),
         ],
       ),
@@ -887,7 +887,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
           SizedBox(
             width: 100,
             child: Text(
-              &apos;$label:&apos;,
+              '$label:',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
@@ -953,7 +953,7 @@ class _NotificationTemplatesPageState extends ConsumerState&lt;NotificationTempl
   }
 
   String _formatDateTime(DateTime dateTime) {
-    return &apos;${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, &apos;0&apos;)}&apos;;
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }
 
@@ -968,11 +968,11 @@ class _TemplateEditDialog extends StatefulWidget {
   });
 
   @override
-  State&lt;_TemplateEditDialog&gt; createState() =&gt; _TemplateEditDialogState();
+  State<_TemplateEditDialog> createState() => _TemplateEditDialogState();
 }
 
-class _TemplateEditDialogState extends State&lt;_TemplateEditDialog&gt; {
-  final _formKey = GlobalKey&lt;FormState&gt;();
+class _TemplateEditDialogState extends State<_TemplateEditDialog> {
+  final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   late TextEditingController _titleTemplateController;
@@ -984,10 +984,10 @@ class _TemplateEditDialogState extends State&lt;_TemplateEditDialog&gt; {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.template?.name ?? &apos;&apos;);
-    _descriptionController = TextEditingController(text: widget.template?.description ?? &apos;&apos;);
-    _titleTemplateController = TextEditingController(text: widget.template?.titleTemplate ?? &apos;&apos;);
-    _contentTemplateController = TextEditingController(text: widget.template?.contentTemplate ?? &apos;&apos;);
+    _nameController = TextEditingController(text: widget.template?.name ?? '');
+    _descriptionController = TextEditingController(text: widget.template?.description ?? '');
+    _titleTemplateController = TextEditingController(text: widget.template?.titleTemplate ?? '');
+    _contentTemplateController = TextEditingController(text: widget.template?.contentTemplate ?? '');
     
     if (widget.template != null) {
       _selectedType = widget.template!.type;
@@ -1008,7 +1008,7 @@ class _TemplateEditDialogState extends State&lt;_TemplateEditDialog&gt; {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.template == null ? &apos;Create Template&apos; : &apos;Edit Template&apos;),
+      title: Text(widget.template == null ? 'Create Template' : 'Edit Template'),
       content: SizedBox(
         width: double.maxFinite,
         height: 400,
@@ -1021,55 +1021,55 @@ class _TemplateEditDialogState extends State&lt;_TemplateEditDialog&gt; {
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(
-                    labelText: &apos;Name&apos;,
+                    labelText: 'Name',
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) =&gt; value?.isEmpty ?? true ? &apos;Name is required&apos; : null,
+                  validator: (value) => value?.isEmpty ?? true ? 'Name is required' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _descriptionController,
                   decoration: const InputDecoration(
-                    labelText: &apos;Description&apos;,
+                    labelText: 'Description',
                     border: OutlineInputBorder(),
                   ),
                   maxLines: 2,
                 ),
                 const SizedBox(height: 16),
-                DropdownButtonFormField&lt;NotificationType&gt;(
+                DropdownButtonFormField<NotificationType>(
                   decoration: const InputDecoration(
-                    labelText: &apos;Type&apos;,
+                    labelText: 'Type',
                     border: OutlineInputBorder(),
                   ),
                   value: _selectedType,
                   items: NotificationType.values.map(
-                    (type) =&gt; DropdownMenuItem(
+                    (type) => DropdownMenuItem(
                       value: type,
                       child: Text(type.displayName),
                     ),
                   ).toList(),
-                  onChanged: (value) =&gt; setState(() =&gt; _selectedType = value!),
+                  onChanged: (value) => setState(() => _selectedType = value!),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _titleTemplateController,
                   decoration: const InputDecoration(
-                    labelText: &apos;Title Template&apos;,
+                    labelText: 'Title Template',
                     border: OutlineInputBorder(),
-                    hintText: &apos;Use {variable_name} for dynamic content&apos;,
+                    hintText: 'Use {variable_name} for dynamic content',
                   ),
-                  validator: (value) =&gt; value?.isEmpty ?? true ? &apos;Title template is required&apos; : null,
+                  validator: (value) => value?.isEmpty ?? true ? 'Title template is required' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _contentTemplateController,
                   decoration: const InputDecoration(
-                    labelText: &apos;Content Template&apos;,
+                    labelText: 'Content Template',
                     border: OutlineInputBorder(),
-                    hintText: &apos;Use {variable_name} for dynamic content&apos;,
+                    hintText: 'Use {variable_name} for dynamic content',
                   ),
                   maxLines: 3,
-                  validator: (value) =&gt; value?.isEmpty ?? true ? &apos;Content template is required&apos; : null,
+                  validator: (value) => value?.isEmpty ?? true ? 'Content template is required' : null,
                 ),
               ],
             ),
@@ -1078,12 +1078,12 @@ class _TemplateEditDialogState extends State&lt;_TemplateEditDialog&gt; {
       ),
       actions: [
         TextButton(
-          onPressed: () =&gt; Navigator.of(context).pop(),
-          child: const Text(&apos;Cancel&apos;),
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _saveTemplate,
-          child: Text(widget.template == null ? &apos;Create&apos; : &apos;Save&apos;),
+          child: Text(widget.template == null ? 'Create' : 'Save'),
         ),
       ],
     );
@@ -1092,7 +1092,7 @@ class _TemplateEditDialogState extends State&lt;_TemplateEditDialog&gt; {
   void _saveTemplate() {
     if (_formKey.currentState?.validate() ?? false) {
       final template = NotificationTemplate(
-        id: widget.template?.id ?? &apos;&apos;,
+        id: widget.template?.id ?? '',
         name: _nameController.text,
         description: _descriptionController.text,
         type: _selectedType,
@@ -1111,8 +1111,8 @@ class _TemplateEditDialogState extends State&lt;_TemplateEditDialog&gt; {
 
 // Batch Create Dialog
 class _BatchCreateDialog extends StatefulWidget {
-  final List&lt;NotificationTemplate&gt; templates;
-  final Function(String, List&lt;String&gt;, String, Map&lt;String, dynamic&gt;, DateTime?) onSaved;
+  final List<NotificationTemplate> templates;
+  final Function(String, List<String>, String, Map<String, dynamic>, DateTime?) onSaved;
 
   const _BatchCreateDialog({
     required this.templates,
@@ -1120,10 +1120,10 @@ class _BatchCreateDialog extends StatefulWidget {
   });
 
   @override
-  State&lt;_BatchCreateDialog&gt; createState() =&gt; _BatchCreateDialogState();
+  State<_BatchCreateDialog> createState() => _BatchCreateDialogState();
 }
 
-class _BatchCreateDialogState extends State&lt;_BatchCreateDialog&gt; {
+class _BatchCreateDialogState extends State<_BatchCreateDialog> {
   final _titleController = TextEditingController();
   final _recipientsController = TextEditingController();
   NotificationTemplate? _selectedTemplate;
@@ -1139,7 +1139,7 @@ class _BatchCreateDialogState extends State&lt;_BatchCreateDialog&gt; {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text(&apos;Create Notification Batch&apos;),
+      title: const Text('Create Notification Batch'),
       content: SizedBox(
         width: double.maxFinite,
         child: Column(
@@ -1148,41 +1148,41 @@ class _BatchCreateDialogState extends State&lt;_BatchCreateDialog&gt; {
             TextFormField(
               controller: _titleController,
               decoration: const InputDecoration(
-                labelText: &apos;Batch Title&apos;,
+                labelText: 'Batch Title',
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField&lt;NotificationTemplate&gt;(
+            DropdownButtonFormField<NotificationTemplate>(
               decoration: const InputDecoration(
-                labelText: &apos;Template&apos;,
+                labelText: 'Template',
                 border: OutlineInputBorder(),
               ),
               value: _selectedTemplate,
               items: widget.templates.map(
-                (template) =&gt; DropdownMenuItem(
+                (template) => DropdownMenuItem(
                   value: template,
                   child: Text(template.name),
                 ),
               ).toList(),
-              onChanged: (value) =&gt; setState(() =&gt; _selectedTemplate = value),
+              onChanged: (value) => setState(() => _selectedTemplate = value),
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _recipientsController,
               decoration: const InputDecoration(
-                labelText: &apos;Recipients (comma-separated)&apos;,
+                labelText: 'Recipients (comma-separated)',
                 border: OutlineInputBorder(),
-                hintText: &apos;user1@example.com, user2@example.com&apos;,
+                hintText: 'user1@example.com, user2@example.com',
               ),
               maxLines: 3,
             ),
             const SizedBox(height: 16),
             ListTile(
-              title: const Text(&apos;Schedule for later&apos;),
+              title: const Text('Schedule for later'),
               subtitle: _scheduledAt != null 
-                  ? Text(&apos;Scheduled: ${_scheduledAt!.toString().split(&apos;.&apos;)[0]}&apos;)
-                  : const Text(&apos;Send immediately&apos;),
+                  ? Text('Scheduled: ${_scheduledAt!.toString().split('.')[0]}')
+                  : const Text('Send immediately'),
               trailing: const Icon(Icons.schedule),
               onTap: _pickScheduleTime,
             ),
@@ -1191,8 +1191,8 @@ class _BatchCreateDialogState extends State&lt;_BatchCreateDialog&gt; {
       ),
       actions: [
         TextButton(
-          onPressed: () =&gt; Navigator.of(context).pop(),
-          child: const Text(&apos;Cancel&apos;),
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _selectedTemplate == null || 
@@ -1200,7 +1200,7 @@ class _BatchCreateDialogState extends State&lt;_BatchCreateDialog&gt; {
                      _recipientsController.text.isEmpty
               ? null
               : _createBatch,
-          child: const Text(&apos;Create&apos;),
+          child: const Text('Create'),
         ),
       ],
     );
@@ -1230,9 +1230,9 @@ class _BatchCreateDialogState extends State&lt;_BatchCreateDialog&gt; {
 
   void _createBatch() {
     final recipients = _recipientsController.text
-        .split(&apos;,&apos;)
-        .map((e) =&gt; e.trim())
-        .where((e) =&gt; e.isNotEmpty)
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
         .toList();
 
     widget.onSaved(
@@ -1248,17 +1248,17 @@ class _BatchCreateDialogState extends State&lt;_BatchCreateDialog&gt; {
 
 // Subscription Create Dialog
 class _SubscriptionCreateDialog extends StatefulWidget {
-  final Function(NotificationChannel, String, Map&lt;String, dynamic&gt;?) onSaved;
+  final Function(NotificationChannel, String, Map<String, dynamic>?) onSaved;
 
   const _SubscriptionCreateDialog({
     required this.onSaved,
   });
 
   @override
-  State&lt;_SubscriptionCreateDialog&gt; createState() =&gt; _SubscriptionCreateDialogState();
+  State<_SubscriptionCreateDialog> createState() => _SubscriptionCreateDialogState();
 }
 
-class _SubscriptionCreateDialogState extends State&lt;_SubscriptionCreateDialog&gt; {
+class _SubscriptionCreateDialogState extends State<_SubscriptionCreateDialog> {
   final _endpointController = TextEditingController();
   NotificationChannel _selectedChannel = NotificationChannel.webhook;
 
@@ -1271,23 +1271,23 @@ class _SubscriptionCreateDialogState extends State&lt;_SubscriptionCreateDialog&
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text(&apos;Add Subscription&apos;),
+      title: const Text('Add Subscription'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          DropdownButtonFormField&lt;NotificationChannel&gt;(
+          DropdownButtonFormField<NotificationChannel>(
             decoration: const InputDecoration(
-              labelText: &apos;Channel&apos;,
+              labelText: 'Channel',
               border: OutlineInputBorder(),
             ),
             value: _selectedChannel,
             items: NotificationChannel.values.map(
-              (channel) =&gt; DropdownMenuItem(
+              (channel) => DropdownMenuItem(
                 value: channel,
                 child: Text(channel.displayName),
               ),
             ).toList(),
-            onChanged: (value) =&gt; setState(() =&gt; _selectedChannel = value!),
+            onChanged: (value) => setState(() => _selectedChannel = value!),
           ),
           const SizedBox(height: 16),
           TextFormField(
@@ -1302,12 +1302,12 @@ class _SubscriptionCreateDialogState extends State&lt;_SubscriptionCreateDialog&
       ),
       actions: [
         TextButton(
-          onPressed: () =&gt; Navigator.of(context).pop(),
-          child: const Text(&apos;Cancel&apos;),
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _endpointController.text.isEmpty ? null : _createSubscription,
-          child: const Text(&apos;Add&apos;),
+          child: const Text('Add'),
         ),
       ],
     );
@@ -1316,30 +1316,30 @@ class _SubscriptionCreateDialogState extends State&lt;_SubscriptionCreateDialog&
   String _getEndpointLabel(NotificationChannel channel) {
     switch (channel) {
       case NotificationChannel.webhook:
-        return &apos;Webhook URL&apos;;
+        return 'Webhook URL';
       case NotificationChannel.email:
-        return &apos;Email Address&apos;;
+        return 'Email Address';
       case NotificationChannel.sms:
-        return &apos;Phone Number&apos;;
+        return 'Phone Number';
       case NotificationChannel.push:
-        return &apos;Device Token&apos;;
+        return 'Device Token';
       case NotificationChannel.inApp:
-        return &apos;User ID&apos;;
+        return 'User ID';
     }
   }
 
   String _getEndpointHint(NotificationChannel channel) {
     switch (channel) {
       case NotificationChannel.webhook:
-        return &apos;https://example.com/webhook&apos;;
+        return 'https://example.com/webhook';
       case NotificationChannel.email:
-        return &apos;user@example.com&apos;;
+        return 'user@example.com';
       case NotificationChannel.sms:
-        return &apos;+1234567890&apos;;
+        return '+1234567890';
       case NotificationChannel.push:
-        return &apos;Device registration token&apos;;
+        return 'Device registration token';
       case NotificationChannel.inApp:
-        return &apos;user123&apos;;
+        return 'user123';
     }
   }
 

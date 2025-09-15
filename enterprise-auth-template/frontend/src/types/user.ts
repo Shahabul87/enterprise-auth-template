@@ -4,7 +4,7 @@ export interface User {
   first_name: string;
   last_name: string;
   is_active: boolean;
-  is_verified: boolean;
+  email_verified: boolean;
   is_superuser: boolean;
   created_at: string;
   updated_at: string;
@@ -32,7 +32,7 @@ export interface CreateUserRequest {
   first_name: string;
   last_name: string;
   is_active?: boolean;
-  is_verified?: boolean;
+  email_verified?: boolean;
   is_superuser?: boolean;
   role_ids?: string[];
 }
@@ -42,7 +42,7 @@ export interface UpdateUserRequest {
   first_name?: string;
   last_name?: string;
   is_active?: boolean;
-  is_verified?: boolean;
+  email_verified?: boolean;
   is_superuser?: boolean;
   role_ids?: string[];
 }
@@ -52,7 +52,7 @@ export interface UserListParams extends Record<string, unknown> {
   per_page?: number;
   search?: string;
   is_active?: boolean;
-  is_verified?: boolean;
+  email_verified?: boolean;
   role_id?: string;
   sort_by?: string;
   sort_order?: 'asc' | 'desc';

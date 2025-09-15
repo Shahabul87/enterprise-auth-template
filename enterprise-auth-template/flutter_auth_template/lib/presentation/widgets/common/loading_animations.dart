@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class LoadingAnimations {
   LoadingAnimations._();
@@ -824,5 +825,3 @@ extension LoadingStateExtension on Widget {
   }
 }
 
-// Import required for math functions
-import 'dart:math' as math;

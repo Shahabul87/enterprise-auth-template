@@ -21,7 +21,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 os.environ["ENVIRONMENT"] = "test"
 os.environ["TESTING"] = "true"
 os.environ["SECRET_KEY"] = secrets.token_urlsafe(32)
-os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///./test.db"
+os.environ["DATABASE_URL"] = "postgresql+asyncpg://enterprise_user:enterprise_password_2024@localhost:5432/enterprise_auth_test"
 
 from app.core.database import Base, get_db_session
 from app.core.security import create_access_token, get_password_hash
@@ -33,16 +33,13 @@ from app.services.cache_service import CacheService
 
 
 # Test database setup
-TEST_DATABASE_URL = "sqlite+aiosqlite:///./test.db"
+TEST_DATABASE_URL = "postgresql+asyncpg://enterprise_user:enterprise_password_2024@localhost:5432/enterprise_auth_test"
 
 # Create async test engine
 test_engine = create_async_engine(
     TEST_DATABASE_URL,
     echo=False,
     poolclass=StaticPool,
-    connect_args={
-        "check_same_thread": False,
-    },
 )
 
 TestSessionLocal = async_sessionmaker(
@@ -164,8 +161,7 @@ async def test_user(db_session: AsyncSession) -> User:
     user = User(
         email="test@example.com",
         hashed_password=get_password_hash("testpassword123"),
-        first_name="Test",
-        last_name="User",
+        full_name="Test User",
         is_active=True,
         is_verified=True,
         is_superuser=False,
@@ -211,8 +207,7 @@ async def admin_user(db_session: AsyncSession) -> User:
     admin = User(
         email="admin@example.com",
         hashed_password=get_password_hash("adminpassword123"),
-        first_name="Admin",
-        last_name="User",
+        full_name="Admin User",
         is_active=True,
         is_verified=True,
         is_superuser=True,
@@ -270,8 +265,7 @@ def user_create_data():
     return {
         "email": "newuser@example.com",
         "password": "SecurePassword123!",
-        "first_name": "New",
-        "last_name": "User",
+        "full_name": "New User",
     }
 
 
@@ -301,8 +295,7 @@ def sample_users_data():
         {
             "email": f"user{i}@example.com",
             "password": "TestPassword123!",
-            "first_name": f"User{i}",
-            "last_name": "Test",
+            "full_name": f"User{i} Test",
         }
         for i in range(1, 11)  # 10 sample users
     ]
@@ -340,8 +333,7 @@ async def populated_database(db_session: AsyncSession, sample_users_data):
         user = User(
             email=user_data["email"],
             hashed_password=get_password_hash(user_data["password"]),
-            first_name=user_data["first_name"],
-            last_name=user_data["last_name"],
+            full_name=user_data["full_name"],
             is_active=True,
             is_verified=True,
             is_superuser=False,

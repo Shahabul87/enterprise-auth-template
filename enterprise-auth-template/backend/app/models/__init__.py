@@ -26,6 +26,7 @@ from app.models.notification import (
     NotificationStatus,
     NotificationCategory
 )
+from app.models.device import UserDevice
 
 # Note: Using enhanced models from separate files for new features
 # The basic Role/Permission models in user.py will be migrated in future updates
@@ -53,4 +54,5 @@ __all__ = [
     "NotificationPriority",
     "NotificationStatus",
     "NotificationCategory",
+    "UserDevice",
 ]

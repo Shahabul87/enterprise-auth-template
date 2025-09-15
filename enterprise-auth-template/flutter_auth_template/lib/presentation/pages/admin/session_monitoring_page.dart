@@ -7,24 +7,24 @@ import '../../widgets/common/error_widget.dart';
 import '../../widgets/charts/line_chart_widget.dart';
 import '../../widgets/charts/pie_chart_widget.dart';
 
-final analyticsApiServiceProvider = Provider((ref) =&gt; AnalyticsApiService());
+final analyticsApiServiceProvider = Provider((ref) => AnalyticsApiService());
 
 class SessionMonitoringPage extends ConsumerStatefulWidget {
   const SessionMonitoringPage({super.key});
 
   @override
-  ConsumerState&lt;SessionMonitoringPage&gt; createState() =&gt; _SessionMonitoringPageState();
+  ConsumerState<SessionMonitoringPage> createState() => _SessionMonitoringPageState();
 }
 
-class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage&gt; 
+class _SessionMonitoringPageState extends ConsumerState<SessionMonitoringPage> 
     with TickerProviderStateMixin {
   late TabController _tabController;
-  List&lt;UserSessionDetails&gt; _activeSessions = [];
-  List&lt;SessionSecurityAlert&gt; _securityAlerts = [];
+  List<UserSessionDetails> _activeSessions = [];
+  List<SessionSecurityAlert> _securityAlerts = [];
   SessionAnalytics? _sessionAnalytics;
   bool _isLoading = true;
   String? _error;
-  String _searchQuery = &apos;&apos;;
+  String _searchQuery = '';
   SessionStatus? _selectedStatusFilter;
   DateTime? _selectedDateFilter;
 
@@ -41,7 +41,7 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
     super.dispose();
   }
 
-  Future&lt;void&gt; _loadData() async {
+  Future<void> _loadData() async {
     try {
       setState(() {
         _isLoading = true;
@@ -57,8 +57,8 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
 
       if (mounted) {
         setState(() {
-          _activeSessions = results[0] as List&lt;UserSessionDetails&gt;;
-          _securityAlerts = results[1] as List&lt;SessionSecurityAlert&gt;;
+          _activeSessions = results[0] as List<UserSessionDetails>;
+          _securityAlerts = results[1] as List<SessionSecurityAlert>;
           _sessionAnalytics = results[2] as SessionAnalytics;
           _isLoading = false;
         });
@@ -92,7 +92,7 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(&apos;Session Monitoring&apos;),
+        title: const Text('Session Monitoring'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -102,9 +102,9 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: &apos;Active Sessions&apos;),
-            Tab(text: &apos;Security Alerts&apos;),
-            Tab(text: &apos;Analytics&apos;),
+            Tab(text: 'Active Sessions'),
+            Tab(text: 'Security Alerts'),
+            Tab(text: 'Analytics'),
           ],
         ),
       ),
@@ -133,7 +133,7 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
           session.lastActivity.isAfter(_selectedDateFilter!) ||
           session.createdAt.isAfter(_selectedDateFilter!);
       
-      return matchesSearch &amp;&amp; matchesStatus &amp;&amp; matchesDate;
+      return matchesSearch && matchesStatus && matchesDate;
     }).toList();
 
     return Column(
@@ -142,7 +142,7 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
         _buildSessionsStats(),
         Expanded(
           child: filteredSessions.isEmpty
-              ? const Center(child: Text(&apos;No active sessions found&apos;))
+              ? const Center(child: Text('No active sessions found'))
               : ListView.builder(
                   itemCount: filteredSessions.length,
                   itemBuilder: (context, index) {
@@ -162,7 +162,7 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
         children: [
           TextField(
             decoration: const InputDecoration(
-              hintText: &apos;Search by user, IP, or device...&apos;,
+              hintText: 'Search by user, IP, or device...',
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(),
             ),
@@ -176,19 +176,19 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
           Row(
             children: [
               Expanded(
-                child: DropdownButtonFormField&lt;SessionStatus&gt;(
+                child: DropdownButtonFormField<SessionStatus>(
                   decoration: const InputDecoration(
-                    labelText: &apos;Status&apos;,
+                    labelText: 'Status',
                     border: OutlineInputBorder(),
                   ),
                   value: _selectedStatusFilter,
                   items: [
                     const DropdownMenuItem(
                       value: null,
-                      child: Text(&apos;All Status&apos;),
+                      child: Text('All Status'),
                     ),
                     ...SessionStatus.values.map(
-                      (status) =&gt; DropdownMenuItem(
+                      (status) => DropdownMenuItem(
                         value: status,
                         child: Text(status.displayName),
                       ),
@@ -206,8 +206,8 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
                 child: OutlinedButton.icon(
                   icon: const Icon(Icons.date_range),
                   label: Text(_selectedDateFilter == null 
-                      ? &apos;Filter by Date&apos; 
-                      : &apos;Since ${_formatDate(_selectedDateFilter!)}&apos;),
+                      ? 'Filter by Date' 
+                      : 'Since ${_formatDate(_selectedDateFilter!)}'),
                   onPressed: _selectDateFilter,
                 ),
               ),
@@ -219,28 +219,28 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
   }
 
   Widget _buildSessionsStats() {
-    final activeCount = _activeSessions.where((s) =&gt; s.status == SessionStatus.active).length;
-    final suspiciousCount = _activeSessions.where((s) =&gt; s.isSuspicious).length;
-    final mobileCount = _activeSessions.where((s) =&gt; s.deviceType == DeviceType.mobile).length;
+    final activeCount = _activeSessions.where((s) => s.status == SessionStatus.active).length;
+    final suspiciousCount = _activeSessions.where((s) => s.isSuspicious).length;
+    final mobileCount = _activeSessions.where((s) => s.deviceType == DeviceType.mobile).length;
     
     return Container(
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
           Expanded(
-            child: _buildStatCard(&apos;Active&apos;, activeCount.toString(), Colors.green),
+            child: _buildStatCard('Active', activeCount.toString(), Colors.green),
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: _buildStatCard(&apos;Suspicious&apos;, suspiciousCount.toString(), Colors.red),
+            child: _buildStatCard('Suspicious', suspiciousCount.toString(), Colors.red),
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: _buildStatCard(&apos;Mobile&apos;, mobileCount.toString(), Colors.blue),
+            child: _buildStatCard('Mobile', mobileCount.toString(), Colors.blue),
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: _buildStatCard(&apos;Total&apos;, _activeSessions.length.toString(), Colors.grey),
+            child: _buildStatCard('Total', _activeSessions.length.toString(), Colors.grey),
           ),
         ],
       ),
@@ -314,43 +314,43 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(&apos;${session.ipAddress} • ${session.location}&apos;),
-            Text(&apos;${session.deviceInfo}&apos;),
-            Text(&apos;Last active: ${_formatTimestamp(session.lastActivity)}&apos;),
+            Text('${session.ipAddress} • ${session.location}'),
+            Text('${session.deviceInfo}'),
+            Text('Last active: ${_formatTimestamp(session.lastActivity)}'),
           ],
         ),
-        trailing: PopupMenuButton&lt;String&gt;(
-          onSelected: (action) =&gt; _handleSessionAction(action, session),
-          itemBuilder: (context) =&gt; [
+        trailing: PopupMenuButton<String>(
+          onSelected: (action) => _handleSessionAction(action, session),
+          itemBuilder: (context) => [
             const PopupMenuItem(
-              value: &apos;details&apos;,
+              value: 'details',
               child: Row(
                 children: [
                   Icon(Icons.info),
                   SizedBox(width: 8),
-                  Text(&apos;Details&apos;),
+                  Text('Details'),
                 ],
               ),
             ),
             if (session.status == SessionStatus.active)
               const PopupMenuItem(
-                value: &apos;terminate&apos;,
+                value: 'terminate',
                 child: Row(
                   children: [
                     Icon(Icons.exit_to_app, color: Colors.red),
                     SizedBox(width: 8),
-                    Text(&apos;Terminate&apos;, style: TextStyle(color: Colors.red)),
+                    Text('Terminate', style: TextStyle(color: Colors.red)),
                   ],
                 ),
               ),
             if (session.isSuspicious)
               const PopupMenuItem(
-                value: &apos;block&apos;,
+                value: 'block',
                 child: Row(
                   children: [
                     Icon(Icons.block, color: Colors.red),
                     SizedBox(width: 8),
-                    Text(&apos;Block IP&apos;, style: TextStyle(color: Colors.red)),
+                    Text('Block IP', style: TextStyle(color: Colors.red)),
                   ],
                 ),
               ),
@@ -365,18 +365,10 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
                 Row(
                   children: [
                     Expanded(
-                      child: _buildDetailItem(&apos;Session ID&apos;, session.sessionId),
+                      child: _buildDetailItem('Session ID', session.sessionId),
                     ),
                     Expanded(
-                      child: _buildDetailItem(&apos;Duration&apos;, _formatDuration(session.duration)),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildDetailItem(&apos;User Agent&apos;, session.userAgent),
+                      child: _buildDetailItem('Duration', _formatDuration(session.duration)),
                     ),
                   ],
                 ),
@@ -384,23 +376,31 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
                 Row(
                   children: [
                     Expanded(
-                      child: _buildDetailItem(&apos;Created&apos;, _formatTimestamp(session.createdAt)),
+                      child: _buildDetailItem('User Agent', session.userAgent),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildDetailItem('Created', _formatTimestamp(session.createdAt)),
                     ),
                     Expanded(
-                      child: _buildDetailItem(&apos;Requests&apos;, session.requestCount.toString()),
+                      child: _buildDetailItem('Requests', session.requestCount.toString()),
                     ),
                   ],
                 ),
                 if (session.securityFlags.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   const Text(
-                    &apos;Security Flags:&apos;,
+                    'Security Flags:',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
                   Wrap(
                     spacing: 4,
-                    children: session.securityFlags.map((flag) =&gt; Chip(
+                    children: session.securityFlags.map((flag) => Chip(
                       label: Text(flag, style: const TextStyle(fontSize: 10)),
                       backgroundColor: Colors.red.withOpacity(0.2),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -443,8 +443,8 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
           children: [
             Icon(Icons.security, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text(&apos;No security alerts&apos;),
-            Text(&apos;All sessions appear normal&apos;),
+            Text('No security alerts'),
+            Text('All sessions appear normal'),
           ],
         ),
       );
@@ -476,41 +476,41 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
           children: [
             Text(alert.description),
             const SizedBox(height: 4),
-            Text(&apos;User: ${alert.userEmail}&apos;),
-            Text(&apos;IP: ${alert.ipAddress}&apos;),
-            Text(&apos;${_formatTimestamp(alert.timestamp)}&apos;),
+            Text('User: ${alert.userEmail}'),
+            Text('IP: ${alert.ipAddress}'),
+            Text('${_formatTimestamp(alert.timestamp)}'),
           ],
         ),
-        trailing: PopupMenuButton&lt;String&gt;(
-          onSelected: (action) =&gt; _handleAlertAction(action, alert),
-          itemBuilder: (context) =&gt; [
+        trailing: PopupMenuButton<String>(
+          onSelected: (action) => _handleAlertAction(action, alert),
+          itemBuilder: (context) => [
             const PopupMenuItem(
-              value: &apos;investigate&apos;,
+              value: 'investigate',
               child: Row(
                 children: [
                   Icon(Icons.search),
                   SizedBox(width: 8),
-                  Text(&apos;Investigate&apos;),
+                  Text('Investigate'),
                 ],
               ),
             ),
             const PopupMenuItem(
-              value: &apos;dismiss&apos;,
+              value: 'dismiss',
               child: Row(
                 children: [
                   Icon(Icons.check),
                   SizedBox(width: 8),
-                  Text(&apos;Dismiss&apos;),
+                  Text('Dismiss'),
                 ],
               ),
             ),
             const PopupMenuItem(
-              value: &apos;block&apos;,
+              value: 'block',
               child: Row(
                 children: [
                   Icon(Icons.block, color: Colors.red),
                   SizedBox(width: 8),
-                  Text(&apos;Block IP&apos;, style: TextStyle(color: Colors.red)),
+                  Text('Block IP', style: TextStyle(color: Colors.red)),
                 ],
               ),
             ),
@@ -522,7 +522,7 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
 
   Widget _buildAnalyticsTab() {
     if (_sessionAnalytics == null) {
-      return const Center(child: Text(&apos;No analytics data available&apos;));
+      return const Center(child: Text('No analytics data available'));
     }
 
     return SingleChildScrollView(
@@ -531,14 +531,14 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            &apos;Session Overview&apos;,
+            'Session Overview',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           _buildAnalyticsKPIs(),
           const SizedBox(height: 24),
           const Text(
-            &apos;Session Trends&apos;,
+            'Session Trends',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
@@ -551,7 +551,7 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
                   y: entry.value.toDouble(),
                 );
               }).toList(),
-              title: &apos;Daily Active Sessions&apos;,
+              title: 'Daily Active Sessions',
             ),
           ),
           const SizedBox(height: 24),
@@ -562,7 +562,7 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      &apos;Device Types&apos;,
+                      'Device Types',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
@@ -586,7 +586,7 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      &apos;Geographic Distribution&apos;,
+                      'Geographic Distribution',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
@@ -621,25 +621,25 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
       mainAxisSpacing: 16,
       children: [
         _buildKPICard(
-          &apos;Total Sessions&apos;,
+          'Total Sessions',
           _sessionAnalytics!.totalSessions.toString(),
           Icons.people,
           Colors.blue,
         ),
         _buildKPICard(
-          &apos;Avg Duration&apos;,
-          &apos;${_sessionAnalytics!.averageDuration.toStringAsFixed(1)}m&apos;,
+          'Avg Duration',
+          '${_sessionAnalytics!.averageDuration.toStringAsFixed(1)}m',
           Icons.access_time,
           Colors.green,
         ),
         _buildKPICard(
-          &apos;Suspicious&apos;,
+          'Suspicious',
           _sessionAnalytics!.suspiciousActivities.toString(),
           Icons.warning,
           Colors.red,
         ),
         _buildKPICard(
-          &apos;Unique IPs&apos;,
+          'Unique IPs',
           _sessionAnalytics!.uniqueIpAddresses.toString(),
           Icons.public,
           Colors.purple,
@@ -708,23 +708,23 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
     
     try {
       switch (action) {
-        case &apos;details&apos;:
+        case 'details':
           _showSessionDetails(session);
           break;
-        case &apos;terminate&apos;:
+        case 'terminate':
           final confirmed = await _showConfirmationDialog(
-            &apos;Terminate Session&apos;,
-            &apos;Are you sure you want to terminate this session?&apos;,
+            'Terminate Session',
+            'Are you sure you want to terminate this session?',
           );
           if (confirmed) {
             await service.terminateSession(session.sessionId);
             _loadData();
           }
           break;
-        case &apos;block&apos;:
+        case 'block':
           final confirmed = await _showConfirmationDialog(
-            &apos;Block IP Address&apos;,
-            &apos;Are you sure you want to block IP ${session.ipAddress}?&apos;,
+            'Block IP Address',
+            'Are you sure you want to block IP ${session.ipAddress}?',
           );
           if (confirmed) {
             await service.blockIpAddress(session.ipAddress);
@@ -735,7 +735,7 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+          SnackBar(content: Text('Error: ${e.toString()}')),
         );
       }
     }
@@ -746,17 +746,17 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
     
     try {
       switch (action) {
-        case &apos;investigate&apos;:
+        case 'investigate':
           _showAlertDetails(alert);
           break;
-        case &apos;dismiss&apos;:
+        case 'dismiss':
           await service.dismissSecurityAlert(alert.id);
           _loadData();
           break;
-        case &apos;block&apos;:
+        case 'block':
           final confirmed = await _showConfirmationDialog(
-            &apos;Block IP Address&apos;,
-            &apos;Are you sure you want to block IP ${alert.ipAddress}?&apos;,
+            'Block IP Address',
+            'Are you sure you want to block IP ${alert.ipAddress}?',
           );
           if (confirmed) {
             await service.blockIpAddress(alert.ipAddress);
@@ -767,7 +767,7 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(&apos;Error: ${e.toString()}&apos;)),
+          SnackBar(content: Text('Error: ${e.toString()}')),
         );
       }
     }
@@ -776,8 +776,8 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
   void _showSessionDetails(UserSessionDetails session) {
     showDialog(
       context: context,
-      builder: (context) =&gt; AlertDialog(
-        title: const Text(&apos;Session Details&apos;),
+      builder: (context) => AlertDialog(
+        title: const Text('Session Details'),
         content: SizedBox(
           width: double.maxFinite,
           child: SingleChildScrollView(
@@ -785,24 +785,24 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildDetailRow(&apos;User&apos;, session.userEmail),
-                _buildDetailRow(&apos;Session ID&apos;, session.sessionId),
-                _buildDetailRow(&apos;IP Address&apos;, session.ipAddress),
-                _buildDetailRow(&apos;Location&apos;, session.location),
-                _buildDetailRow(&apos;Device&apos;, session.deviceInfo),
-                _buildDetailRow(&apos;User Agent&apos;, session.userAgent),
-                _buildDetailRow(&apos;Status&apos;, session.status.displayName),
-                _buildDetailRow(&apos;Created&apos;, _formatTimestamp(session.createdAt)),
-                _buildDetailRow(&apos;Last Activity&apos;, _formatTimestamp(session.lastActivity)),
-                _buildDetailRow(&apos;Duration&apos;, _formatDuration(session.duration)),
-                _buildDetailRow(&apos;Requests&apos;, session.requestCount.toString()),
+                _buildDetailRow('User', session.userEmail),
+                _buildDetailRow('Session ID', session.sessionId),
+                _buildDetailRow('IP Address', session.ipAddress),
+                _buildDetailRow('Location', session.location),
+                _buildDetailRow('Device', session.deviceInfo),
+                _buildDetailRow('User Agent', session.userAgent),
+                _buildDetailRow('Status', session.status.displayName),
+                _buildDetailRow('Created', _formatTimestamp(session.createdAt)),
+                _buildDetailRow('Last Activity', _formatTimestamp(session.lastActivity)),
+                _buildDetailRow('Duration', _formatDuration(session.duration)),
+                _buildDetailRow('Requests', session.requestCount.toString()),
                 if (session.securityFlags.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   const Text(
-                    &apos;Security Flags:&apos;,
+                    'Security Flags:',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  ...session.securityFlags.map((flag) =&gt; Text(&apos;• $flag&apos;)),
+                  ...session.securityFlags.map((flag) => Text('• $flag')),
                 ],
               ],
             ),
@@ -810,8 +810,8 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
         ),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(),
-            child: const Text(&apos;Close&apos;),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),
@@ -821,8 +821,8 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
   void _showAlertDetails(SessionSecurityAlert alert) {
     showDialog(
       context: context,
-      builder: (context) =&gt; AlertDialog(
-        title: Text(&apos;Security Alert: ${alert.title}&apos;),
+      builder: (context) => AlertDialog(
+        title: Text('Security Alert: ${alert.title}'),
         content: SizedBox(
           width: double.maxFinite,
           child: SingleChildScrollView(
@@ -830,20 +830,20 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildDetailRow(&apos;Type&apos;, alert.type.displayName),
-                _buildDetailRow(&apos;Severity&apos;, alert.severity.displayName),
-                _buildDetailRow(&apos;Description&apos;, alert.description),
-                _buildDetailRow(&apos;User&apos;, alert.userEmail),
-                _buildDetailRow(&apos;IP Address&apos;, alert.ipAddress),
-                _buildDetailRow(&apos;Timestamp&apos;, _formatTimestamp(alert.timestamp)),
+                _buildDetailRow('Type', alert.type.displayName),
+                _buildDetailRow('Severity', alert.severity.displayName),
+                _buildDetailRow('Description', alert.description),
+                _buildDetailRow('User', alert.userEmail),
+                _buildDetailRow('IP Address', alert.ipAddress),
+                _buildDetailRow('Timestamp', _formatTimestamp(alert.timestamp)),
                 if (alert.metadata.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   const Text(
-                    &apos;Additional Details:&apos;,
+                    'Additional Details:',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  ...alert.metadata.entries.map((entry) =&gt; 
-                      Text(&apos;${entry.key}: ${entry.value}&apos;)),
+                  ...alert.metadata.entries.map((entry) => 
+                      Text('${entry.key}: ${entry.value}')),
                 ],
               ],
             ),
@@ -851,29 +851,29 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
         ),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(),
-            child: const Text(&apos;Close&apos;),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),
     );
   }
 
-  Future&lt;bool&gt; _showConfirmationDialog(String title, String content) async {
-    return await showDialog&lt;bool&gt;(
+  Future<bool> _showConfirmationDialog(String title, String content) async {
+    return await showDialog<bool>(
       context: context,
-      builder: (context) =&gt; AlertDialog(
+      builder: (context) => AlertDialog(
         title: Text(title),
         content: Text(content),
         actions: [
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(false),
-            child: const Text(&apos;Cancel&apos;),
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () =&gt; Navigator.of(context).pop(true),
+            onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text(&apos;Confirm&apos;),
+            child: const Text('Confirm'),
           ),
         ],
       ),
@@ -889,7 +889,7 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
           SizedBox(
             width: 120,
             child: Text(
-              &apos;$label:&apos;,
+              '$label:',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
@@ -931,28 +931,28 @@ class _SessionMonitoringPageState extends ConsumerState&lt;SessionMonitoringPage
     final now = DateTime.now();
     final difference = now.difference(timestamp);
 
-    if (difference.inMinutes &lt; 1) {
-      return &apos;Just now&apos;;
-    } else if (difference.inHours &lt; 1) {
-      return &apos;${difference.inMinutes}m ago&apos;;
-    } else if (difference.inDays &lt; 1) {
-      return &apos;${difference.inHours}h ago&apos;;
+    if (difference.inMinutes < 1) {
+      return 'Just now';
+    } else if (difference.inHours < 1) {
+      return '${difference.inMinutes}m ago';
+    } else if (difference.inDays < 1) {
+      return '${difference.inHours}h ago';
     } else {
-      return &apos;${timestamp.day}/${timestamp.month}/${timestamp.year}&apos;;
+      return '${timestamp.day}/${timestamp.month}/${timestamp.year}';
     }
   }
 
   String _formatDate(DateTime date) {
-    return &apos;${date.day}/${date.month}/${date.year}&apos;;
+    return '${date.day}/${date.month}/${date.year}';
   }
 
   String _formatDuration(int minutes) {
-    if (minutes &lt; 60) {
-      return &apos;${minutes}m&apos;;
+    if (minutes < 60) {
+      return '${minutes}m';
     } else {
       final hours = minutes ~/ 60;
       final remainingMinutes = minutes % 60;
-      return remainingMinutes == 0 ? &apos;${hours}h&apos; : &apos;${hours}h ${remainingMinutes}m&apos;;
+      return remainingMinutes == 0 ? '${hours}h' : '${hours}h ${remainingMinutes}m';
     }
   }
 }

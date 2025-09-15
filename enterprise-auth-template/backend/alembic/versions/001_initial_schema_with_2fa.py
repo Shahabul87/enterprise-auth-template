@@ -24,10 +24,8 @@ def upgrade() -> None:
         sa.Column('hashed_password', sa.String(length=255), nullable=True),
         
         # Profile fields
-        sa.Column('first_name', sa.String(length=100), nullable=False),
-        sa.Column('last_name', sa.String(length=100), nullable=False),
+        sa.Column('full_name', sa.String(length=255), nullable=False),
         sa.Column('username', sa.String(length=100), nullable=True),
-        sa.Column('full_name', sa.String(length=255), nullable=True),
         sa.Column('avatar_url', sa.String(length=500), nullable=True),
         
         # OAuth fields

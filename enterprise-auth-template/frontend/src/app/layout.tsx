@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   authors: [{ name: 'Enterprise Auth Template' }],
   creator: 'Enterprise Auth Template',
   publisher: 'Enterprise Auth Template',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
   robots: {
     index: true,
     follow: true,
@@ -53,7 +58,7 @@ export default function RootLayout({ children }: RootLayoutProps): JSX.Element {
       <body className={cn(inter.className, 'min-h-screen bg-background antialiased')}>
         <QueryProvider>
           <AuthErrorBoundary>
-            <main className='relative flex min-h-screen flex-col'>{children}</main>
+            {children}
           </AuthErrorBoundary>
         </QueryProvider>
       </body>

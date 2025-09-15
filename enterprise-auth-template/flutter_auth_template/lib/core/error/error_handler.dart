@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'app_exception.dart';
 import 'error_logger.dart';
@@ -23,8 +22,7 @@ class ErrorHandler {
 
     if (error is AppException) {
       appException = error;
-    } else if (error is http.Response) {
-      appException = _handleHttpResponse(error);
+    // Note: http.Response handling removed since http is not a dependency
     } else if (error is SocketException) {
       appException = AppException.connectivity(
         message: 'No internet connection',
@@ -44,7 +42,7 @@ class ErrorHandler {
     } else if (error is HttpException) {
       appException = AppException.network(
         message: error.message,
-        statusCode: error.statusCode,
+        statusCode: 500, // HttpException doesn't provide statusCode
       );
     } else {
       appException = AppException.unknown(
@@ -60,25 +58,7 @@ class ErrorHandler {
     return appException;
   }
 
-  /// Handles HTTP responses and creates appropriate exceptions
-  AppException _handleHttpResponse(http.Response response) {
-    final statusCode = response.statusCode;
-    String message = 'HTTP Error $statusCode';
-    Map<String, dynamic>? details;
-
-    // Try to parse error details from response body
-    try {
-      final body = json.decode(response.body);
-      if (body is Map<String, dynamic>) {
-        message = body['message'] ?? body['error'] ?? message;
-        details = body;
-      }
-    } catch (e) {
-      // Ignore JSON parsing errors, use default message
-    }
-
-    return AppExceptions.fromHttpStatusCode(statusCode, message);
-  }
+  /// Note: HTTP response handling removed since http package is not a dependency
 
   /// Shows user-friendly error message
   void showErrorToUser(BuildContext context, AppException exception) {
@@ -287,87 +267,8 @@ class ErrorHandler {
     // crashReporter.recordError(appException, stackTrace);
   }
 
-  /// Handles specific API errors and converts them to appropriate exceptions
-  AppException handleApiError(http.Response response) {
-    final statusCode = response.statusCode;
-    Map<String, dynamic>? errorData;
-    
-    try {
-      final responseBody = json.decode(response.body);
-      if (responseBody is Map<String, dynamic>) {
-        errorData = responseBody;
-      }
-    } catch (e) {
-      // JSON parsing failed, use default handling
-    }
-    
-    final message = errorData?['message'] ?? 
-                   errorData?['error'] ?? 
-                   'HTTP Error $statusCode';
-    
-    switch (statusCode) {
-      case 400:
-        return AppException.validation(
-          message: message,
-          fieldErrors: _parseFieldErrors(errorData),
-          details: errorData,
-        );
-      case 401:
-        return AppException.authentication(
-          message: message,
-          reason: errorData?['reason'],
-          details: errorData,
-        );
-      case 403:
-        return AppException.authorization(
-          message: message,
-          requiredPermission: errorData?['required_permission'],
-          details: errorData,
-        );
-      case 404:
-        return AppException.notFound(
-          message: message,
-          resource: errorData?['resource'],
-          details: errorData,
-        );
-      case 408:
-        return AppException.timeout(
-          message: message,
-          details: errorData,
-        );
-      case 429:
-        final retryAfterSeconds = errorData?['retry_after'] as int?;
-        return AppException.rateLimited(
-          message: message,
-          retryAfter: retryAfterSeconds != null 
-              ? Duration(seconds: retryAfterSeconds) 
-              : null,
-          limit: errorData?['limit'] as int?,
-          details: errorData,
-        );
-      case 422:
-        return AppException.validation(
-          message: message,
-          fieldErrors: _parseFieldErrors(errorData),
-          details: errorData,
-        );
-      default:
-        if (statusCode >= 500) {
-          return AppException.server(
-            message: message,
-            statusCode: statusCode,
-            errorCode: errorData?['error_code'],
-            details: errorData,
-          );
-        } else {
-          return AppException.network(
-            message: message,
-            statusCode: statusCode,
-            details: errorData,
-          );
-        }
-    }
-  }
+  /// Note: API error handling removed since http package is not a dependency
+  /// This functionality can be implemented when using dio or another HTTP client
   
   Map<String, List<String>>? _parseFieldErrors(Map<String, dynamic>? errorData) {
     if (errorData == null) return null;

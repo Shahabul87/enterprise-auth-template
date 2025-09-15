@@ -6,7 +6,7 @@ import '../../core/network/api_client.dart';
 import '../../core/errors/app_exception.dart';
 import '../models/device_models.dart';
 
-final deviceApiServiceProvider = Provider&lt;DeviceApiService&gt;((ref) {
+final deviceApiServiceProvider = Provider<DeviceApiService>((ref) {
   return DeviceApiService(ref.read(apiClientProvider));
 });
 
@@ -16,7 +16,7 @@ class DeviceApiService {
   DeviceApiService(this._apiClient);
 
   /// Get all devices for current user
-  Future&lt;DeviceListResponse&gt; getUserDevices({
+  Future<DeviceListResponse> getUserDevices({
     int page = 1,
     int limit = 20,
     bool? isActive,
@@ -25,27 +25,27 @@ class DeviceApiService {
     String? deviceType,
   }) async {
     try {
-      final queryParams = &lt;String, dynamic&gt;{
-        &apos;page&apos;: page,
-        &apos;limit&apos;: limit,
+      final queryParams = <String, dynamic>{
+        'page': page,
+        'limit': limit,
       };
 
-      if (isActive != null) queryParams[&apos;is_active&apos;] = isActive;
-      if (isTrusted != null) queryParams[&apos;is_trusted&apos;] = isTrusted;
-      if (platform != null) queryParams[&apos;platform&apos;] = platform;
-      if (deviceType != null) queryParams[&apos;device_type&apos;] = deviceType;
+      if (isActive != null) queryParams['is_active'] = isActive;
+      if (isTrusted != null) queryParams['is_trusted'] = isTrusted;
+      if (platform != null) queryParams['platform'] = platform;
+      if (deviceType != null) queryParams['device_type'] = deviceType;
 
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices',
         queryParameters: queryParams,
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return DeviceListResponse.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return DeviceListResponse.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get devices&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get devices',
         null,
         response.statusCode ?? 500,
       );
@@ -55,18 +55,18 @@ class DeviceApiService {
   }
 
   /// Get device by ID
-  Future&lt;Device&gt; getDevice(String deviceId) async {
+  Future<Device> getDevice(String deviceId) async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices/$deviceId&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices/$deviceId',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Device.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Device.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get device&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get device',
         null,
         response.statusCode ?? 500,
       );
@@ -76,19 +76,19 @@ class DeviceApiService {
   }
 
   /// Register new device
-  Future&lt;Device&gt; registerDevice(DeviceRegistrationRequest request) async {
+  Future<Device> registerDevice(DeviceRegistrationRequest request) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices',
         data: request.toJson(),
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Device.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Device.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to register device&apos;,
+        response.data!['error']?['message'] ?? 'Failed to register device',
         null,
         response.statusCode ?? 500,
       );
@@ -98,22 +98,22 @@ class DeviceApiService {
   }
 
   /// Update device
-  Future&lt;Device&gt; updateDevice(
+  Future<Device> updateDevice(
     String deviceId,
     DeviceUpdateRequest request,
   ) async {
     try {
-      final response = await _apiClient.put&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices/$deviceId&apos;,
+      final response = await _apiClient.put<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices/$deviceId',
         data: request.toJson(),
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Device.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Device.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to update device&apos;,
+        response.data!['error']?['message'] ?? 'Failed to update device',
         null,
         response.statusCode ?? 500,
       );
@@ -123,15 +123,15 @@ class DeviceApiService {
   }
 
   /// Delete device
-  Future&lt;void&gt; deleteDevice(String deviceId) async {
+  Future<void> deleteDevice(String deviceId) async {
     try {
-      final response = await _apiClient.delete&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices/$deviceId&apos;,
+      final response = await _apiClient.delete<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices/$deviceId',
       );
 
-      if (response.data![&apos;success&apos;] != true) {
+      if (response.data!['success'] != true) {
         throw ServerException(
-          response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to delete device&apos;,
+          response.data!['error']?['message'] ?? 'Failed to delete device',
           null,
           response.statusCode ?? 500,
         );
@@ -142,18 +142,18 @@ class DeviceApiService {
   }
 
   /// Trust device
-  Future&lt;Device&gt; trustDevice(String deviceId) async {
+  Future<Device> trustDevice(String deviceId) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices/$deviceId/trust&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices/$deviceId/trust',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Device.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Device.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to trust device&apos;,
+        response.data!['error']?['message'] ?? 'Failed to trust device',
         null,
         response.statusCode ?? 500,
       );
@@ -163,18 +163,18 @@ class DeviceApiService {
   }
 
   /// Untrust device
-  Future&lt;Device&gt; untrustDevice(String deviceId) async {
+  Future<Device> untrustDevice(String deviceId) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices/$deviceId/untrust&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices/$deviceId/untrust',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Device.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Device.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to untrust device&apos;,
+        response.data!['error']?['message'] ?? 'Failed to untrust device',
         null,
         response.statusCode ?? 500,
       );
@@ -184,18 +184,18 @@ class DeviceApiService {
   }
 
   /// Block device
-  Future&lt;Device&gt; blockDevice(String deviceId) async {
+  Future<Device> blockDevice(String deviceId) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices/$deviceId/block&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices/$deviceId/block',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Device.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Device.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to block device&apos;,
+        response.data!['error']?['message'] ?? 'Failed to block device',
         null,
         response.statusCode ?? 500,
       );
@@ -205,18 +205,18 @@ class DeviceApiService {
   }
 
   /// Unblock device
-  Future&lt;Device&gt; unblockDevice(String deviceId) async {
+  Future<Device> unblockDevice(String deviceId) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices/$deviceId/unblock&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices/$deviceId/unblock',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Device.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Device.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to unblock device&apos;,
+        response.data!['error']?['message'] ?? 'Failed to unblock device',
         null,
         response.statusCode ?? 500,
       );
@@ -226,18 +226,18 @@ class DeviceApiService {
   }
 
   /// Get device statistics
-  Future&lt;DeviceStats&gt; getDeviceStats() async {
+  Future<DeviceStats> getDeviceStats() async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices/stats&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices/stats',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return DeviceStats.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return DeviceStats.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get device stats&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get device stats',
         null,
         response.statusCode ?? 500,
       );
@@ -247,33 +247,33 @@ class DeviceApiService {
   }
 
   /// Get device security alerts
-  Future&lt;List&lt;DeviceSecurityAlert&gt;&gt; getDeviceSecurityAlerts({
+  Future<List<DeviceSecurityAlert>> getDeviceSecurityAlerts({
     String? deviceId,
     int page = 1,
     int limit = 20,
   }) async {
     try {
-      final queryParams = &lt;String, dynamic&gt;{
-        &apos;page&apos;: page,
-        &apos;limit&apos;: limit,
+      final queryParams = <String, dynamic>{
+        'page': page,
+        'limit': limit,
       };
 
-      if (deviceId != null) queryParams[&apos;device_id&apos;] = deviceId;
+      if (deviceId != null) queryParams['device_id'] = deviceId;
 
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices/security-alerts&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices/security-alerts',
         queryParameters: queryParams,
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        final alertList = response.data![&apos;data&apos;] as List;
+      if (response.data!['success'] == true) {
+        final alertList = response.data!['data'] as List;
         return alertList
-            .map((alert) =&gt; DeviceSecurityAlert.fromJson(alert))
+            .map((alert) => DeviceSecurityAlert.fromJson(alert))
             .toList();
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get security alerts&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get security alerts',
         null,
         response.statusCode ?? 500,
       );
@@ -283,15 +283,15 @@ class DeviceApiService {
   }
 
   /// Resolve security alert
-  Future&lt;void&gt; resolveSecurityAlert(String alertId) async {
+  Future<void> resolveSecurityAlert(String alertId) async {
     try {
-      final response = await _apiClient.post&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices/security-alerts/$alertId/resolve&apos;,
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices/security-alerts/$alertId/resolve',
       );
 
-      if (response.data![&apos;success&apos;] != true) {
+      if (response.data!['success'] != true) {
         throw ServerException(
-          response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to resolve alert&apos;,
+          response.data!['error']?['message'] ?? 'Failed to resolve alert',
           null,
           response.statusCode ?? 500,
         );
@@ -302,18 +302,18 @@ class DeviceApiService {
   }
 
   /// Get current device info
-  Future&lt;Device&gt; getCurrentDevice() async {
+  Future<Device> getCurrentDevice() async {
     try {
-      final response = await _apiClient.get&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices/current&apos;,
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices/current',
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Device.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Device.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to get current device&apos;,
+        response.data!['error']?['message'] ?? 'Failed to get current device',
         null,
         response.statusCode ?? 500,
       );
@@ -323,19 +323,19 @@ class DeviceApiService {
   }
 
   /// Update current device
-  Future&lt;Device&gt; updateCurrentDevice(DeviceUpdateRequest request) async {
+  Future<Device> updateCurrentDevice(DeviceUpdateRequest request) async {
     try {
-      final response = await _apiClient.put&lt;Map&lt;String, dynamic&gt;&gt;(
-        &apos;${ApiConstants.profileBasePath}/devices/current&apos;,
+      final response = await _apiClient.put<Map<String, dynamic>>(
+        '${ApiConstants.profileBasePath}/devices/current',
         data: request.toJson(),
       );
 
-      if (response.data![&apos;success&apos;] == true) {
-        return Device.fromJson(response.data![&apos;data&apos;]);
+      if (response.data!['success'] == true) {
+        return Device.fromJson(response.data!['data']);
       }
 
       throw ServerException(
-        response.data![&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Failed to update current device&apos;,
+        response.data!['error']?['message'] ?? 'Failed to update current device',
         null,
         response.statusCode ?? 500,
       );
@@ -347,12 +347,12 @@ class DeviceApiService {
   AppException _handleDioException(DioException exception) {
     if (exception.response?.data != null) {
       final data = exception.response!.data;
-      final message = data[&apos;error&apos;]?[&apos;message&apos;] ?? &apos;Unknown error occurred&apos;;
+      final message = data['error']?['message'] ?? 'Unknown error occurred';
       return ServerException(message, null, exception.response?.statusCode ?? 500);
     }
 
     return NetworkException(
-      exception.message ?? &apos;Network error occurred&apos;,
+      exception.message ?? 'Network error occurred',
       exception.requestOptions.path,
     );
   }

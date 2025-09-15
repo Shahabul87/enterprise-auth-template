@@ -4,7 +4,7 @@ export interface User {
   first_name: string;
   last_name: string;
   is_active: boolean;
-  is_verified: boolean;
+  email_verified: boolean;
   is_superuser: boolean;
   failed_login_attempts: number;
   last_login: string | null;
@@ -30,7 +30,7 @@ export interface Permission {
 }
 
 export interface LoginRequest {
-  username: string;
+  email: string;
   password: string;
 }
 
