@@ -1,31 +1,40 @@
 'use client';
 
 import { useGuestOnly } from '@/stores/auth.store';
-import { ForgotPasswordForm } from '@/components/auth/forgot-password-form';
+import { ModernForgotPasswordForm } from '@/components/auth/modern-forgot-password-form';
 
 export default function ForgotPasswordPage(): JSX.Element {
   const { isLoading } = useGuestOnly('/dashboard');
 
   if (isLoading) {
     return (
-      <div className='flex items-center justify-center min-h-screen'>
-        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900'></div>
+      <div className='relative min-h-screen flex items-center justify-center'>
+        <div className='absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800'></div>
+        <div className='relative'>
+          <div className='animate-spin rounded-full h-12 w-12 border-4 border-amber-500 border-t-transparent'></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className='flex flex-col min-h-screen bg-muted/50'>
-      <header className='border-b bg-background'>
-        <div className='container mx-auto px-4 py-4'>
-          <h1 className='text-xl font-bold text-primary'>Enterprise Auth Template</h1>
-        </div>
-      </header>
+    <div className='relative min-h-screen overflow-hidden'>
+      {/* Animated gradient background */}
+      <div className='absolute inset-0'>
+        <div className='absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800'></div>
 
-      <div className='flex-1 flex items-center justify-center p-4'>
-        <div className='w-full max-w-md'>
-          <ForgotPasswordForm />
-        </div>
+        {/* Animated orbs */}
+        <div className='absolute top-0 -left-4 w-72 h-72 bg-amber-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob dark:bg-amber-900 dark:opacity-30'></div>
+        <div className='absolute top-0 -right-4 w-72 h-72 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob [animation-delay:2s] dark:bg-orange-900 dark:opacity-30'></div>
+        <div className='absolute -bottom-8 left-20 w-72 h-72 bg-red-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob [animation-delay:4s] dark:bg-red-900 dark:opacity-30'></div>
+
+        {/* Grid pattern overlay */}
+        <div className='absolute inset-0 bg-[url("/grid.svg")] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]'></div>
+      </div>
+
+      {/* Content */}
+      <div className='relative z-10 flex items-center justify-center min-h-screen p-4 py-12'>
+        <ModernForgotPasswordForm />
       </div>
     </div>
   );

@@ -1,237 +1,386 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useAuthStore } from '@/stores/auth.store';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { useAuthStore } from '@/stores/auth.store';
+import { cn } from '@/lib/utils';
 import {
   Mail,
   CheckCircle2,
-  ArrowRight,
-  RefreshCw,
-  Clock,
   AlertCircle,
+  RefreshCw,
+  ArrowRight,
+  Clock,
+  Shield,
+  Sparkles,
+  Send,
 } from 'lucide-react';
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent(): JSX.Element {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { resendVerification } = useAuthStore();
+  const [verificationCode, setVerificationCode] = useState('');
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'pending' | 'verifying' | 'success' | 'error'>('pending');
+  const [error, setError] = useState('');
+  const [resendCooldown, setResendCooldown] = useState(0);
 
-  const [isResending, setIsResending] = useState(false);
-  const [resendSuccess, setResendSuccess] = useState(false);
-  const [resendError, setResendError] = useState<string | null>(null);
-  const [timeLeft, setTimeLeft] = useState(60);
-  const [canResend, setCanResend] = useState(false);
-  const [email, setEmail] = useState<string | null>(null);
-
-  // Get email from URL params or localStorage on mount
   useEffect(() => {
-    const urlEmail = searchParams?.get('email');
-    if (urlEmail) {
-      setEmail(urlEmail);
-    } else if (typeof window !== 'undefined') {
-      const storedEmail = localStorage.getItem('registrationEmail');
-      if (storedEmail) {
-        setEmail(storedEmail);
-      }
+    // Get email from query params or localStorage
+    const emailParam = searchParams.get('email');
+    const storedEmail = localStorage.getItem('registrationEmail');
+    setEmail(emailParam || storedEmail || '');
+
+    // Auto-verify if token is in URL
+    const token = searchParams.get('token');
+    if (token) {
+      handleVerification(token);
     }
   }, [searchParams]);
 
-  // Countdown timer for resend button
   useEffect(() => {
-    if (!canResend && timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
       return () => clearTimeout(timer);
-    } else if (timeLeft === 0) {
-      setCanResend(true);
     }
-  }, [timeLeft, canResend]);
+  }, [resendCooldown]);
 
-  const handleResendEmail = async () => {
-    if (!email || isResending) return;
+  const handleVerification = async (token?: string): Promise<void> => {
+    setStatus('verifying');
+    setError('');
 
-    setIsResending(true);
-    setResendError(null);
-    setResendSuccess(false);
+    const verifyToken = token || verificationCode;
+    if (!verifyToken) {
+      setError('Please enter the verification code');
+      setStatus('error');
+      return;
+    }
+
+    try {
+      // Simulate API call for now
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // TODO: Replace with actual API call
+      // const response = await api.verifyEmail({ token: verifyToken });
+
+      setStatus('success');
+      setTimeout(() => {
+        router.push('/auth/login');
+      }, 3000);
+    } catch (err) {
+      setError('Invalid or expired verification code. Please try again.');
+      setStatus('error');
+    }
+  };
+
+  const handleResendEmail = async (): Promise<void> => {
+    if (resendCooldown > 0 || !email) return;
 
     try {
       const response = await resendVerification();
-
       if (response.success) {
-        setResendSuccess(true);
-        setCanResend(false);
-        setTimeLeft(60);
+        setResendCooldown(60);
+        // Show success message
       } else {
-        setResendError(response.error?.message || 'Failed to resend verification email');
+        setError(response.error?.message || 'Failed to resend verification email');
       }
-    } catch (error) {
-      setResendError(error instanceof Error ? error.message : 'An error occurred');
-    } finally {
-      setIsResending(false);
+    } catch (err) {
+      setError('Failed to resend verification email. Please try again.');
     }
   };
 
-  const handleBackToLogin = () => {
-    // Clear any stored registration email
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('registrationEmail');
-    }
-    router.push('/auth/login');
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.3 },
+    },
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-white to-green-50">
-      <div className="w-full max-w-md">
-        <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-sm">
-          <CardContent className="p-8">
-            {/* Success Icon */}
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-4 animate-pulse">
-                <CheckCircle2 className="w-10 h-10 text-green-600" />
-              </div>
-              <h1 className="text-3xl font-bold mb-2 text-gray-900">
-                Check Your Email
-              </h1>
-              <p className="text-gray-600">
-                We&apos;ve sent a verification link to verify your account
-              </p>
+    <div className='relative min-h-screen overflow-hidden'>
+      {/* Animated gradient background */}
+      <div className='absolute inset-0'>
+        <div className='absolute inset-0 bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800'></div>
+
+        {/* Animated orbs */}
+        <div className='absolute top-0 -left-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob dark:bg-cyan-900 dark:opacity-30'></div>
+        <div className='absolute top-0 -right-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob [animation-delay:2s] dark:bg-blue-900 dark:opacity-30'></div>
+        <div className='absolute -bottom-8 left-20 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob [animation-delay:4s] dark:bg-indigo-900 dark:opacity-30'></div>
+
+        {/* Grid pattern overlay */}
+        <div className='absolute inset-0 bg-[url("/grid.svg")] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]'></div>
+      </div>
+
+      {/* Content */}
+      <div className='relative z-10 flex items-center justify-center min-h-screen p-4 py-12'>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className='w-full max-w-md mx-auto'
+        >
+          <div className='bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden'>
+            {/* Header */}
+            <div className='relative p-8 pb-6'>
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                className={cn(
+                  'w-16 h-16 rounded-2xl flex items-center justify-center mb-6 mx-auto',
+                  status === 'success'
+                    ? 'bg-gradient-to-br from-green-500 to-green-600'
+                    : status === 'error'
+                    ? 'bg-gradient-to-br from-red-500 to-red-600'
+                    : 'bg-gradient-to-br from-blue-500 to-indigo-600'
+                )}
+              >
+                {status === 'success' ? (
+                  <CheckCircle2 className='w-8 h-8 text-white' />
+                ) : status === 'error' ? (
+                  <AlertCircle className='w-8 h-8 text-white' />
+                ) : (
+                  <Mail className='w-8 h-8 text-white' />
+                )}
+              </motion.div>
+
+              <motion.h2
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className='text-3xl font-bold text-center bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent'
+              >
+                {status === 'success'
+                  ? 'Email Verified!'
+                  : status === 'error'
+                  ? 'Verification Failed'
+                  : 'Verify Your Email'}
+              </motion.h2>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className='text-center text-gray-600 dark:text-gray-400 mt-2'
+              >
+                {status === 'success'
+                  ? 'Your account has been successfully verified'
+                  : status === 'error'
+                  ? 'We couldn&apos;t verify your email'
+                  : email
+                  ? `We sent a verification code to ${email}`
+                  : 'Enter the code we sent to your email'}
+              </motion.p>
             </div>
 
-            {/* Email Display */}
-            {email && (
-              <div className="bg-blue-50 rounded-lg p-4 mb-6 border border-blue-200">
-                <div className="flex items-center gap-3">
-                  <Mail className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                  <div>
-                    <p className="text-sm font-medium text-blue-900">Email sent to:</p>
-                    <p className="text-blue-700 font-mono text-sm">{email}</p>
+            {/* Content */}
+            <div className='p-8 pt-0'>
+              <AnimatePresence mode='wait'>
+                {status === 'pending' && (
+                  <motion.div
+                    key='pending'
+                    variants={containerVariants}
+                    initial='hidden'
+                    animate='visible'
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className='space-y-4'
+                  >
+                    <motion.div variants={itemVariants}>
+                      <div className='flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 mb-4'>
+                        <Shield className='w-4 h-4' />
+                        <span>Enter the 6-digit code from your email</span>
+                      </div>
+                      <Input
+                        type='text'
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value)}
+                        placeholder='123456'
+                        className='h-12 text-center text-2xl font-mono tracking-widest bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700'
+                        maxLength={6}
+                      />
+                    </motion.div>
+
+                    <motion.div variants={itemVariants}>
+                      <Button
+                        onClick={() => handleVerification()}
+                        className='w-full h-11 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium'
+                      >
+                        Verify Email
+                        <ArrowRight className='ml-2 w-4 h-4' />
+                      </Button>
+                    </motion.div>
+
+                    <motion.div
+                      variants={itemVariants}
+                      className='flex items-center justify-center space-x-2'
+                    >
+                      <span className='text-sm text-gray-600 dark:text-gray-400'>
+                        Didn&apos;t receive the code?
+                      </span>
+                      <Button
+                        variant='link'
+                        onClick={handleResendEmail}
+                        disabled={resendCooldown > 0}
+                        className='text-sm font-medium text-blue-600 hover:text-blue-500 p-0'
+                      >
+                        {resendCooldown > 0 ? (
+                          <span className='flex items-center'>
+                            <Clock className='w-3 h-3 mr-1' />
+                            {resendCooldown}s
+                          </span>
+                        ) : (
+                          <span className='flex items-center'>
+                            <RefreshCw className='w-3 h-3 mr-1' />
+                            Resend
+                          </span>
+                        )}
+                      </Button>
+                    </motion.div>
+                  </motion.div>
+                )}
+
+                {status === 'verifying' && (
+                  <motion.div
+                    key='verifying'
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className='text-center py-8'
+                  >
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                      className='w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4'
+                    />
+                    <p className='text-gray-600 dark:text-gray-400'>
+                      Verifying your email...
+                    </p>
+                  </motion.div>
+                )}
+
+                {status === 'success' && (
+                  <motion.div
+                    key='success'
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className='text-center py-8'
+                  >
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 200 }}
+                      className='w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4'
+                    >
+                      <CheckCircle2 className='w-10 h-10 text-white' />
+                    </motion.div>
+                    <h3 className='text-xl font-bold text-gray-900 dark:text-white mb-2'>
+                      Verification Successful!
+                    </h3>
+                    <p className='text-gray-600 dark:text-gray-400 mb-4'>
+                      Redirecting you to login...
+                    </p>
+                    <div className='flex items-center justify-center'>
+                      <Sparkles className='w-4 h-4 text-yellow-500 animate-pulse' />
+                      <Sparkles className='w-5 h-5 text-yellow-500 animate-pulse mx-2' />
+                      <Sparkles className='w-4 h-4 text-yellow-500 animate-pulse' />
+                    </div>
+                  </motion.div>
+                )}
+
+                {status === 'error' && (
+                  <motion.div
+                    key='error'
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className='space-y-4'
+                  >
+                    <div className='bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4'>
+                      <p className='text-sm text-red-600 dark:text-red-400'>
+                        {error}
+                      </p>
+                    </div>
+                    <Button
+                      onClick={() => {
+                        setStatus('pending');
+                        setError('');
+                        setVerificationCode('');
+                      }}
+                      className='w-full h-11 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium'
+                    >
+                      Try Again
+                      <RefreshCw className='ml-2 w-4 h-4' />
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Additional Info */}
+              {status === 'pending' && (
+                <div className='mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800'>
+                  <div className='flex items-start'>
+                    <Send className='w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 mr-2 flex-shrink-0' />
+                    <div className='text-sm text-blue-700 dark:text-blue-300'>
+                      <p className='font-medium mb-1'>Check your spam folder</p>
+                      <p className='text-xs opacity-90'>
+                        Sometimes our emails end up there. Make sure to mark us as
+                        not spam!
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-
-            {/* Instructions */}
-            <div className="bg-gray-50 rounded-lg p-6 mb-6">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <span className="text-lg">📧</span>
-                Next Steps:
-              </h3>
-              <ol className="space-y-3 text-sm text-gray-700">
-                <li className="flex items-start gap-3">
-                  <span className="font-semibold text-blue-600 flex-shrink-0">1.</span>
-                  <span>Open your email inbox and look for our verification message</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-semibold text-blue-600 flex-shrink-0">2.</span>
-                  <span>Click the &quot;Verify Email&quot; button in the email</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-semibold text-blue-600 flex-shrink-0">3.</span>
-                  <span>Return to the login page and sign in with your credentials</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-semibold text-blue-600 flex-shrink-0">4.</span>
-                  <span>If you don&apos;t see the email, check your spam/junk folder</span>
-                </li>
-              </ol>
+              )}
             </div>
 
-            {/* Important Notice */}
-            <Alert className="bg-amber-50 border-amber-200 mb-6">
-              <Clock className="h-4 w-4 text-amber-600" />
-              <AlertDescription className="text-sm text-amber-800">
-                <strong>Important:</strong> The verification link expires in 24 hours.
-                You must verify your email before you can log in.
-              </AlertDescription>
-            </Alert>
-
-            {/* Resend Success Message */}
-            {resendSuccess && (
-              <Alert className="bg-green-50 border-green-200 mb-4">
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
-                <AlertDescription className="text-sm text-green-800">
-                  Verification email sent successfully! Please check your inbox.
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {/* Resend Error Message */}
-            {resendError && (
-              <Alert variant="destructive" className="mb-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription className="text-sm">
-                  {resendError}
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {/* Action Buttons */}
-            <div className="space-y-3">
-              {/* Primary Action - Go to Login */}
-              <Button
-                onClick={handleBackToLogin}
-                className="w-full h-12 text-base font-medium bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-200"
-              >
-                <ArrowRight className="w-5 h-5 mr-2" />
-                Continue to Login
-              </Button>
-
-              {/* Secondary Action - Resend Email */}
-              <Button
-                variant="outline"
-                onClick={handleResendEmail}
-                disabled={!canResend || isResending || !email}
-                className="w-full h-12 text-base"
-              >
-                {isResending ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                    Sending...
-                  </>
-                ) : canResend ? (
-                  <>
-                    <Mail className="w-4 h-4 mr-2" />
-                    Resend Verification Email
-                  </>
-                ) : (
-                  <>
-                    <Clock className="w-4 h-4 mr-2" />
-                    Resend in {timeLeft}s
-                  </>
-                )}
-              </Button>
-
-              {/* Back to Registration */}
-              <div className="text-center pt-4">
-                <p className="text-sm text-gray-600">
-                  Wrong email address?{' '}
+            {/* Footer */}
+            {status !== 'success' && status !== 'verifying' && (
+              <div className='px-8 pb-8'>
+                <p className='text-center text-sm text-gray-600 dark:text-gray-400'>
+                  Wrong email?{' '}
                   <Link
-                    href="/auth/register"
-                    className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                    href='/auth/register'
+                    className='font-medium text-blue-600 hover:text-blue-500 transition-colors'
                   >
-                    Register again
+                    Go back to registration
                   </Link>
                 </p>
               </div>
-            </div>
-
-            {/* Help Text */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <p className="text-xs text-gray-500 text-center">
-                Still having trouble? Contact our{' '}
-                <Link href="/support" className="text-blue-600 hover:text-blue-700">
-                  support team
-                </Link>{' '}
-                for assistance.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+            )}
+          </div>
+        </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage(): JSX.Element {
+  return (
+    <Suspense
+      fallback={
+        <div className='relative min-h-screen flex items-center justify-center'>
+          <div className='absolute inset-0 bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800'></div>
+          <div className='relative'>
+            <div className='animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent'></div>
+          </div>
+        </div>
+      }
+    >
+      <VerifyEmailContent />
+    </Suspense>
   );
 }

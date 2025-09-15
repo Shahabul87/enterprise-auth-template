@@ -1,8 +1,8 @@
-'use client';
-
 import React from 'react';
 import { ArrowLeft, Home, Search, FileX, Compass } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { BackButton } from '@/components/ui/back-button';
+import { SupportEmailLink } from '@/components/ui/support-email-link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
@@ -156,15 +156,7 @@ export default function NotFound(): JSX.Element {
             </Button>
           </Link>
 
-          <Button
-            variant='outline'
-            size='lg'
-            onClick={() => window.history.back()}
-            className='w-full sm:w-auto'
-          >
-            <ArrowLeft className='mr-2 h-4 w-4' />
-            Go Back
-          </Button>
+          <BackButton className='w-full sm:w-auto' />
         </div>
 
         <Separator className='my-8' />
@@ -182,14 +174,7 @@ export default function NotFound(): JSX.Element {
               </p>
 
               <div className='flex flex-col sm:flex-row gap-3 justify-center items-center'>
-                <a
-                  href={`mailto:${supportInfo.email}?subject=404 Error Report&body=I encountered a 404 error at: ${typeof window !== 'undefined' ? window.location.href : ''}`}
-                  className='inline-flex'
-                >
-                  <Button variant='outline' size='sm'>
-                    Contact Support
-                  </Button>
-                </a>
+                <SupportEmailLink email={supportInfo.email} />
 
                 <Link href={supportInfo.docs}>
                   <Button variant='ghost' size='sm'>
