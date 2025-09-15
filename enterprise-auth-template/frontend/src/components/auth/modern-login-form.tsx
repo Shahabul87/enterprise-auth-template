@@ -132,21 +132,21 @@ export function ModernLoginForm() {
       id: 'password' as AuthMethod,
       label: 'Password',
       icon: Lock,
-      color: 'from-blue-500 to-indigo-600',
+      activeClasses: 'border-transparent bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg',
       description: 'Sign in with email and password'
     },
     {
       id: 'passkey' as AuthMethod,
       label: 'Passkey',
       icon: Fingerprint,
-      color: 'from-purple-500 to-pink-600',
+      activeClasses: 'border-transparent bg-gradient-to-br from-purple-500 to-pink-600 shadow-lg',
       description: 'Secure biometric authentication'
     },
     {
       id: 'magic-link' as AuthMethod,
       label: 'Magic Link',
       icon: Mail,
-      color: 'from-emerald-500 to-teal-600',
+      activeClasses: 'border-transparent bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg',
       description: 'Get a login link via email'
     },
   ];
@@ -173,7 +173,7 @@ export function ModernLoginForm() {
 
       {/* Auth Method Selector */}
       <motion.div
-        className="grid grid-cols-3 gap-2 mb-8"
+        className="grid grid-cols-3 gap-3 mb-8"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.1 }}
@@ -183,43 +183,39 @@ export function ModernLoginForm() {
           const isActive = authMethod === method.id;
 
           return (
-            <button
+            <motion.button
               key={method.id}
               onClick={() => {
                 setAuthMethod(method.id);
                 setEmailSent(false);
               }}
               className={cn(
-                "relative group flex flex-col items-center p-3 rounded-xl transition-all duration-300",
+                "relative group flex flex-col items-center p-3 rounded-xl",
                 "border-2 backdrop-blur-sm",
                 isActive
-                  ? "border-transparent bg-gradient-to-br shadow-lg scale-105"
-                  : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:scale-105",
-                isActive && method.color
+                  ? method.activeClasses
+                  : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
               )}
+              whileHover={{ scale: isActive ? 1 : 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              animate={{ scale: isActive ? 1.05 : 1 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
             >
               <Icon
                 className={cn(
-                  "w-6 h-6 mb-1 transition-colors duration-300",
+                  "w-6 h-6 mb-1",
                   isActive ? "text-white" : "text-gray-600 dark:text-gray-400"
                 )}
               />
               <span
                 className={cn(
-                  "text-xs font-medium transition-colors duration-300",
+                  "text-xs font-medium",
                   isActive ? "text-white" : "text-gray-700 dark:text-gray-300"
                 )}
               >
                 {method.label}
               </span>
-              {isActive && (
-                <motion.div
-                  className="absolute inset-0 rounded-xl bg-gradient-to-br opacity-20"
-                  layoutId="activeTab"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-            </button>
+            </motion.button>
           );
         })}
       </motion.div>
@@ -231,7 +227,7 @@ export function ModernLoginForm() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           {/* Password Login Form */}
           {authMethod === 'password' && (
             <motion.form
