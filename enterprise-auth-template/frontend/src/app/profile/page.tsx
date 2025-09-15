@@ -61,6 +61,15 @@ export default function ProfilePage(): JSX.Element {
     text: string;
   } | null>(null);
 
+  // Helper function to get initials from full name
+  const getInitials = (name: string): string => {
+    if (!name) return 'U';
+    const parts = name.trim().split(' ').filter(Boolean);
+    if (parts.length === 0) return 'U';
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  };
+
   useEffect(() => {
     if (user) {
       fetchLinkedAccounts();
@@ -228,8 +237,7 @@ export default function ProfilePage(): JSX.Element {
                 >
                   <div className='w-24 h-24 rounded-full bg-white dark:bg-gray-800 p-1.5'>
                     <div className='w-full h-full rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-3xl font-bold text-white shadow-xl'>
-                      {user.first_name.charAt(0)}
-                      {user.last_name.charAt(0)}
+                      {getInitials(user.full_name || user.email)}
                     </div>
                   </div>
                 </motion.div>
@@ -237,7 +245,7 @@ export default function ProfilePage(): JSX.Element {
               <CardContent className='pt-14 pb-6'>
                 <div className='text-center mb-6'>
                   <h2 className='text-xl font-bold'>
-                    {user.first_name} {user.last_name}
+                    {user.full_name || 'User'}
                   </h2>
                   <p className='text-sm text-gray-600 dark:text-gray-400 flex items-center justify-center gap-1 mt-1'>
                     <Mail className='h-3 w-3' />

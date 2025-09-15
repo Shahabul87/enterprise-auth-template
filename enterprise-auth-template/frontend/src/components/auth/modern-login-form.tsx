@@ -52,7 +52,7 @@ export function ModernLoginForm() {
 
     setIsLoading(true);
     try {
-      await login(email, password);
+      await login({ email, password });
       toast({
         title: 'Welcome back!',
         description: 'Login successful',

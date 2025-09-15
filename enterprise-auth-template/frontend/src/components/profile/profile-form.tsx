@@ -19,8 +19,7 @@ import AuthAPI from '@/lib/auth-api';
 import { Loader2, User as UserIcon } from 'lucide-react';
 
 interface ProfileFormData {
-  first_name: string;
-  last_name: string;
+  full_name: string;
   email: string;
 }
 
@@ -33,8 +32,7 @@ export function ProfileForm({ onSuccess }: ProfileFormProps): JSX.Element {
 
   const { form, isSubmitting, error, handleSubmit } = useAuthForm<ProfileFormData>({
     defaultValues: {
-      first_name: user?.first_name || '',
-      last_name: user?.last_name || '',
+      full_name: user?.full_name || '',
       email: user?.email || '',
     },
     onSuccess: async () => {
@@ -47,8 +45,7 @@ export function ProfileForm({ onSuccess }: ProfileFormProps): JSX.Element {
   React.useEffect(() => {
     if (user) {
       form.reset({
-        first_name: user.first_name,
-        last_name: user.last_name,
+        full_name: user.full_name || '',
         email: user.email,
       });
     }
@@ -65,14 +62,13 @@ export function ProfileForm({ onSuccess }: ProfileFormProps): JSX.Element {
     return false;
   });
 
-  const formIsValid = isFormValid(form, ['first_name', 'last_name', 'email']);
+  const formIsValid = isFormValid(form, ['full_name', 'email']);
   const hasChanges = React.useMemo(() => {
     if (!user) return false;
 
     const currentValues = form.getValues();
     return (
-      currentValues.first_name !== user.first_name ||
-      currentValues.last_name !== user.last_name ||
+      currentValues.full_name !== (user.full_name || '') ||
       currentValues.email !== user.email
     );
   }, [form, user]);
@@ -105,45 +101,24 @@ export function ProfileForm({ onSuccess }: ProfileFormProps): JSX.Element {
               </Alert>
             )}
 
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-              <FormField
-                control={form.control}
-                name='first_name'
-                rules={validationRules.firstName}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>First name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Enter your first name'
-                        disabled={isSubmitting}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='last_name'
-                rules={validationRules.lastName}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Enter your last name'
-                        disabled={isSubmitting}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name='full_name'
+              rules={validationRules.name}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='Enter your full name'
+                      disabled={isSubmitting}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
@@ -172,8 +147,7 @@ export function ProfileForm({ onSuccess }: ProfileFormProps): JSX.Element {
                 onClick={() => {
                   if (user) {
                     form.reset({
-                      first_name: user.first_name,
-                      last_name: user.last_name,
+                      full_name: user.full_name || '',
                       email: user.email,
                     });
                   }
