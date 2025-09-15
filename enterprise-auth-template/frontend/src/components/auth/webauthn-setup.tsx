@@ -40,7 +40,18 @@ import {
   Clock,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { webAuthnService, type WebAuthnCredential } from '@/lib/webauthn-client';
+import { webAuthnService } from '@/services/auth-api.service';
+
+// Type for WebAuthn credentials
+interface WebAuthnCredential {
+  id: string;
+  device_name: string;
+  created_at: string;
+  last_used: string | null;
+  transports: string[];
+  aaguid: string;
+  credential_id_preview: string;
+}
 
 interface WebAuthnSetupProps {
   /** Current user information */
@@ -155,17 +166,21 @@ export function WebAuthnSetup({
       setIsDeletingId(credentialId);
       setError(null);
 
-      await webAuthnService.deleteCredential(credentialId);
-      
-      toast({
-        title: 'Passkey deleted',
-        description: 'The passkey has been removed from your account.',
-      });
+      const response = await webAuthnService.deleteCredential(credentialId);
 
-      // Reload credentials and close dialog
-      await loadCredentials();
-      setShowDeleteDialog(null);
-      
+      if (response.success) {
+        toast({
+          title: 'Passkey deleted',
+          description: 'The passkey has been removed from your account.',
+        });
+
+        // Reload credentials and close dialog
+        await loadCredentials();
+        setShowDeleteDialog(null);
+      } else {
+        throw new Error(response.error?.message || 'Failed to delete passkey');
+      }
+
     } catch (err: unknown) {
       // Failed to delete WebAuthn credential - error already handled
       

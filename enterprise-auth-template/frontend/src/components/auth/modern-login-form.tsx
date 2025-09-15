@@ -24,6 +24,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { magicLinkService, webAuthnService, base64ToArrayBuffer, arrayBufferToBase64 } from '@/services/auth-api.service';
 
 type AuthMethod = 'password' | 'passkey' | 'magic-link';
 
@@ -70,29 +71,111 @@ export function ModernLoginForm() {
   };
 
   const handlePasskeyLogin = async () => {
-    setIsLoading(true);
-    try {
-      // Simulate passkey authentication
+    if (!email) {
       toast({
-        title: 'Passkey authentication',
-        description: 'Please use your device authenticator',
-      });
-      // In production, this would trigger WebAuthn API
-      setTimeout(() => {
-        setIsLoading(false);
-        toast({
-          title: 'Passkey not configured',
-          description: 'Please set up passkey in your security settings first',
-          variant: 'destructive',
-        });
-      }, 2000);
-    } catch (error) {
-      setIsLoading(false);
-      toast({
-        title: 'Authentication failed',
-        description: 'Could not authenticate with passkey',
+        title: 'Email required',
+        description: 'Please enter your email address',
         variant: 'destructive',
       });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Step 1: Get authentication options from server
+      const optionsResponse = await webAuthnService.getAuthenticationOptions(email);
+
+      if (!optionsResponse.success || !optionsResponse.data) {
+        throw new Error(optionsResponse.error?.message || 'Failed to get authentication options');
+      }
+
+      const options = optionsResponse.data;
+
+      // Step 2: Convert challenge from base64 to ArrayBuffer
+      const publicKeyOptions = {
+        ...options.publicKey,
+        challenge: base64ToArrayBuffer(options.publicKey.challenge),
+      };
+
+      // Convert allowCredentials if present
+      if (options.publicKey.allowCredentials) {
+        publicKeyOptions.allowCredentials = options.publicKey.allowCredentials.map(cred => ({
+          ...cred,
+          id: base64ToArrayBuffer(cred.id),
+        }));
+      }
+
+      // Step 3: Request credential from browser
+      const credential = await navigator.credentials.get({
+        publicKey: publicKeyOptions,
+      }) as PublicKeyCredential;
+
+      if (!credential) {
+        throw new Error('Authentication cancelled');
+      }
+
+      // Step 4: Prepare credential response for server
+      const response = credential.response as AuthenticatorAssertionResponse;
+      const credentialData = {
+        id: credential.id,
+        rawId: arrayBufferToBase64(credential.rawId),
+        type: credential.type,
+        response: {
+          authenticatorData: arrayBufferToBase64(response.authenticatorData),
+          clientDataJSON: arrayBufferToBase64(response.clientDataJSON),
+          signature: arrayBufferToBase64(response.signature),
+          userHandle: response.userHandle ? arrayBufferToBase64(response.userHandle) : null,
+        },
+      };
+
+      // Step 5: Verify with server
+      const verifyResponse = await webAuthnService.verifyAuthentication(
+        credentialData,
+        options.publicKey.challenge
+      );
+
+      if (verifyResponse.success && verifyResponse.data) {
+        // Store tokens and user data
+        const { setAuth } = useAuthStore.getState();
+        setAuth(
+          verifyResponse.data.access_token,
+          verifyResponse.data.refresh_token,
+          verifyResponse.data.user
+        );
+
+        toast({
+          title: 'Welcome back!',
+          description: 'Successfully authenticated with passkey',
+        });
+
+        router.push('/dashboard');
+      } else {
+        throw new Error(verifyResponse.error?.message || 'Authentication failed');
+      }
+    } catch (error) {
+      console.error('Passkey authentication error:', error);
+
+      let errorMessage = 'Could not authenticate with passkey';
+
+      if (error instanceof Error) {
+        if (error.name === 'NotAllowedError') {
+          errorMessage = 'Authentication was cancelled or timed out';
+        } else if (error.name === 'NotSupportedError') {
+          errorMessage = 'Your device does not support passkeys';
+        } else if (error.name === 'InvalidStateError') {
+          errorMessage = 'No passkey found for this account';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
+      toast({
+        title: 'Authentication failed',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -109,17 +192,24 @@ export function ModernLoginForm() {
 
     setIsLoading(true);
     try {
-      // Simulate sending magic link
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setEmailSent(true);
-      toast({
-        title: 'Magic link sent!',
-        description: 'Check your email for the login link',
-      });
+      // Request magic link from server
+      const response = await magicLinkService.requestMagicLink(email);
+
+      if (response.success) {
+        setEmailSent(true);
+        toast({
+          title: 'Magic link sent!',
+          description: (response as any).message || 'Check your email for the login link',
+        });
+      } else {
+        throw new Error(response.error?.message || 'Failed to send magic link');
+      }
     } catch (error) {
+      console.error('Magic link error:', error);
+
       toast({
         title: 'Failed to send',
-        description: 'Could not send magic link. Please try again.',
+        description: error instanceof Error ? error.message : 'Could not send magic link. Please try again.',
         variant: 'destructive',
       });
     } finally {

@@ -122,7 +122,7 @@ export interface RegisterRequest {
   email: string;
   password: string;
   confirm_password?: string; // Optional for backend compatibility
-  name: string; // Will be used as full_name in backend
+  full_name: string; // Backend expects full_name
   agree_to_terms: boolean;
 }
 

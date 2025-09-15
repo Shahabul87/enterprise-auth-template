@@ -76,18 +76,20 @@ export function RegisterForm() {
         email: data.email,
         password: data.password,
         confirm_password: data.confirmPassword,
-        name: data.name,
+        full_name: data.name,
         agree_to_terms: data.terms,
       });
 
       if (response.success) {
-        // Store email for verification page
+        // Show success message
         if (typeof window !== 'undefined') {
-          localStorage.setItem('registrationEmail', data.email);
+          alert('Registration successful! Please check your email for a verification link.');
         }
 
-        // Redirect to email verification page
-        router.push(`/auth/verify-email?email=${encodeURIComponent(data.email)}`);
+        // Redirect to login page after a short delay
+        setTimeout(() => {
+          router.push('/auth/login');
+        }, 3000);
       } else {
         const errorMessage = response.error?.message || 'Registration failed';
         setError(errorMessage);

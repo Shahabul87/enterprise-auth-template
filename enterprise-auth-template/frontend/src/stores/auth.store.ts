@@ -131,6 +131,7 @@ export interface AuthState {
   clearAuth: () => void;
   setupTokenRefresh: () => void;
   clearAuthData: () => void;
+  setAuth: (accessToken: string, refreshToken: string, user: any) => void;
 }
 
 // Token refresh interval (5 minutes before expiry)
@@ -651,9 +652,9 @@ export const useAuthStore = create<AuthState>()(
               clearTimeout(refreshTimer);
               refreshTimer = null;
             }
-            
+
             clearAuthCookies();
-            
+
             set((state) => {
               state.user = null;
               state.tokens = null;
@@ -666,6 +667,57 @@ export const useAuthStore = create<AuthState>()(
               state.is2FAEnabled = false;
               state.requiresPasswordChange = false;
             });
+          },
+
+          setAuth: (accessToken: string, refreshToken: string, user: any) => {
+            // Create token pair
+            const tokenPair: TokenPair = {
+              access_token: accessToken,
+              refresh_token: refreshToken,
+              token_type: 'bearer',
+              expires_in: 900, // Default 15 minutes
+            };
+
+            // Store tokens
+            storeAuthTokens(tokenPair);
+
+            // Update state
+            set((state) => {
+              state.user = {
+                id: String(user.id ?? ''),
+                email: String(user.email ?? ''),
+                full_name: String(user.full_name ?? user.name ?? ''),
+                username: user.username,
+                is_active: Boolean(user.is_active ?? true),
+                email_verified: Boolean(user.email_verified ?? user.isEmailVerified ?? user.is_verified ?? false),
+                is_superuser: Boolean(user.is_superuser ?? false),
+                two_factor_enabled: Boolean(user.two_factor_enabled ?? user.isTwoFactorEnabled ?? false),
+                failed_login_attempts: Number(user.failed_login_attempts ?? 0),
+                last_login: (user.last_login ?? user.lastLoginAt ?? null),
+                profile_picture: user.profilePicture ?? user.avatar_url,
+                avatar_url: user.avatar_url,
+                phone_number: user.phone_number,
+                is_phone_verified: user.is_phone_verified,
+                user_metadata: user.user_metadata ?? {},
+                created_at: String(user.created_at ?? user.createdAt ?? new Date().toISOString()),
+                updated_at: String(user.updated_at ?? user.updatedAt ?? new Date().toISOString()),
+                roles: [],
+                permissions: Array.isArray(user.permissions) ? user.permissions : [],
+              } as any;
+              state.tokens = tokenPair;
+              state.accessToken = accessToken;
+              state.isAuthenticated = true;
+              state.isEmailVerified = Boolean(
+                user?.email_verified ?? user?.isEmailVerified ?? user?.is_verified ?? false
+              );
+              state.session = {
+                loginTime: new Date(),
+                lastActivity: new Date(),
+              };
+            });
+
+            // Setup token refresh
+            get().setupTokenRefresh();
           },
           
           setupTokenRefresh: () => {

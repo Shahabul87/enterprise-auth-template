@@ -37,8 +37,9 @@ export interface LoginRequest {
 export interface RegisterRequest {
   email: string;
   password: string;
-  first_name: string;
-  last_name: string;
+  full_name: string;
+  confirm_password?: string;
+  agree_to_terms?: boolean;
 }
 
 export interface LoginResponse {

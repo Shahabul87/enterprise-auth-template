@@ -85,15 +85,14 @@ export function ModernRegisterForm(): JSX.Element {
       {
         email: formData.email,
         password: formData.password,
-        name: formData.name,
-        organization: formData.organization || undefined,
+        full_name: formData.name,
+        confirm_password: formData.confirmPassword,
+        agree_to_terms: formData.acceptTerms,
       },
       {
         onSuccess: () => {
           setStep('complete');
-          setTimeout(() => {
-            router.push('/auth/verify-email');
-          }, 2000);
+          // Don't redirect - user needs to check email for link
         },
         onError: (error) => {
           setErrors({
@@ -441,9 +440,22 @@ export function ModernRegisterForm(): JSX.Element {
                 <h3 className='text-2xl font-bold text-gray-900 dark:text-white mb-2'>
                   Account Created!
                 </h3>
-                <p className='text-gray-600 dark:text-gray-400'>
-                  Please check your email to verify your account.
+                <p className='text-gray-600 dark:text-gray-400 mb-4'>
+                  We&apos;ve sent a verification link to your email.
                 </p>
+                <div className='bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 text-left'>
+                  <p className='text-sm text-blue-700 dark:text-blue-300 font-medium mb-2'>
+                    Next steps:
+                  </p>
+                  <ol className='text-sm text-blue-600 dark:text-blue-400 space-y-1'>
+                    <li>1. Check your email inbox</li>
+                    <li>2. Click the verification link</li>
+                    <li>3. Log in to your account</li>
+                  </ol>
+                  <p className='text-xs text-blue-500 dark:text-blue-500 mt-3'>
+                    Note: Check your spam folder if you don&apos;t see the email
+                  </p>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

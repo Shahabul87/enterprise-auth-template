@@ -5,7 +5,7 @@ Models for managing passwordless authentication via magic links
 sent to user email addresses.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import TYPE_CHECKING, Optional
 from uuid import uuid4
 
@@ -96,7 +96,7 @@ class MagicLink(Base):
     @property
     def is_expired(self) -> bool:
         """Check if the magic link has expired."""
-        return datetime.utcnow() > self.expires_at
+        return datetime.now(timezone.utc) > self.expires_at
 
     @property
     def is_valid(self) -> bool:
@@ -122,7 +122,7 @@ class MagicLink(Base):
     def increment_attempts(self) -> None:
         """Increment the attempt counter and update last attempt timestamp."""
         self.attempt_count += 1
-        self.last_attempt_at = datetime.utcnow()
+        self.last_attempt_at = datetime.now(timezone.utc)
 
     def mark_as_used(
         self, ip_address: Optional[str] = None, user_agent: Optional[str] = None
@@ -135,7 +135,7 @@ class MagicLink(Base):
             user_agent: User agent that used the link
         """
         self.is_used = True
-        self.used_at = datetime.utcnow()
+        self.used_at = datetime.now(timezone.utc)
         if ip_address:
             self.ip_address = ip_address
         if user_agent:
@@ -152,7 +152,7 @@ class MagicLink(Base):
         Returns:
             Expiration datetime
         """
-        return datetime.utcnow() + timedelta(minutes=minutes)
+        return datetime.now(timezone.utc) + timedelta(minutes=minutes)
 
     @classmethod
     def generate_token(cls) -> str:
