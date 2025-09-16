@@ -7,13 +7,12 @@ import 'dart:async' as _i4;
 
 import 'package:flutter_auth_template/core/network/api_response.dart' as _i2;
 import 'package:flutter_auth_template/core/storage/secure_storage_service.dart'
-    as _i10;
+    as _i9;
 import 'package:flutter_auth_template/data/models/auth_request.dart' as _i6;
 import 'package:flutter_auth_template/data/models/auth_response.dart' as _i7;
 import 'package:flutter_auth_template/domain/entities/user.dart' as _i5;
 import 'package:flutter_auth_template/services/auth_service.dart' as _i3;
 import 'package:flutter_auth_template/services/oauth_service.dart' as _i8;
-import 'package:google_sign_in/google_sign_in.dart' as _i9;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -336,77 +335,13 @@ class MockOAuthService extends _i1.Mock implements _i8.OAuthService {
             returnValue: _i4.Future<bool>.value(false),
           )
           as _i4.Future<bool>);
-
-  @override
-  _i4.Future<_i9.GoogleSignInAccount?> getCurrentGoogleUser() =>
-      (super.noSuchMethod(
-            Invocation.method(#getCurrentGoogleUser, []),
-            returnValue: _i4.Future<_i9.GoogleSignInAccount?>.value(),
-          )
-          as _i4.Future<_i9.GoogleSignInAccount?>);
-
-  @override
-  _i4.Future<_i2.ApiResponse<_i8.AppleSignInResult>> signInWithApple() =>
-      (super.noSuchMethod(
-            Invocation.method(#signInWithApple, []),
-            returnValue:
-                _i4.Future<_i2.ApiResponse<_i8.AppleSignInResult>>.value(
-                  _FakeApiResponse_0<_i8.AppleSignInResult>(
-                    this,
-                    Invocation.method(#signInWithApple, []),
-                  ),
-                ),
-          )
-          as _i4.Future<_i2.ApiResponse<_i8.AppleSignInResult>>);
-
-  @override
-  _i4.Future<_i2.ApiResponse<_i8.FacebookSignInResult>> signInWithFacebook() =>
-      (super.noSuchMethod(
-            Invocation.method(#signInWithFacebook, []),
-            returnValue:
-                _i4.Future<_i2.ApiResponse<_i8.FacebookSignInResult>>.value(
-                  _FakeApiResponse_0<_i8.FacebookSignInResult>(
-                    this,
-                    Invocation.method(#signInWithFacebook, []),
-                  ),
-                ),
-          )
-          as _i4.Future<_i2.ApiResponse<_i8.FacebookSignInResult>>);
-
-  @override
-  _i4.Future<_i2.ApiResponse<_i8.GitHubSignInResult>> signInWithGitHub() =>
-      (super.noSuchMethod(
-            Invocation.method(#signInWithGitHub, []),
-            returnValue:
-                _i4.Future<_i2.ApiResponse<_i8.GitHubSignInResult>>.value(
-                  _FakeApiResponse_0<_i8.GitHubSignInResult>(
-                    this,
-                    Invocation.method(#signInWithGitHub, []),
-                  ),
-                ),
-          )
-          as _i4.Future<_i2.ApiResponse<_i8.GitHubSignInResult>>);
-
-  @override
-  _i4.Future<_i2.ApiResponse<_i8.DiscordSignInResult>> signInWithDiscord() =>
-      (super.noSuchMethod(
-            Invocation.method(#signInWithDiscord, []),
-            returnValue:
-                _i4.Future<_i2.ApiResponse<_i8.DiscordSignInResult>>.value(
-                  _FakeApiResponse_0<_i8.DiscordSignInResult>(
-                    this,
-                    Invocation.method(#signInWithDiscord, []),
-                  ),
-                ),
-          )
-          as _i4.Future<_i2.ApiResponse<_i8.DiscordSignInResult>>);
 }
 
 /// A class which mocks [SecureStorageService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSecureStorageService extends _i1.Mock
-    implements _i10.SecureStorageService {
+    implements _i9.SecureStorageService {
   MockSecureStorageService() {
     _i1.throwOnMissingStub(this);
   }
@@ -424,6 +359,14 @@ class MockSecureStorageService extends _i1.Mock
   _i4.Future<String?> getAccessToken() =>
       (super.noSuchMethod(
             Invocation.method(#getAccessToken, []),
+            returnValue: _i4.Future<String?>.value(),
+          )
+          as _i4.Future<String?>);
+
+  @override
+  _i4.Future<String?> getToken() =>
+      (super.noSuchMethod(
+            Invocation.method(#getToken, []),
             returnValue: _i4.Future<String?>.value(),
           )
           as _i4.Future<String?>);
@@ -502,6 +445,23 @@ class MockSecureStorageService extends _i1.Mock
   _i4.Future<bool> getBiometricEnabled() =>
       (super.noSuchMethod(
             Invocation.method(#getBiometricEnabled, []),
+            returnValue: _i4.Future<bool>.value(false),
+          )
+          as _i4.Future<bool>);
+
+  @override
+  _i4.Future<void> storeBiometricEnabled(bool? enabled) =>
+      (super.noSuchMethod(
+            Invocation.method(#storeBiometricEnabled, [enabled]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<bool> isBiometricEnabled() =>
+      (super.noSuchMethod(
+            Invocation.method(#isBiometricEnabled, []),
             returnValue: _i4.Future<bool>.value(false),
           )
           as _i4.Future<bool>);

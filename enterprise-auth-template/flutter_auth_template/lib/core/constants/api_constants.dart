@@ -4,7 +4,7 @@ class ApiConstants {
   // Base URLs - Now dynamic based on environment
   static String get baseUrl => Environment.apiBaseUrl;
   static const String apiVersion = 'v1';
-  static const String apiPath = '/api/$apiVersion/$apiVersion';  // Double v1 due to backend router config
+  static const String apiPath = '/api/$apiVersion';  // API version path
 
   // Full API URL
   static String get apiUrl => '$baseUrl$apiPath';
@@ -60,6 +60,12 @@ class ApiConstants {
       '$webauthnBasePath/authenticate/begin';
   static const String webauthnAuthenticateCompletePath =
       '$webauthnBasePath/authenticate/complete';
+
+  // WebAuthn aliases for compatibility
+  static const String webauthnRegisterStartPath = webauthnRegisterBeginPath;
+  static const String webauthnAuthStartPath = webauthnAuthenticateBeginPath;
+  static const String webauthnAuthCompletePath = webauthnAuthenticateCompletePath;
+  static const String webauthnCredentialsPath = '$webauthnBasePath/credentials/{id}';
 
   // Magic Links endpoints
   static const String magicLinksBasePath = '/magic-links';

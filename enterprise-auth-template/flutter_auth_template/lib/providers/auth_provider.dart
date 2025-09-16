@@ -91,7 +91,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
     final request = RegisterRequest(
       email: email,
       password: password,
-      name: name,
+      fullName: name,
+      confirmPassword: password,
+      agreeToTerms: true,
     );
     final response = await _authService.register(request);
     
@@ -161,6 +163,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     final request = ChangePasswordRequest(
       currentPassword: currentPassword,
       newPassword: newPassword,
+      confirmPassword: newPassword,
     );
     final response = await _authService.changePassword(request);
     

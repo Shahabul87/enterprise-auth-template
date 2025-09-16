@@ -19,7 +19,11 @@ class RegisterRequest with _$RegisterRequest {
   const factory RegisterRequest({
     required String email,
     required String password,
-    required String name,
+    @JsonKey(name: 'full_name') required String fullName,
+    @JsonKey(name: 'confirm_password') required String confirmPassword,
+    String? organization,
+    @JsonKey(name: 'agree_to_terms') required bool agreeToTerms,
+    @JsonKey(name: 'subscribe_newsletter') bool? subscribeNewsletter,
   }) = _RegisterRequest;
 
   factory RegisterRequest.fromJson(Map<String, dynamic> json) =>
@@ -79,6 +83,18 @@ class VerifyTwoFactorRequest with _$VerifyTwoFactorRequest {
 }
 
 @freezed
+class ChangePasswordRequest with _$ChangePasswordRequest {
+  const factory ChangePasswordRequest({
+    @JsonKey(name: 'current_password') required String currentPassword,
+    @JsonKey(name: 'new_password') required String newPassword,
+    @JsonKey(name: 'confirm_password') required String confirmPassword,
+  }) = _ChangePasswordRequest;
+
+  factory ChangePasswordRequest.fromJson(Map<String, dynamic> json) =>
+      _$ChangePasswordRequestFromJson(json);
+}
+
+@freezed
 class VerifyEmailRequest with _$VerifyEmailRequest {
   const factory VerifyEmailRequest({required String token}) = _VerifyEmailRequest;
 
@@ -86,13 +102,3 @@ class VerifyEmailRequest with _$VerifyEmailRequest {
       _$VerifyEmailRequestFromJson(json);
 }
 
-@freezed
-class ChangePasswordRequest with _$ChangePasswordRequest {
-  const factory ChangePasswordRequest({
-    required String currentPassword,
-    required String newPassword,
-  }) = _ChangePasswordRequest;
-
-  factory ChangePasswordRequest.fromJson(Map<String, dynamic> json) =>
-      _$ChangePasswordRequestFromJson(json);
-}

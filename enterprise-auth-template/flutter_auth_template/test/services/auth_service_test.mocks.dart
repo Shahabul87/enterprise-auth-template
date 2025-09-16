@@ -330,6 +330,14 @@ class MockSecureStorageService extends _i1.Mock
           as _i5.Future<String?>);
 
   @override
+  _i5.Future<String?> getToken() =>
+      (super.noSuchMethod(
+            Invocation.method(#getToken, []),
+            returnValue: _i5.Future<String?>.value(),
+          )
+          as _i5.Future<String?>);
+
+  @override
   _i5.Future<void> removeAccessToken() =>
       (super.noSuchMethod(
             Invocation.method(#removeAccessToken, []),
@@ -403,6 +411,23 @@ class MockSecureStorageService extends _i1.Mock
   _i5.Future<bool> getBiometricEnabled() =>
       (super.noSuchMethod(
             Invocation.method(#getBiometricEnabled, []),
+            returnValue: _i5.Future<bool>.value(false),
+          )
+          as _i5.Future<bool>);
+
+  @override
+  _i5.Future<void> storeBiometricEnabled(bool? enabled) =>
+      (super.noSuchMethod(
+            Invocation.method(#storeBiometricEnabled, [enabled]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<bool> isBiometricEnabled() =>
+      (super.noSuchMethod(
+            Invocation.method(#isBiometricEnabled, []),
             returnValue: _i5.Future<bool>.value(false),
           )
           as _i5.Future<bool>);

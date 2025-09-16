@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../providers/auth_provider.dart';
 import '../screens/splash_screen.dart';
-import '../screens/auth/login_screen.dart';
-import '../screens/auth/register_screen.dart';
+import '../screens/auth/modern_login_screen.dart';
+import '../screens/auth/modern_register_screen.dart';
 import '../screens/auth/two_factor_setup_screen.dart';
 import '../screens/auth/two_factor_verify_screen.dart';
 import '../screens/dashboard_screen.dart';
@@ -50,12 +50,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/auth/login',
         name: 'login',
-        builder: (context, state) => const LoginScreen(),
+        builder: (context, state) => const ModernLoginScreen(),
       ),
       GoRoute(
         path: '/auth/register',
         name: 'register',
-        builder: (context, state) => const RegisterScreen(),
+        builder: (context, state) => const ModernRegisterScreen(),
       ),
       GoRoute(
         path: '/auth/2fa-setup',
@@ -128,12 +128,12 @@ final simpleRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/auth/login',
         name: 'login',
-        builder: (context, state) => const LoginScreen(),
+        builder: (context, state) => const ModernLoginScreen(),
       ),
       GoRoute(
         path: '/auth/register',
         name: 'register',
-        builder: (context, state) => const RegisterScreen(),
+        builder: (context, state) => const ModernRegisterScreen(),
       ),
       GoRoute(
         path: '/dashboard',

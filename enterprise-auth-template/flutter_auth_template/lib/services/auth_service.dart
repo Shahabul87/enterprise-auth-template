@@ -268,8 +268,9 @@ class AuthService {
             try {
               // Extract user and tokens
               final user = User.fromJson(data['user'] as Map<String, dynamic>);
-              final accessToken = data['access_token'] as String?;
-              final refreshToken = data['refresh_token'] as String?;
+              // Backend returns camelCase for tokens
+              final accessToken = data['accessToken'] as String? ?? data['access_token'] as String?;
+              final refreshToken = data['refreshToken'] as String? ?? data['refresh_token'] as String?;
 
               // Store tokens asynchronously
               if (accessToken != null) {
