@@ -9,36 +9,46 @@ import '../screens/auth/modern_register_screen.dart';
 import '../screens/auth/two_factor_setup_screen.dart';
 import '../screens/auth/two_factor_verify_screen.dart';
 import '../screens/dashboard_screen.dart';
+import '../screens/home/modern_home_screen.dart';
+import '../screens/home/public_home_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
   final isAuthenticated = ref.watch(isAuthenticatedProvider);
 
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/home',
     redirect: (BuildContext context, GoRouterState state) {
       final isGoingToLogin = state.matchedLocation == '/auth/login';
       final isGoingToRegister = state.matchedLocation == '/auth/register';
+      final isGoingToHome = state.matchedLocation == '/home';
+      final isGoingToDashboard = state.matchedLocation == '/dashboard';
       final isGoingToSplash = state.matchedLocation == '/splash';
 
-      // If we're going to splash, let it through
-      if (isGoingToSplash) {
+      // Public pages - always accessible
+      if (isGoingToHome || isGoingToLogin || isGoingToRegister || isGoingToSplash) {
+        // If authenticated and going to login/register, redirect to dashboard
+        if (isAuthenticated && (isGoingToLogin || isGoingToRegister)) {
+          return '/dashboard';
+        }
         return null;
       }
 
-      // If not authenticated and not going to auth screens, go to login
-      if (!isAuthenticated && !isGoingToLogin && !isGoingToRegister) {
-        return '/auth/login';
-      }
-
-      // If authenticated and going to auth screens, go to dashboard
-      if (isAuthenticated && (isGoingToLogin || isGoingToRegister)) {
-        return '/dashboard';
+      // Protected pages - require authentication
+      if (isGoingToDashboard && !isAuthenticated) {
+        return '/home';
       }
 
       return null; // No redirect needed
     },
     routes: [
+      // Public Home Screen
+      GoRoute(
+        path: '/home',
+        name: 'home',
+        builder: (context, state) => const PublicHomeScreen(),
+      ),
+
       // Splash Screen
       GoRoute(
         path: '/splash',
@@ -76,13 +86,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/dashboard',
         name: 'dashboard',
-        builder: (context, state) => const DashboardScreen(),
+        builder: (context, state) => const ModernHomeScreen(),
       ),
 
       // Default redirect
       GoRoute(
         path: '/',
-        redirect: (context, state) => '/splash',
+        redirect: (context, state) => '/home',
       ),
     ],
 
