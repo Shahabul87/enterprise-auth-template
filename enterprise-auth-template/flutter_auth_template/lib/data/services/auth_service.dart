@@ -26,11 +26,11 @@ class AuthService {
 
       final authResponse = AuthResponse.fromJson(response.data!);
 
-      if (!authResponse.success || authResponse.dataOrNull == null) {
-        throw _handleAuthError(authResponse.errorMessage);
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
       }
 
-      return authResponse.dataOrNull!;
+      return authResponse.data!;
     } on DioException catch (e) {
       throw _handleDioException(e);
     }
@@ -46,11 +46,11 @@ class AuthService {
 
       final authResponse = AuthResponse.fromJson(response.data!);
 
-      if (!authResponse.success || authResponse.dataOrNull == null) {
-        throw _handleAuthError(authResponse.errorMessage);
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
       }
 
-      return authResponse.dataOrNull!;
+      return authResponse.data!;
     } on DioException catch (e) {
       throw _handleDioException(e);
     }
@@ -65,11 +65,11 @@ class AuthService {
 
       final authResponse = AuthResponse.fromJson(response.data!);
 
-      if (!authResponse.success || authResponse.dataOrNull == null) {
+      if (!authResponse.success || authResponse.data == null) {
         throw const TokenExpiredException();
       }
 
-      return authResponse.dataOrNull!;
+      return authResponse.data!;
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         throw const TokenExpiredException();
@@ -99,7 +99,7 @@ class AuthService {
       final authResponse = AuthResponse.fromJson(response.data!);
 
       if (!authResponse.success) {
-        throw _handleAuthError(authResponse.errorMessage);
+        throw _handleAuthError(authResponse.error);
       }
     } on DioException catch (e) {
       throw _handleDioException(e);
@@ -117,7 +117,7 @@ class AuthService {
       final authResponse = AuthResponse.fromJson(response.data!);
 
       if (!authResponse.success) {
-        throw _handleAuthError(authResponse.errorMessage);
+        throw _handleAuthError(authResponse.error);
       }
     } on DioException catch (e) {
       throw _handleDioException(e);
@@ -134,7 +134,7 @@ class AuthService {
       final authResponse = AuthResponse.fromJson(response.data!);
 
       if (!authResponse.success) {
-        throw _handleAuthError(authResponse.errorMessage);
+        throw _handleAuthError(authResponse.error);
       }
     } on DioException catch (e) {
       throw _handleDioException(e);
@@ -151,7 +151,7 @@ class AuthService {
       final authResponse = AuthResponse.fromJson(response.data!);
 
       if (!authResponse.success) {
-        throw _handleAuthError(authResponse.errorMessage);
+        throw _handleAuthError(authResponse.error);
       }
     } on DioException catch (e) {
       throw _handleDioException(e);
@@ -167,8 +167,8 @@ class AuthService {
 
       final authResponse = AuthResponse.fromJson(response.data!);
 
-      if (!authResponse.success || authResponse.dataOrNull == null) {
-        throw _handleAuthError(authResponse.errorMessage);
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
       }
 
       // Extract permissions from response
@@ -190,11 +190,11 @@ class AuthService {
 
       final authResponse = AuthResponse.fromJson(response.data!);
 
-      if (!authResponse.success || authResponse.dataOrNull == null) {
-        throw _handleAuthError(authResponse.errorMessage);
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
       }
 
-      return authResponse.dataOrNull!.user;
+      return authResponse.data!.user;
     } on DioException catch (e) {
       throw _handleDioException(e);
     }
@@ -210,11 +210,11 @@ class AuthService {
 
       final authResponse = AuthResponse.fromJson(response.data!);
 
-      if (!authResponse.success || authResponse.dataOrNull == null) {
-        throw _handleAuthError(authResponse.errorMessage);
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
       }
 
-      return authResponse.dataOrNull!.user;
+      return authResponse.data!.user;
     } on DioException catch (e) {
       throw _handleDioException(e);
     }
@@ -263,11 +263,11 @@ class AuthService {
 
       final authResponse = AuthResponse.fromJson(response.data!);
 
-      if (!authResponse.success || authResponse.dataOrNull == null) {
-        throw _handleAuthError(authResponse.errorMessage);
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
       }
 
-      return authResponse.dataOrNull!;
+      return authResponse.data!;
     } on DioException catch (e) {
       throw _handleDioException(e);
     }
@@ -286,7 +286,7 @@ class AuthService {
       final authResponse = AuthResponse.fromJson(response.data!);
 
       if (!authResponse.success) {
-        throw _handleAuthError(authResponse.errorMessage);
+        throw _handleAuthError(authResponse.error);
       }
     } on DioException catch (e) {
       throw _handleDioException(e);
@@ -302,11 +302,11 @@ class AuthService {
 
       final authResponse = AuthResponse.fromJson(response.data!);
 
-      if (!authResponse.success || authResponse.dataOrNull == null) {
-        throw _handleAuthError(authResponse.errorMessage);
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
       }
 
-      return authResponse.dataOrNull!;
+      return authResponse.data!;
     } on DioException catch (e) {
       throw _handleDioException(e);
     }
@@ -343,7 +343,7 @@ class AuthService {
       final authResponse = AuthResponse.fromJson(response.data!);
 
       if (!authResponse.success) {
-        throw _handleAuthError(authResponse.errorMessage);
+        throw _handleAuthError(authResponse.error);
       }
     } on DioException catch (e) {
       throw _handleDioException(e);
@@ -378,11 +378,11 @@ class AuthService {
 
       final authResponse = AuthResponse.fromJson(response.data!);
 
-      if (!authResponse.success || authResponse.dataOrNull == null) {
-        throw _handleAuthError(authResponse.errorMessage);
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
       }
 
-      return authResponse.dataOrNull!;
+      return authResponse.data!;
     } on DioException catch (e) {
       throw _handleDioException(e);
     }
@@ -444,11 +444,11 @@ class AuthService {
 
       final authResponse = AuthResponse.fromJson(response.data!);
 
-      if (!authResponse.success || authResponse.dataOrNull == null) {
-        throw _handleAuthError(authResponse.errorMessage);
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
       }
 
-      return authResponse.dataOrNull!;
+      return authResponse.data!;
     } on DioException catch (e) {
       throw _handleDioException(e);
     }
@@ -464,7 +464,7 @@ class AuthService {
       final authResponse = AuthResponse.fromJson(response.data!);
 
       if (!authResponse.success) {
-        throw _handleAuthError(authResponse.errorMessage);
+        throw _handleAuthError(authResponse.error);
       }
     } on DioException catch (e) {
       throw _handleDioException(e);

@@ -183,6 +183,11 @@ export function isFormValid<T extends FieldValues>(
       return value === true;
     }
 
+    // For numeric fields, 0 is considered empty for required fields
+    if (typeof value === 'number') {
+      return value !== 0;
+    }
+
     // For other fields, check if not empty
     return value !== undefined && value !== null && value !== '';
   });

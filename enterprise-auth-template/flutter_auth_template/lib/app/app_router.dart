@@ -11,9 +11,10 @@ import '../screens/auth/two_factor_verify_screen.dart';
 import '../screens/dashboard_screen.dart';
 import '../screens/home/modern_home_screen.dart';
 import '../screens/home/public_home_screen.dart';
+import '../presentation/pages/auth/forgot_password_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authStateProvider);
+  // final authState = ref.watch(authStateProvider); // Unused variable
   final isAuthenticated = ref.watch(isAuthenticatedProvider);
 
   return GoRouter(
@@ -24,9 +25,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isGoingToHome = state.matchedLocation == '/home';
       final isGoingToDashboard = state.matchedLocation == '/dashboard';
       final isGoingToSplash = state.matchedLocation == '/splash';
+      final isGoingToForgotPassword = state.matchedLocation == '/auth/forgot-password';
+      final isGoingTo2FA = state.matchedLocation.startsWith('/auth/2fa');
 
       // Public pages - always accessible
-      if (isGoingToHome || isGoingToLogin || isGoingToRegister || isGoingToSplash) {
+      if (isGoingToHome || isGoingToLogin || isGoingToRegister ||
+          isGoingToSplash || isGoingToForgotPassword || isGoingTo2FA) {
         // If authenticated and going to login/register, redirect to dashboard
         if (isAuthenticated && (isGoingToLogin || isGoingToRegister)) {
           return '/dashboard';
@@ -66,6 +70,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/auth/register',
         name: 'register',
         builder: (context, state) => const ModernRegisterScreen(),
+      ),
+      GoRoute(
+        path: '/auth/forgot-password',
+        name: 'forgot-password',
+        builder: (context, state) => const ForgotPasswordPage(),
       ),
       GoRoute(
         path: '/auth/2fa-setup',

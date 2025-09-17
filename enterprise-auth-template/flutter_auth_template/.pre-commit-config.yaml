@@ -1,0 +1,47 @@
+repos:
+  - repo: local
+    hooks:
+      - id: flutter-analyze
+        name: Flutter Analyze
+        entry: flutter analyze
+        language: system
+        pass_filenames: false
+        always_run: true
+        files: \.dart$
+
+      - id: flutter-format
+        name: Flutter Format
+        entry: dart format --set-exit-if-changed
+        language: system
+        files: \.dart$
+
+      - id: flutter-test
+        name: Flutter Test
+        entry: flutter test
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: check-pubspec
+        name: Check pubspec.yaml
+        entry: flutter pub get
+        language: system
+        files: pubspec\.yaml$
+
+      - id: remove-print-statements
+        name: Remove Print Statements
+        entry: sh -c 'grep -r "print(" lib/ && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+
+      - id: check-todo-comments
+        name: Check TODO Comments
+        entry: sh -c 'grep -r "TODO\|FIXME\|HACK" lib/ && echo "Found TODO comments that need addressing" && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+
+      - id: validate-imports
+        name: Validate Imports
+        entry: sh -c 'grep -r "dart:io" lib/ --include="*.dart" | grep -v "platform_check\|device_info" && echo "Found dart:io import in non-platform specific code" && exit 1 || exit 0'
+        language: system
+        pass_filenames: false

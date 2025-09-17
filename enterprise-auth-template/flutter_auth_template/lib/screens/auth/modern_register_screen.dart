@@ -493,7 +493,7 @@ class _ModernRegisterScreenState extends ConsumerState<ModernRegisterScreen>
           ),
           const SizedBox(height: 16),
           TextButton(
-            onPressed: () => context.go('/login'),
+            onPressed: () => context.go('/auth/login'),
             child: Text(
               'Already have an account? Sign in',
               style: TextStyle(color: theme.colorScheme.primary),

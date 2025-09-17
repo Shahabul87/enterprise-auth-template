@@ -697,7 +697,7 @@ class _ModernLoginScreenState extends ConsumerState<ModernLoginScreen>
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TextButton(
-          onPressed: () => context.push('/forgot-password'),
+          onPressed: () => context.push('/auth/forgot-password'),
           child: Text(
             'Forgot password?',
             style: TextStyle(
@@ -707,7 +707,7 @@ class _ModernLoginScreenState extends ConsumerState<ModernLoginScreen>
           ),
         ),
         TextButton(
-          onPressed: () => context.push('/register'),
+          onPressed: () => context.push('/auth/register'),
           child: Text(
             'Create account',
             style: TextStyle(

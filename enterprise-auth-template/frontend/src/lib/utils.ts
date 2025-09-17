@@ -44,13 +44,20 @@ export function formatDate(
 
 // Validation utilities
 export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // More strict email regex that doesn't allow leading/trailing dots
+  const emailRegex = /^[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
+
+  // Handle single character emails before @
+  if (email.match(/^[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$/)) {
+    return true;
+  }
+
   return emailRegex.test(email);
 }
 
 export function isStrongPassword(password: string): boolean {
   // At least 8 characters, one uppercase, one lowercase, one number, one special character
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
   return passwordRegex.test(password);
 }
 

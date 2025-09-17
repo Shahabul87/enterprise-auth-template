@@ -604,10 +604,11 @@ export const useAuthStore = create<AuthState>()(
             return await AuthAPI.requestPasswordReset({ email });
           },
           
-          confirmPasswordReset: async (token: string, newPassword: string) => {
+          confirmPasswordReset: async (token: string, newPassword: string, confirmPassword: string) => {
             return await AuthAPI.confirmPasswordReset({
               token,
               new_password: newPassword,
+              confirm_password: confirmPassword,
             });
           },
           

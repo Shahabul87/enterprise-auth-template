@@ -795,8 +795,8 @@ export const useUserStore = create<UserState>()(
               // In real implementation, make API call to export data
               const data = format === 'json' 
                 ? JSON.stringify(get().users, null, 2)
-                : 'id,email,first_name,last_name,is_active\n' + 
-                  get().users.map(user => `${user.id},${user.email},${user.first_name},${user.last_name},${user.is_active}`).join('\n');
+                : 'id,email,full_name,is_active\n' +
+                  get().users.map(user => `${user.id},${user.email},${user.full_name},${user.is_active}`).join('\n');
               
               return data;
             } catch (error) {

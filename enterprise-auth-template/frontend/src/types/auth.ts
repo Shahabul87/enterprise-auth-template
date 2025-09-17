@@ -1,11 +1,14 @@
 export interface User {
   id: string;
   email: string;
-  first_name: string;
-  last_name: string;
+  full_name: string;
+  username?: string;
+  avatar_url?: string;
   is_active: boolean;
+  is_verified: boolean;
   email_verified: boolean;
   is_superuser: boolean;
+  two_factor_enabled: boolean;
   failed_login_attempts: number;
   last_login: string | null;
   user_metadata: Record<string, unknown>;
@@ -38,7 +41,7 @@ export interface RegisterRequest {
   email: string;
   password: string;
   full_name: string;
-  confirm_password?: string;
+  confirm_password: string;
   agree_to_terms?: boolean;
 }
 
@@ -62,6 +65,12 @@ export interface PasswordResetRequest {
 export interface PasswordResetConfirm {
   token: string;
   new_password: string;
+}
+
+export interface ConfirmResetPasswordRequest {
+  token: string;
+  new_password: string;
+  confirm_password: string;
 }
 
 export interface ChangePasswordRequest {

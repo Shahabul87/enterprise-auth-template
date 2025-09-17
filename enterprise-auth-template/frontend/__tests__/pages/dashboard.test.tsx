@@ -86,11 +86,12 @@ describe('Dashboard Page', () => {
   const mockUser: User = {
     id: 'user-123',
     email: 'user@example.com',
-    first_name: 'John',
-    last_name: 'Doe',
+    full_name: 'John Doe',
     is_active: true,
     is_verified: true,
+    email_verified: true,
     is_superuser: false,
+    two_factor_enabled: false,
     failed_login_attempts: 0,
     user_metadata: {
       theme: 'light',

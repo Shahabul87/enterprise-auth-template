@@ -37,8 +37,7 @@ export default function WebAuthnSetupPage(): JSX.Element {
               user={{
                 id: user.id,
                 email: user.email,
-                first_name: user.first_name,
-                last_name: user.last_name,
+                full_name: user.full_name,
               }}
               onCredentialsChange={() => {
                 // Handle credentials change if needed

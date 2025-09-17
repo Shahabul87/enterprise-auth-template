@@ -26,8 +26,7 @@ describe('AuthContext', () => {
   const mockUser: User = {
     id: 'test-user-id',
     email: 'test@example.com',
-    first_name: 'Test',
-    last_name: 'User',
+    full_name: 'Test User',
     is_active: true,
     is_verified: true,
     is_superuser: false,
@@ -206,8 +205,7 @@ describe('AuthContext', () => {
         email: 'new@example.com',
         password: 'SecurePassword123!',
         confirm_password: 'SecurePassword123!',
-        first_name: 'New',
-        last_name: 'User',
+        full_name: 'New User',
         agree_to_terms: true,
       };
 
@@ -248,8 +246,7 @@ describe('AuthContext', () => {
         email: 'existing@example.com',
         password: 'SecurePassword123!',
         confirm_password: 'SecurePassword123!',
-        first_name: 'New',
-        last_name: 'User',
+        full_name: 'New User',
         agree_to_terms: true,
       };
 
@@ -398,20 +395,18 @@ describe('AuthContext', () => {
       });
 
       const updates = {
-        first_name: 'Updated',
-        last_name: 'Name',
+        full_name: 'Updated Name',
       };
 
       act(() => {
         result.current.updateUser(updates);
       });
 
-      expect(result.current.user?.first_name).toBe('Updated');
-      expect(result.current.user?.last_name).toBe('Name');
+      expect(result.current.user?.full_name).toBe('Updated Name');
 
       // Check sessionStorage was updated
       const storedUser = JSON.parse(sessionStorage.getItem('auth_user') || '{}');
-      expect(storedUser.first_name).toBe('Updated');
+      expect(storedUser.full_name).toBe('Updated Name');
     });
   });
 });

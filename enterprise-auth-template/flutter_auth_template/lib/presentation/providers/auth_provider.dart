@@ -90,7 +90,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final request = RegisterRequest(
         email: email,
         password: password,
-        name: name,
+        fullName: name,
+        confirmPassword: password,
+        agreeToTerms: true,
       );
       final result = await _authRepository.register(request);
 

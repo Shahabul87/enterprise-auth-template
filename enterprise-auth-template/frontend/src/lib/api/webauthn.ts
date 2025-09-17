@@ -90,7 +90,7 @@ export async function registerPasskey(deviceName?: string) {
     const { options, challenge } = optionsResponse.data;
 
     // Start WebAuthn registration
-    const attResp = await startRegistration(options);
+    const attResp = await startRegistration({ optionsJSON: options });
 
     // Verify registration with backend
     const verifyResponse = await apiClient.post<{
@@ -135,7 +135,7 @@ export async function authenticateWithPasskey(email?: string) {
     const { options, challenge } = optionsResponse.data;
 
     // Start WebAuthn authentication
-    const assertionResp = await startAuthentication(options);
+    const assertionResp = await startAuthentication({ optionsJSON: options });
 
     // Verify authentication with backend
     const verifyResponse = await apiClient.post<{

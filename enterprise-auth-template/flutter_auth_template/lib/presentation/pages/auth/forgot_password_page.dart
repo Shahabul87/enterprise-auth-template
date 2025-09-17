@@ -106,7 +106,7 @@ class ForgotPasswordPage extends HookConsumerWidget {
         ),
         const SizedBox(height: 48),
         ElevatedButton(
-          onPressed: () => context.go('/login'),
+          onPressed: () => context.go('/auth/login'),
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
           ),
@@ -224,7 +224,7 @@ class ForgotPasswordPage extends HookConsumerWidget {
 
           // Back to Login
           TextButton(
-            onPressed: () => context.go('/login'),
+            onPressed: () => context.go('/auth/login'),
             child: const Text('Back to Login'),
           ),
         ],

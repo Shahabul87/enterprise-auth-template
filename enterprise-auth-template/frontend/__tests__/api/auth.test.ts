@@ -24,11 +24,12 @@ describe('AuthAPI', () => {
   const mockUser: User = {
     id: 'test-user-id',
     email: 'test@example.com',
-    first_name: 'Test',
-    last_name: 'User',
+    full_name: 'Test User',
     is_active: true,
     is_verified: true,
+    email_verified: true,
     is_superuser: false,
+    two_factor_enabled: false,
     failed_login_attempts: 0,
     user_metadata: {},
     roles: [],
@@ -168,8 +169,7 @@ describe('AuthAPI', () => {
         email: 'new@example.com',
         password: 'SecurePassword123!',
         confirm_password: 'SecurePassword123!',
-        first_name: 'New',
-        last_name: 'User',
+        full_name: 'New User',
         agree_to_terms: true,
       };
 
@@ -208,8 +208,7 @@ describe('AuthAPI', () => {
         email: 'existing@example.com',
         password: 'SecurePassword123!',
         confirm_password: 'SecurePassword123!',
-        first_name: 'New',
-        last_name: 'User',
+        full_name: 'New User',
         agree_to_terms: true,
       };
 
@@ -238,8 +237,7 @@ describe('AuthAPI', () => {
         email: 'invalid-email',
         password: '123',
         confirm_password: '456',
-        first_name: '',
-        last_name: '',
+        full_name: '',
         agree_to_terms: false,
       };
 
@@ -463,7 +461,7 @@ describe('AuthAPI', () => {
       });
 
       expect(result.success).toBe(true);
-      expect(result.data?.first_name).toBe('Updated');
+      expect(result.data?.full_name).toBe('Updated User');
     });
   });
 

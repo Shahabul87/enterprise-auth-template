@@ -52,8 +52,7 @@ dependencies:
   intl: ^0.20.2
   
   # Charts and Analytics
-  fl_chart: ^0.70.2
-  syncfusion_flutter_charts: ^31.1.18
+  fl_chart: ^0.70.2  # Using fl_chart only, removed syncfusion for smaller bundle
   
   # WebSocket
   web_socket_channel: ^3.0.1
@@ -81,6 +80,7 @@ dependencies:
   package_info_plus: ^8.3.1
   device_info_plus: ^11.5.0
   image_picker: ^1.1.2
+  html_unescape: ^2.0.0
   
   # UI Icons
   cupertino_icons: ^1.0.8
