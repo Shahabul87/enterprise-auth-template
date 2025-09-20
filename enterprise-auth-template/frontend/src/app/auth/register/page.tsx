@@ -29,7 +29,7 @@ export default function RegisterPage(): React.ReactElement {
         <div className='absolute -bottom-8 left-20 w-72 h-72 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob [animation-delay:4s] dark:bg-orange-900 dark:opacity-30'></div>
 
         {/* Grid pattern overlay */}
-        <div className='absolute inset-0 bg-[url("/grid.svg")] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]'></div>
+        <div className='absolute inset-0 grid-pattern'></div>
       </div>
 
       {/* Content */}

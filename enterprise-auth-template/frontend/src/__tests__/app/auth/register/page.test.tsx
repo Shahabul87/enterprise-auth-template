@@ -327,7 +327,7 @@ describe('Grid Pattern Overlay', () => {
         isLoading: false,
       }));
       const { container } = render(<RegisterPage />);
-      const gridOverlay = container.querySelector('[class*="bg-[url(\\"/grid.svg\\")]"]');
+      const gridOverlay = container.querySelector('.grid-pattern');
       expect(gridOverlay).toBeInTheDocument();
     });
   });

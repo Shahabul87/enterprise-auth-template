@@ -332,7 +332,7 @@ describe('Grid Pattern Overlay', () => {
         isLoading: false,
       }));
       const { container } = render(<ForgotPasswordPage />);
-      const gridOverlay = container.querySelector('[class*="bg-[url(\\"/grid.svg\\")]"]');
+      const gridOverlay = container.querySelector('.grid-pattern');
       expect(gridOverlay).toBeInTheDocument();
     });
     it('should have proper mask for grid pattern', async () => {
