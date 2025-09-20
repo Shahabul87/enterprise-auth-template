@@ -170,6 +170,7 @@ async def get_current_user(
 
         # Import settings to check if email verification is required
         from app.core.config import get_settings
+
         settings = get_settings()
 
         if settings.should_enforce_email_verification() and not user.email_verified:
@@ -516,11 +517,7 @@ async def get_optional_current_user(
         return None
 
 
-async def require_permission(
-    user: User,
-    permission: str,
-    db: AsyncSession
-) -> None:
+async def require_permission(user: User, permission: str, db: AsyncSession) -> None:
     """
     Check if a user has a specific permission through their roles.
 
@@ -543,12 +540,8 @@ async def require_permission(
     has_permission = await service.user_has_permission(user.id, permission)
 
     if not has_permission:
-        logger.warning(
-            "Permission denied",
-            user_id=str(user.id),
-            permission=permission
-        )
+        logger.warning("Permission denied", user_id=str(user.id), permission=permission)
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"Permission denied: {permission}"
+            detail=f"Permission denied: {permission}",
         )

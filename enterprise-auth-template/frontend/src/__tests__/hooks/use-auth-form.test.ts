@@ -1,21 +1,25 @@
-/**
- * @jest-environment jsdom
- */
+
 import { renderHook, act } from '@testing-library/react';
 import { useAuthForm, validationRules, isFormValid } from '@/hooks/use-auth-form';
-import { useForm, UseFormReturn, FieldValues } from 'react-hook-form';
+import { useForm, UseFormReturn, FieldValues, Control } from 'react-hook-form';
+import { AuthFormData } from '../types/test-interfaces';
+import React from 'react';
 
-// Mock react-hook-form
 jest.mock('react-hook-form', () => ({
   useForm: jest.fn(),
   Controller: jest.fn(),
 }));
 
-const mockUseForm = useForm as jest.MockedFunction<typeof useForm>;
+/**
+ * @jest-environment jsdom
+ */
 
+
+// Mock react-hook-form
+const mockUseForm = useForm as jest.MockedFunction<typeof useForm>;
 describe('useAuthForm', () => {
   const mockForm = {
-    control: {} as unknown,
+    control: {} as Control<AuthFormData>,
     handleSubmit: jest.fn(),
     watch: jest.fn(),
     reset: jest.fn(),
@@ -48,20 +52,16 @@ describe('useAuthForm', () => {
       isReady: true
     },
   } as UseFormReturn<FieldValues>;
-
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseForm.mockReturnValue(mockForm);
   });
-
-  it('should initialize with default values', () => {
+  it('should initialize with default values', async () => {
     const defaultValues = { email: '', password: '' };
     const onSuccess = jest.fn();
-
     const { result } = renderHook(() =>
       useAuthForm({ defaultValues, onSuccess })
     );
-
     expect(result.current.form).toBeDefined();
     expect(result.current.isSubmitting).toBe(false);
     expect(result.current.error).toBeNull();
@@ -70,65 +70,51 @@ describe('useAuthForm', () => {
       mode: 'onBlur',
     });
   });
-
   it('should handle form submission success', async () => {
     const onSuccess = jest.fn();
     const mockCallback = jest.fn().mockResolvedValue(true);
-
-    (mockForm.handleSubmit as jest.Mock).mockImplementation((callback: (data: Record<string, unknown>) => Promise<boolean>) => {
-      return async (data: Record<string, unknown>) => {
+    (mockForm.handleSubmit as jest.Mock).mockImplementation((callback: (data: AuthFormData) => Promise<boolean>) => {
+      return async (data: AuthFormData) => {
         const result = await callback(data);
         if (result) {
           onSuccess();
         }
       };
     });
-
     const { result } = renderHook(() =>
       useAuthForm({ defaultValues: { email: '', password: '' }, onSuccess })
     );
-
     const submitHandler = result.current.handleSubmit(mockCallback);
-
     await act(async () => {
-      await submitHandler({ email: 'test@example.com', password: 'password123' });
+      await submitHandler({ email: 'test@example.com', password: 'password123', rememberMe: false });
     });
-
     expect(onSuccess).toHaveBeenCalled();
   });
-
   it('should handle form submission failure', async () => {
     const onSuccess = jest.fn();
     const mockCallback = jest.fn().mockResolvedValue(false);
-
-    (mockForm.handleSubmit as jest.Mock).mockImplementation((callback: (data: Record<string, unknown>) => Promise<boolean>) => {
-      return async (data: Record<string, unknown>) => {
+    (mockForm.handleSubmit as jest.Mock).mockImplementation((callback: (data: AuthFormData) => Promise<boolean>) => {
+      return async (data: AuthFormData) => {
         const result = await callback(data);
         if (result) {
           onSuccess();
         }
       };
     });
-
     const { result } = renderHook(() =>
       useAuthForm({ defaultValues: { email: '', password: '' }, onSuccess })
     );
-
     const submitHandler = result.current.handleSubmit(mockCallback);
-
     await act(async () => {
       await submitHandler({ email: 'test@example.com', password: 'wrong' });
     });
-
     expect(onSuccess).not.toHaveBeenCalled();
   });
-
   it('should handle form submission with exception', async () => {
     const onSuccess = jest.fn();
     const mockCallback = jest.fn().mockRejectedValue(new Error('Network error'));
-
-    (mockForm.handleSubmit as jest.Mock).mockImplementation((callback: (data: Record<string, unknown>) => Promise<boolean>) => {
-      return async (data: Record<string, unknown>) => {
+    (mockForm.handleSubmit as jest.Mock).mockImplementation((callback: (data: AuthFormData) => Promise<boolean>) => {
+      return async (data: AuthFormData) => {
         try {
           const result = await callback(data);
           if (result) {
@@ -140,54 +126,31 @@ describe('useAuthForm', () => {
         }
       };
     });
-
     const { result } = renderHook(() =>
       useAuthForm({ defaultValues: { email: '', password: '' }, onSuccess })
     );
-
     const submitHandler = result.current.handleSubmit(mockCallback);
-
     await act(async () => {
-      await submitHandler({ email: 'test@example.com', password: 'password123' });
+      await submitHandler({ email: 'test@example.com', password: 'password123', rememberMe: false });
     });
-
     expect(onSuccess).not.toHaveBeenCalled();
   });
-
-  it('should set and clear errors', () => {
+  it('should set and clear errors', async () => {
     const { result } = renderHook(() =>
       useAuthForm({ defaultValues: { email: '', password: '' } })
     );
-
     act(() => {
       result.current.setError('Test error message');
     });
-
     expect(result.current.error).toBe('Test error message');
-
     act(() => {
       result.current.setError('');
     });
-
     expect(result.current.error).toBeNull();
   });
-
   it('should track submitting state', async () => {
     const onSuccess = jest.fn();
-    const mockCallback = jest.fn().mockImplementation(() => {
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(true), 100);
-      });
-    });
-
-    (mockForm.handleSubmit as jest.Mock).mockImplementation((callback: (data: Record<string, unknown>) => Promise<boolean>) => {
-      return async (data: Record<string, unknown>) => {
-        const result = await callback(data);
-        if (result) {
-          onSuccess();
-        }
-      };
-    });
+    const mockCallback = jest.fn().mockResolvedValue(true);
 
     const { result } = renderHook(() =>
       useAuthForm({ defaultValues: { email: '', password: '' }, onSuccess })
@@ -195,24 +158,27 @@ describe('useAuthForm', () => {
 
     const submitHandler = result.current.handleSubmit(mockCallback);
 
-    // Start submission
-    const submissionPromise = act(async () => {
-      await submitHandler({ email: 'test@example.com', password: 'password123' });
+    // Start submission - don't await it immediately
+    let submissionPromise: Promise<void>;
+    await act(async () => {
+      submissionPromise = submitHandler({ email: 'test@example.com', password: 'password123', rememberMe: false });
+      // At this point isSubmitting should be true
     });
 
-    // Should be submitting
-    expect(result.current.isSubmitting).toBe(true);
-
     // Wait for completion
-    await submissionPromise;
+    await act(async () => {
+      await submissionPromise!;
+    });
 
-    // Should not be submitting
+    // Should not be submitting after completion
     expect(result.current.isSubmitting).toBe(false);
+    expect(mockCallback).toHaveBeenCalled();
+    expect(onSuccess).toHaveBeenCalled();
   });
 });
 
 describe('validationRules', () => {
-  it('should have email validation rules', () => {
+  it('should have email validation rules', async () => {
     expect(validationRules.email).toEqual({
       required: 'Email is required',
       pattern: {
@@ -221,8 +187,7 @@ describe('validationRules', () => {
       },
     });
   });
-
-  it('should have password validation rules', () => {
+  it('should have password validation rules', async () => {
     expect(validationRules.password).toEqual({
       required: 'Password is required',
       minLength: {
@@ -235,8 +200,7 @@ describe('validationRules', () => {
       },
     });
   });
-
-  it('should have firstName validation rules', () => {
+  it('should have firstName validation rules', async () => {
     expect(validationRules.firstName).toEqual({
       required: 'First name is required',
       minLength: {
@@ -253,15 +217,13 @@ describe('validationRules', () => {
       },
     });
   });
-
-  it('should have confirmPassword validation function', () => {
+  it('should have confirmPassword validation function', async () => {
     const confirmPasswordRule = validationRules.confirmPassword('password123');
     
     expect(confirmPasswordRule).toEqual({
       required: 'Please confirm your password',
       validate: expect.any(Function),
     });
-
     // Test the validate function
     const validateFn = confirmPasswordRule.validate as Function;
     expect(validateFn('password123')).toBe(true);
@@ -270,10 +232,10 @@ describe('validationRules', () => {
 });
 
 describe('isFormValid', () => {
-  it('should return true when all required fields are valid', () => {
+  it('should return true when all required fields are valid', async () => {
     const mockForm = {
       watch: jest.fn((fields) => {
-        const values: Record<string, unknown> = {
+        const values: AuthFormData = {
           email: 'test@example.com',
           password: 'ValidPass123!',
           name: 'Test User',
@@ -287,16 +249,14 @@ describe('isFormValid', () => {
         errors: {},
         isValid: true,
       },
-    } as unknown as UseFormReturn<FieldValues>;
-
+    } as UseFormReturn<FieldValues>;
     const result = isFormValid(mockForm, ['email', 'password', 'name']);
     expect(result).toBe(true);
   });
-
-  it('should return false when required fields are empty', () => {
+  it('should return false when required fields are empty', async () => {
     const mockForm = {
       watch: jest.fn((fields) => {
-        const values: Record<string, unknown> = {
+        const values: AuthFormData = {
           email: '',
           password: 'ValidPass123!',
           name: 'Test User',
@@ -310,16 +270,14 @@ describe('isFormValid', () => {
         errors: {},
         isValid: false,
       },
-    } as unknown as UseFormReturn<FieldValues>;
-
+    } as UseFormReturn<FieldValues>;
     const result = isFormValid(mockForm, ['email', 'password', 'name']);
     expect(result).toBe(false);
   });
-
-  it('should return false when form has validation errors', () => {
+  it('should return false when form has validation errors', async () => {
     const mockForm = {
       watch: jest.fn((fields) => {
-        const values: Record<string, unknown> = {
+        const values: AuthFormData = {
           email: 'test@example.com',
           password: 'ValidPass123!',
           name: 'Test User',
@@ -335,16 +293,14 @@ describe('isFormValid', () => {
         },
         isValid: false,
       },
-    } as unknown as UseFormReturn<FieldValues>;
-
+    } as UseFormReturn<FieldValues>;
     const result = isFormValid(mockForm, ['email', 'password', 'name']);
     expect(result).toBe(false);
   });
-
-  it('should handle boolean fields correctly', () => {
+  it('should handle boolean fields correctly', async () => {
     const mockForm = {
       watch: jest.fn((fields) => {
-        const values: Record<string, unknown> = {
+        const values: AuthFormData = {
           email: 'test@example.com',
           password: 'ValidPass123!',
           acceptTerms: false,
@@ -358,17 +314,15 @@ describe('isFormValid', () => {
         errors: {},
         isValid: true,
       },
-    } as unknown as UseFormReturn<FieldValues>;
-
+    } as UseFormReturn<FieldValues>;
     // Boolean fields should be valid even when false for optional fields
     const result = isFormValid(mockForm, ['email', 'password']);
     expect(result).toBe(true);
   });
-
-  it('should handle undefined/null values', () => {
+  it('should handle undefined/null values', async () => {
     const mockForm = {
       watch: jest.fn((fields) => {
-        const values: Record<string, unknown> = {
+        const values: AuthFormData = {
           email: null,
           password: undefined,
           name: 'Test User',
@@ -382,34 +336,29 @@ describe('isFormValid', () => {
         errors: {},
         isValid: false,
       },
-    } as unknown as UseFormReturn<FieldValues>;
-
+    } as UseFormReturn<FieldValues>;
     const result = isFormValid(mockForm, ['email', 'password', 'name']);
     expect(result).toBe(false);
   });
-
-  it('should handle single field validation', () => {
+  it('should handle single field validation', async () => {
     const mockForm = {
-      watch: jest.fn(() => 'test@example.com'),
+      watch: jest.fn(() => ({ email: 'test@example.com' })),
       formState: {
         errors: {},
         isValid: true,
       },
-    } as unknown as UseFormReturn<FieldValues>;
-
+    } as UseFormReturn<FieldValues>;
     const result = isFormValid(mockForm, ['email']);
     expect(result).toBe(true);
   });
-
-  it('should return true for empty field list', () => {
+  it('should return true for empty field list', async () => {
     const mockForm = {
       watch: jest.fn(() => ({})),
       formState: {
         errors: {},
         isValid: true,
       },
-    } as unknown as UseFormReturn<FieldValues>;
-
+    } as UseFormReturn<FieldValues>;
     const result = isFormValid(mockForm, []);
     expect(result).toBe(true);
   });

@@ -30,7 +30,7 @@ interface ResetPasswordFormProps {
   onSuccess?: () => void;
 }
 
-export function ResetPasswordForm({ token, onSuccess }: ResetPasswordFormProps): JSX.Element {
+export function ResetPasswordForm({ token, onSuccess }: ResetPasswordFormProps): React.ReactElement {
   const router = useRouter();
   const [isComplete, setIsComplete] = React.useState<boolean>(false);
 
@@ -53,6 +53,7 @@ export function ResetPasswordForm({ token, onSuccess }: ResetPasswordFormProps):
     const response = await AuthAPI.confirmPasswordReset({
       token,
       new_password: data.password,
+      confirm_password: data.confirmPassword,
     });
     return response.success;
   });

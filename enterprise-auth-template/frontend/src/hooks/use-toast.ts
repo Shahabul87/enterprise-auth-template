@@ -31,7 +31,7 @@ const addToast = (toast: ToastProps) => {
   const newToast: Toast = {
     ...toast,
     id,
-    duration: toast.duration || 5000,
+    duration: toast.duration !== undefined ? toast.duration : 5000,
   };
   
   toasts = [...toasts, newToast];

@@ -754,11 +754,14 @@ mixin _$NotificationTemplate {
   NotificationType get type => throw _privateConstructorUsedError;
   String get titleTemplate => throw _privateConstructorUsedError;
   String get contentTemplate => throw _privateConstructorUsedError;
+  String? get subject => throw _privateConstructorUsedError;
+  String? get content => throw _privateConstructorUsedError;
+  List<String>? get variables => throw _privateConstructorUsedError;
   NotificationPriority? get defaultPriority =>
       throw _privateConstructorUsedError;
   List<NotificationAction>? get defaultActions =>
       throw _privateConstructorUsedError;
-  Map<String, String>? get variables => throw _privateConstructorUsedError;
+  Map<String, String>? get variableMap => throw _privateConstructorUsedError;
   NotificationChannelSettings? get channelSettings =>
       throw _privateConstructorUsedError;
   bool? get isActive => throw _privateConstructorUsedError;
@@ -789,9 +792,12 @@ abstract class $NotificationTemplateCopyWith<$Res> {
     NotificationType type,
     String titleTemplate,
     String contentTemplate,
+    String? subject,
+    String? content,
+    List<String>? variables,
     NotificationPriority? defaultPriority,
     List<NotificationAction>? defaultActions,
-    Map<String, String>? variables,
+    Map<String, String>? variableMap,
     NotificationChannelSettings? channelSettings,
     bool? isActive,
     DateTime? createdAt,
@@ -825,9 +831,12 @@ class _$NotificationTemplateCopyWithImpl<
     Object? type = null,
     Object? titleTemplate = null,
     Object? contentTemplate = null,
+    Object? subject = freezed,
+    Object? content = freezed,
+    Object? variables = freezed,
     Object? defaultPriority = freezed,
     Object? defaultActions = freezed,
-    Object? variables = freezed,
+    Object? variableMap = freezed,
     Object? channelSettings = freezed,
     Object? isActive = freezed,
     Object? createdAt = freezed,
@@ -859,6 +868,18 @@ class _$NotificationTemplateCopyWithImpl<
                 ? _value.contentTemplate
                 : contentTemplate // ignore: cast_nullable_to_non_nullable
                       as String,
+            subject: freezed == subject
+                ? _value.subject
+                : subject // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            content: freezed == content
+                ? _value.content
+                : content // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            variables: freezed == variables
+                ? _value.variables
+                : variables // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
             defaultPriority: freezed == defaultPriority
                 ? _value.defaultPriority
                 : defaultPriority // ignore: cast_nullable_to_non_nullable
@@ -867,9 +888,9 @@ class _$NotificationTemplateCopyWithImpl<
                 ? _value.defaultActions
                 : defaultActions // ignore: cast_nullable_to_non_nullable
                       as List<NotificationAction>?,
-            variables: freezed == variables
-                ? _value.variables
-                : variables // ignore: cast_nullable_to_non_nullable
+            variableMap: freezed == variableMap
+                ? _value.variableMap
+                : variableMap // ignore: cast_nullable_to_non_nullable
                       as Map<String, String>?,
             channelSettings: freezed == channelSettings
                 ? _value.channelSettings
@@ -925,9 +946,12 @@ abstract class _$$NotificationTemplateImplCopyWith<$Res>
     NotificationType type,
     String titleTemplate,
     String contentTemplate,
+    String? subject,
+    String? content,
+    List<String>? variables,
     NotificationPriority? defaultPriority,
     List<NotificationAction>? defaultActions,
-    Map<String, String>? variables,
+    Map<String, String>? variableMap,
     NotificationChannelSettings? channelSettings,
     bool? isActive,
     DateTime? createdAt,
@@ -958,9 +982,12 @@ class __$$NotificationTemplateImplCopyWithImpl<$Res>
     Object? type = null,
     Object? titleTemplate = null,
     Object? contentTemplate = null,
+    Object? subject = freezed,
+    Object? content = freezed,
+    Object? variables = freezed,
     Object? defaultPriority = freezed,
     Object? defaultActions = freezed,
-    Object? variables = freezed,
+    Object? variableMap = freezed,
     Object? channelSettings = freezed,
     Object? isActive = freezed,
     Object? createdAt = freezed,
@@ -992,6 +1019,18 @@ class __$$NotificationTemplateImplCopyWithImpl<$Res>
             ? _value.contentTemplate
             : contentTemplate // ignore: cast_nullable_to_non_nullable
                   as String,
+        subject: freezed == subject
+            ? _value.subject
+            : subject // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        content: freezed == content
+            ? _value.content
+            : content // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        variables: freezed == variables
+            ? _value._variables
+            : variables // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
         defaultPriority: freezed == defaultPriority
             ? _value.defaultPriority
             : defaultPriority // ignore: cast_nullable_to_non_nullable
@@ -1000,9 +1039,9 @@ class __$$NotificationTemplateImplCopyWithImpl<$Res>
             ? _value._defaultActions
             : defaultActions // ignore: cast_nullable_to_non_nullable
                   as List<NotificationAction>?,
-        variables: freezed == variables
-            ? _value._variables
-            : variables // ignore: cast_nullable_to_non_nullable
+        variableMap: freezed == variableMap
+            ? _value._variableMap
+            : variableMap // ignore: cast_nullable_to_non_nullable
                   as Map<String, String>?,
         channelSettings: freezed == channelSettings
             ? _value.channelSettings
@@ -1035,15 +1074,19 @@ class _$NotificationTemplateImpl implements _NotificationTemplate {
     required this.type,
     required this.titleTemplate,
     required this.contentTemplate,
+    this.subject,
+    this.content,
+    final List<String>? variables,
     this.defaultPriority,
     final List<NotificationAction>? defaultActions,
-    final Map<String, String>? variables,
+    final Map<String, String>? variableMap,
     this.channelSettings,
     this.isActive,
     this.createdAt,
     this.updatedAt,
-  }) : _defaultActions = defaultActions,
-       _variables = variables;
+  }) : _variables = variables,
+       _defaultActions = defaultActions,
+       _variableMap = variableMap;
 
   factory _$NotificationTemplateImpl.fromJson(Map<String, dynamic> json) =>
       _$$NotificationTemplateImplFromJson(json);
@@ -1061,6 +1104,20 @@ class _$NotificationTemplateImpl implements _NotificationTemplate {
   @override
   final String contentTemplate;
   @override
+  final String? subject;
+  @override
+  final String? content;
+  final List<String>? _variables;
+  @override
+  List<String>? get variables {
+    final value = _variables;
+    if (value == null) return null;
+    if (_variables is EqualUnmodifiableListView) return _variables;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
   final NotificationPriority? defaultPriority;
   final List<NotificationAction>? _defaultActions;
   @override
@@ -1072,12 +1129,12 @@ class _$NotificationTemplateImpl implements _NotificationTemplate {
     return EqualUnmodifiableListView(value);
   }
 
-  final Map<String, String>? _variables;
+  final Map<String, String>? _variableMap;
   @override
-  Map<String, String>? get variables {
-    final value = _variables;
+  Map<String, String>? get variableMap {
+    final value = _variableMap;
     if (value == null) return null;
-    if (_variables is EqualUnmodifiableMapView) return _variables;
+    if (_variableMap is EqualUnmodifiableMapView) return _variableMap;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(value);
   }
@@ -1093,7 +1150,7 @@ class _$NotificationTemplateImpl implements _NotificationTemplate {
 
   @override
   String toString() {
-    return 'NotificationTemplate(id: $id, name: $name, description: $description, type: $type, titleTemplate: $titleTemplate, contentTemplate: $contentTemplate, defaultPriority: $defaultPriority, defaultActions: $defaultActions, variables: $variables, channelSettings: $channelSettings, isActive: $isActive, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'NotificationTemplate(id: $id, name: $name, description: $description, type: $type, titleTemplate: $titleTemplate, contentTemplate: $contentTemplate, subject: $subject, content: $content, variables: $variables, defaultPriority: $defaultPriority, defaultActions: $defaultActions, variableMap: $variableMap, channelSettings: $channelSettings, isActive: $isActive, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -1110,6 +1167,12 @@ class _$NotificationTemplateImpl implements _NotificationTemplate {
                 other.titleTemplate == titleTemplate) &&
             (identical(other.contentTemplate, contentTemplate) ||
                 other.contentTemplate == contentTemplate) &&
+            (identical(other.subject, subject) || other.subject == subject) &&
+            (identical(other.content, content) || other.content == content) &&
+            const DeepCollectionEquality().equals(
+              other._variables,
+              _variables,
+            ) &&
             (identical(other.defaultPriority, defaultPriority) ||
                 other.defaultPriority == defaultPriority) &&
             const DeepCollectionEquality().equals(
@@ -1117,8 +1180,8 @@ class _$NotificationTemplateImpl implements _NotificationTemplate {
               _defaultActions,
             ) &&
             const DeepCollectionEquality().equals(
-              other._variables,
-              _variables,
+              other._variableMap,
+              _variableMap,
             ) &&
             (identical(other.channelSettings, channelSettings) ||
                 other.channelSettings == channelSettings) &&
@@ -1140,9 +1203,12 @@ class _$NotificationTemplateImpl implements _NotificationTemplate {
     type,
     titleTemplate,
     contentTemplate,
+    subject,
+    content,
+    const DeepCollectionEquality().hash(_variables),
     defaultPriority,
     const DeepCollectionEquality().hash(_defaultActions),
-    const DeepCollectionEquality().hash(_variables),
+    const DeepCollectionEquality().hash(_variableMap),
     channelSettings,
     isActive,
     createdAt,
@@ -1175,9 +1241,12 @@ abstract class _NotificationTemplate implements NotificationTemplate {
     required final NotificationType type,
     required final String titleTemplate,
     required final String contentTemplate,
+    final String? subject,
+    final String? content,
+    final List<String>? variables,
     final NotificationPriority? defaultPriority,
     final List<NotificationAction>? defaultActions,
-    final Map<String, String>? variables,
+    final Map<String, String>? variableMap,
     final NotificationChannelSettings? channelSettings,
     final bool? isActive,
     final DateTime? createdAt,
@@ -1200,11 +1269,17 @@ abstract class _NotificationTemplate implements NotificationTemplate {
   @override
   String get contentTemplate;
   @override
+  String? get subject;
+  @override
+  String? get content;
+  @override
+  List<String>? get variables;
+  @override
   NotificationPriority? get defaultPriority;
   @override
   List<NotificationAction>? get defaultActions;
   @override
-  Map<String, String>? get variables;
+  Map<String, String>? get variableMap;
   @override
   NotificationChannelSettings? get channelSettings;
   @override
@@ -1623,8 +1698,13 @@ NotificationPreferences _$NotificationPreferencesFromJson(
 
 /// @nodoc
 mixin _$NotificationPreferences {
-  String get userId => throw _privateConstructorUsedError;
+  String? get userId => throw _privateConstructorUsedError;
   bool get globalEnabled => throw _privateConstructorUsedError;
+  bool get email => throw _privateConstructorUsedError;
+  bool get push => throw _privateConstructorUsedError;
+  bool get sms => throw _privateConstructorUsedError;
+  bool get inApp => throw _privateConstructorUsedError;
+  Map<String, bool>? get categories => throw _privateConstructorUsedError;
   Map<NotificationType, NotificationChannelSettings>? get typeSettings =>
       throw _privateConstructorUsedError;
   Map<NotificationPriority, bool>? get prioritySettings =>
@@ -1654,8 +1734,13 @@ abstract class $NotificationPreferencesCopyWith<$Res> {
   ) = _$NotificationPreferencesCopyWithImpl<$Res, NotificationPreferences>;
   @useResult
   $Res call({
-    String userId,
+    String? userId,
     bool globalEnabled,
+    bool email,
+    bool push,
+    bool sms,
+    bool inApp,
+    Map<String, bool>? categories,
     Map<NotificationType, NotificationChannelSettings>? typeSettings,
     Map<NotificationPriority, bool>? prioritySettings,
     List<String>? mutedCategories,
@@ -1685,8 +1770,13 @@ class _$NotificationPreferencesCopyWithImpl<
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
+    Object? userId = freezed,
     Object? globalEnabled = null,
+    Object? email = null,
+    Object? push = null,
+    Object? sms = null,
+    Object? inApp = null,
+    Object? categories = freezed,
     Object? typeSettings = freezed,
     Object? prioritySettings = freezed,
     Object? mutedCategories = freezed,
@@ -1698,14 +1788,34 @@ class _$NotificationPreferencesCopyWithImpl<
   }) {
     return _then(
       _value.copyWith(
-            userId: null == userId
+            userId: freezed == userId
                 ? _value.userId
                 : userId // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             globalEnabled: null == globalEnabled
                 ? _value.globalEnabled
                 : globalEnabled // ignore: cast_nullable_to_non_nullable
                       as bool,
+            email: null == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            push: null == push
+                ? _value.push
+                : push // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            sms: null == sms
+                ? _value.sms
+                : sms // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            inApp: null == inApp
+                ? _value.inApp
+                : inApp // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            categories: freezed == categories
+                ? _value.categories
+                : categories // ignore: cast_nullable_to_non_nullable
+                      as Map<String, bool>?,
             typeSettings: freezed == typeSettings
                 ? _value.typeSettings
                 : typeSettings // ignore: cast_nullable_to_non_nullable
@@ -1754,8 +1864,13 @@ abstract class _$$NotificationPreferencesImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    String userId,
+    String? userId,
     bool globalEnabled,
+    bool email,
+    bool push,
+    bool sms,
+    bool inApp,
+    Map<String, bool>? categories,
     Map<NotificationType, NotificationChannelSettings>? typeSettings,
     Map<NotificationPriority, bool>? prioritySettings,
     List<String>? mutedCategories,
@@ -1785,8 +1900,13 @@ class __$$NotificationPreferencesImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
+    Object? userId = freezed,
     Object? globalEnabled = null,
+    Object? email = null,
+    Object? push = null,
+    Object? sms = null,
+    Object? inApp = null,
+    Object? categories = freezed,
     Object? typeSettings = freezed,
     Object? prioritySettings = freezed,
     Object? mutedCategories = freezed,
@@ -1798,14 +1918,34 @@ class __$$NotificationPreferencesImplCopyWithImpl<$Res>
   }) {
     return _then(
       _$NotificationPreferencesImpl(
-        userId: null == userId
+        userId: freezed == userId
             ? _value.userId
             : userId // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         globalEnabled: null == globalEnabled
             ? _value.globalEnabled
             : globalEnabled // ignore: cast_nullable_to_non_nullable
                   as bool,
+        email: null == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        push: null == push
+            ? _value.push
+            : push // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        sms: null == sms
+            ? _value.sms
+            : sms // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        inApp: null == inApp
+            ? _value.inApp
+            : inApp // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        categories: freezed == categories
+            ? _value._categories
+            : categories // ignore: cast_nullable_to_non_nullable
+                  as Map<String, bool>?,
         typeSettings: freezed == typeSettings
             ? _value._typeSettings
             : typeSettings // ignore: cast_nullable_to_non_nullable
@@ -1847,8 +1987,13 @@ class __$$NotificationPreferencesImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$NotificationPreferencesImpl implements _NotificationPreferences {
   const _$NotificationPreferencesImpl({
-    required this.userId,
+    this.userId,
     this.globalEnabled = true,
+    this.email = true,
+    this.push = true,
+    this.sms = false,
+    this.inApp = true,
+    final Map<String, bool>? categories,
     final Map<NotificationType, NotificationChannelSettings>? typeSettings,
     final Map<NotificationPriority, bool>? prioritySettings,
     final List<String>? mutedCategories,
@@ -1857,7 +2002,8 @@ class _$NotificationPreferencesImpl implements _NotificationPreferences {
     this.quietHoursStart = '08:00',
     this.quietHoursEnd = '22:00',
     this.updatedAt,
-  }) : _typeSettings = typeSettings,
+  }) : _categories = categories,
+       _typeSettings = typeSettings,
        _prioritySettings = prioritySettings,
        _mutedCategories = mutedCategories;
 
@@ -1865,10 +2011,32 @@ class _$NotificationPreferencesImpl implements _NotificationPreferences {
       _$$NotificationPreferencesImplFromJson(json);
 
   @override
-  final String userId;
+  final String? userId;
   @override
   @JsonKey()
   final bool globalEnabled;
+  @override
+  @JsonKey()
+  final bool email;
+  @override
+  @JsonKey()
+  final bool push;
+  @override
+  @JsonKey()
+  final bool sms;
+  @override
+  @JsonKey()
+  final bool inApp;
+  final Map<String, bool>? _categories;
+  @override
+  Map<String, bool>? get categories {
+    final value = _categories;
+    if (value == null) return null;
+    if (_categories is EqualUnmodifiableMapView) return _categories;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
   final Map<NotificationType, NotificationChannelSettings>? _typeSettings;
   @override
   Map<NotificationType, NotificationChannelSettings>? get typeSettings {
@@ -1916,7 +2084,7 @@ class _$NotificationPreferencesImpl implements _NotificationPreferences {
 
   @override
   String toString() {
-    return 'NotificationPreferences(userId: $userId, globalEnabled: $globalEnabled, typeSettings: $typeSettings, prioritySettings: $prioritySettings, mutedCategories: $mutedCategories, soundEnabled: $soundEnabled, vibrationEnabled: $vibrationEnabled, quietHoursStart: $quietHoursStart, quietHoursEnd: $quietHoursEnd, updatedAt: $updatedAt)';
+    return 'NotificationPreferences(userId: $userId, globalEnabled: $globalEnabled, email: $email, push: $push, sms: $sms, inApp: $inApp, categories: $categories, typeSettings: $typeSettings, prioritySettings: $prioritySettings, mutedCategories: $mutedCategories, soundEnabled: $soundEnabled, vibrationEnabled: $vibrationEnabled, quietHoursStart: $quietHoursStart, quietHoursEnd: $quietHoursEnd, updatedAt: $updatedAt)';
   }
 
   @override
@@ -1927,6 +2095,14 @@ class _$NotificationPreferencesImpl implements _NotificationPreferences {
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.globalEnabled, globalEnabled) ||
                 other.globalEnabled == globalEnabled) &&
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.push, push) || other.push == push) &&
+            (identical(other.sms, sms) || other.sms == sms) &&
+            (identical(other.inApp, inApp) || other.inApp == inApp) &&
+            const DeepCollectionEquality().equals(
+              other._categories,
+              _categories,
+            ) &&
             const DeepCollectionEquality().equals(
               other._typeSettings,
               _typeSettings,
@@ -1957,6 +2133,11 @@ class _$NotificationPreferencesImpl implements _NotificationPreferences {
     runtimeType,
     userId,
     globalEnabled,
+    email,
+    push,
+    sms,
+    inApp,
+    const DeepCollectionEquality().hash(_categories),
     const DeepCollectionEquality().hash(_typeSettings),
     const DeepCollectionEquality().hash(_prioritySettings),
     const DeepCollectionEquality().hash(_mutedCategories),
@@ -1986,8 +2167,13 @@ class _$NotificationPreferencesImpl implements _NotificationPreferences {
 
 abstract class _NotificationPreferences implements NotificationPreferences {
   const factory _NotificationPreferences({
-    required final String userId,
+    final String? userId,
     final bool globalEnabled,
+    final bool email,
+    final bool push,
+    final bool sms,
+    final bool inApp,
+    final Map<String, bool>? categories,
     final Map<NotificationType, NotificationChannelSettings>? typeSettings,
     final Map<NotificationPriority, bool>? prioritySettings,
     final List<String>? mutedCategories,
@@ -2002,9 +2188,19 @@ abstract class _NotificationPreferences implements NotificationPreferences {
       _$NotificationPreferencesImpl.fromJson;
 
   @override
-  String get userId;
+  String? get userId;
   @override
   bool get globalEnabled;
+  @override
+  bool get email;
+  @override
+  bool get push;
+  @override
+  bool get sms;
+  @override
+  bool get inApp;
+  @override
+  Map<String, bool>? get categories;
   @override
   Map<NotificationType, NotificationChannelSettings>? get typeSettings;
   @override
@@ -2048,6 +2244,7 @@ mixin _$NotificationBatch {
   int get totalCount => throw _privateConstructorUsedError;
   int get successCount => throw _privateConstructorUsedError;
   int get failureCount => throw _privateConstructorUsedError;
+  int get recipientCount => throw _privateConstructorUsedError;
   List<NotificationDeliveryResult>? get results =>
       throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
@@ -2082,6 +2279,7 @@ abstract class $NotificationBatchCopyWith<$Res> {
     int totalCount,
     int successCount,
     int failureCount,
+    int recipientCount,
     List<NotificationDeliveryResult>? results,
     String? errorMessage,
   });
@@ -2116,6 +2314,7 @@ class _$NotificationBatchCopyWithImpl<$Res, $Val extends NotificationBatch>
     Object? totalCount = null,
     Object? successCount = null,
     Object? failureCount = null,
+    Object? recipientCount = null,
     Object? results = freezed,
     Object? errorMessage = freezed,
   }) {
@@ -2169,6 +2368,10 @@ class _$NotificationBatchCopyWithImpl<$Res, $Val extends NotificationBatch>
                 ? _value.failureCount
                 : failureCount // ignore: cast_nullable_to_non_nullable
                       as int,
+            recipientCount: null == recipientCount
+                ? _value.recipientCount
+                : recipientCount // ignore: cast_nullable_to_non_nullable
+                      as int,
             results: freezed == results
                 ? _value.results
                 : results // ignore: cast_nullable_to_non_nullable
@@ -2215,6 +2418,7 @@ abstract class _$$NotificationBatchImplCopyWith<$Res>
     int totalCount,
     int successCount,
     int failureCount,
+    int recipientCount,
     List<NotificationDeliveryResult>? results,
     String? errorMessage,
   });
@@ -2249,6 +2453,7 @@ class __$$NotificationBatchImplCopyWithImpl<$Res>
     Object? totalCount = null,
     Object? successCount = null,
     Object? failureCount = null,
+    Object? recipientCount = null,
     Object? results = freezed,
     Object? errorMessage = freezed,
   }) {
@@ -2302,6 +2507,10 @@ class __$$NotificationBatchImplCopyWithImpl<$Res>
             ? _value.failureCount
             : failureCount // ignore: cast_nullable_to_non_nullable
                   as int,
+        recipientCount: null == recipientCount
+            ? _value.recipientCount
+            : recipientCount // ignore: cast_nullable_to_non_nullable
+                  as int,
         results: freezed == results
             ? _value._results
             : results // ignore: cast_nullable_to_non_nullable
@@ -2331,6 +2540,7 @@ class _$NotificationBatchImpl implements _NotificationBatch {
     this.totalCount = 0,
     this.successCount = 0,
     this.failureCount = 0,
+    this.recipientCount = 0,
     final List<NotificationDeliveryResult>? results,
     this.errorMessage,
   }) : _recipients = recipients,
@@ -2379,6 +2589,9 @@ class _$NotificationBatchImpl implements _NotificationBatch {
   @override
   @JsonKey()
   final int failureCount;
+  @override
+  @JsonKey()
+  final int recipientCount;
   final List<NotificationDeliveryResult>? _results;
   @override
   List<NotificationDeliveryResult>? get results {
@@ -2394,7 +2607,7 @@ class _$NotificationBatchImpl implements _NotificationBatch {
 
   @override
   String toString() {
-    return 'NotificationBatch(id: $id, title: $title, recipients: $recipients, template: $template, variables: $variables, status: $status, createdAt: $createdAt, scheduledAt: $scheduledAt, completedAt: $completedAt, totalCount: $totalCount, successCount: $successCount, failureCount: $failureCount, results: $results, errorMessage: $errorMessage)';
+    return 'NotificationBatch(id: $id, title: $title, recipients: $recipients, template: $template, variables: $variables, status: $status, createdAt: $createdAt, scheduledAt: $scheduledAt, completedAt: $completedAt, totalCount: $totalCount, successCount: $successCount, failureCount: $failureCount, recipientCount: $recipientCount, results: $results, errorMessage: $errorMessage)';
   }
 
   @override
@@ -2427,6 +2640,8 @@ class _$NotificationBatchImpl implements _NotificationBatch {
                 other.successCount == successCount) &&
             (identical(other.failureCount, failureCount) ||
                 other.failureCount == failureCount) &&
+            (identical(other.recipientCount, recipientCount) ||
+                other.recipientCount == recipientCount) &&
             const DeepCollectionEquality().equals(other._results, _results) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
@@ -2448,6 +2663,7 @@ class _$NotificationBatchImpl implements _NotificationBatch {
     totalCount,
     successCount,
     failureCount,
+    recipientCount,
     const DeepCollectionEquality().hash(_results),
     errorMessage,
   );
@@ -2483,6 +2699,7 @@ abstract class _NotificationBatch implements NotificationBatch {
     final int totalCount,
     final int successCount,
     final int failureCount,
+    final int recipientCount,
     final List<NotificationDeliveryResult>? results,
     final String? errorMessage,
   }) = _$NotificationBatchImpl;
@@ -2514,6 +2731,8 @@ abstract class _NotificationBatch implements NotificationBatch {
   int get successCount;
   @override
   int get failureCount;
+  @override
+  int get recipientCount;
   @override
   List<NotificationDeliveryResult>? get results;
   @override
@@ -3460,6 +3679,8 @@ mixin _$NotificationAnalytics {
       throw _privateConstructorUsedError;
   NotificationEngagementMetrics get engagement =>
       throw _privateConstructorUsedError;
+  int get totalSent => throw _privateConstructorUsedError;
+  double get deliveryRate => throw _privateConstructorUsedError;
 
   /// Serializes this NotificationAnalytics to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -3483,6 +3704,8 @@ abstract class $NotificationAnalyticsCopyWith<$Res> {
     List<NotificationTypeMetric> typeMetrics,
     List<NotificationChannelMetric> channelMetrics,
     NotificationEngagementMetrics engagement,
+    int totalSent,
+    double deliveryRate,
   });
 
   $NotificationDeliveryStatsCopyWith<$Res> get deliveryStats;
@@ -3511,6 +3734,8 @@ class _$NotificationAnalyticsCopyWithImpl<
     Object? typeMetrics = null,
     Object? channelMetrics = null,
     Object? engagement = null,
+    Object? totalSent = null,
+    Object? deliveryRate = null,
   }) {
     return _then(
       _value.copyWith(
@@ -3530,6 +3755,14 @@ class _$NotificationAnalyticsCopyWithImpl<
                 ? _value.engagement
                 : engagement // ignore: cast_nullable_to_non_nullable
                       as NotificationEngagementMetrics,
+            totalSent: null == totalSent
+                ? _value.totalSent
+                : totalSent // ignore: cast_nullable_to_non_nullable
+                      as int,
+            deliveryRate: null == deliveryRate
+                ? _value.deliveryRate
+                : deliveryRate // ignore: cast_nullable_to_non_nullable
+                      as double,
           )
           as $Val,
     );
@@ -3574,6 +3807,8 @@ abstract class _$$NotificationAnalyticsImplCopyWith<$Res>
     List<NotificationTypeMetric> typeMetrics,
     List<NotificationChannelMetric> channelMetrics,
     NotificationEngagementMetrics engagement,
+    int totalSent,
+    double deliveryRate,
   });
 
   @override
@@ -3601,6 +3836,8 @@ class __$$NotificationAnalyticsImplCopyWithImpl<$Res>
     Object? typeMetrics = null,
     Object? channelMetrics = null,
     Object? engagement = null,
+    Object? totalSent = null,
+    Object? deliveryRate = null,
   }) {
     return _then(
       _$NotificationAnalyticsImpl(
@@ -3620,6 +3857,14 @@ class __$$NotificationAnalyticsImplCopyWithImpl<$Res>
             ? _value.engagement
             : engagement // ignore: cast_nullable_to_non_nullable
                   as NotificationEngagementMetrics,
+        totalSent: null == totalSent
+            ? _value.totalSent
+            : totalSent // ignore: cast_nullable_to_non_nullable
+                  as int,
+        deliveryRate: null == deliveryRate
+            ? _value.deliveryRate
+            : deliveryRate // ignore: cast_nullable_to_non_nullable
+                  as double,
       ),
     );
   }
@@ -3633,6 +3878,8 @@ class _$NotificationAnalyticsImpl implements _NotificationAnalytics {
     required final List<NotificationTypeMetric> typeMetrics,
     required final List<NotificationChannelMetric> channelMetrics,
     required this.engagement,
+    this.totalSent = 0,
+    this.deliveryRate = 0.0,
   }) : _typeMetrics = typeMetrics,
        _channelMetrics = channelMetrics;
 
@@ -3659,10 +3906,16 @@ class _$NotificationAnalyticsImpl implements _NotificationAnalytics {
 
   @override
   final NotificationEngagementMetrics engagement;
+  @override
+  @JsonKey()
+  final int totalSent;
+  @override
+  @JsonKey()
+  final double deliveryRate;
 
   @override
   String toString() {
-    return 'NotificationAnalytics(deliveryStats: $deliveryStats, typeMetrics: $typeMetrics, channelMetrics: $channelMetrics, engagement: $engagement)';
+    return 'NotificationAnalytics(deliveryStats: $deliveryStats, typeMetrics: $typeMetrics, channelMetrics: $channelMetrics, engagement: $engagement, totalSent: $totalSent, deliveryRate: $deliveryRate)';
   }
 
   @override
@@ -3681,7 +3934,11 @@ class _$NotificationAnalyticsImpl implements _NotificationAnalytics {
               _channelMetrics,
             ) &&
             (identical(other.engagement, engagement) ||
-                other.engagement == engagement));
+                other.engagement == engagement) &&
+            (identical(other.totalSent, totalSent) ||
+                other.totalSent == totalSent) &&
+            (identical(other.deliveryRate, deliveryRate) ||
+                other.deliveryRate == deliveryRate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -3692,6 +3949,8 @@ class _$NotificationAnalyticsImpl implements _NotificationAnalytics {
     const DeepCollectionEquality().hash(_typeMetrics),
     const DeepCollectionEquality().hash(_channelMetrics),
     engagement,
+    totalSent,
+    deliveryRate,
   );
 
   /// Create a copy of NotificationAnalytics
@@ -3718,6 +3977,8 @@ abstract class _NotificationAnalytics implements NotificationAnalytics {
     required final List<NotificationTypeMetric> typeMetrics,
     required final List<NotificationChannelMetric> channelMetrics,
     required final NotificationEngagementMetrics engagement,
+    final int totalSent,
+    final double deliveryRate,
   }) = _$NotificationAnalyticsImpl;
 
   factory _NotificationAnalytics.fromJson(Map<String, dynamic> json) =
@@ -3731,6 +3992,10 @@ abstract class _NotificationAnalytics implements NotificationAnalytics {
   List<NotificationChannelMetric> get channelMetrics;
   @override
   NotificationEngagementMetrics get engagement;
+  @override
+  int get totalSent;
+  @override
+  double get deliveryRate;
 
   /// Create a copy of NotificationAnalytics
   /// with the given fields replaced by the non-null parameter values.

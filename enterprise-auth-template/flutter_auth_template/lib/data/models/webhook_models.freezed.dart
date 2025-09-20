@@ -21,20 +21,20 @@ Webhook _$WebhookFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Webhook {
-  String get id => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
-  String get url => throw _privateConstructorUsedError;
-  String get secret => throw _privateConstructorUsedError;
-  List<String> get events => throw _privateConstructorUsedError;
-  bool get isActive => throw _privateConstructorUsedError;
-  String get httpMethod => throw _privateConstructorUsedError;
-  Map<String, String> get headers => throw _privateConstructorUsedError;
-  int get timeoutSeconds => throw _privateConstructorUsedError;
-  int get maxRetries => throw _privateConstructorUsedError;
-  bool get verifyTls => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get updatedAt => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  String? get url => throw _privateConstructorUsedError;
+  String? get secret => throw _privateConstructorUsedError;
+  List<String>? get events => throw _privateConstructorUsedError;
+  bool? get isActive => throw _privateConstructorUsedError;
+  String? get httpMethod => throw _privateConstructorUsedError;
+  Map<String, String>? get headers => throw _privateConstructorUsedError;
+  int? get timeoutSeconds => throw _privateConstructorUsedError;
+  int? get maxRetries => throw _privateConstructorUsedError;
+  bool? get verifyTls => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
   DateTime? get lastTriggeredAt => throw _privateConstructorUsedError;
   WebhookStatus? get status => throw _privateConstructorUsedError;
   int? get successCount => throw _privateConstructorUsedError;
@@ -56,20 +56,20 @@ abstract class $WebhookCopyWith<$Res> {
       _$WebhookCopyWithImpl<$Res, Webhook>;
   @useResult
   $Res call({
-    String id,
-    String name,
-    String description,
-    String url,
-    String secret,
-    List<String> events,
-    bool isActive,
-    String httpMethod,
-    Map<String, String> headers,
-    int timeoutSeconds,
-    int maxRetries,
-    bool verifyTls,
-    DateTime createdAt,
-    DateTime updatedAt,
+    String? id,
+    String? name,
+    String? description,
+    String? url,
+    String? secret,
+    List<String>? events,
+    bool? isActive,
+    String? httpMethod,
+    Map<String, String>? headers,
+    int? timeoutSeconds,
+    int? maxRetries,
+    bool? verifyTls,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     DateTime? lastTriggeredAt,
     WebhookStatus? status,
     int? successCount,
@@ -93,20 +93,20 @@ class _$WebhookCopyWithImpl<$Res, $Val extends Webhook>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? name = null,
-    Object? description = null,
-    Object? url = null,
-    Object? secret = null,
-    Object? events = null,
-    Object? isActive = null,
-    Object? httpMethod = null,
-    Object? headers = null,
-    Object? timeoutSeconds = null,
-    Object? maxRetries = null,
-    Object? verifyTls = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
+    Object? id = freezed,
+    Object? name = freezed,
+    Object? description = freezed,
+    Object? url = freezed,
+    Object? secret = freezed,
+    Object? events = freezed,
+    Object? isActive = freezed,
+    Object? httpMethod = freezed,
+    Object? headers = freezed,
+    Object? timeoutSeconds = freezed,
+    Object? maxRetries = freezed,
+    Object? verifyTls = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
     Object? lastTriggeredAt = freezed,
     Object? status = freezed,
     Object? successCount = freezed,
@@ -115,62 +115,62 @@ class _$WebhookCopyWithImpl<$Res, $Val extends Webhook>
   }) {
     return _then(
       _value.copyWith(
-            id: null == id
+            id: freezed == id
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            name: null == name
+                      as String?,
+            name: freezed == name
                 ? _value.name
                 : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            description: null == description
+                      as String?,
+            description: freezed == description
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
-                      as String,
-            url: null == url
+                      as String?,
+            url: freezed == url
                 ? _value.url
                 : url // ignore: cast_nullable_to_non_nullable
-                      as String,
-            secret: null == secret
+                      as String?,
+            secret: freezed == secret
                 ? _value.secret
                 : secret // ignore: cast_nullable_to_non_nullable
-                      as String,
-            events: null == events
+                      as String?,
+            events: freezed == events
                 ? _value.events
                 : events // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
-            isActive: null == isActive
+                      as List<String>?,
+            isActive: freezed == isActive
                 ? _value.isActive
                 : isActive // ignore: cast_nullable_to_non_nullable
-                      as bool,
-            httpMethod: null == httpMethod
+                      as bool?,
+            httpMethod: freezed == httpMethod
                 ? _value.httpMethod
                 : httpMethod // ignore: cast_nullable_to_non_nullable
-                      as String,
-            headers: null == headers
+                      as String?,
+            headers: freezed == headers
                 ? _value.headers
                 : headers // ignore: cast_nullable_to_non_nullable
-                      as Map<String, String>,
-            timeoutSeconds: null == timeoutSeconds
+                      as Map<String, String>?,
+            timeoutSeconds: freezed == timeoutSeconds
                 ? _value.timeoutSeconds
                 : timeoutSeconds // ignore: cast_nullable_to_non_nullable
-                      as int,
-            maxRetries: null == maxRetries
+                      as int?,
+            maxRetries: freezed == maxRetries
                 ? _value.maxRetries
                 : maxRetries // ignore: cast_nullable_to_non_nullable
-                      as int,
-            verifyTls: null == verifyTls
+                      as int?,
+            verifyTls: freezed == verifyTls
                 ? _value.verifyTls
                 : verifyTls // ignore: cast_nullable_to_non_nullable
-                      as bool,
-            createdAt: null == createdAt
+                      as bool?,
+            createdAt: freezed == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            updatedAt: null == updatedAt
+                      as DateTime?,
+            updatedAt: freezed == updatedAt
                 ? _value.updatedAt
                 : updatedAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
+                      as DateTime?,
             lastTriggeredAt: freezed == lastTriggeredAt
                 ? _value.lastTriggeredAt
                 : lastTriggeredAt // ignore: cast_nullable_to_non_nullable
@@ -206,20 +206,20 @@ abstract class _$$WebhookImplCopyWith<$Res> implements $WebhookCopyWith<$Res> {
   @override
   @useResult
   $Res call({
-    String id,
-    String name,
-    String description,
-    String url,
-    String secret,
-    List<String> events,
-    bool isActive,
-    String httpMethod,
-    Map<String, String> headers,
-    int timeoutSeconds,
-    int maxRetries,
-    bool verifyTls,
-    DateTime createdAt,
-    DateTime updatedAt,
+    String? id,
+    String? name,
+    String? description,
+    String? url,
+    String? secret,
+    List<String>? events,
+    bool? isActive,
+    String? httpMethod,
+    Map<String, String>? headers,
+    int? timeoutSeconds,
+    int? maxRetries,
+    bool? verifyTls,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     DateTime? lastTriggeredAt,
     WebhookStatus? status,
     int? successCount,
@@ -242,20 +242,20 @@ class __$$WebhookImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? name = null,
-    Object? description = null,
-    Object? url = null,
-    Object? secret = null,
-    Object? events = null,
-    Object? isActive = null,
-    Object? httpMethod = null,
-    Object? headers = null,
-    Object? timeoutSeconds = null,
-    Object? maxRetries = null,
-    Object? verifyTls = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
+    Object? id = freezed,
+    Object? name = freezed,
+    Object? description = freezed,
+    Object? url = freezed,
+    Object? secret = freezed,
+    Object? events = freezed,
+    Object? isActive = freezed,
+    Object? httpMethod = freezed,
+    Object? headers = freezed,
+    Object? timeoutSeconds = freezed,
+    Object? maxRetries = freezed,
+    Object? verifyTls = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
     Object? lastTriggeredAt = freezed,
     Object? status = freezed,
     Object? successCount = freezed,
@@ -264,62 +264,62 @@ class __$$WebhookImplCopyWithImpl<$Res>
   }) {
     return _then(
       _$WebhookImpl(
-        id: null == id
+        id: freezed == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        name: null == name
+                  as String?,
+        name: freezed == name
             ? _value.name
             : name // ignore: cast_nullable_to_non_nullable
-                  as String,
-        description: null == description
+                  as String?,
+        description: freezed == description
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
-                  as String,
-        url: null == url
+                  as String?,
+        url: freezed == url
             ? _value.url
             : url // ignore: cast_nullable_to_non_nullable
-                  as String,
-        secret: null == secret
+                  as String?,
+        secret: freezed == secret
             ? _value.secret
             : secret // ignore: cast_nullable_to_non_nullable
-                  as String,
-        events: null == events
+                  as String?,
+        events: freezed == events
             ? _value._events
             : events // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
-        isActive: null == isActive
+                  as List<String>?,
+        isActive: freezed == isActive
             ? _value.isActive
             : isActive // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        httpMethod: null == httpMethod
+                  as bool?,
+        httpMethod: freezed == httpMethod
             ? _value.httpMethod
             : httpMethod // ignore: cast_nullable_to_non_nullable
-                  as String,
-        headers: null == headers
+                  as String?,
+        headers: freezed == headers
             ? _value._headers
             : headers // ignore: cast_nullable_to_non_nullable
-                  as Map<String, String>,
-        timeoutSeconds: null == timeoutSeconds
+                  as Map<String, String>?,
+        timeoutSeconds: freezed == timeoutSeconds
             ? _value.timeoutSeconds
             : timeoutSeconds // ignore: cast_nullable_to_non_nullable
-                  as int,
-        maxRetries: null == maxRetries
+                  as int?,
+        maxRetries: freezed == maxRetries
             ? _value.maxRetries
             : maxRetries // ignore: cast_nullable_to_non_nullable
-                  as int,
-        verifyTls: null == verifyTls
+                  as int?,
+        verifyTls: freezed == verifyTls
             ? _value.verifyTls
             : verifyTls // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        createdAt: null == createdAt
+                  as bool?,
+        createdAt: freezed == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        updatedAt: null == updatedAt
+                  as DateTime?,
+        updatedAt: freezed == updatedAt
             ? _value.updatedAt
             : updatedAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
+                  as DateTime?,
         lastTriggeredAt: freezed == lastTriggeredAt
             ? _value.lastTriggeredAt
             : lastTriggeredAt // ignore: cast_nullable_to_non_nullable
@@ -349,20 +349,20 @@ class __$$WebhookImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WebhookImpl implements _Webhook {
   const _$WebhookImpl({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.url,
-    required this.secret,
-    required final List<String> events,
-    required this.isActive,
-    required this.httpMethod,
-    required final Map<String, String> headers,
-    required this.timeoutSeconds,
-    required this.maxRetries,
-    required this.verifyTls,
-    required this.createdAt,
-    required this.updatedAt,
+    this.id,
+    this.name,
+    this.description,
+    this.url,
+    this.secret,
+    final List<String>? events,
+    this.isActive,
+    this.httpMethod,
+    final Map<String, String>? headers,
+    this.timeoutSeconds,
+    this.maxRetries,
+    this.verifyTls,
+    this.createdAt,
+    this.updatedAt,
     this.lastTriggeredAt,
     this.status,
     this.successCount,
@@ -376,45 +376,49 @@ class _$WebhookImpl implements _Webhook {
       _$$WebhookImplFromJson(json);
 
   @override
-  final String id;
+  final String? id;
   @override
-  final String name;
+  final String? name;
   @override
-  final String description;
+  final String? description;
   @override
-  final String url;
+  final String? url;
   @override
-  final String secret;
-  final List<String> _events;
+  final String? secret;
+  final List<String>? _events;
   @override
-  List<String> get events {
+  List<String>? get events {
+    final value = _events;
+    if (value == null) return null;
     if (_events is EqualUnmodifiableListView) return _events;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_events);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
-  final bool isActive;
+  final bool? isActive;
   @override
-  final String httpMethod;
-  final Map<String, String> _headers;
+  final String? httpMethod;
+  final Map<String, String>? _headers;
   @override
-  Map<String, String> get headers {
+  Map<String, String>? get headers {
+    final value = _headers;
+    if (value == null) return null;
     if (_headers is EqualUnmodifiableMapView) return _headers;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_headers);
+    return EqualUnmodifiableMapView(value);
   }
 
   @override
-  final int timeoutSeconds;
+  final int? timeoutSeconds;
   @override
-  final int maxRetries;
+  final int? maxRetries;
   @override
-  final bool verifyTls;
+  final bool? verifyTls;
   @override
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
   @override
   final DateTime? lastTriggeredAt;
   @override
@@ -516,20 +520,20 @@ class _$WebhookImpl implements _Webhook {
 
 abstract class _Webhook implements Webhook {
   const factory _Webhook({
-    required final String id,
-    required final String name,
-    required final String description,
-    required final String url,
-    required final String secret,
-    required final List<String> events,
-    required final bool isActive,
-    required final String httpMethod,
-    required final Map<String, String> headers,
-    required final int timeoutSeconds,
-    required final int maxRetries,
-    required final bool verifyTls,
-    required final DateTime createdAt,
-    required final DateTime updatedAt,
+    final String? id,
+    final String? name,
+    final String? description,
+    final String? url,
+    final String? secret,
+    final List<String>? events,
+    final bool? isActive,
+    final String? httpMethod,
+    final Map<String, String>? headers,
+    final int? timeoutSeconds,
+    final int? maxRetries,
+    final bool? verifyTls,
+    final DateTime? createdAt,
+    final DateTime? updatedAt,
     final DateTime? lastTriggeredAt,
     final WebhookStatus? status,
     final int? successCount,
@@ -540,33 +544,33 @@ abstract class _Webhook implements Webhook {
   factory _Webhook.fromJson(Map<String, dynamic> json) = _$WebhookImpl.fromJson;
 
   @override
-  String get id;
+  String? get id;
   @override
-  String get name;
+  String? get name;
   @override
-  String get description;
+  String? get description;
   @override
-  String get url;
+  String? get url;
   @override
-  String get secret;
+  String? get secret;
   @override
-  List<String> get events;
+  List<String>? get events;
   @override
-  bool get isActive;
+  bool? get isActive;
   @override
-  String get httpMethod;
+  String? get httpMethod;
   @override
-  Map<String, String> get headers;
+  Map<String, String>? get headers;
   @override
-  int get timeoutSeconds;
+  int? get timeoutSeconds;
   @override
-  int get maxRetries;
+  int? get maxRetries;
   @override
-  bool get verifyTls;
+  bool? get verifyTls;
   @override
-  DateTime get createdAt;
+  DateTime? get createdAt;
   @override
-  DateTime get updatedAt;
+  DateTime? get updatedAt;
   @override
   DateTime? get lastTriggeredAt;
   @override
@@ -1745,16 +1749,16 @@ WebhookDelivery _$WebhookDeliveryFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$WebhookDelivery {
-  String get id => throw _privateConstructorUsedError;
-  String get webhookId => throw _privateConstructorUsedError;
-  String get event => throw _privateConstructorUsedError;
-  Map<String, dynamic> get payload => throw _privateConstructorUsedError;
-  int get statusCode => throw _privateConstructorUsedError;
-  String get response => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get deliveredAt => throw _privateConstructorUsedError;
-  bool get success => throw _privateConstructorUsedError;
-  int get attempt => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
+  String? get webhookId => throw _privateConstructorUsedError;
+  String? get event => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get payload => throw _privateConstructorUsedError;
+  int? get statusCode => throw _privateConstructorUsedError;
+  String? get response => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get deliveredAt => throw _privateConstructorUsedError;
+  bool? get success => throw _privateConstructorUsedError;
+  int? get attempt => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
   int? get responseTime => throw _privateConstructorUsedError;
   Map<String, String>? get requestHeaders => throw _privateConstructorUsedError;
@@ -1779,16 +1783,16 @@ abstract class $WebhookDeliveryCopyWith<$Res> {
   ) = _$WebhookDeliveryCopyWithImpl<$Res, WebhookDelivery>;
   @useResult
   $Res call({
-    String id,
-    String webhookId,
-    String event,
-    Map<String, dynamic> payload,
-    int statusCode,
-    String response,
-    DateTime createdAt,
-    DateTime deliveredAt,
-    bool success,
-    int attempt,
+    String? id,
+    String? webhookId,
+    String? event,
+    Map<String, dynamic>? payload,
+    int? statusCode,
+    String? response,
+    DateTime? createdAt,
+    DateTime? deliveredAt,
+    bool? success,
+    int? attempt,
     String? error,
     int? responseTime,
     Map<String, String>? requestHeaders,
@@ -1811,16 +1815,16 @@ class _$WebhookDeliveryCopyWithImpl<$Res, $Val extends WebhookDelivery>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? webhookId = null,
-    Object? event = null,
-    Object? payload = null,
-    Object? statusCode = null,
-    Object? response = null,
-    Object? createdAt = null,
-    Object? deliveredAt = null,
-    Object? success = null,
-    Object? attempt = null,
+    Object? id = freezed,
+    Object? webhookId = freezed,
+    Object? event = freezed,
+    Object? payload = freezed,
+    Object? statusCode = freezed,
+    Object? response = freezed,
+    Object? createdAt = freezed,
+    Object? deliveredAt = freezed,
+    Object? success = freezed,
+    Object? attempt = freezed,
     Object? error = freezed,
     Object? responseTime = freezed,
     Object? requestHeaders = freezed,
@@ -1828,46 +1832,46 @@ class _$WebhookDeliveryCopyWithImpl<$Res, $Val extends WebhookDelivery>
   }) {
     return _then(
       _value.copyWith(
-            id: null == id
+            id: freezed == id
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            webhookId: null == webhookId
+                      as String?,
+            webhookId: freezed == webhookId
                 ? _value.webhookId
                 : webhookId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            event: null == event
+                      as String?,
+            event: freezed == event
                 ? _value.event
                 : event // ignore: cast_nullable_to_non_nullable
-                      as String,
-            payload: null == payload
+                      as String?,
+            payload: freezed == payload
                 ? _value.payload
                 : payload // ignore: cast_nullable_to_non_nullable
-                      as Map<String, dynamic>,
-            statusCode: null == statusCode
+                      as Map<String, dynamic>?,
+            statusCode: freezed == statusCode
                 ? _value.statusCode
                 : statusCode // ignore: cast_nullable_to_non_nullable
-                      as int,
-            response: null == response
+                      as int?,
+            response: freezed == response
                 ? _value.response
                 : response // ignore: cast_nullable_to_non_nullable
-                      as String,
-            createdAt: null == createdAt
+                      as String?,
+            createdAt: freezed == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            deliveredAt: null == deliveredAt
+                      as DateTime?,
+            deliveredAt: freezed == deliveredAt
                 ? _value.deliveredAt
                 : deliveredAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            success: null == success
+                      as DateTime?,
+            success: freezed == success
                 ? _value.success
                 : success // ignore: cast_nullable_to_non_nullable
-                      as bool,
-            attempt: null == attempt
+                      as bool?,
+            attempt: freezed == attempt
                 ? _value.attempt
                 : attempt // ignore: cast_nullable_to_non_nullable
-                      as int,
+                      as int?,
             error: freezed == error
                 ? _value.error
                 : error // ignore: cast_nullable_to_non_nullable
@@ -1900,16 +1904,16 @@ abstract class _$$WebhookDeliveryImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    String id,
-    String webhookId,
-    String event,
-    Map<String, dynamic> payload,
-    int statusCode,
-    String response,
-    DateTime createdAt,
-    DateTime deliveredAt,
-    bool success,
-    int attempt,
+    String? id,
+    String? webhookId,
+    String? event,
+    Map<String, dynamic>? payload,
+    int? statusCode,
+    String? response,
+    DateTime? createdAt,
+    DateTime? deliveredAt,
+    bool? success,
+    int? attempt,
     String? error,
     int? responseTime,
     Map<String, String>? requestHeaders,
@@ -1931,16 +1935,16 @@ class __$$WebhookDeliveryImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? webhookId = null,
-    Object? event = null,
-    Object? payload = null,
-    Object? statusCode = null,
-    Object? response = null,
-    Object? createdAt = null,
-    Object? deliveredAt = null,
-    Object? success = null,
-    Object? attempt = null,
+    Object? id = freezed,
+    Object? webhookId = freezed,
+    Object? event = freezed,
+    Object? payload = freezed,
+    Object? statusCode = freezed,
+    Object? response = freezed,
+    Object? createdAt = freezed,
+    Object? deliveredAt = freezed,
+    Object? success = freezed,
+    Object? attempt = freezed,
     Object? error = freezed,
     Object? responseTime = freezed,
     Object? requestHeaders = freezed,
@@ -1948,46 +1952,46 @@ class __$$WebhookDeliveryImplCopyWithImpl<$Res>
   }) {
     return _then(
       _$WebhookDeliveryImpl(
-        id: null == id
+        id: freezed == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        webhookId: null == webhookId
+                  as String?,
+        webhookId: freezed == webhookId
             ? _value.webhookId
             : webhookId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        event: null == event
+                  as String?,
+        event: freezed == event
             ? _value.event
             : event // ignore: cast_nullable_to_non_nullable
-                  as String,
-        payload: null == payload
+                  as String?,
+        payload: freezed == payload
             ? _value._payload
             : payload // ignore: cast_nullable_to_non_nullable
-                  as Map<String, dynamic>,
-        statusCode: null == statusCode
+                  as Map<String, dynamic>?,
+        statusCode: freezed == statusCode
             ? _value.statusCode
             : statusCode // ignore: cast_nullable_to_non_nullable
-                  as int,
-        response: null == response
+                  as int?,
+        response: freezed == response
             ? _value.response
             : response // ignore: cast_nullable_to_non_nullable
-                  as String,
-        createdAt: null == createdAt
+                  as String?,
+        createdAt: freezed == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        deliveredAt: null == deliveredAt
+                  as DateTime?,
+        deliveredAt: freezed == deliveredAt
             ? _value.deliveredAt
             : deliveredAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        success: null == success
+                  as DateTime?,
+        success: freezed == success
             ? _value.success
             : success // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        attempt: null == attempt
+                  as bool?,
+        attempt: freezed == attempt
             ? _value.attempt
             : attempt // ignore: cast_nullable_to_non_nullable
-                  as int,
+                  as int?,
         error: freezed == error
             ? _value.error
             : error // ignore: cast_nullable_to_non_nullable
@@ -2013,16 +2017,16 @@ class __$$WebhookDeliveryImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WebhookDeliveryImpl implements _WebhookDelivery {
   const _$WebhookDeliveryImpl({
-    required this.id,
-    required this.webhookId,
-    required this.event,
-    required final Map<String, dynamic> payload,
-    required this.statusCode,
-    required this.response,
-    required this.createdAt,
-    required this.deliveredAt,
-    required this.success,
-    required this.attempt,
+    this.id,
+    this.webhookId,
+    this.event,
+    final Map<String, dynamic>? payload,
+    this.statusCode,
+    this.response,
+    this.createdAt,
+    this.deliveredAt,
+    this.success,
+    this.attempt,
     this.error,
     this.responseTime,
     final Map<String, String>? requestHeaders,
@@ -2035,31 +2039,33 @@ class _$WebhookDeliveryImpl implements _WebhookDelivery {
       _$$WebhookDeliveryImplFromJson(json);
 
   @override
-  final String id;
+  final String? id;
   @override
-  final String webhookId;
+  final String? webhookId;
   @override
-  final String event;
-  final Map<String, dynamic> _payload;
+  final String? event;
+  final Map<String, dynamic>? _payload;
   @override
-  Map<String, dynamic> get payload {
+  Map<String, dynamic>? get payload {
+    final value = _payload;
+    if (value == null) return null;
     if (_payload is EqualUnmodifiableMapView) return _payload;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_payload);
+    return EqualUnmodifiableMapView(value);
   }
 
   @override
-  final int statusCode;
+  final int? statusCode;
   @override
-  final String response;
+  final String? response;
   @override
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
-  final DateTime deliveredAt;
+  final DateTime? deliveredAt;
   @override
-  final bool success;
+  final bool? success;
   @override
-  final int attempt;
+  final int? attempt;
   @override
   final String? error;
   @override
@@ -2161,16 +2167,16 @@ class _$WebhookDeliveryImpl implements _WebhookDelivery {
 
 abstract class _WebhookDelivery implements WebhookDelivery {
   const factory _WebhookDelivery({
-    required final String id,
-    required final String webhookId,
-    required final String event,
-    required final Map<String, dynamic> payload,
-    required final int statusCode,
-    required final String response,
-    required final DateTime createdAt,
-    required final DateTime deliveredAt,
-    required final bool success,
-    required final int attempt,
+    final String? id,
+    final String? webhookId,
+    final String? event,
+    final Map<String, dynamic>? payload,
+    final int? statusCode,
+    final String? response,
+    final DateTime? createdAt,
+    final DateTime? deliveredAt,
+    final bool? success,
+    final int? attempt,
     final String? error,
     final int? responseTime,
     final Map<String, String>? requestHeaders,
@@ -2181,25 +2187,25 @@ abstract class _WebhookDelivery implements WebhookDelivery {
       _$WebhookDeliveryImpl.fromJson;
 
   @override
-  String get id;
+  String? get id;
   @override
-  String get webhookId;
+  String? get webhookId;
   @override
-  String get event;
+  String? get event;
   @override
-  Map<String, dynamic> get payload;
+  Map<String, dynamic>? get payload;
   @override
-  int get statusCode;
+  int? get statusCode;
   @override
-  String get response;
+  String? get response;
   @override
-  DateTime get createdAt;
+  DateTime? get createdAt;
   @override
-  DateTime get deliveredAt;
+  DateTime? get deliveredAt;
   @override
-  bool get success;
+  bool? get success;
   @override
-  int get attempt;
+  int? get attempt;
   @override
   String? get error;
   @override
@@ -2223,12 +2229,12 @@ WebhookEvent _$WebhookEventFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$WebhookEvent {
-  String get id => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
-  String get category => throw _privateConstructorUsedError;
-  Map<String, dynamic> get samplePayload => throw _privateConstructorUsedError;
-  bool get isEnabled => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  String? get category => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get samplePayload => throw _privateConstructorUsedError;
+  bool? get isEnabled => throw _privateConstructorUsedError;
 
   /// Serializes this WebhookEvent to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -2248,12 +2254,12 @@ abstract class $WebhookEventCopyWith<$Res> {
   ) = _$WebhookEventCopyWithImpl<$Res, WebhookEvent>;
   @useResult
   $Res call({
-    String id,
-    String name,
-    String description,
-    String category,
-    Map<String, dynamic> samplePayload,
-    bool isEnabled,
+    String? id,
+    String? name,
+    String? description,
+    String? category,
+    Map<String, dynamic>? samplePayload,
+    bool? isEnabled,
   });
 }
 
@@ -2272,39 +2278,39 @@ class _$WebhookEventCopyWithImpl<$Res, $Val extends WebhookEvent>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? name = null,
-    Object? description = null,
-    Object? category = null,
-    Object? samplePayload = null,
-    Object? isEnabled = null,
+    Object? id = freezed,
+    Object? name = freezed,
+    Object? description = freezed,
+    Object? category = freezed,
+    Object? samplePayload = freezed,
+    Object? isEnabled = freezed,
   }) {
     return _then(
       _value.copyWith(
-            id: null == id
+            id: freezed == id
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            name: null == name
+                      as String?,
+            name: freezed == name
                 ? _value.name
                 : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            description: null == description
+                      as String?,
+            description: freezed == description
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
-                      as String,
-            category: null == category
+                      as String?,
+            category: freezed == category
                 ? _value.category
                 : category // ignore: cast_nullable_to_non_nullable
-                      as String,
-            samplePayload: null == samplePayload
+                      as String?,
+            samplePayload: freezed == samplePayload
                 ? _value.samplePayload
                 : samplePayload // ignore: cast_nullable_to_non_nullable
-                      as Map<String, dynamic>,
-            isEnabled: null == isEnabled
+                      as Map<String, dynamic>?,
+            isEnabled: freezed == isEnabled
                 ? _value.isEnabled
                 : isEnabled // ignore: cast_nullable_to_non_nullable
-                      as bool,
+                      as bool?,
           )
           as $Val,
     );
@@ -2321,12 +2327,12 @@ abstract class _$$WebhookEventImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    String id,
-    String name,
-    String description,
-    String category,
-    Map<String, dynamic> samplePayload,
-    bool isEnabled,
+    String? id,
+    String? name,
+    String? description,
+    String? category,
+    Map<String, dynamic>? samplePayload,
+    bool? isEnabled,
   });
 }
 
@@ -2344,39 +2350,39 @@ class __$$WebhookEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? name = null,
-    Object? description = null,
-    Object? category = null,
-    Object? samplePayload = null,
-    Object? isEnabled = null,
+    Object? id = freezed,
+    Object? name = freezed,
+    Object? description = freezed,
+    Object? category = freezed,
+    Object? samplePayload = freezed,
+    Object? isEnabled = freezed,
   }) {
     return _then(
       _$WebhookEventImpl(
-        id: null == id
+        id: freezed == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        name: null == name
+                  as String?,
+        name: freezed == name
             ? _value.name
             : name // ignore: cast_nullable_to_non_nullable
-                  as String,
-        description: null == description
+                  as String?,
+        description: freezed == description
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
-                  as String,
-        category: null == category
+                  as String?,
+        category: freezed == category
             ? _value.category
             : category // ignore: cast_nullable_to_non_nullable
-                  as String,
-        samplePayload: null == samplePayload
+                  as String?,
+        samplePayload: freezed == samplePayload
             ? _value._samplePayload
             : samplePayload // ignore: cast_nullable_to_non_nullable
-                  as Map<String, dynamic>,
-        isEnabled: null == isEnabled
+                  as Map<String, dynamic>?,
+        isEnabled: freezed == isEnabled
             ? _value.isEnabled
             : isEnabled // ignore: cast_nullable_to_non_nullable
-                  as bool,
+                  as bool?,
       ),
     );
   }
@@ -2386,35 +2392,37 @@ class __$$WebhookEventImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WebhookEventImpl implements _WebhookEvent {
   const _$WebhookEventImpl({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.category,
-    required final Map<String, dynamic> samplePayload,
-    required this.isEnabled,
+    this.id,
+    this.name,
+    this.description,
+    this.category,
+    final Map<String, dynamic>? samplePayload,
+    this.isEnabled,
   }) : _samplePayload = samplePayload;
 
   factory _$WebhookEventImpl.fromJson(Map<String, dynamic> json) =>
       _$$WebhookEventImplFromJson(json);
 
   @override
-  final String id;
+  final String? id;
   @override
-  final String name;
+  final String? name;
   @override
-  final String description;
+  final String? description;
   @override
-  final String category;
-  final Map<String, dynamic> _samplePayload;
+  final String? category;
+  final Map<String, dynamic>? _samplePayload;
   @override
-  Map<String, dynamic> get samplePayload {
+  Map<String, dynamic>? get samplePayload {
+    final value = _samplePayload;
+    if (value == null) return null;
     if (_samplePayload is EqualUnmodifiableMapView) return _samplePayload;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_samplePayload);
+    return EqualUnmodifiableMapView(value);
   }
 
   @override
-  final bool isEnabled;
+  final bool? isEnabled;
 
   @override
   String toString() {
@@ -2468,29 +2476,29 @@ class _$WebhookEventImpl implements _WebhookEvent {
 
 abstract class _WebhookEvent implements WebhookEvent {
   const factory _WebhookEvent({
-    required final String id,
-    required final String name,
-    required final String description,
-    required final String category,
-    required final Map<String, dynamic> samplePayload,
-    required final bool isEnabled,
+    final String? id,
+    final String? name,
+    final String? description,
+    final String? category,
+    final Map<String, dynamic>? samplePayload,
+    final bool? isEnabled,
   }) = _$WebhookEventImpl;
 
   factory _WebhookEvent.fromJson(Map<String, dynamic> json) =
       _$WebhookEventImpl.fromJson;
 
   @override
-  String get id;
+  String? get id;
   @override
-  String get name;
+  String? get name;
   @override
-  String get description;
+  String? get description;
   @override
-  String get category;
+  String? get category;
   @override
-  Map<String, dynamic> get samplePayload;
+  Map<String, dynamic>? get samplePayload;
   @override
-  bool get isEnabled;
+  bool? get isEnabled;
 
   /// Create a copy of WebhookEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -2506,16 +2514,16 @@ WebhookStats _$WebhookStatsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$WebhookStats {
-  String get webhookId => throw _privateConstructorUsedError;
-  int get totalDeliveries => throw _privateConstructorUsedError;
-  int get successfulDeliveries => throw _privateConstructorUsedError;
-  int get failedDeliveries => throw _privateConstructorUsedError;
-  double get successRate => throw _privateConstructorUsedError;
-  double get averageResponseTime => throw _privateConstructorUsedError;
-  DateTime get lastDelivery => throw _privateConstructorUsedError;
-  Map<String, int> get deliveriesByDay => throw _privateConstructorUsedError;
-  Map<String, int> get deliveriesByEvent => throw _privateConstructorUsedError;
-  List<WebhookDelivery> get recentDeliveries =>
+  String? get webhookId => throw _privateConstructorUsedError;
+  int? get totalDeliveries => throw _privateConstructorUsedError;
+  int? get successfulDeliveries => throw _privateConstructorUsedError;
+  int? get failedDeliveries => throw _privateConstructorUsedError;
+  double? get successRate => throw _privateConstructorUsedError;
+  double? get averageResponseTime => throw _privateConstructorUsedError;
+  DateTime? get lastDelivery => throw _privateConstructorUsedError;
+  Map<String, int>? get deliveriesByDay => throw _privateConstructorUsedError;
+  Map<String, int>? get deliveriesByEvent => throw _privateConstructorUsedError;
+  List<WebhookDelivery>? get recentDeliveries =>
       throw _privateConstructorUsedError;
 
   /// Serializes this WebhookStats to a JSON map.
@@ -2536,16 +2544,16 @@ abstract class $WebhookStatsCopyWith<$Res> {
   ) = _$WebhookStatsCopyWithImpl<$Res, WebhookStats>;
   @useResult
   $Res call({
-    String webhookId,
-    int totalDeliveries,
-    int successfulDeliveries,
-    int failedDeliveries,
-    double successRate,
-    double averageResponseTime,
-    DateTime lastDelivery,
-    Map<String, int> deliveriesByDay,
-    Map<String, int> deliveriesByEvent,
-    List<WebhookDelivery> recentDeliveries,
+    String? webhookId,
+    int? totalDeliveries,
+    int? successfulDeliveries,
+    int? failedDeliveries,
+    double? successRate,
+    double? averageResponseTime,
+    DateTime? lastDelivery,
+    Map<String, int>? deliveriesByDay,
+    Map<String, int>? deliveriesByEvent,
+    List<WebhookDelivery>? recentDeliveries,
   });
 }
 
@@ -2564,59 +2572,59 @@ class _$WebhookStatsCopyWithImpl<$Res, $Val extends WebhookStats>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? webhookId = null,
-    Object? totalDeliveries = null,
-    Object? successfulDeliveries = null,
-    Object? failedDeliveries = null,
-    Object? successRate = null,
-    Object? averageResponseTime = null,
-    Object? lastDelivery = null,
-    Object? deliveriesByDay = null,
-    Object? deliveriesByEvent = null,
-    Object? recentDeliveries = null,
+    Object? webhookId = freezed,
+    Object? totalDeliveries = freezed,
+    Object? successfulDeliveries = freezed,
+    Object? failedDeliveries = freezed,
+    Object? successRate = freezed,
+    Object? averageResponseTime = freezed,
+    Object? lastDelivery = freezed,
+    Object? deliveriesByDay = freezed,
+    Object? deliveriesByEvent = freezed,
+    Object? recentDeliveries = freezed,
   }) {
     return _then(
       _value.copyWith(
-            webhookId: null == webhookId
+            webhookId: freezed == webhookId
                 ? _value.webhookId
                 : webhookId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            totalDeliveries: null == totalDeliveries
+                      as String?,
+            totalDeliveries: freezed == totalDeliveries
                 ? _value.totalDeliveries
                 : totalDeliveries // ignore: cast_nullable_to_non_nullable
-                      as int,
-            successfulDeliveries: null == successfulDeliveries
+                      as int?,
+            successfulDeliveries: freezed == successfulDeliveries
                 ? _value.successfulDeliveries
                 : successfulDeliveries // ignore: cast_nullable_to_non_nullable
-                      as int,
-            failedDeliveries: null == failedDeliveries
+                      as int?,
+            failedDeliveries: freezed == failedDeliveries
                 ? _value.failedDeliveries
                 : failedDeliveries // ignore: cast_nullable_to_non_nullable
-                      as int,
-            successRate: null == successRate
+                      as int?,
+            successRate: freezed == successRate
                 ? _value.successRate
                 : successRate // ignore: cast_nullable_to_non_nullable
-                      as double,
-            averageResponseTime: null == averageResponseTime
+                      as double?,
+            averageResponseTime: freezed == averageResponseTime
                 ? _value.averageResponseTime
                 : averageResponseTime // ignore: cast_nullable_to_non_nullable
-                      as double,
-            lastDelivery: null == lastDelivery
+                      as double?,
+            lastDelivery: freezed == lastDelivery
                 ? _value.lastDelivery
                 : lastDelivery // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            deliveriesByDay: null == deliveriesByDay
+                      as DateTime?,
+            deliveriesByDay: freezed == deliveriesByDay
                 ? _value.deliveriesByDay
                 : deliveriesByDay // ignore: cast_nullable_to_non_nullable
-                      as Map<String, int>,
-            deliveriesByEvent: null == deliveriesByEvent
+                      as Map<String, int>?,
+            deliveriesByEvent: freezed == deliveriesByEvent
                 ? _value.deliveriesByEvent
                 : deliveriesByEvent // ignore: cast_nullable_to_non_nullable
-                      as Map<String, int>,
-            recentDeliveries: null == recentDeliveries
+                      as Map<String, int>?,
+            recentDeliveries: freezed == recentDeliveries
                 ? _value.recentDeliveries
                 : recentDeliveries // ignore: cast_nullable_to_non_nullable
-                      as List<WebhookDelivery>,
+                      as List<WebhookDelivery>?,
           )
           as $Val,
     );
@@ -2633,16 +2641,16 @@ abstract class _$$WebhookStatsImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    String webhookId,
-    int totalDeliveries,
-    int successfulDeliveries,
-    int failedDeliveries,
-    double successRate,
-    double averageResponseTime,
-    DateTime lastDelivery,
-    Map<String, int> deliveriesByDay,
-    Map<String, int> deliveriesByEvent,
-    List<WebhookDelivery> recentDeliveries,
+    String? webhookId,
+    int? totalDeliveries,
+    int? successfulDeliveries,
+    int? failedDeliveries,
+    double? successRate,
+    double? averageResponseTime,
+    DateTime? lastDelivery,
+    Map<String, int>? deliveriesByDay,
+    Map<String, int>? deliveriesByEvent,
+    List<WebhookDelivery>? recentDeliveries,
   });
 }
 
@@ -2660,59 +2668,59 @@ class __$$WebhookStatsImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? webhookId = null,
-    Object? totalDeliveries = null,
-    Object? successfulDeliveries = null,
-    Object? failedDeliveries = null,
-    Object? successRate = null,
-    Object? averageResponseTime = null,
-    Object? lastDelivery = null,
-    Object? deliveriesByDay = null,
-    Object? deliveriesByEvent = null,
-    Object? recentDeliveries = null,
+    Object? webhookId = freezed,
+    Object? totalDeliveries = freezed,
+    Object? successfulDeliveries = freezed,
+    Object? failedDeliveries = freezed,
+    Object? successRate = freezed,
+    Object? averageResponseTime = freezed,
+    Object? lastDelivery = freezed,
+    Object? deliveriesByDay = freezed,
+    Object? deliveriesByEvent = freezed,
+    Object? recentDeliveries = freezed,
   }) {
     return _then(
       _$WebhookStatsImpl(
-        webhookId: null == webhookId
+        webhookId: freezed == webhookId
             ? _value.webhookId
             : webhookId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        totalDeliveries: null == totalDeliveries
+                  as String?,
+        totalDeliveries: freezed == totalDeliveries
             ? _value.totalDeliveries
             : totalDeliveries // ignore: cast_nullable_to_non_nullable
-                  as int,
-        successfulDeliveries: null == successfulDeliveries
+                  as int?,
+        successfulDeliveries: freezed == successfulDeliveries
             ? _value.successfulDeliveries
             : successfulDeliveries // ignore: cast_nullable_to_non_nullable
-                  as int,
-        failedDeliveries: null == failedDeliveries
+                  as int?,
+        failedDeliveries: freezed == failedDeliveries
             ? _value.failedDeliveries
             : failedDeliveries // ignore: cast_nullable_to_non_nullable
-                  as int,
-        successRate: null == successRate
+                  as int?,
+        successRate: freezed == successRate
             ? _value.successRate
             : successRate // ignore: cast_nullable_to_non_nullable
-                  as double,
-        averageResponseTime: null == averageResponseTime
+                  as double?,
+        averageResponseTime: freezed == averageResponseTime
             ? _value.averageResponseTime
             : averageResponseTime // ignore: cast_nullable_to_non_nullable
-                  as double,
-        lastDelivery: null == lastDelivery
+                  as double?,
+        lastDelivery: freezed == lastDelivery
             ? _value.lastDelivery
             : lastDelivery // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        deliveriesByDay: null == deliveriesByDay
+                  as DateTime?,
+        deliveriesByDay: freezed == deliveriesByDay
             ? _value._deliveriesByDay
             : deliveriesByDay // ignore: cast_nullable_to_non_nullable
-                  as Map<String, int>,
-        deliveriesByEvent: null == deliveriesByEvent
+                  as Map<String, int>?,
+        deliveriesByEvent: freezed == deliveriesByEvent
             ? _value._deliveriesByEvent
             : deliveriesByEvent // ignore: cast_nullable_to_non_nullable
-                  as Map<String, int>,
-        recentDeliveries: null == recentDeliveries
+                  as Map<String, int>?,
+        recentDeliveries: freezed == recentDeliveries
             ? _value._recentDeliveries
             : recentDeliveries // ignore: cast_nullable_to_non_nullable
-                  as List<WebhookDelivery>,
+                  as List<WebhookDelivery>?,
       ),
     );
   }
@@ -2722,16 +2730,16 @@ class __$$WebhookStatsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WebhookStatsImpl implements _WebhookStats {
   const _$WebhookStatsImpl({
-    required this.webhookId,
-    required this.totalDeliveries,
-    required this.successfulDeliveries,
-    required this.failedDeliveries,
-    required this.successRate,
-    required this.averageResponseTime,
-    required this.lastDelivery,
-    required final Map<String, int> deliveriesByDay,
-    required final Map<String, int> deliveriesByEvent,
-    required final List<WebhookDelivery> recentDeliveries,
+    this.webhookId,
+    this.totalDeliveries,
+    this.successfulDeliveries,
+    this.failedDeliveries,
+    this.successRate,
+    this.averageResponseTime,
+    this.lastDelivery,
+    final Map<String, int>? deliveriesByDay,
+    final Map<String, int>? deliveriesByEvent,
+    final List<WebhookDelivery>? recentDeliveries,
   }) : _deliveriesByDay = deliveriesByDay,
        _deliveriesByEvent = deliveriesByEvent,
        _recentDeliveries = recentDeliveries;
@@ -2740,43 +2748,49 @@ class _$WebhookStatsImpl implements _WebhookStats {
       _$$WebhookStatsImplFromJson(json);
 
   @override
-  final String webhookId;
+  final String? webhookId;
   @override
-  final int totalDeliveries;
+  final int? totalDeliveries;
   @override
-  final int successfulDeliveries;
+  final int? successfulDeliveries;
   @override
-  final int failedDeliveries;
+  final int? failedDeliveries;
   @override
-  final double successRate;
+  final double? successRate;
   @override
-  final double averageResponseTime;
+  final double? averageResponseTime;
   @override
-  final DateTime lastDelivery;
-  final Map<String, int> _deliveriesByDay;
+  final DateTime? lastDelivery;
+  final Map<String, int>? _deliveriesByDay;
   @override
-  Map<String, int> get deliveriesByDay {
+  Map<String, int>? get deliveriesByDay {
+    final value = _deliveriesByDay;
+    if (value == null) return null;
     if (_deliveriesByDay is EqualUnmodifiableMapView) return _deliveriesByDay;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_deliveriesByDay);
+    return EqualUnmodifiableMapView(value);
   }
 
-  final Map<String, int> _deliveriesByEvent;
+  final Map<String, int>? _deliveriesByEvent;
   @override
-  Map<String, int> get deliveriesByEvent {
+  Map<String, int>? get deliveriesByEvent {
+    final value = _deliveriesByEvent;
+    if (value == null) return null;
     if (_deliveriesByEvent is EqualUnmodifiableMapView)
       return _deliveriesByEvent;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_deliveriesByEvent);
+    return EqualUnmodifiableMapView(value);
   }
 
-  final List<WebhookDelivery> _recentDeliveries;
+  final List<WebhookDelivery>? _recentDeliveries;
   @override
-  List<WebhookDelivery> get recentDeliveries {
+  List<WebhookDelivery>? get recentDeliveries {
+    final value = _recentDeliveries;
+    if (value == null) return null;
     if (_recentDeliveries is EqualUnmodifiableListView)
       return _recentDeliveries;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_recentDeliveries);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -2849,41 +2863,41 @@ class _$WebhookStatsImpl implements _WebhookStats {
 
 abstract class _WebhookStats implements WebhookStats {
   const factory _WebhookStats({
-    required final String webhookId,
-    required final int totalDeliveries,
-    required final int successfulDeliveries,
-    required final int failedDeliveries,
-    required final double successRate,
-    required final double averageResponseTime,
-    required final DateTime lastDelivery,
-    required final Map<String, int> deliveriesByDay,
-    required final Map<String, int> deliveriesByEvent,
-    required final List<WebhookDelivery> recentDeliveries,
+    final String? webhookId,
+    final int? totalDeliveries,
+    final int? successfulDeliveries,
+    final int? failedDeliveries,
+    final double? successRate,
+    final double? averageResponseTime,
+    final DateTime? lastDelivery,
+    final Map<String, int>? deliveriesByDay,
+    final Map<String, int>? deliveriesByEvent,
+    final List<WebhookDelivery>? recentDeliveries,
   }) = _$WebhookStatsImpl;
 
   factory _WebhookStats.fromJson(Map<String, dynamic> json) =
       _$WebhookStatsImpl.fromJson;
 
   @override
-  String get webhookId;
+  String? get webhookId;
   @override
-  int get totalDeliveries;
+  int? get totalDeliveries;
   @override
-  int get successfulDeliveries;
+  int? get successfulDeliveries;
   @override
-  int get failedDeliveries;
+  int? get failedDeliveries;
   @override
-  double get successRate;
+  double? get successRate;
   @override
-  double get averageResponseTime;
+  double? get averageResponseTime;
   @override
-  DateTime get lastDelivery;
+  DateTime? get lastDelivery;
   @override
-  Map<String, int> get deliveriesByDay;
+  Map<String, int>? get deliveriesByDay;
   @override
-  Map<String, int> get deliveriesByEvent;
+  Map<String, int>? get deliveriesByEvent;
   @override
-  List<WebhookDelivery> get recentDeliveries;
+  List<WebhookDelivery>? get recentDeliveries;
 
   /// Create a copy of WebhookStats
   /// with the given fields replaced by the non-null parameter values.
@@ -3087,10 +3101,10 @@ WebhookTestResponse _$WebhookTestResponseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$WebhookTestResponse {
-  bool get success => throw _privateConstructorUsedError;
-  int get statusCode => throw _privateConstructorUsedError;
-  String get response => throw _privateConstructorUsedError;
-  int get responseTime => throw _privateConstructorUsedError;
+  bool? get success => throw _privateConstructorUsedError;
+  int? get statusCode => throw _privateConstructorUsedError;
+  String? get response => throw _privateConstructorUsedError;
+  int? get responseTime => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
   Map<String, String>? get requestHeaders => throw _privateConstructorUsedError;
   Map<String, String>? get responseHeaders =>
@@ -3114,10 +3128,10 @@ abstract class $WebhookTestResponseCopyWith<$Res> {
   ) = _$WebhookTestResponseCopyWithImpl<$Res, WebhookTestResponse>;
   @useResult
   $Res call({
-    bool success,
-    int statusCode,
-    String response,
-    int responseTime,
+    bool? success,
+    int? statusCode,
+    String? response,
+    int? responseTime,
     String? error,
     Map<String, String>? requestHeaders,
     Map<String, String>? responseHeaders,
@@ -3139,32 +3153,32 @@ class _$WebhookTestResponseCopyWithImpl<$Res, $Val extends WebhookTestResponse>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? success = null,
-    Object? statusCode = null,
-    Object? response = null,
-    Object? responseTime = null,
+    Object? success = freezed,
+    Object? statusCode = freezed,
+    Object? response = freezed,
+    Object? responseTime = freezed,
     Object? error = freezed,
     Object? requestHeaders = freezed,
     Object? responseHeaders = freezed,
   }) {
     return _then(
       _value.copyWith(
-            success: null == success
+            success: freezed == success
                 ? _value.success
                 : success // ignore: cast_nullable_to_non_nullable
-                      as bool,
-            statusCode: null == statusCode
+                      as bool?,
+            statusCode: freezed == statusCode
                 ? _value.statusCode
                 : statusCode // ignore: cast_nullable_to_non_nullable
-                      as int,
-            response: null == response
+                      as int?,
+            response: freezed == response
                 ? _value.response
                 : response // ignore: cast_nullable_to_non_nullable
-                      as String,
-            responseTime: null == responseTime
+                      as String?,
+            responseTime: freezed == responseTime
                 ? _value.responseTime
                 : responseTime // ignore: cast_nullable_to_non_nullable
-                      as int,
+                      as int?,
             error: freezed == error
                 ? _value.error
                 : error // ignore: cast_nullable_to_non_nullable
@@ -3193,10 +3207,10 @@ abstract class _$$WebhookTestResponseImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    bool success,
-    int statusCode,
-    String response,
-    int responseTime,
+    bool? success,
+    int? statusCode,
+    String? response,
+    int? responseTime,
     String? error,
     Map<String, String>? requestHeaders,
     Map<String, String>? responseHeaders,
@@ -3217,32 +3231,32 @@ class __$$WebhookTestResponseImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? success = null,
-    Object? statusCode = null,
-    Object? response = null,
-    Object? responseTime = null,
+    Object? success = freezed,
+    Object? statusCode = freezed,
+    Object? response = freezed,
+    Object? responseTime = freezed,
     Object? error = freezed,
     Object? requestHeaders = freezed,
     Object? responseHeaders = freezed,
   }) {
     return _then(
       _$WebhookTestResponseImpl(
-        success: null == success
+        success: freezed == success
             ? _value.success
             : success // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        statusCode: null == statusCode
+                  as bool?,
+        statusCode: freezed == statusCode
             ? _value.statusCode
             : statusCode // ignore: cast_nullable_to_non_nullable
-                  as int,
-        response: null == response
+                  as int?,
+        response: freezed == response
             ? _value.response
             : response // ignore: cast_nullable_to_non_nullable
-                  as String,
-        responseTime: null == responseTime
+                  as String?,
+        responseTime: freezed == responseTime
             ? _value.responseTime
             : responseTime // ignore: cast_nullable_to_non_nullable
-                  as int,
+                  as int?,
         error: freezed == error
             ? _value.error
             : error // ignore: cast_nullable_to_non_nullable
@@ -3264,10 +3278,10 @@ class __$$WebhookTestResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WebhookTestResponseImpl implements _WebhookTestResponse {
   const _$WebhookTestResponseImpl({
-    required this.success,
-    required this.statusCode,
-    required this.response,
-    required this.responseTime,
+    this.success,
+    this.statusCode,
+    this.response,
+    this.responseTime,
     this.error,
     final Map<String, String>? requestHeaders,
     final Map<String, String>? responseHeaders,
@@ -3278,13 +3292,13 @@ class _$WebhookTestResponseImpl implements _WebhookTestResponse {
       _$$WebhookTestResponseImplFromJson(json);
 
   @override
-  final bool success;
+  final bool? success;
   @override
-  final int statusCode;
+  final int? statusCode;
   @override
-  final String response;
+  final String? response;
   @override
-  final int responseTime;
+  final int? responseTime;
   @override
   final String? error;
   final Map<String, String>? _requestHeaders;
@@ -3367,10 +3381,10 @@ class _$WebhookTestResponseImpl implements _WebhookTestResponse {
 
 abstract class _WebhookTestResponse implements WebhookTestResponse {
   const factory _WebhookTestResponse({
-    required final bool success,
-    required final int statusCode,
-    required final String response,
-    required final int responseTime,
+    final bool? success,
+    final int? statusCode,
+    final String? response,
+    final int? responseTime,
     final String? error,
     final Map<String, String>? requestHeaders,
     final Map<String, String>? responseHeaders,
@@ -3380,13 +3394,13 @@ abstract class _WebhookTestResponse implements WebhookTestResponse {
       _$WebhookTestResponseImpl.fromJson;
 
   @override
-  bool get success;
+  bool? get success;
   @override
-  int get statusCode;
+  int? get statusCode;
   @override
-  String get response;
+  String? get response;
   @override
-  int get responseTime;
+  int? get responseTime;
   @override
   String? get error;
   @override
@@ -3408,14 +3422,14 @@ WebhookTemplate _$WebhookTemplateFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$WebhookTemplate {
-  String get id => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
-  String get category => throw _privateConstructorUsedError;
-  String get url => throw _privateConstructorUsedError;
-  List<String> get events => throw _privateConstructorUsedError;
-  Map<String, String> get headers => throw _privateConstructorUsedError;
-  Map<String, dynamic> get config => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  String? get category => throw _privateConstructorUsedError;
+  String? get url => throw _privateConstructorUsedError;
+  List<String>? get events => throw _privateConstructorUsedError;
+  Map<String, String>? get headers => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get config => throw _privateConstructorUsedError;
   String? get documentation => throw _privateConstructorUsedError;
 
   /// Serializes this WebhookTemplate to a JSON map.
@@ -3436,14 +3450,14 @@ abstract class $WebhookTemplateCopyWith<$Res> {
   ) = _$WebhookTemplateCopyWithImpl<$Res, WebhookTemplate>;
   @useResult
   $Res call({
-    String id,
-    String name,
-    String description,
-    String category,
-    String url,
-    List<String> events,
-    Map<String, String> headers,
-    Map<String, dynamic> config,
+    String? id,
+    String? name,
+    String? description,
+    String? category,
+    String? url,
+    List<String>? events,
+    Map<String, String>? headers,
+    Map<String, dynamic>? config,
     String? documentation,
   });
 }
@@ -3463,50 +3477,50 @@ class _$WebhookTemplateCopyWithImpl<$Res, $Val extends WebhookTemplate>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? name = null,
-    Object? description = null,
-    Object? category = null,
-    Object? url = null,
-    Object? events = null,
-    Object? headers = null,
-    Object? config = null,
+    Object? id = freezed,
+    Object? name = freezed,
+    Object? description = freezed,
+    Object? category = freezed,
+    Object? url = freezed,
+    Object? events = freezed,
+    Object? headers = freezed,
+    Object? config = freezed,
     Object? documentation = freezed,
   }) {
     return _then(
       _value.copyWith(
-            id: null == id
+            id: freezed == id
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            name: null == name
+                      as String?,
+            name: freezed == name
                 ? _value.name
                 : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            description: null == description
+                      as String?,
+            description: freezed == description
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
-                      as String,
-            category: null == category
+                      as String?,
+            category: freezed == category
                 ? _value.category
                 : category // ignore: cast_nullable_to_non_nullable
-                      as String,
-            url: null == url
+                      as String?,
+            url: freezed == url
                 ? _value.url
                 : url // ignore: cast_nullable_to_non_nullable
-                      as String,
-            events: null == events
+                      as String?,
+            events: freezed == events
                 ? _value.events
                 : events // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
-            headers: null == headers
+                      as List<String>?,
+            headers: freezed == headers
                 ? _value.headers
                 : headers // ignore: cast_nullable_to_non_nullable
-                      as Map<String, String>,
-            config: null == config
+                      as Map<String, String>?,
+            config: freezed == config
                 ? _value.config
                 : config // ignore: cast_nullable_to_non_nullable
-                      as Map<String, dynamic>,
+                      as Map<String, dynamic>?,
             documentation: freezed == documentation
                 ? _value.documentation
                 : documentation // ignore: cast_nullable_to_non_nullable
@@ -3527,14 +3541,14 @@ abstract class _$$WebhookTemplateImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    String id,
-    String name,
-    String description,
-    String category,
-    String url,
-    List<String> events,
-    Map<String, String> headers,
-    Map<String, dynamic> config,
+    String? id,
+    String? name,
+    String? description,
+    String? category,
+    String? url,
+    List<String>? events,
+    Map<String, String>? headers,
+    Map<String, dynamic>? config,
     String? documentation,
   });
 }
@@ -3553,50 +3567,50 @@ class __$$WebhookTemplateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? name = null,
-    Object? description = null,
-    Object? category = null,
-    Object? url = null,
-    Object? events = null,
-    Object? headers = null,
-    Object? config = null,
+    Object? id = freezed,
+    Object? name = freezed,
+    Object? description = freezed,
+    Object? category = freezed,
+    Object? url = freezed,
+    Object? events = freezed,
+    Object? headers = freezed,
+    Object? config = freezed,
     Object? documentation = freezed,
   }) {
     return _then(
       _$WebhookTemplateImpl(
-        id: null == id
+        id: freezed == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        name: null == name
+                  as String?,
+        name: freezed == name
             ? _value.name
             : name // ignore: cast_nullable_to_non_nullable
-                  as String,
-        description: null == description
+                  as String?,
+        description: freezed == description
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
-                  as String,
-        category: null == category
+                  as String?,
+        category: freezed == category
             ? _value.category
             : category // ignore: cast_nullable_to_non_nullable
-                  as String,
-        url: null == url
+                  as String?,
+        url: freezed == url
             ? _value.url
             : url // ignore: cast_nullable_to_non_nullable
-                  as String,
-        events: null == events
+                  as String?,
+        events: freezed == events
             ? _value._events
             : events // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
-        headers: null == headers
+                  as List<String>?,
+        headers: freezed == headers
             ? _value._headers
             : headers // ignore: cast_nullable_to_non_nullable
-                  as Map<String, String>,
-        config: null == config
+                  as Map<String, String>?,
+        config: freezed == config
             ? _value._config
             : config // ignore: cast_nullable_to_non_nullable
-                  as Map<String, dynamic>,
+                  as Map<String, dynamic>?,
         documentation: freezed == documentation
             ? _value.documentation
             : documentation // ignore: cast_nullable_to_non_nullable
@@ -3610,14 +3624,14 @@ class __$$WebhookTemplateImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WebhookTemplateImpl implements _WebhookTemplate {
   const _$WebhookTemplateImpl({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.category,
-    required this.url,
-    required final List<String> events,
-    required final Map<String, String> headers,
-    required final Map<String, dynamic> config,
+    this.id,
+    this.name,
+    this.description,
+    this.category,
+    this.url,
+    final List<String>? events,
+    final Map<String, String>? headers,
+    final Map<String, dynamic>? config,
     this.documentation,
   }) : _events = events,
        _headers = headers,
@@ -3627,37 +3641,43 @@ class _$WebhookTemplateImpl implements _WebhookTemplate {
       _$$WebhookTemplateImplFromJson(json);
 
   @override
-  final String id;
+  final String? id;
   @override
-  final String name;
+  final String? name;
   @override
-  final String description;
+  final String? description;
   @override
-  final String category;
+  final String? category;
   @override
-  final String url;
-  final List<String> _events;
+  final String? url;
+  final List<String>? _events;
   @override
-  List<String> get events {
+  List<String>? get events {
+    final value = _events;
+    if (value == null) return null;
     if (_events is EqualUnmodifiableListView) return _events;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_events);
+    return EqualUnmodifiableListView(value);
   }
 
-  final Map<String, String> _headers;
+  final Map<String, String>? _headers;
   @override
-  Map<String, String> get headers {
+  Map<String, String>? get headers {
+    final value = _headers;
+    if (value == null) return null;
     if (_headers is EqualUnmodifiableMapView) return _headers;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_headers);
+    return EqualUnmodifiableMapView(value);
   }
 
-  final Map<String, dynamic> _config;
+  final Map<String, dynamic>? _config;
   @override
-  Map<String, dynamic> get config {
+  Map<String, dynamic>? get config {
+    final value = _config;
+    if (value == null) return null;
     if (_config is EqualUnmodifiableMapView) return _config;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_config);
+    return EqualUnmodifiableMapView(value);
   }
 
   @override
@@ -3721,14 +3741,14 @@ class _$WebhookTemplateImpl implements _WebhookTemplate {
 
 abstract class _WebhookTemplate implements WebhookTemplate {
   const factory _WebhookTemplate({
-    required final String id,
-    required final String name,
-    required final String description,
-    required final String category,
-    required final String url,
-    required final List<String> events,
-    required final Map<String, String> headers,
-    required final Map<String, dynamic> config,
+    final String? id,
+    final String? name,
+    final String? description,
+    final String? category,
+    final String? url,
+    final List<String>? events,
+    final Map<String, String>? headers,
+    final Map<String, dynamic>? config,
     final String? documentation,
   }) = _$WebhookTemplateImpl;
 
@@ -3736,21 +3756,21 @@ abstract class _WebhookTemplate implements WebhookTemplate {
       _$WebhookTemplateImpl.fromJson;
 
   @override
-  String get id;
+  String? get id;
   @override
-  String get name;
+  String? get name;
   @override
-  String get description;
+  String? get description;
   @override
-  String get category;
+  String? get category;
   @override
-  String get url;
+  String? get url;
   @override
-  List<String> get events;
+  List<String>? get events;
   @override
-  Map<String, String> get headers;
+  Map<String, String>? get headers;
   @override
-  Map<String, dynamic> get config;
+  Map<String, dynamic>? get config;
   @override
   String? get documentation;
 

@@ -3,7 +3,7 @@
 import { useGuestOnly } from '@/stores/auth.store';
 import { ModernForgotPasswordForm } from '@/components/auth/modern-forgot-password-form';
 
-export default function ForgotPasswordPage(): JSX.Element {
+export default function ForgotPasswordPage(): React.ReactElement {
   const { isLoading } = useGuestOnly('/dashboard');
 
   if (isLoading) {

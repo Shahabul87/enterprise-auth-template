@@ -15,11 +15,13 @@ logger = structlog.get_logger(__name__)
 
 class KeyGenerationError(Exception):
     """Exception raised when key generation fails."""
+
     pass
 
 
 class KeyValidationError(Exception):
     """Exception raised when key validation fails."""
+
     pass
 
 
@@ -67,15 +69,13 @@ def generate_secure_jwt_secret(length: int = 64) -> str:
 
         # Additional entropy by mixing with system random
         alphabet = string.ascii_letters + string.digits + "-_"
-        additional = ''.join(secrets.choice(alphabet) for _ in range(16))
+        additional = "".join(secrets.choice(alphabet) for _ in range(16))
 
         # Combine for final secret
         final_secret = f"{secret[:48]}{additional}{secret[48:]}"[:length]
 
         logger.info(
-            "Secure JWT secret generated",
-            length=length,
-            entropy_bits=length * 8
+            "Secure JWT secret generated", length=length, entropy_bits=length * 8
         )
 
         return final_secret
@@ -104,21 +104,15 @@ def validate_jwt_secret(secret: str, min_length: int = 32) -> bool:
 
     # Check length
     if len(secret) < min_length:
-        raise KeyValidationError(
-            f"JWT secret must be at least {min_length} characters"
-        )
+        raise KeyValidationError(f"JWT secret must be at least {min_length} characters")
 
     # Check for dangerous/default keys
     if secret.lower() in [k.lower() for k in DANGEROUS_KEYS]:
-        raise KeyValidationError(
-            "JWT secret matches a known dangerous default key"
-        )
+        raise KeyValidationError("JWT secret matches a known dangerous default key")
 
     # Check for common patterns
     if secret.startswith("dev_") or secret.startswith("test_"):
-        raise KeyValidationError(
-            "JWT secret appears to be a development key"
-        )
+        raise KeyValidationError("JWT secret appears to be a development key")
 
     # Check entropy (basic check)
     unique_chars = len(set(secret))
@@ -129,15 +123,9 @@ def validate_jwt_secret(secret: str, min_length: int = 32) -> bool:
 
     # Check for sequential patterns
     if any(pattern in secret.lower() for pattern in ["123", "abc", "qwerty"]):
-        raise KeyValidationError(
-            "JWT secret contains predictable patterns"
-        )
+        raise KeyValidationError("JWT secret contains predictable patterns")
 
-    logger.info(
-        "JWT secret validated",
-        length=len(secret),
-        unique_chars=unique_chars
-    )
+    logger.info("JWT secret validated", length=len(secret), unique_chars=unique_chars)
 
     return True
 
@@ -159,11 +147,7 @@ def generate_api_key(prefix: str = "ak") -> tuple[str, str]:
     # Generate hash for storage
     key_hash = hashlib.sha256(api_key.encode()).hexdigest()
 
-    logger.info(
-        "API key generated",
-        prefix=prefix,
-        key_id=key_hash[:8]
-    )
+    logger.info("API key generated", prefix=prefix, key_id=key_hash[:8])
 
     return api_key, key_hash
 
@@ -190,18 +174,13 @@ def generate_encryption_key() -> bytes:
     """
     key = secrets.token_bytes(32)
 
-    logger.info(
-        "Encryption key generated",
-        key_size=32,
-        algorithm="AES-256"
-    )
+    logger.info("Encryption key generated", key_size=32, algorithm="AES-256")
 
     return key
 
 
 def rotate_jwt_secret(
-    current_secret: str,
-    grace_period_seconds: int = 300
+    current_secret: str, grace_period_seconds: int = 300
 ) -> tuple[str, str]:
     """
     Rotate JWT secret with grace period for transition.
@@ -229,7 +208,7 @@ def rotate_jwt_secret(
     logger.info(
         "JWT secret rotation initiated",
         grace_period=grace_period_seconds,
-        transition_key=transition_key[:8]
+        transition_key=transition_key[:8],
     )
 
     return new_secret, transition_key

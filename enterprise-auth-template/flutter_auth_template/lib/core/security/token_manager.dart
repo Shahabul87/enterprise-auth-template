@@ -4,15 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../constants/api_constants.dart';
-import '../errors/app_exception.dart';
+import 'package:flutter_auth_template/core/constants/api_constants.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
 
-final tokenManagerProvider = Provider<TokenManager>((ref) {
-  return TokenManager();
-});
-
-class TokenManager {
-  static const _storage = FlutterSecureStorage(
+// Provider for FlutterSecureStorage
+final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
+  return const FlutterSecureStorage(
     aOptions: AndroidOptions(
       encryptedSharedPreferences: true,
       keyCipherAlgorithm: KeyCipherAlgorithm.RSA_ECB_PKCS1Padding,
@@ -26,6 +23,19 @@ class TokenManager {
     wOptions: WindowsOptions(),
     mOptions: MacOsOptions(),
   );
+});
+
+// TokenManager provider that depends on storage
+final tokenManagerProvider = Provider<TokenManager>((ref) {
+  final storage = ref.watch(secureStorageProvider);
+  return TokenManager(storage);
+});
+
+class TokenManager {
+  final FlutterSecureStorage _storage;
+
+  // Constructor accepting storage dependency
+  TokenManager(this._storage);
 
   // Token storage keys
   static const String _accessTokenKey = 'access_token';
@@ -316,6 +326,94 @@ class TokenManager {
       );
       throw const SecureStorageException();
     }
+  }
+
+  /// Check if refresh token exists
+  Future<bool> hasRefreshToken() async {
+    try {
+      final refreshToken = await _storage.read(key: _refreshTokenKey);
+      return refreshToken != null && refreshToken.isNotEmpty;
+    } catch (e) {
+      developer.log(
+        'Failed to check refresh token: $e',
+        name: 'TokenManager',
+        level: 1000,
+      );
+      return false;
+    }
+  }
+
+  /// Get token expiry as DateTime
+  Future<DateTime?> getTokenExpiry() async {
+    try {
+      final expiryString = await _storage.read(key: _tokenExpiryKey);
+      if (expiryString == null) return null;
+
+      final expiryMs = int.tryParse(expiryString);
+      if (expiryMs == null) return null;
+
+      return DateTime.fromMillisecondsSinceEpoch(expiryMs);
+    } catch (e) {
+      developer.log(
+        'Failed to get token expiry: $e',
+        name: 'TokenManager',
+        level: 1000,
+      );
+      return null;
+    }
+  }
+
+  /// Check if token will expire soon (within 5 minutes)
+  Future<bool> willExpireSoon({Duration threshold = const Duration(minutes: 5)}) async {
+    try {
+      final expiry = await getTokenExpiry();
+      if (expiry == null) return true; // Consider null expiry as expired
+
+      final now = DateTime.now();
+      final timeUntilExpiry = expiry.difference(now);
+
+      return timeUntilExpiry <= threshold;
+    } catch (e) {
+      developer.log(
+        'Failed to check token expiry: $e',
+        name: 'TokenManager',
+        level: 1000,
+      );
+      return true; // Err on the side of caution
+    }
+  }
+
+  /// Clear tokens on security breach
+  Future<void> clearTokensOnSecurityBreach() async {
+    try {
+      await clearTokens();
+
+      // Log security event
+      developer.log(
+        'Tokens cleared due to security breach',
+        name: 'TokenManager',
+        level: 800,
+      );
+
+      // Could also notify security monitoring service here
+    } catch (e) {
+      developer.log(
+        'Failed to clear tokens on security breach: $e',
+        name: 'TokenManager',
+        level: 1000,
+      );
+      rethrow;
+    }
+  }
+
+  /// Validate token format (basic JWT structure check)
+  bool isValidTokenFormat(String? token) {
+    if (token == null || token.isEmpty) return false;
+
+    // Basic JWT format check (header.payload.signature)
+    final parts = token.split('.');
+    return parts.length == 3 &&
+           parts.every((part) => part.isNotEmpty);
   }
 
   /// Check if secure storage is available

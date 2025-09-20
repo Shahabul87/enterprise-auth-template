@@ -39,6 +39,7 @@ logger = structlog.get_logger(__name__)
 
 class ExportFormat:
     """Supported export formats."""
+
     CSV = "csv"
     JSON = "json"
     EXCEL = "xlsx"
@@ -48,6 +49,7 @@ class ExportFormat:
 
 class ExportStatus:
     """Export job status."""
+
     PENDING = "pending"
     PROCESSING = "processing"
     COMPLETED = "completed"
@@ -57,11 +59,13 @@ class ExportStatus:
 
 class ExportError(Exception):
     """Base exception for export-related errors."""
+
     pass
 
 
 class ExportValidationError(ExportError):
     """Exception raised when export validation fails."""
+
     pass
 
 
@@ -84,7 +88,7 @@ class ExportService:
         self,
         session: AsyncSession,
         cache_service: Optional[CacheService] = None,
-        event_emitter: Optional[EventEmitter] = None
+        event_emitter: Optional[EventEmitter] = None,
     ) -> None:
         """
         Initialize export service.
@@ -99,12 +103,14 @@ class ExportService:
         self.event_emitter = event_emitter or EventEmitter()
 
         # Export storage configuration
-        self.export_dir = Path(settings.EXPORT_DIR if hasattr(settings, 'EXPORT_DIR') else "/tmp/exports")
+        self.export_dir = Path(
+            settings.EXPORT_DIR if hasattr(settings, "EXPORT_DIR") else "/tmp/exports"
+        )
         self.export_dir.mkdir(parents=True, exist_ok=True)
 
         # Export job configuration
-        self.max_rows_per_export = getattr(settings, 'MAX_EXPORT_ROWS', 100000)
-        self.export_retention_days = getattr(settings, 'EXPORT_RETENTION_DAYS', 7)
+        self.max_rows_per_export = getattr(settings, "MAX_EXPORT_ROWS", 100000)
+        self.export_retention_days = getattr(settings, "EXPORT_RETENTION_DAYS", 7)
 
     async def export_users(
         self,
@@ -115,7 +121,7 @@ class ExportService:
         organization_id: Optional[str] = None,
         background: bool = False,
         encrypt: bool = False,
-        compress: bool = True
+        compress: bool = True,
     ) -> Union[str, bytes]:
         """
         Export user data with comprehensive filtering and security.
@@ -139,10 +145,17 @@ class ExportService:
         """
         try:
             # Validate permissions
-            await self._validate_export_permissions(requester_id, "users", organization_id)
+            await self._validate_export_permissions(
+                requester_id, "users", organization_id
+            )
 
             # Validate format
-            if format_type not in [ExportFormat.CSV, ExportFormat.JSON, ExportFormat.EXCEL, ExportFormat.PARQUET]:
+            if format_type not in [
+                ExportFormat.CSV,
+                ExportFormat.JSON,
+                ExportFormat.EXCEL,
+                ExportFormat.PARQUET,
+            ]:
                 raise ExportValidationError(f"Unsupported format: {format_type}")
 
             # Build query
@@ -173,7 +186,7 @@ class ExportService:
                 "created_at": datetime.utcnow().isoformat(),
                 "compress": compress,
                 "encrypt": encrypt,
-                "progress": 0
+                "progress": 0,
             }
 
             # Store job information
@@ -181,37 +194,32 @@ class ExportService:
             await self.cache_service.set(
                 job_key,
                 json.dumps(export_job),
-                ttl=self.export_retention_days * 24 * 3600
+                ttl=self.export_retention_days * 24 * 3600,
             )
 
             # Emit audit event
-            await self.event_emitter.emit(Event(
-                type="export.requested",
-                data={
-                    "export_id": export_job["id"],
-                    "type": "users",
-                    "format": format_type,
-                    "total_rows": total_rows,
-                    "requester_id": requester_id,
-                    "background": background
-                }
-            ))
+            await self.event_emitter.emit(
+                Event(
+                    type="export.requested",
+                    data={
+                        "export_id": export_job["id"],
+                        "type": "users",
+                        "format": format_type,
+                        "total_rows": total_rows,
+                        "requester_id": requester_id,
+                        "background": background,
+                    },
+                )
+            )
 
             if background:
                 # Process in background
-                asyncio.create_task(
-                    self._process_export_job(export_job["id"])
-                )
+                asyncio.create_task(self._process_export_job(export_job["id"]))
                 return export_job["id"]
             else:
                 # Process immediately
                 return await self._execute_users_export(
-                    export_job["id"],
-                    query,
-                    format_type,
-                    columns,
-                    compress,
-                    encrypt
+                    export_job["id"], query, format_type, columns, compress, encrypt
                 )
 
         except (ExportValidationError, ExportError):
@@ -221,7 +229,7 @@ class ExportService:
                 "Failed to export users",
                 requester_id=requester_id,
                 format_type=format_type,
-                error=str(e)
+                error=str(e),
             )
             raise ExportError(f"Failed to export users: {str(e)}")
 
@@ -235,7 +243,7 @@ class ExportService:
         organization_id: Optional[str] = None,
         background: bool = False,
         encrypt: bool = True,  # Default to encrypted for audit logs
-        compress: bool = True
+        compress: bool = True,
     ) -> Union[str, bytes]:
         """
         Export audit logs with enhanced security and compliance features.
@@ -257,10 +265,7 @@ class ExportService:
         try:
             # Enhanced permissions check for audit logs
             await self._validate_export_permissions(
-                requester_id,
-                "audit_logs",
-                organization_id,
-                require_admin=True
+                requester_id, "audit_logs", organization_id, require_admin=True
             )
 
             # Set default date range if not provided
@@ -271,10 +276,7 @@ class ExportService:
 
             # Build audit log query
             query = await self._build_audit_logs_query(
-                start_date,
-                end_date,
-                filters,
-                organization_id
+                start_date, end_date, filters, organization_id
             )
 
             # Create export job
@@ -291,7 +293,7 @@ class ExportService:
                 "created_at": datetime.utcnow().isoformat(),
                 "compress": compress,
                 "encrypt": encrypt,
-                "progress": 0
+                "progress": 0,
             }
 
             # Store job information
@@ -299,44 +301,38 @@ class ExportService:
             await self.cache_service.set(
                 job_key,
                 json.dumps(export_job),
-                ttl=self.export_retention_days * 24 * 3600
+                ttl=self.export_retention_days * 24 * 3600,
             )
 
             # Emit audit event
-            await self.event_emitter.emit(Event(
-                type="export.requested",
-                data={
-                    "export_id": export_job["id"],
-                    "type": "audit_logs",
-                    "format": format_type,
-                    "start_date": start_date.isoformat(),
-                    "end_date": end_date.isoformat(),
-                    "requester_id": requester_id,
-                    "encrypted": encrypt
-                }
-            ))
+            await self.event_emitter.emit(
+                Event(
+                    type="export.requested",
+                    data={
+                        "export_id": export_job["id"],
+                        "type": "audit_logs",
+                        "format": format_type,
+                        "start_date": start_date.isoformat(),
+                        "end_date": end_date.isoformat(),
+                        "requester_id": requester_id,
+                        "encrypted": encrypt,
+                    },
+                )
+            )
 
             if background:
-                asyncio.create_task(
-                    self._process_export_job(export_job["id"])
-                )
+                asyncio.create_task(self._process_export_job(export_job["id"]))
                 return export_job["id"]
             else:
                 return await self._execute_audit_logs_export(
-                    export_job["id"],
-                    query,
-                    format_type,
-                    compress,
-                    encrypt
+                    export_job["id"], query, format_type, compress, encrypt
                 )
 
         except (ExportValidationError, ExportError):
             raise
         except Exception as e:
             logger.error(
-                "Failed to export audit logs",
-                requester_id=requester_id,
-                error=str(e)
+                "Failed to export audit logs", requester_id=requester_id, error=str(e)
             )
             raise ExportError(f"Failed to export audit logs: {str(e)}")
 
@@ -346,7 +342,7 @@ class ExportService:
         requester_id: str,
         format_type: str = ExportFormat.EXCEL,
         organization_id: Optional[str] = None,
-        background: bool = False
+        background: bool = False,
     ) -> Union[str, bytes]:
         """
         Export analytics report with charts and visualizations.
@@ -364,10 +360,7 @@ class ExportService:
         try:
             # Validate permissions
             await self._validate_export_permissions(
-                requester_id,
-                "analytics",
-                organization_id,
-                require_analyst=True
+                requester_id, "analytics", organization_id, require_analyst=True
             )
 
             # Create export job
@@ -382,7 +375,7 @@ class ExportService:
                 "created_at": datetime.utcnow().isoformat(),
                 "compress": True,
                 "encrypt": False,
-                "progress": 0
+                "progress": 0,
             }
 
             # Store job information
@@ -390,19 +383,15 @@ class ExportService:
             await self.cache_service.set(
                 job_key,
                 json.dumps(export_job),
-                ttl=self.export_retention_days * 24 * 3600
+                ttl=self.export_retention_days * 24 * 3600,
             )
 
             if background:
-                asyncio.create_task(
-                    self._process_export_job(export_job["id"])
-                )
+                asyncio.create_task(self._process_export_job(export_job["id"]))
                 return export_job["id"]
             else:
                 return await self._execute_analytics_export(
-                    export_job["id"],
-                    report_config,
-                    format_type
+                    export_job["id"], report_config, format_type
                 )
 
         except (ExportValidationError, ExportError):
@@ -411,7 +400,7 @@ class ExportService:
             logger.error(
                 "Failed to export analytics report",
                 requester_id=requester_id,
-                error=str(e)
+                error=str(e),
             )
             raise ExportError(f"Failed to export analytics report: {str(e)}")
 
@@ -439,8 +428,8 @@ class ExportService:
                 file_path = self.export_dir / f"{export_id}.zip"
                 export_job["download_ready"] = file_path.exists()
                 export_job["expires_at"] = (
-                    datetime.fromisoformat(export_job["created_at"]) +
-                    timedelta(days=self.export_retention_days)
+                    datetime.fromisoformat(export_job["created_at"])
+                    + timedelta(days=self.export_retention_days)
                 ).isoformat()
 
             return export_job
@@ -449,13 +438,13 @@ class ExportService:
             raise
         except Exception as e:
             logger.error(
-                "Failed to get export status",
-                export_id=export_id,
-                error=str(e)
+                "Failed to get export status", export_id=export_id, error=str(e)
             )
             raise ExportError(f"Failed to get export status: {str(e)}")
 
-    async def download_export(self, export_id: str, requester_id: str) -> Tuple[BinaryIO, str, str]:
+    async def download_export(
+        self, export_id: str, requester_id: str
+    ) -> Tuple[BinaryIO, str, str]:
         """
         Download completed export file.
 
@@ -480,7 +469,7 @@ class ExportService:
                     requester_id,
                     export_job["type"],
                     export_job.get("organization_id"),
-                    require_admin=True
+                    require_admin=True,
                 )
 
             if export_job["status"] != ExportStatus.COMPLETED:
@@ -492,30 +481,38 @@ class ExportService:
                 raise ExportError(f"Export file {export_id} not found")
 
             # Open file stream
-            file_stream = open(file_path, 'rb')
+            file_stream = open(file_path, "rb")
 
             # Determine content type
-            content_type = "application/zip" if export_job.get("compress") else "application/octet-stream"
+            content_type = (
+                "application/zip"
+                if export_job.get("compress")
+                else "application/octet-stream"
+            )
 
             # Generate filename
-            timestamp = datetime.fromisoformat(export_job["created_at"]).strftime("%Y%m%d_%H%M%S")
+            timestamp = datetime.fromisoformat(export_job["created_at"]).strftime(
+                "%Y%m%d_%H%M%S"
+            )
             filename = f"{export_job['type']}_{timestamp}_{export_id[:8]}.zip"
 
             # Log download
-            await self.event_emitter.emit(Event(
-                type="export.downloaded",
-                data={
-                    "export_id": export_id,
-                    "requester_id": requester_id,
-                    "filename": filename
-                }
-            ))
+            await self.event_emitter.emit(
+                Event(
+                    type="export.downloaded",
+                    data={
+                        "export_id": export_id,
+                        "requester_id": requester_id,
+                        "filename": filename,
+                    },
+                )
+            )
 
             logger.info(
                 "Export downloaded",
                 export_id=export_id,
                 requester_id=requester_id,
-                filename=filename
+                filename=filename,
             )
 
             return file_stream, filename, content_type
@@ -527,15 +524,12 @@ class ExportService:
                 "Failed to download export",
                 export_id=export_id,
                 requester_id=requester_id,
-                error=str(e)
+                error=str(e),
             )
             raise ExportError(f"Failed to download export: {str(e)}")
 
     async def list_user_exports(
-        self,
-        requester_id: str,
-        limit: int = 50,
-        offset: int = 0
+        self, requester_id: str, limit: int = 50, offset: int = 0
     ) -> Tuple[List[Dict[str, Any]], int]:
         """
         List export jobs for a user.
@@ -563,9 +557,7 @@ class ExportService:
 
         except Exception as e:
             logger.error(
-                "Failed to list user exports",
-                requester_id=requester_id,
-                error=str(e)
+                "Failed to list user exports", requester_id=requester_id, error=str(e)
             )
             raise ExportError(f"Failed to list user exports: {str(e)}")
 
@@ -596,11 +588,15 @@ class ExportService:
                     requester_id,
                     export_job["type"],
                     export_job.get("organization_id"),
-                    require_admin=True
+                    require_admin=True,
                 )
 
             # Check if cancellable
-            if export_job["status"] in [ExportStatus.COMPLETED, ExportStatus.FAILED, ExportStatus.EXPIRED]:
+            if export_job["status"] in [
+                ExportStatus.COMPLETED,
+                ExportStatus.FAILED,
+                ExportStatus.EXPIRED,
+            ]:
                 return False
 
             # Update status
@@ -610,22 +606,19 @@ class ExportService:
             await self.cache_service.set(
                 job_key,
                 json.dumps(export_job),
-                ttl=self.export_retention_days * 24 * 3600
+                ttl=self.export_retention_days * 24 * 3600,
             )
 
             # Emit event
-            await self.event_emitter.emit(Event(
-                type="export.cancelled",
-                data={
-                    "export_id": export_id,
-                    "requester_id": requester_id
-                }
-            ))
+            await self.event_emitter.emit(
+                Event(
+                    type="export.cancelled",
+                    data={"export_id": export_id, "requester_id": requester_id},
+                )
+            )
 
             logger.info(
-                "Export cancelled",
-                export_id=export_id,
-                requester_id=requester_id
+                "Export cancelled", export_id=export_id, requester_id=requester_id
             )
 
             return True
@@ -637,7 +630,7 @@ class ExportService:
                 "Failed to cancel export",
                 export_id=export_id,
                 requester_id=requester_id,
-                error=str(e)
+                error=str(e),
             )
             raise ExportError(f"Failed to cancel export: {str(e)}")
 
@@ -647,15 +640,13 @@ class ExportService:
         export_type: str,
         organization_id: Optional[str] = None,
         require_admin: bool = False,
-        require_analyst: bool = False
+        require_analyst: bool = False,
     ) -> None:
         """Validate user permissions for export operation."""
         try:
             # Get user with roles
             user_stmt = (
-                select(User)
-                .options(selectinload(User.roles))
-                .where(User.id == user_id)
+                select(User).options(selectinload(User.roles)).where(User.id == user_id)
             )
             result = await self.session.execute(user_stmt)
             user = result.scalar_one_or_none()
@@ -666,25 +657,33 @@ class ExportService:
             user_roles = [role.name.lower() for role in user.roles]
 
             # Check admin requirement
-            if require_admin and not any(role in user_roles for role in ['admin', 'super_admin']):
+            if require_admin and not any(
+                role in user_roles for role in ["admin", "super_admin"]
+            ):
                 raise ExportValidationError("Admin privileges required for this export")
 
             # Check analyst requirement
-            if require_analyst and not any(role in user_roles for role in ['analyst', 'admin', 'super_admin']):
-                raise ExportValidationError("Analyst privileges required for this export")
+            if require_analyst and not any(
+                role in user_roles for role in ["analyst", "admin", "super_admin"]
+            ):
+                raise ExportValidationError(
+                    "Analyst privileges required for this export"
+                )
 
             # Check export-specific permissions
             required_permissions = {
                 "users": ["users:read"],
                 "audit_logs": ["audit:read"],
-                "analytics": ["analytics:read"]
+                "analytics": ["analytics:read"],
             }
 
             if export_type in required_permissions:
                 # In production, you'd check actual permissions
                 # For now, allow if user has any role
                 if not user_roles:
-                    raise ExportValidationError("Insufficient permissions for this export")
+                    raise ExportValidationError(
+                        "Insufficient permissions for this export"
+                    )
 
         except ExportValidationError:
             raise
@@ -693,14 +692,12 @@ class ExportService:
                 "Failed to validate export permissions",
                 user_id=user_id,
                 export_type=export_type,
-                error=str(e)
+                error=str(e),
             )
             raise ExportValidationError("Failed to validate permissions")
 
     async def _build_users_query(
-        self,
-        filters: Optional[Dict[str, Any]],
-        organization_id: Optional[str]
+        self, filters: Optional[Dict[str, Any]], organization_id: Optional[str]
     ):
         """Build SQLAlchemy query for users export."""
         query = select(User).options(selectinload(User.roles))
@@ -738,15 +735,12 @@ class ExportService:
         start_date: datetime,
         end_date: datetime,
         filters: Optional[Dict[str, Any]],
-        organization_id: Optional[str]
+        organization_id: Optional[str],
     ):
         """Build SQLAlchemy query for audit logs export."""
         query = select(AuditLog)
 
-        conditions = [
-            AuditLog.timestamp >= start_date,
-            AuditLog.timestamp <= end_date
-        ]
+        conditions = [AuditLog.timestamp >= start_date, AuditLog.timestamp <= end_date]
 
         # Organization filter
         if organization_id:
@@ -770,7 +764,9 @@ class ExportService:
         """Process export job in background."""
         try:
             # Update status to processing
-            await self._update_export_status(export_id, ExportStatus.PROCESSING, progress=0)
+            await self._update_export_status(
+                export_id, ExportStatus.PROCESSING, progress=0
+            )
 
             # Get job details
             job_key = f"export_job:{export_id}"
@@ -780,8 +776,7 @@ class ExportService:
             # Process based on type
             if export_job["type"] == "users":
                 query = await self._build_users_query(
-                    export_job.get("filters"),
-                    export_job.get("organization_id")
+                    export_job.get("filters"), export_job.get("organization_id")
                 )
                 await self._execute_users_export(
                     export_id,
@@ -789,41 +784,35 @@ class ExportService:
                     export_job["format"],
                     export_job.get("columns"),
                     export_job.get("compress", True),
-                    export_job.get("encrypt", False)
+                    export_job.get("encrypt", False),
                 )
             elif export_job["type"] == "audit_logs":
                 query = await self._build_audit_logs_query(
                     datetime.fromisoformat(export_job["start_date"]),
                     datetime.fromisoformat(export_job["end_date"]),
                     export_job.get("filters"),
-                    export_job.get("organization_id")
+                    export_job.get("organization_id"),
                 )
                 await self._execute_audit_logs_export(
                     export_id,
                     query,
                     export_job["format"],
                     export_job.get("compress", True),
-                    export_job.get("encrypt", True)
+                    export_job.get("encrypt", True),
                 )
             elif export_job["type"] == "analytics_report":
                 await self._execute_analytics_export(
-                    export_id,
-                    export_job["report_config"],
-                    export_job["format"]
+                    export_id, export_job["report_config"], export_job["format"]
                 )
 
-            await self._update_export_status(export_id, ExportStatus.COMPLETED, progress=100)
+            await self._update_export_status(
+                export_id, ExportStatus.COMPLETED, progress=100
+            )
 
         except Exception as e:
-            logger.error(
-                "Export job failed",
-                export_id=export_id,
-                error=str(e)
-            )
+            logger.error("Export job failed", export_id=export_id, error=str(e))
             await self._update_export_status(
-                export_id,
-                ExportStatus.FAILED,
-                error_message=str(e)
+                export_id, ExportStatus.FAILED, error_message=str(e)
             )
 
     async def _execute_users_export(
@@ -833,7 +822,7 @@ class ExportService:
         format_type: str,
         columns: Optional[List[str]],
         compress: bool,
-        encrypt: bool
+        encrypt: bool,
     ) -> bytes:
         """Execute users data export."""
         try:
@@ -844,40 +833,33 @@ class ExportService:
             output_buffer = io.BytesIO()
 
             if format_type == ExportFormat.CSV:
-                await self._export_to_csv(result, output_buffer, columns, "users", export_id)
+                await self._export_to_csv(
+                    result, output_buffer, columns, "users", export_id
+                )
             elif format_type == ExportFormat.JSON:
                 await self._export_to_json(result, output_buffer, columns, export_id)
             elif format_type == ExportFormat.EXCEL:
-                await self._export_to_excel(result, output_buffer, columns, "users", export_id)
+                await self._export_to_excel(
+                    result, output_buffer, columns, "users", export_id
+                )
             elif format_type == ExportFormat.PARQUET:
                 await self._export_to_parquet(result, output_buffer, columns, export_id)
 
             # Process final output
             final_output = await self._process_export_output(
-                output_buffer.getvalue(),
-                export_id,
-                format_type,
-                compress,
-                encrypt
+                output_buffer.getvalue(), export_id, format_type, compress, encrypt
             )
 
             return final_output
 
         except Exception as e:
             logger.error(
-                "Failed to execute users export",
-                export_id=export_id,
-                error=str(e)
+                "Failed to execute users export", export_id=export_id, error=str(e)
             )
             raise
 
     async def _execute_audit_logs_export(
-        self,
-        export_id: str,
-        query,
-        format_type: str,
-        compress: bool,
-        encrypt: bool
+        self, export_id: str, query, format_type: str, compress: bool, encrypt: bool
     ) -> bytes:
         """Execute audit logs export."""
         try:
@@ -886,40 +868,43 @@ class ExportService:
 
             # Audit logs have specific columns
             audit_columns = [
-                'timestamp', 'action', 'user_id', 'user_email',
-                'description', 'result', 'ip_address', 'user_agent'
+                "timestamp",
+                "action",
+                "user_id",
+                "user_email",
+                "description",
+                "result",
+                "ip_address",
+                "user_agent",
             ]
 
             if format_type == ExportFormat.CSV:
-                await self._export_to_csv(result, output_buffer, audit_columns, "audit_logs", export_id)
+                await self._export_to_csv(
+                    result, output_buffer, audit_columns, "audit_logs", export_id
+                )
             elif format_type == ExportFormat.JSON:
-                await self._export_to_json(result, output_buffer, audit_columns, export_id)
+                await self._export_to_json(
+                    result, output_buffer, audit_columns, export_id
+                )
             elif format_type == ExportFormat.EXCEL:
-                await self._export_to_excel(result, output_buffer, audit_columns, "audit_logs", export_id)
+                await self._export_to_excel(
+                    result, output_buffer, audit_columns, "audit_logs", export_id
+                )
 
             final_output = await self._process_export_output(
-                output_buffer.getvalue(),
-                export_id,
-                format_type,
-                compress,
-                encrypt
+                output_buffer.getvalue(), export_id, format_type, compress, encrypt
             )
 
             return final_output
 
         except Exception as e:
             logger.error(
-                "Failed to execute audit logs export",
-                export_id=export_id,
-                error=str(e)
+                "Failed to execute audit logs export", export_id=export_id, error=str(e)
             )
             raise
 
     async def _execute_analytics_export(
-        self,
-        export_id: str,
-        report_config: Dict[str, Any],
-        format_type: str
+        self, export_id: str, report_config: Dict[str, Any], format_type: str
     ) -> bytes:
         """Execute analytics report export."""
         try:
@@ -934,9 +919,9 @@ class ExportService:
                 workbook = xlsxwriter.Workbook(temp_file.name)
 
                 # Summary sheet
-                summary_sheet = workbook.add_worksheet('Summary')
-                summary_sheet.write('A1', 'Analytics Report')
-                summary_sheet.write('A2', f'Generated: {datetime.utcnow().isoformat()}')
+                summary_sheet = workbook.add_worksheet("Summary")
+                summary_sheet.write("A1", "Analytics Report")
+                summary_sheet.write("A2", f"Generated: {datetime.utcnow().isoformat()}")
 
                 workbook.close()
 
@@ -948,16 +933,14 @@ class ExportService:
                 export_id,
                 format_type,
                 True,  # Always compress analytics reports
-                False  # Don't encrypt by default
+                False,  # Don't encrypt by default
             )
 
             return final_output
 
         except Exception as e:
             logger.error(
-                "Failed to execute analytics export",
-                export_id=export_id,
-                error=str(e)
+                "Failed to execute analytics export", export_id=export_id, error=str(e)
             )
             raise
 
@@ -967,7 +950,7 @@ class ExportService:
         output_buffer: io.BytesIO,
         columns: Optional[List[str]],
         export_type: str,
-        export_id: str
+        export_id: str,
     ) -> None:
         """Export data to CSV format."""
         text_buffer = io.StringIO()
@@ -989,21 +972,25 @@ class ExportService:
 
                 # Update progress periodically
                 if row_count % 1000 == 0:
-                    progress = min(90, (row_count / 50000) * 90)  # Max 90% during processing
-                    await self._update_export_status(export_id, ExportStatus.PROCESSING, progress=progress)
+                    progress = min(
+                        90, (row_count / 50000) * 90
+                    )  # Max 90% during processing
+                    await self._update_export_status(
+                        export_id, ExportStatus.PROCESSING, progress=progress
+                    )
 
         # Write to bytes buffer
-        output_buffer.write(text_buffer.getvalue().encode('utf-8'))
+        output_buffer.write(text_buffer.getvalue().encode("utf-8"))
 
     async def _export_to_json(
         self,
         result_stream,
         output_buffer: io.BytesIO,
         columns: Optional[List[str]],
-        export_id: str
+        export_id: str,
     ) -> None:
         """Export data to JSON format."""
-        output_buffer.write(b'[')
+        output_buffer.write(b"[")
         first_row = True
         row_count = 0
 
@@ -1012,18 +999,20 @@ class ExportService:
                 row_dict = await self._sanitize_row_data(row, columns)
 
                 if not first_row:
-                    output_buffer.write(b',')
+                    output_buffer.write(b",")
 
-                output_buffer.write(json.dumps(row_dict, default=str).encode('utf-8'))
+                output_buffer.write(json.dumps(row_dict, default=str).encode("utf-8"))
                 first_row = False
                 row_count += 1
 
                 # Update progress
                 if row_count % 1000 == 0:
                     progress = min(90, (row_count / 50000) * 90)
-                    await self._update_export_status(export_id, ExportStatus.PROCESSING, progress=progress)
+                    await self._update_export_status(
+                        export_id, ExportStatus.PROCESSING, progress=progress
+                    )
 
-        output_buffer.write(b']')
+        output_buffer.write(b"]")
 
     async def _export_to_excel(
         self,
@@ -1031,7 +1020,7 @@ class ExportService:
         output_buffer: io.BytesIO,
         columns: Optional[List[str]],
         sheet_name: str,
-        export_id: str
+        export_id: str,
     ) -> None:
         """Export data to Excel format."""
         # Collect all data first (for Excel we need to know structure)
@@ -1045,23 +1034,29 @@ class ExportService:
                 row_count += 1
 
                 if row_count % 1000 == 0:
-                    progress = min(45, (row_count / 50000) * 45)  # First 45% for data collection
-                    await self._update_export_status(export_id, ExportStatus.PROCESSING, progress=progress)
+                    progress = min(
+                        45, (row_count / 50000) * 45
+                    )  # First 45% for data collection
+                    await self._update_export_status(
+                        export_id, ExportStatus.PROCESSING, progress=progress
+                    )
 
         # Create Excel file
         if all_rows:
             df = pd.DataFrame(all_rows)
-            with pd.ExcelWriter(output_buffer, engine='xlsxwriter') as writer:
+            with pd.ExcelWriter(output_buffer, engine="xlsxwriter") as writer:
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
 
-            await self._update_export_status(export_id, ExportStatus.PROCESSING, progress=90)
+            await self._update_export_status(
+                export_id, ExportStatus.PROCESSING, progress=90
+            )
 
     async def _export_to_parquet(
         self,
         result_stream,
         output_buffer: io.BytesIO,
         columns: Optional[List[str]],
-        export_id: str
+        export_id: str,
     ) -> None:
         """Export data to Parquet format."""
         # Collect data and convert to DataFrame
@@ -1076,25 +1071,28 @@ class ExportService:
 
                 if row_count % 1000 == 0:
                     progress = min(45, (row_count / 50000) * 45)
-                    await self._update_export_status(export_id, ExportStatus.PROCESSING, progress=progress)
+                    await self._update_export_status(
+                        export_id, ExportStatus.PROCESSING, progress=progress
+                    )
 
         if all_rows:
             df = pd.DataFrame(all_rows)
             df.to_parquet(output_buffer, index=False)
 
-            await self._update_export_status(export_id, ExportStatus.PROCESSING, progress=90)
+            await self._update_export_status(
+                export_id, ExportStatus.PROCESSING, progress=90
+            )
 
     async def _sanitize_row_data(
-        self,
-        row: Any,
-        columns: Optional[List[str]]
+        self, row: Any, columns: Optional[List[str]]
     ) -> Dict[str, Any]:
         """Sanitize and filter row data for export."""
         # Convert SQLAlchemy object to dict
-        if hasattr(row, '__dict__'):
+        if hasattr(row, "__dict__"):
             row_dict = {
-                key: value for key, value in row.__dict__.items()
-                if not key.startswith('_')
+                key: value
+                for key, value in row.__dict__.items()
+                if not key.startswith("_")
             }
         else:
             # Handle other row types
@@ -1105,16 +1103,16 @@ class ExportService:
             row_dict = {key: value for key, value in row_dict.items() if key in columns}
 
         # Sanitize sensitive data
-        sensitive_fields = ['password', 'hashed_password', 'secret', 'token']
+        sensitive_fields = ["password", "hashed_password", "secret", "token"]
         for field in sensitive_fields:
             if field in row_dict:
-                row_dict[field] = '[REDACTED]'
+                row_dict[field] = "[REDACTED]"
 
         # Convert datetime objects to ISO format
         for key, value in row_dict.items():
             if isinstance(value, datetime):
                 row_dict[key] = value.isoformat()
-            elif hasattr(value, 'isoformat'):  # Other datetime-like objects
+            elif hasattr(value, "isoformat"):  # Other datetime-like objects
                 row_dict[key] = value.isoformat()
 
         return row_dict
@@ -1125,7 +1123,7 @@ class ExportService:
         export_id: str,
         format_type: str,
         compress: bool,
-        encrypt: bool
+        encrypt: bool,
     ) -> bytes:
         """Process final export output with compression and encryption."""
         try:
@@ -1134,7 +1132,9 @@ class ExportService:
             # Compress if requested
             if compress:
                 with tempfile.NamedTemporaryFile() as temp_file:
-                    with zipfile.ZipFile(temp_file, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+                    with zipfile.ZipFile(
+                        temp_file, "w", zipfile.ZIP_DEFLATED
+                    ) as zip_file:
                         filename = f"export.{format_type}"
                         zip_file.writestr(filename, data)
 
@@ -1145,20 +1145,18 @@ class ExportService:
             if encrypt:
                 # In production, implement proper encryption
                 # For now, just add a marker
-                final_data = b'ENCRYPTED:' + final_data
+                final_data = b"ENCRYPTED:" + final_data
 
             # Save to file
             file_path = self.export_dir / f"{export_id}.zip"
-            with open(file_path, 'wb') as f:
+            with open(file_path, "wb") as f:
                 f.write(final_data)
 
             return final_data
 
         except Exception as e:
             logger.error(
-                "Failed to process export output",
-                export_id=export_id,
-                error=str(e)
+                "Failed to process export output", export_id=export_id, error=str(e)
             )
             raise
 
@@ -1167,7 +1165,7 @@ class ExportService:
         export_id: str,
         status: str,
         progress: Optional[int] = None,
-        error_message: Optional[str] = None
+        error_message: Optional[str] = None,
     ) -> None:
         """Update export job status."""
         try:
@@ -1192,7 +1190,7 @@ class ExportService:
                 await self.cache_service.set(
                     job_key,
                     json.dumps(export_job),
-                    ttl=self.export_retention_days * 24 * 3600
+                    ttl=self.export_retention_days * 24 * 3600,
                 )
 
         except Exception as e:
@@ -1200,7 +1198,7 @@ class ExportService:
                 "Failed to update export status",
                 export_id=export_id,
                 status=status,
-                error=str(e)
+                error=str(e),
             )
 
 

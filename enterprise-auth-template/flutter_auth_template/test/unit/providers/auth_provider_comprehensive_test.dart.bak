@@ -1,0 +1,438 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:flutter_auth_template/presentation/providers/auth_provider.dart';
+import 'package:flutter_auth_template/domain/entities/auth_state.dart' show AuthState, Authenticated;
+import 'package:flutter_auth_template/domain/entities/user.dart';
+import 'package:flutter_auth_template/infrastructure/services/auth/auth_service.dart';
+import 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart';
+import 'package:flutter_auth_template/core/storage/secure_storage_service.dart';
+import 'package:flutter_auth_template/core/network/api_response.dart';
+import 'package:flutter_auth_template/data/models/auth_request.dart';
+import 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' show GoogleSignInAccount, GoogleSignInResult;
+import 'auth_provider_comprehensive_test.mocks.dart';
+
+@GenerateMocks([
+  AuthService,
+  OAuthService,
+  SecureStorageService,
+])
+void main() {
+  late ProviderContainer container;
+  late MockAuthService mockAuthService;
+  late MockOAuthService mockOAuthService;
+  late MockSecureStorageService mockSecureStorage;
+
+  setUp(() {
+    mockAuthService = MockAuthService();
+    mockOAuthService = MockOAuthService();
+    mockSecureStorage = MockSecureStorageService();
+
+    container = ProviderContainer(
+      overrides: [
+        authServiceProvider.overrideWithValue(mockAuthService),
+        oauthServiceProvider.overrideWithValue(mockOAuthService),
+        secureStorageServiceProvider.overrideWithValue(mockSecureStorage),
+      ],
+    );
+  });
+
+  tearDown(() {
+    container.dispose();
+  });
+
+  group('AuthNotifier Provider Tests', () {
+    final testUser = User(
+        id: '123',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+      updatedAt: DateTime.now(),
+    );
+
+    final authenticatedState = AuthState.authenticated(
+      user: testUser,
+      accessToken: 'test_access_token',
+      refreshToken: 'test_refresh_token',
+    );
+
+    group('initialization', () {
+      test('should start with authenticating state during initialization', () async {
+        // Arrange
+        when(mockAuthService.isAuthenticated()).thenAnswer((_) async => false);
+
+        // Act
+        final authNotifier = container.read(authStateProvider.notifier);
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        // Assert
+        final state = container.read(authStateProvider);
+        expect(state, equals(AuthState.unauthenticated()));
+      });
+
+      test('should restore authenticated state if user is logged in', () async {
+        // Arrange
+        when(mockAuthService.isAuthenticated()).thenAnswer((_) async => true);
+        when(mockAuthService.getCurrentUser(
+        id: 'test-id',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+        updatedAt: DateTime.now(),
+      ))
+            .thenAnswer((_) async => ApiResponse.success(data: testUser, message: 'Success'));
+
+        // Act
+        final authNotifier = container.read(authStateProvider.notifier);
+        await Future.delayed(const Duration(milliseconds: 100));
+
+        // Assert
+        final state = container.read(authStateProvider);
+        expect(state, isA<Authenticated>());
+        if (state is Authenticated) {
+          expect(state.user, equals(testUser));
+        }
+      });
+    });
+
+    group('login', () {
+      test('should update state to authenticated on successful login', () async {
+        // Arrange
+        const email = 'test@example.com';
+        const password = 'password123';
+
+        when(mockAuthService.login(any))
+            .thenAnswer((_) async => ApiResponse.success(data: testUser, message: 'Login successful'));
+
+        // Act
+        await container.read(authStateProvider.notifier).login(email, password);
+
+        // Assert
+        final state = container.read(authStateProvider);
+        expect(state, isA<Authenticated>());
+        if (state is Authenticated) {
+          expect(state.user, equals(testUser));
+        }
+      });
+
+      test('should update state to error on login failure', () async {
+        // Arrange
+        const email = 'test@example.com';
+        const password = 'wrong_password';
+        const errorMessage = 'Invalid credentials';
+
+        when(mockAuthService.login(any))
+            .thenAnswer((_) async => ApiResponse.error(message: errorMessage, code: '401'));
+
+        // Act
+        try {
+          await container.read(authStateProvider.notifier).login(email, password);
+          fail('Expected an exception to be thrown');
+        } catch (e) {
+          // Expected to throw
+        }
+
+        // Assert
+        final state = container.read(authStateProvider);
+        expect(state, isA<AuthError>());
+        if (state is AuthError) {
+          expect(state.message, equals(errorMessage));
+        }
+      });
+
+      test('should show authenticating state during login', () async {
+        // Arrange
+        when(mockAuthService.login(any))
+            .thenAnswer((_) async {
+          await Future.delayed(const Duration(milliseconds: 100));
+          return ApiResponse.success(data: testUser, message: 'Login successful');
+        });
+
+        // Act
+        final future = container.read(authStateProvider.notifier).login(
+          'test@example.com',
+          'password',
+        );
+
+        // Assert - Check loading state immediately
+        expect(
+          container.read(authStateProvider),
+          equals(AuthState.authenticating()),
+        );
+
+        await future;
+
+        // Should be authenticated after completion
+        final state = container.read(authStateProvider);
+        expect(state, isA<Authenticated>());
+      });
+    });
+
+    group('register', () {
+      test('should update state to authenticated on successful registration', () async {
+        // Arrange
+        const email = 'new@example.com';
+        const password = 'NewPassword123!';
+        const name = 'New User';
+
+        when(mockAuthService.register(any))
+            .thenAnswer((_) async => ApiResponse.success(data: testUser, message: 'Registration successful'));
+
+        // Act
+        await container.read(authStateProvider.notifier).register(email, password, name);
+
+        // Assert
+        final state = container.read(authStateProvider);
+        expect(state, isA<Authenticated>());
+        if (state is Authenticated) {
+          expect(state.user, equals(testUser));
+        }
+      });
+
+      test('should handle registration errors', () async {
+        // Arrange
+        const email = 'existing@example.com';
+        const errorMessage = 'Email already registered';
+
+        when(mockAuthService.register(any))
+            .thenAnswer((_) async => ApiResponse.error(message: errorMessage, code: '409'));
+
+        // Act
+        try {
+          await container.read(authStateProvider.notifier).register(
+            email,
+            'password',
+            'User',
+          );
+          fail('Expected an exception to be thrown');
+        } catch (e) {
+          // Expected to throw
+        }
+
+        // Assert
+        final state = container.read(authStateProvider);
+        expect(state, isA<AuthError>());
+        if (state is AuthError) {
+          expect(state.message, equals(errorMessage));
+        }
+      });
+    });
+
+    group('logout', () {
+      test('should update state to unauthenticated on logout', () async {
+        // Arrange
+        when(mockAuthService.logout())
+            .thenAnswer((_) async => ApiResponse<String>.success(data: '', message: 'Logged out'));
+
+        // Act
+        await container.read(authStateProvider.notifier).logout();
+
+        // Assert
+        expect(
+          container.read(authStateProvider),
+          equals(AuthState.unauthenticated()),
+        );
+      });
+
+      test('should handle logout errors gracefully', () async {
+        // Arrange
+        when(mockAuthService.logout())
+            .thenAnswer((_) async => ApiResponse.error(message: 'Network error', code: '500'));
+
+        // Act
+        await container.read(authStateProvider.notifier).logout();
+
+        // Assert - Should still logout locally
+        expect(
+          container.read(authStateProvider),
+          equals(AuthState.unauthenticated()),
+        );
+      });
+    });
+
+    group('OAuth authentication', () {
+      test('should handle Google login', () async {
+        // Arrange
+        const googleUser = GoogleSignInAccount(
+          email: 'test@gmail.com',
+          displayName: 'Test User',
+        );
+        const googleResult = GoogleSignInResult(
+          user: googleUser,
+          accessToken: 'google_token',
+          idToken: 'id_token',
+        );
+        when(mockOAuthService.signInWithGoogle())
+            .thenAnswer((_) async => const ApiResponse.success(
+                data: googleResult, message: 'Success'));
+
+        when(mockAuthService.oauthLogin(any))
+            .thenAnswer((_) async => ApiResponse.success(data: testUser, message: 'OAuth login successful'));
+
+        // Act
+        await container.read(authStateProvider.notifier).signInWithGoogle();
+
+        // Assert
+        final state = container.read(authStateProvider);
+        expect(state, isA<Authenticated>());
+        if (state is Authenticated) {
+          expect(state.user, equals(testUser));
+        }
+      });
+
+      test('should handle Google login failure', () async {
+        // Arrange
+        when(mockOAuthService.signInWithGoogle())
+            .thenAnswer((_) async => const ApiResponse.error(message: 'Google login failed', code: '400'));
+
+        // Act
+        try {
+          await container.read(authStateProvider.notifier).signInWithGoogle();
+          fail('Expected an exception to be thrown');
+        } catch (e) {
+          // Expected to throw
+        }
+
+        // Assert
+        final state = container.read(authStateProvider);
+        expect(state, isA<AuthError>());
+      });
+    });
+
+    group('password management', () {
+      test('should handle forgot password request', () async {
+        // Arrange
+        const email = 'forgot@example.com';
+
+        when(mockAuthService.forgotPassword(any))
+            .thenAnswer((_) async => ApiResponse<String>.success(data: '', message: 'Reset email sent'));
+
+        // Act
+        await container.read(authStateProvider.notifier).forgotPassword(email);
+
+        // Assert
+        verify(mockAuthService.forgotPassword(any)).called(1);
+      });
+
+      test('should handle password reset', () async {
+        // Arrange
+        const token = 'reset_token';
+        const newPassword = 'NewPassword123!';
+
+        when(mockAuthService.resetPassword(any))
+            .thenAnswer((_) async => ApiResponse<String>.success(data: '', message: 'Password reset'));
+
+        // Act
+        await container.read(authStateProvider.notifier).resetPassword(token, newPassword);
+
+        // Assert
+        verify(mockAuthService.resetPassword(any)).called(1);
+      });
+
+      test('should handle change password', () async {
+        // Arrange
+        const currentPassword = 'CurrentPass123!';
+        const newPassword = 'NewPass456!';
+
+        when(mockAuthService.changePassword(any))
+            .thenAnswer((_) async => ApiResponse<String>.success(data: '', message: 'Password changed'));
+
+        // Act
+        await container.read(authStateProvider.notifier).changePassword(
+          currentPassword,
+          newPassword,
+        );
+
+        // Assert
+        verify(mockAuthService.changePassword(any)).called(1);
+      });
+    });
+
+    group('error handling', () {
+      test('should clear error state', () async {
+        // Arrange - Set error state
+        when(mockAuthService.login(any))
+            .thenAnswer((_) async => ApiResponse.error(message: 'Test error', code: '400'));
+
+        try {
+          await container.read(authStateProvider.notifier).login(
+            'test@example.com',
+            'password',
+          );
+        } catch (e) {
+          // Expected to throw
+        }
+
+        expect(container.read(authStateProvider), isA<AuthError>());
+
+        // Act
+        container.read(authStateProvider.notifier).clearError();
+
+        // Assert
+        expect(
+          container.read(authStateProvider),
+          equals(AuthState.unauthenticated()),
+        );
+      });
+    });
+
+    group('convenience providers', () {
+      test('currentUserProvider should return user when authenticated', () {
+        // Arrange
+        container.read(authStateProvider.notifier).state = authenticatedState;
+
+        // Act
+        final user = container.read(currentUserProvider);
+
+        // Assert
+        expect(user, equals(testUser));
+      });
+
+      test('currentUserProvider should return null when unauthenticated', () {
+        // Arrange
+        container.read(authStateProvider.notifier).state = AuthState.unauthenticated();
+
+        // Act
+        final user = container.read(currentUserProvider);
+
+        // Assert
+        expect(user, isNull);
+      });
+
+      test('isAuthenticatedProvider should return true when authenticated', () {
+        // Arrange
+        container.read(authStateProvider.notifier).state = authenticatedState;
+
+        // Act
+        final isAuthenticated = container.read(isAuthenticatedProvider);
+
+        // Assert
+        expect(isAuthenticated, isTrue);
+      });
+
+      test('isLoadingProvider should return true when authenticating', () {
+        // Arrange
+        container.read(authStateProvider.notifier).state = AuthState.authenticating();
+
+        // Act
+        final isLoading = container.read(isLoadingProvider);
+
+        // Assert
+        expect(isLoading, isTrue);
+      });
+    });
+  });
+}

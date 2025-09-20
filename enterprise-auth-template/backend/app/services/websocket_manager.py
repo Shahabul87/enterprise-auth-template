@@ -1,6 +1,7 @@
 """
 WebSocket Manager for real-time communication
 """
+
 from typing import Dict, Set, List, Optional, Any
 import json
 import asyncio
@@ -30,7 +31,7 @@ class ConnectionManager:
         websocket: WebSocket,
         user_id: str,
         session_id: str,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Accept and register a new WebSocket connection"""
         await websocket.accept()
@@ -45,7 +46,7 @@ class ConnectionManager:
             "user_id": user_id,
             "session_id": session_id,
             "connected_at": datetime.utcnow().isoformat(),
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
 
         # Subscribe to user's Redis channel if using Redis
@@ -59,9 +60,9 @@ class ConnectionManager:
                 "type": "connection",
                 "status": "connected",
                 "session_id": session_id,
-                "timestamp": datetime.utcnow().isoformat()
+                "timestamp": datetime.utcnow().isoformat(),
             },
-            websocket=websocket
+            websocket=websocket,
         )
 
         # Notify about connection
@@ -104,7 +105,7 @@ class ConnectionManager:
         self,
         user_id: str,
         message: Dict[str, Any],
-        websocket: Optional[WebSocket] = None
+        websocket: Optional[WebSocket] = None,
     ) -> None:
         """Send a message to a specific user (all their connections or specific one)"""
         if websocket:
@@ -131,15 +132,10 @@ class ConnectionManager:
 
             # Also publish to Redis for other servers
             if self.redis_client:
-                await self.redis_client.publish(
-                    f"user:{user_id}",
-                    json.dumps(message)
-                )
+                await self.redis_client.publish(f"user:{user_id}", json.dumps(message))
 
     async def broadcast(
-        self,
-        message: Dict[str, Any],
-        exclude_user: Optional[str] = None
+        self, message: Dict[str, Any], exclude_user: Optional[str] = None
     ) -> None:
         """Broadcast a message to all connected users"""
         disconnected = []
@@ -164,52 +160,41 @@ class ConnectionManager:
             await self.redis_client.publish("broadcast", json.dumps(message))
 
     async def broadcast_to_group(
-        self,
-        group_id: str,
-        message: Dict[str, Any],
-        user_ids: List[str]
+        self, group_id: str, message: Dict[str, Any], user_ids: List[str]
     ) -> None:
         """Broadcast a message to a specific group of users"""
         for user_id in user_ids:
             await self.send_personal_message(user_id, message)
 
-    async def broadcast_user_status(
-        self,
-        user_id: str,
-        status: str
-    ) -> None:
+    async def broadcast_user_status(self, user_id: str, status: str) -> None:
         """Broadcast user online/offline status"""
         message = {
             "type": "user_status",
             "user_id": user_id,
             "status": status,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
         await self.broadcast(message, exclude_user=user_id)
 
     async def send_notification(
-        self,
-        user_id: str,
-        notification: Dict[str, Any]
+        self, user_id: str, notification: Dict[str, Any]
     ) -> None:
         """Send a notification to a user"""
         message = {
             "type": "notification",
             "data": notification,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
         await self.send_personal_message(user_id, message)
 
     async def send_session_update(
-        self,
-        user_id: str,
-        session_data: Dict[str, Any]
+        self, user_id: str, session_data: Dict[str, Any]
     ) -> None:
         """Send session update to a user"""
         message = {
             "type": "session_update",
             "data": session_data,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
         await self.send_personal_message(user_id, message)
 
@@ -217,14 +202,14 @@ class ConnectionManager:
         self,
         alert_type: str,
         alert_data: Dict[str, Any],
-        target_users: Optional[List[str]] = None
+        target_users: Optional[List[str]] = None,
     ) -> None:
         """Send system alert to specific users or all users"""
         message = {
             "type": "system_alert",
             "alert_type": alert_type,
             "data": alert_data,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
 
         if target_users:
@@ -234,9 +219,7 @@ class ConnectionManager:
             await self.broadcast(message)
 
     async def handle_message(
-        self,
-        websocket: WebSocket,
-        message: Dict[str, Any]
+        self, websocket: WebSocket, message: Dict[str, Any]
     ) -> None:
         """Handle incoming WebSocket messages"""
         metadata = self.connection_metadata.get(websocket)
@@ -248,17 +231,21 @@ class ConnectionManager:
 
         # Handle different message types
         if message_type == "ping":
-            await websocket.send_json({"type": "pong", "timestamp": datetime.utcnow().isoformat()})
+            await websocket.send_json(
+                {"type": "pong", "timestamp": datetime.utcnow().isoformat()}
+            )
 
         elif message_type == "subscribe":
             # Handle subscription to specific channels/topics
             topics = message.get("topics", [])
             metadata["metadata"]["subscriptions"] = topics
-            await websocket.send_json({
-                "type": "subscription_confirmed",
-                "topics": topics,
-                "timestamp": datetime.utcnow().isoformat()
-            })
+            await websocket.send_json(
+                {
+                    "type": "subscription_confirmed",
+                    "topics": topics,
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
         elif message_type == "unsubscribe":
             # Handle unsubscription
@@ -267,11 +254,13 @@ class ConnectionManager:
             metadata["metadata"]["subscriptions"] = [
                 s for s in current_subs if s not in topics
             ]
-            await websocket.send_json({
-                "type": "unsubscription_confirmed",
-                "topics": topics,
-                "timestamp": datetime.utcnow().isoformat()
-            })
+            await websocket.send_json(
+                {
+                    "type": "unsubscription_confirmed",
+                    "topics": topics,
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
         elif message_type == "message":
             # Handle user-to-user messages (if applicable)
@@ -283,17 +272,19 @@ class ConnectionManager:
                         "type": "user_message",
                         "from_user": user_id,
                         "content": message.get("content"),
-                        "timestamp": datetime.utcnow().isoformat()
-                    }
+                        "timestamp": datetime.utcnow().isoformat(),
+                    },
                 )
 
         else:
             # Unknown message type
-            await websocket.send_json({
-                "type": "error",
-                "error": "Unknown message type",
-                "timestamp": datetime.utcnow().isoformat()
-            })
+            await websocket.send_json(
+                {
+                    "type": "error",
+                    "error": "Unknown message type",
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
     async def _subscribe_to_user_channel(self, user_id: str) -> None:
         """Subscribe to user's Redis channel for cross-server communication"""
@@ -337,7 +328,10 @@ class ConnectionManager:
 
     def is_user_connected(self, user_id: str) -> bool:
         """Check if a user has any active connections"""
-        return user_id in self.active_connections and len(self.active_connections[user_id]) > 0
+        return (
+            user_id in self.active_connections
+            and len(self.active_connections[user_id]) > 0
+        )
 
     async def close_all_connections(self) -> None:
         """Close all active WebSocket connections"""
@@ -363,7 +357,7 @@ async def websocket_endpoint(
     websocket: WebSocket,
     user_id: str,
     session_id: str,
-    redis_client: Optional[Redis] = None
+    redis_client: Optional[Redis] = None,
 ):
     """WebSocket endpoint handler"""
     # Set Redis client if provided

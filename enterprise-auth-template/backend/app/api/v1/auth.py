@@ -60,6 +60,7 @@ from app.utils.response_helpers import (
     server_error,
     invalid_token_error,
 )
+
 # Import new refactored services
 from app.services.auth.authentication_service import (
     AuthenticationService,
@@ -88,10 +89,9 @@ bearer_scheme = HTTPBearer()
 logger = structlog.get_logger(__name__)
 
 router = APIRouter()
-@router.get(
-    "/me",
-    response_model=StandardResponse[dict]
-)
+
+
+@router.get("/me", response_model=StandardResponse[dict])
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     db: AsyncSession = Depends(get_db_session),
@@ -102,18 +102,25 @@ async def get_current_user(
     Expects a valid Bearer access token.
     """
     if not credentials:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required"
+        )
 
     try:
         token_data = verify_token(credentials.credentials, "access")
         if not token_data:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired token",
+            )
 
         stmt = select(User).where(User.id == token_data.sub)
         result = await db.execute(stmt)
         user = result.scalar_one_or_none()
         if not user:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found"
+            )
 
         request_id = generate_request_id()
         return user_profile_response(user, request_id)
@@ -125,7 +132,6 @@ async def get_current_user(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=server_error("Failed to retrieve user profile").model_dump(),
         )
-
 
 
 @router.post(
@@ -186,7 +192,7 @@ async def register(
             f"Registration successful! We've sent a verification email to {user.email}. "
             f"Please check your inbox (including spam folder) and click the verification link to activate your account. "
             f"The link will expire in 24 hours.",
-            request_id
+            request_id,
         )
 
     except ValueError as e:
@@ -209,12 +215,11 @@ async def register(
             error_code=error_code,
             error_category=ErrorCategory.VALIDATION,
             context={"field": "email" if "email" in str(e).lower() else "password"},
-            user_id=None
+            user_id=None,
         )
 
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=error_response
+            status_code=status.HTTP_400_BAD_REQUEST, detail=error_response
         )
 
     except AuthenticationError as e:
@@ -223,23 +228,26 @@ async def register(
         # For now, use the existing server_error function until we fix the relationship issue
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=server_error("Registration failed. Please try again.").model_dump(mode='json'),
+            detail=server_error("Registration failed. Please try again.").model_dump(
+                mode="json"
+            ),
         )
 
     except Exception as e:
-        logger.error("Unexpected error during registration", email=user_data.email, error=str(e))
+        logger.error(
+            "Unexpected error during registration", email=user_data.email, error=str(e)
+        )
 
         # For now, use the existing server_error function until we fix the relationship issue
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=server_error("Registration failed. Please try again.").model_dump(mode='json'),
+            detail=server_error("Registration failed. Please try again.").model_dump(
+                mode="json"
+            ),
         )
 
 
-@router.post(
-    "/login",
-    response_model=StandardResponse[dict]
-)
+@router.post("/login", response_model=StandardResponse[dict])
 async def login(
     credentials: LoginRequest,
     response: Response,
@@ -290,10 +298,10 @@ async def login(
 
         # Check if client prefers JSON tokens (for Flutter app) or header preference
         use_json_tokens = (
-            prefer_json_tokens or
-            "application/json" in request.headers.get("accept", "") or
-            "flutter" in request.headers.get("user-agent", "").lower() or
-            "mobile" in request.headers.get("user-agent", "").lower()
+            prefer_json_tokens
+            or "application/json" in request.headers.get("accept", "")
+            or "flutter" in request.headers.get("user-agent", "").lower()
+            or "mobile" in request.headers.get("user-agent", "").lower()
         )
 
         if use_json_tokens:
@@ -302,7 +310,7 @@ async def login(
                 "User login successful with JSON tokens",
                 user_id=auth_result.user.id,
                 email=auth_result.user.email,
-                client_type="mobile/flutter"
+                client_type="mobile/flutter",
             )
 
             return login_success_response(
@@ -310,7 +318,7 @@ async def login(
                 access_token=auth_result.access_token,
                 refresh_token=auth_result.refresh_token,
                 expires_in=15 * 60,  # 15 minutes
-                request_id=request_id
+                request_id=request_id,
             )
         else:
             # Set httpOnly cookies for web browsers (legacy behavior)
@@ -318,7 +326,9 @@ async def login(
                 key="access_token",
                 value=auth_result.access_token,
                 httponly=True,
-                secure=(request.url.scheme == "https"),  # HTTPS in prod, dev-friendly locally
+                secure=(
+                    request.url.scheme == "https"
+                ),  # HTTPS in prod, dev-friendly locally
                 samesite="lax",  # CSRF protection
                 max_age=15 * 60,  # 15 minutes (same as token expiry)
                 path="/",
@@ -329,7 +339,9 @@ async def login(
                 key="refresh_token",
                 value=auth_result.refresh_token,
                 httponly=True,
-                secure=(request.url.scheme == "https"),  # HTTPS in prod, dev-friendly locally
+                secure=(
+                    request.url.scheme == "https"
+                ),  # HTTPS in prod, dev-friendly locally
                 samesite="lax",  # CSRF protection
                 max_age=30 * 24 * 60 * 60,  # 30 days (same as token expiry)
                 path=f"{get_settings().API_V1_PREFIX}/auth/refresh",  # Restrict to refresh endpoint
@@ -340,17 +352,18 @@ async def login(
                 user_id=auth_result.user.id,
                 email=auth_result.user.email,
                 cookie_domain=request.url.hostname,
-                client_type="web"
+                client_type="web",
             )
 
             # Return standardized response without tokens (they're in cookies)
             from app.utils.response_helpers import format_user_response
+
             return login_success_response(
                 user=user,  # Use the raw User model, not auth_result.user (which is UserResponse)
                 access_token="",  # Empty since it's in cookie
                 refresh_token=None,
                 expires_in=15 * 60,
-                request_id=request_id
+                request_id=request_id,
             )
 
     except AccountLockedError as e:
@@ -364,13 +377,10 @@ async def login(
             error_code="account_locked",
             error_category=ErrorCategory.AUTHENTICATION,
             context={"email": credentials.email},
-            user_id=None
+            user_id=None,
         )
 
-        raise HTTPException(
-            status_code=status.HTTP_423_LOCKED,
-            detail=error_response
-        )
+        raise HTTPException(status_code=status.HTTP_423_LOCKED, detail=error_response)
 
     except EmailNotVerifiedError as e:
         logger.warning(
@@ -383,12 +393,11 @@ async def login(
             error_code="account_not_verified",
             error_category=ErrorCategory.AUTHENTICATION,
             context={"email": credentials.email},
-            user_id=None
+            user_id=None,
         )
 
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail=error_response
+            status_code=status.HTTP_403_FORBIDDEN, detail=error_response
         )
 
     except AuthenticationError as e:
@@ -405,16 +414,17 @@ async def login(
             error_code=error_code,
             error_category=ErrorCategory.AUTHENTICATION,
             context={"email": credentials.email},
-            user_id=None
+            user_id=None,
         )
 
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=error_response
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=error_response
         )
 
     except Exception as e:
-        logger.error("Unexpected error during login", email=credentials.email, error=str(e))
+        logger.error(
+            "Unexpected error during login", email=credentials.email, error=str(e)
+        )
 
         error_code = "unexpected_error"
         error_category = ErrorCategory.SYSTEM
@@ -430,19 +440,15 @@ async def login(
             error_code=error_code,
             error_category=error_category,
             context={"operation": "login"},
-            user_id=None
+            user_id=None,
         )
 
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=error_response
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=error_response
         )
 
 
-@router.post(
-    "/refresh",
-    response_model=StandardResponse[dict]
-)
+@router.post("/refresh", response_model=StandardResponse[dict])
 async def refresh_token(
     request: Request,
     response: Response,
@@ -490,7 +496,9 @@ async def refresh_token(
                 refresh_token = auth_header[7:]
 
         if not refresh_token:
-            logger.warning("Refresh token missing from all sources", ip_address=ip_address)
+            logger.warning(
+                "Refresh token missing from all sources", ip_address=ip_address
+            )
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail=token_expired_error().model_dump(),
@@ -506,11 +514,12 @@ async def refresh_token(
 
         # Check if this is a mobile/Flutter request
         use_json_tokens = (
-            token_request is not None or
-            "application/json" in request.headers.get("accept", "") or
-            "flutter" in request.headers.get("user-agent", "").lower() or
-            "mobile" in request.headers.get("user-agent", "").lower() or
-            request.cookies.get("refresh_token") is None  # No cookie means JSON request
+            token_request is not None
+            or "application/json" in request.headers.get("accept", "")
+            or "flutter" in request.headers.get("user-agent", "").lower()
+            or "mobile" in request.headers.get("user-agent", "").lower()
+            or request.cookies.get("refresh_token")
+            is None  # No cookie means JSON request
         )
 
         if use_json_tokens:
@@ -518,14 +527,14 @@ async def refresh_token(
             logger.debug(
                 "Access token refreshed successfully with JSON response",
                 expires_in=token_data["expires_in"],
-                client_type="mobile/flutter"
+                client_type="mobile/flutter",
             )
 
             return token_refresh_success_response(
                 access_token=token_data["access_token"],
                 refresh_token=token_data.get("refresh_token"),
                 expires_in=int(token_data["expires_in"]),
-                request_id=request_id
+                request_id=request_id,
             )
         else:
             # Set new access token in httpOnly cookie for web
@@ -554,13 +563,10 @@ async def refresh_token(
             logger.debug(
                 "Access token refreshed successfully with secure cookies",
                 expires_in=token_data["expires_in"],
-                client_type="web"
+                client_type="web",
             )
 
-            return message_response(
-                "Token refreshed successfully",
-                request_id
-            )
+            return message_response("Token refreshed successfully", request_id)
 
     except AuthenticationError as e:
         logger.warning("Token refresh failed", error=str(e))
@@ -569,7 +575,9 @@ async def refresh_token(
         if request.cookies.get("access_token"):
             response.delete_cookie(key="access_token", path="/")
         if request.cookies.get("refresh_token"):
-            response.delete_cookie(key="refresh_token", path=f"{get_settings().API_V1_PREFIX}/auth/refresh")
+            response.delete_cookie(
+                key="refresh_token", path=f"{get_settings().API_V1_PREFIX}/auth/refresh"
+            )
 
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -577,10 +585,7 @@ async def refresh_token(
         )
 
 
-@router.post(
-    "/logout",
-    response_model=StandardResponse[dict]
-)
+@router.post("/logout", response_model=StandardResponse[dict])
 async def logout(
     request: Request,
     response: Response,
@@ -677,31 +682,24 @@ async def logout(
         )
 
         request_id = generate_request_id()
-        return message_response(
-            "Successfully logged out",
-            request_id
-        )
+        return message_response("Successfully logged out", request_id)
 
     except Exception as e:
         logger.error("Logout failed", error=str(e), exception_type=type(e).__name__)
 
         # Still clear cookies even if token invalidation failed
         response.delete_cookie(key="access_token", path="/")
-        response.delete_cookie(key="refresh_token", path=f"{get_settings().API_V1_PREFIX}/auth/refresh")
+        response.delete_cookie(
+            key="refresh_token", path=f"{get_settings().API_V1_PREFIX}/auth/refresh"
+        )
         response.delete_cookie(key="refresh_token", path="/")
 
         # Always return success for security reasons (don't leak internal errors)
         request_id = generate_request_id()
-        return message_response(
-            "Successfully logged out",
-            request_id
-        )
+        return message_response("Successfully logged out", request_id)
 
 
-@router.post(
-    "/forgot-password",
-    response_model=StandardResponse[dict]
-)
+@router.post("/forgot-password", response_model=StandardResponse[dict])
 async def forgot_password(
     reset_request: PasswordResetRequest,
     request: Request,
@@ -750,14 +748,11 @@ async def forgot_password(
     request_id = generate_request_id()
     return message_response(
         "If an account with that email exists, a password reset link has been sent.",
-        request_id
+        request_id,
     )
 
 
-@router.post(
-    "/reset-password",
-    response_model=StandardResponse[dict]
-)
+@router.post("/reset-password", response_model=StandardResponse[dict])
 async def reset_password(
     reset_data: PasswordResetConfirm,
     request: Request,
@@ -809,7 +804,7 @@ async def reset_password(
         )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=validation_error(str(e)).model_dump()
+            detail=validation_error(str(e)).model_dump(),
         )
     except AuthenticationError as e:
         logger.error(
@@ -823,10 +818,7 @@ async def reset_password(
         )
 
 
-@router.get(
-    "/verify-email/{token}",
-    response_model=StandardResponse[dict]
-)
+@router.get("/verify-email/{token}", response_model=StandardResponse[dict])
 async def verify_email(
     token: str, request: Request, db: AsyncSession = Depends(get_db_session)
 ) -> StandardResponse[dict]:
@@ -872,7 +864,7 @@ async def verify_email(
         )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=validation_error(str(e)).model_dump()
+            detail=validation_error(str(e)).model_dump(),
         )
     except ValueError as e:
         logger.warning(
@@ -880,25 +872,22 @@ async def verify_email(
         )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=validation_error(str(e)).model_dump()
+            detail=validation_error(str(e)).model_dump(),
         )
     except Exception as e:
         logger.error(
             "Unexpected error during email verification",
             token=token[:8] + "...",
             error=str(e),
-            error_type=type(e).__name__
+            error_type=type(e).__name__,
         )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=internal_error().model_dump()
+            detail=server_error("Registration failed").model_dump(),
         )
 
 
-@router.post(
-    "/resend-verification",
-    response_model=StandardResponse[dict]
-)
+@router.post("/resend-verification", response_model=StandardResponse[dict])
 async def resend_verification(
     verification_request: EmailVerificationRequest,
     request: Request,
@@ -947,14 +936,11 @@ async def resend_verification(
     request_id = generate_request_id()
     return message_response(
         "If an account with that email exists, a verification email has been sent.",
-        request_id
+        request_id,
     )
 
 
-@router.get(
-    "/permissions",
-    response_model=StandardResponse[List[str]]
-)
+@router.get("/permissions", response_model=StandardResponse[List[str]])
 async def get_user_permissions(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     db: AsyncSession = Depends(get_db_session),
@@ -1042,10 +1028,7 @@ async def get_user_permissions(
         )
 
 
-@router.get(
-    "/roles",
-    response_model=StandardResponse[List[str]]
-)
+@router.get("/roles", response_model=StandardResponse[List[str]])
 async def get_user_roles(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     db: AsyncSession = Depends(get_db_session),
@@ -1079,7 +1062,11 @@ async def get_user_roles(
             )
 
         # Get user with roles
-        stmt = select(User).options(selectinload(User.roles)).where(User.id == token_data.sub)
+        stmt = (
+            select(User)
+            .options(selectinload(User.roles))
+            .where(User.id == token_data.sub)
+        )
         result = await db.execute(stmt)
         user = result.scalar_one_or_none()
 

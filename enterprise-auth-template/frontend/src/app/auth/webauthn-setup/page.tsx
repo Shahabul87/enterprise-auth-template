@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores/auth.store';
 import { WebAuthnSetup } from '@/components/auth/webauthn-setup';
 import { useRouter } from 'next/navigation';
 
-export default function WebAuthnSetupPage(): JSX.Element {
+export default function WebAuthnSetupPage(): React.ReactElement {
   const { isLoading, user, isAuthenticated } = useAuthStore();
   // Use isAuthenticated if needed
   isAuthenticated;

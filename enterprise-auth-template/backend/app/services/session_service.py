@@ -14,6 +14,7 @@ from uuid import uuid4
 import structlog
 from sqlalchemy import and_, delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+
 # Simple user agent parsing - replace with user_agents library if needed
 import re
 
@@ -110,7 +111,7 @@ class DeviceFingerprint:
                 "browser": "Unknown",
                 "operating_system": "Unknown",
                 "device_type": "desktop",
-                "device_family": "Unknown"
+                "device_family": "Unknown",
             }
 
         # Simple regex-based parsing
@@ -143,8 +144,16 @@ class DeviceFingerprint:
             device_type = "mobile" if "iPhone" in user_agent else "tablet"
 
         # Mobile detection
-        if any(mobile_indicator in user_agent.lower() for mobile_indicator in
-               ["mobile", "android", "iphone", "blackberry", "windows phone"]):
+        if any(
+            mobile_indicator in user_agent.lower()
+            for mobile_indicator in [
+                "mobile",
+                "android",
+                "iphone",
+                "blackberry",
+                "windows phone",
+            ]
+        ):
             device_type = "mobile"
         elif "tablet" in user_agent.lower() or "ipad" in user_agent.lower():
             device_type = "tablet"
@@ -153,7 +162,7 @@ class DeviceFingerprint:
             "browser": browser,
             "operating_system": os,
             "device_type": device_type,
-            "device_family": device_type.title()
+            "device_family": device_type.title(),
         }
 
 
@@ -305,9 +314,7 @@ class SessionService:
                 user_session = cached_session
             else:
                 # Query database
-                stmt = select(UserSession).where(
-                    UserSession.session_id == session_id
-                )
+                stmt = select(UserSession).where(UserSession.session_id == session_id)
                 result = await self.session.execute(stmt)
                 user_session: Optional[UserSession] = result.scalar_one_or_none()
 
@@ -711,9 +718,7 @@ class SessionService:
                 "last_activity": session.last_activity.isoformat(),
             }
 
-            ttl = int(
-                (session.expires_at - datetime.now(timezone.utc)).total_seconds()
-            )
+            ttl = int((session.expires_at - datetime.now(timezone.utc)).total_seconds())
 
             await self.cache.set(cache_key, cache_data, ttl=ttl)
 

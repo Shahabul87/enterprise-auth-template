@@ -102,10 +102,12 @@ class WebAuthnCredential:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'WebAuthnCredential':
+    def from_dict(cls, data: Dict[str, Any]) -> "WebAuthnCredential":
         """Create from dictionary stored in JSONB."""
         created_at = datetime.fromisoformat(data["created_at"])
-        last_used = datetime.fromisoformat(data["last_used"]) if data.get("last_used") else None
+        last_used = (
+            datetime.fromisoformat(data["last_used"]) if data.get("last_used") else None
+        )
 
         credential = cls(
             credential_id=data["credential_id"],
@@ -154,6 +156,7 @@ class WebAuthnService:
         """
         try:
             from urllib.parse import urlparse
+
             parsed = urlparse(settings.FRONTEND_URL)
             # For localhost, use 'localhost', otherwise use hostname
             hostname = parsed.hostname or "localhost"
@@ -197,7 +200,7 @@ class WebAuthnService:
 
             # User information for WebAuthn
             user_dict = {
-                "id": str(user.id).encode('utf-8'),
+                "id": str(user.id).encode("utf-8"),
                 "name": user.email,
                 "displayName": user.full_name or user.email,
             }
@@ -311,7 +314,9 @@ class WebAuthnService:
             )
 
             # Check verification result based on available attributes
-            is_verified = getattr(verification, 'verified', getattr(verification, 'user_verified', False))
+            is_verified = getattr(
+                verification, "verified", getattr(verification, "user_verified", False)
+            )
 
             if not is_verified:
                 logger.warning(
@@ -482,7 +487,9 @@ class WebAuthnService:
             )
 
             # Check verification result based on available attributes
-            is_verified = getattr(verification, 'verified', getattr(verification, 'user_verified', False))
+            is_verified = getattr(
+                verification, "verified", getattr(verification, "user_verified", False)
+            )
 
             if not is_verified:
                 logger.warning(
@@ -696,7 +703,7 @@ class WebAuthnService:
     async def _find_user_by_credential_id(self, credential_id: str) -> Optional[User]:
         """Find user by WebAuthn credential ID."""
         try:
-            async with get_session() as session:
+            async with get_db_session() as session:
                 # Query users with WebAuthn credentials
                 result = await session.execute(
                     select(User).where(User.webauthn_credentials.isnot(None))
@@ -707,8 +714,10 @@ class WebAuthnService:
                 for user in users:
                     if user.webauthn_credentials:
                         for cred_data in user.webauthn_credentials:
-                            if (isinstance(cred_data, dict) and
-                                cred_data.get("credential_id") == credential_id):
+                            if (
+                                isinstance(cred_data, dict)
+                                and cred_data.get("credential_id") == credential_id
+                            ):
                                 return user
 
                 return None

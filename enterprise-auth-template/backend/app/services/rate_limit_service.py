@@ -27,6 +27,7 @@ logger = structlog.get_logger(__name__)
 
 class RateLimitAlgorithm(str, Enum):
     """Rate limiting algorithms."""
+
     TOKEN_BUCKET = "token_bucket"
     SLIDING_WINDOW = "sliding_window"
     FIXED_WINDOW = "fixed_window"
@@ -35,6 +36,7 @@ class RateLimitAlgorithm(str, Enum):
 
 class RateLimitScope(str, Enum):
     """Rate limiting scopes."""
+
     GLOBAL = "global"
     USER = "user"
     IP = "ip"
@@ -45,6 +47,7 @@ class RateLimitScope(str, Enum):
 
 class RateLimitAction(str, Enum):
     """Actions to take when rate limit is exceeded."""
+
     BLOCK = "block"
     THROTTLE = "throttle"
     LOG_ONLY = "log_only"
@@ -53,6 +56,7 @@ class RateLimitAction(str, Enum):
 
 class RateLimitError(Exception):
     """Base exception for rate limiting errors."""
+
     pass
 
 
@@ -85,7 +89,7 @@ class RateLimitService:
         self,
         session: AsyncSession,
         cache_service: Optional[CacheService] = None,
-        event_emitter: Optional[EventEmitter] = None
+        event_emitter: Optional[EventEmitter] = None,
     ) -> None:
         """
         Initialize rate limiting service.
@@ -102,10 +106,16 @@ class RateLimitService:
         # Default configurations
         self.default_limits = {
             RateLimitScope.GLOBAL: {"requests": 10000, "window": 3600},  # 10k/hour
-            RateLimitScope.USER: {"requests": 1000, "window": 3600},     # 1k/hour per user
-            RateLimitScope.IP: {"requests": 100, "window": 60},          # 100/minute per IP
-            RateLimitScope.API_KEY: {"requests": 5000, "window": 3600},  # 5k/hour per API key
-            RateLimitScope.ENDPOINT: {"requests": 60, "window": 60},     # 60/minute per endpoint
+            RateLimitScope.USER: {"requests": 1000, "window": 3600},  # 1k/hour per user
+            RateLimitScope.IP: {"requests": 100, "window": 60},  # 100/minute per IP
+            RateLimitScope.API_KEY: {
+                "requests": 5000,
+                "window": 3600,
+            },  # 5k/hour per API key
+            RateLimitScope.ENDPOINT: {
+                "requests": 60,
+                "window": 60,
+            },  # 60/minute per endpoint
         }
 
         # Algorithm implementations
@@ -123,7 +133,7 @@ class RateLimitService:
         endpoint: Optional[str] = None,
         algorithm: RateLimitAlgorithm = RateLimitAlgorithm.SLIDING_WINDOW,
         custom_limit: Optional[Dict[str, Any]] = None,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Check if a request is within rate limits.
@@ -147,9 +157,9 @@ class RateLimitService:
             if await self._is_whitelisted(identifier, scope):
                 return {
                     "allowed": True,
-                    "remaining": float('inf'),
+                    "remaining": float("inf"),
                     "reset_at": None,
-                    "whitelisted": True
+                    "whitelisted": True,
                 }
 
             # Check if identifier is blacklisted
@@ -159,7 +169,7 @@ class RateLimitService:
                     retry_after=None,
                     scope=scope.value,
                     identifier=identifier,
-                    reason="blacklisted"
+                    reason="blacklisted",
                 )
 
             # Get rate limit configuration
@@ -188,7 +198,7 @@ class RateLimitService:
                     scope=scope.value,
                     identifier=identifier,
                     remaining=result["remaining"],
-                    reset_at=result.get("reset_at")
+                    reset_at=result.get("reset_at"),
                 )
 
             return result
@@ -200,21 +210,13 @@ class RateLimitService:
                 "Rate limit check failed",
                 identifier=identifier,
                 scope=scope.value,
-                error=str(e)
+                error=str(e),
             )
             # Fail open - allow request but log error
-            return {
-                "allowed": True,
-                "remaining": 0,
-                "reset_at": None,
-                "error": str(e)
-            }
+            return {"allowed": True, "remaining": 0, "reset_at": None, "error": str(e)}
 
     async def get_rate_limit_status(
-        self,
-        identifier: str,
-        scope: RateLimitScope,
-        endpoint: Optional[str] = None
+        self, identifier: str, scope: RateLimitScope, endpoint: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Get current rate limit status without consuming quota.
@@ -239,7 +241,7 @@ class RateLimitService:
                     "requests_made": 0,
                     "requests_remaining": config["requests"],
                     "reset_at": None,
-                    "window_start": None
+                    "window_start": None,
                 }
 
             state = json.loads(state_data)
@@ -250,7 +252,8 @@ class RateLimitService:
                 # Sliding window calculation
                 window_start = current_time - config["window"]
                 recent_requests = [
-                    req_time for req_time in state.get("requests", [])
+                    req_time
+                    for req_time in state.get("requests", [])
                     if req_time > window_start
                 ]
                 requests_made = len(recent_requests)
@@ -265,7 +268,7 @@ class RateLimitService:
                 "requests_remaining": requests_remaining,
                 "reset_at": state.get("reset_at"),
                 "window_start": state.get("window_start"),
-                "config": config
+                "config": config,
             }
 
         except Exception as e:
@@ -273,7 +276,7 @@ class RateLimitService:
                 "Failed to get rate limit status",
                 identifier=identifier,
                 scope=scope.value,
-                error=str(e)
+                error=str(e),
             )
             return {"error": str(e)}
 
@@ -282,7 +285,7 @@ class RateLimitService:
         identifier: str,
         scope: RateLimitScope,
         endpoint: Optional[str] = None,
-        requester_id: Optional[str] = None
+        requester_id: Optional[str] = None,
     ) -> bool:
         """
         Reset rate limit for an identifier.
@@ -305,22 +308,24 @@ class RateLimitService:
             await self.cache_service.delete(cache_key)
 
             # Emit audit event
-            await self.event_emitter.emit(Event(
-                event_type="rate_limit.reset",
-                data={
-                    "identifier": identifier,
-                    "scope": scope.value,
-                    "endpoint": endpoint,
-                    "requester_id": requester_id
-                }
-            ))
+            await self.event_emitter.emit(
+                Event(
+                    event_type="rate_limit.reset",
+                    data={
+                        "identifier": identifier,
+                        "scope": scope.value,
+                        "endpoint": endpoint,
+                        "requester_id": requester_id,
+                    },
+                )
+            )
 
             logger.info(
                 "Rate limit reset",
                 identifier=identifier,
                 scope=scope.value,
                 endpoint=endpoint,
-                requester_id=requester_id
+                requester_id=requester_id,
             )
 
             return True
@@ -330,7 +335,7 @@ class RateLimitService:
                 "Failed to reset rate limit",
                 identifier=identifier,
                 scope=scope.value,
-                error=str(e)
+                error=str(e),
             )
             return False
 
@@ -340,7 +345,7 @@ class RateLimitService:
         scope: RateLimitScope,
         reason: Optional[str] = None,
         expires_at: Optional[datetime] = None,
-        requester_id: Optional[str] = None
+        requester_id: Optional[str] = None,
     ) -> bool:
         """
         Add identifier to rate limit whitelist.
@@ -366,7 +371,7 @@ class RateLimitService:
                 "reason": reason,
                 "added_at": datetime.utcnow().isoformat(),
                 "added_by": requester_id,
-                "expires_at": expires_at.isoformat() if expires_at else None
+                "expires_at": expires_at.isoformat() if expires_at else None,
             }
 
             # Calculate TTL
@@ -375,22 +380,19 @@ class RateLimitService:
                 ttl = int((expires_at - datetime.utcnow()).total_seconds())
 
             await self.cache_service.set(
-                whitelist_key,
-                json.dumps(whitelist_data),
-                ttl=ttl
+                whitelist_key, json.dumps(whitelist_data), ttl=ttl
             )
 
             # Emit audit event
-            await self.event_emitter.emit(Event(
-                event_type="rate_limit.whitelist_added",
-                data=whitelist_data
-            ))
+            await self.event_emitter.emit(
+                Event(event_type="rate_limit.whitelist_added", data=whitelist_data)
+            )
 
             logger.info(
                 "Added to rate limit whitelist",
                 identifier=identifier,
                 scope=scope.value,
-                requester_id=requester_id
+                requester_id=requester_id,
             )
 
             return True
@@ -400,7 +402,7 @@ class RateLimitService:
                 "Failed to add to whitelist",
                 identifier=identifier,
                 scope=scope.value,
-                error=str(e)
+                error=str(e),
             )
             return False
 
@@ -410,7 +412,7 @@ class RateLimitService:
         scope: RateLimitScope,
         reason: Optional[str] = None,
         expires_at: Optional[datetime] = None,
-        requester_id: Optional[str] = None
+        requester_id: Optional[str] = None,
     ) -> bool:
         """
         Add identifier to rate limit blacklist.
@@ -436,7 +438,7 @@ class RateLimitService:
                 "reason": reason,
                 "added_at": datetime.utcnow().isoformat(),
                 "added_by": requester_id,
-                "expires_at": expires_at.isoformat() if expires_at else None
+                "expires_at": expires_at.isoformat() if expires_at else None,
             }
 
             # Calculate TTL
@@ -445,22 +447,19 @@ class RateLimitService:
                 ttl = int((expires_at - datetime.utcnow()).total_seconds())
 
             await self.cache_service.set(
-                blacklist_key,
-                json.dumps(blacklist_data),
-                ttl=ttl
+                blacklist_key, json.dumps(blacklist_data), ttl=ttl
             )
 
             # Emit audit event
-            await self.event_emitter.emit(Event(
-                event_type="rate_limit.blacklist_added",
-                data=blacklist_data
-            ))
+            await self.event_emitter.emit(
+                Event(event_type="rate_limit.blacklist_added", data=blacklist_data)
+            )
 
             logger.info(
                 "Added to rate limit blacklist",
                 identifier=identifier,
                 scope=scope.value,
-                requester_id=requester_id
+                requester_id=requester_id,
             )
 
             return True
@@ -470,15 +469,12 @@ class RateLimitService:
                 "Failed to add to blacklist",
                 identifier=identifier,
                 scope=scope.value,
-                error=str(e)
+                error=str(e),
             )
             return False
 
     async def remove_from_whitelist(
-        self,
-        identifier: str,
-        scope: RateLimitScope,
-        requester_id: Optional[str] = None
+        self, identifier: str, scope: RateLimitScope, requester_id: Optional[str] = None
     ) -> bool:
         """Remove identifier from whitelist."""
         try:
@@ -489,14 +485,16 @@ class RateLimitService:
             await self.cache_service.delete(whitelist_key)
 
             # Emit audit event
-            await self.event_emitter.emit(Event(
-                event_type="rate_limit.whitelist_removed",
-                data={
-                    "identifier": identifier,
-                    "scope": scope.value,
-                    "requester_id": requester_id
-                }
-            ))
+            await self.event_emitter.emit(
+                Event(
+                    event_type="rate_limit.whitelist_removed",
+                    data={
+                        "identifier": identifier,
+                        "scope": scope.value,
+                        "requester_id": requester_id,
+                    },
+                )
+            )
 
             return True
 
@@ -505,15 +503,12 @@ class RateLimitService:
                 "Failed to remove from whitelist",
                 identifier=identifier,
                 scope=scope.value,
-                error=str(e)
+                error=str(e),
             )
             return False
 
     async def remove_from_blacklist(
-        self,
-        identifier: str,
-        scope: RateLimitScope,
-        requester_id: Optional[str] = None
+        self, identifier: str, scope: RateLimitScope, requester_id: Optional[str] = None
     ) -> bool:
         """Remove identifier from blacklist."""
         try:
@@ -524,14 +519,16 @@ class RateLimitService:
             await self.cache_service.delete(blacklist_key)
 
             # Emit audit event
-            await self.event_emitter.emit(Event(
-                event_type="rate_limit.blacklist_removed",
-                data={
-                    "identifier": identifier,
-                    "scope": scope.value,
-                    "requester_id": requester_id
-                }
-            ))
+            await self.event_emitter.emit(
+                Event(
+                    event_type="rate_limit.blacklist_removed",
+                    data={
+                        "identifier": identifier,
+                        "scope": scope.value,
+                        "requester_id": requester_id,
+                    },
+                )
+            )
 
             return True
 
@@ -540,7 +537,7 @@ class RateLimitService:
                 "Failed to remove from blacklist",
                 identifier=identifier,
                 scope=scope.value,
-                error=str(e)
+                error=str(e),
             )
             return False
 
@@ -548,7 +545,7 @@ class RateLimitService:
         self,
         time_range: str = "1h",
         scope: Optional[RateLimitScope] = None,
-        top_n: int = 10
+        top_n: int = 10,
     ) -> Dict[str, Any]:
         """
         Get rate limiting analytics and statistics.
@@ -584,7 +581,7 @@ class RateLimitService:
                 "top_endpoints": [],
                 "rate_limit_violations": [],
                 "algorithm_usage": {},
-                "scope_distribution": {}
+                "scope_distribution": {},
             }
 
             # In a production environment, you'd query actual analytics data
@@ -596,7 +593,7 @@ class RateLimitService:
                 "Failed to get rate limit analytics",
                 time_range=time_range,
                 scope=scope.value if scope else None,
-                error=str(e)
+                error=str(e),
             )
             return {"error": str(e)}
 
@@ -605,7 +602,7 @@ class RateLimitService:
         scope: RateLimitScope,
         config: Dict[str, Any],
         endpoint: Optional[str] = None,
-        requester_id: Optional[str] = None
+        requester_id: Optional[str] = None,
     ) -> bool:
         """
         Update rate limit configuration.
@@ -636,31 +633,31 @@ class RateLimitService:
             config_data = {
                 **config,
                 "updated_at": datetime.utcnow().isoformat(),
-                "updated_by": requester_id
+                "updated_by": requester_id,
             }
 
             await self.cache_service.set(
-                config_key,
-                json.dumps(config_data),
-                ttl=30 * 24 * 3600  # 30 days
+                config_key, json.dumps(config_data), ttl=30 * 24 * 3600  # 30 days
             )
 
             # Emit audit event
-            await self.event_emitter.emit(Event(
-                event_type="rate_limit.config_updated",
-                data={
-                    "scope": scope.value,
-                    "endpoint": endpoint,
-                    "config": config,
-                    "requester_id": requester_id
-                }
-            ))
+            await self.event_emitter.emit(
+                Event(
+                    event_type="rate_limit.config_updated",
+                    data={
+                        "scope": scope.value,
+                        "endpoint": endpoint,
+                        "config": config,
+                        "requester_id": requester_id,
+                    },
+                )
+            )
 
             logger.info(
                 "Rate limit configuration updated",
                 scope=scope.value,
                 endpoint=endpoint,
-                requester_id=requester_id
+                requester_id=requester_id,
             )
 
             return True
@@ -670,7 +667,7 @@ class RateLimitService:
                 "Failed to update rate limit config",
                 scope=scope.value,
                 endpoint=endpoint,
-                error=str(e)
+                error=str(e),
             )
             return False
 
@@ -680,7 +677,7 @@ class RateLimitService:
         scope: RateLimitScope,
         config: Dict[str, Any],
         endpoint: Optional[str],
-        metadata: Optional[Dict[str, Any]]
+        metadata: Optional[Dict[str, Any]],
     ) -> Dict[str, Any]:
         """Token bucket algorithm implementation."""
         cache_key = self._get_cache_key(identifier, scope, endpoint)
@@ -692,10 +689,7 @@ class RateLimitService:
         if bucket_data:
             bucket = json.loads(bucket_data)
         else:
-            bucket = {
-                "tokens": config["requests"],
-                "last_refill": current_time
-            }
+            bucket = {"tokens": config["requests"], "last_refill": current_time}
 
         # Refill tokens based on elapsed time
         time_passed = current_time - bucket["last_refill"]
@@ -717,16 +711,14 @@ class RateLimitService:
 
         # Store updated bucket state
         await self.cache_service.set(
-            cache_key,
-            json.dumps(bucket),
-            ttl=config["window"] * 2
+            cache_key, json.dumps(bucket), ttl=config["window"] * 2
         )
 
         return {
             "allowed": allowed,
             "remaining": int(bucket["tokens"]),
             "reset_at": None,
-            "retry_after": retry_after
+            "retry_after": retry_after,
         }
 
     async def _sliding_window_check(
@@ -735,7 +727,7 @@ class RateLimitService:
         scope: RateLimitScope,
         config: Dict[str, Any],
         endpoint: Optional[str],
-        metadata: Optional[Dict[str, Any]]
+        metadata: Optional[Dict[str, Any]],
     ) -> Dict[str, Any]:
         """Sliding window algorithm implementation."""
         cache_key = self._get_cache_key(identifier, scope, endpoint)
@@ -770,14 +762,16 @@ class RateLimitService:
         await self.cache_service.set(
             cache_key,
             json.dumps({"requests": requests}),
-            ttl=config["window"] + 60  # Extra buffer
+            ttl=config["window"] + 60,  # Extra buffer
         )
 
         return {
             "allowed": allowed,
             "remaining": max(0, config["requests"] - len(requests)),
             "reset_at": reset_at,
-            "retry_after": int(reset_at - current_time) if reset_at and not allowed else None
+            "retry_after": (
+                int(reset_at - current_time) if reset_at and not allowed else None
+            ),
         }
 
     async def _fixed_window_check(
@@ -786,7 +780,7 @@ class RateLimitService:
         scope: RateLimitScope,
         config: Dict[str, Any],
         endpoint: Optional[str],
-        metadata: Optional[Dict[str, Any]]
+        metadata: Optional[Dict[str, Any]],
     ) -> Dict[str, Any]:
         """Fixed window algorithm implementation."""
         cache_key = self._get_cache_key(identifier, scope, endpoint)
@@ -816,16 +810,14 @@ class RateLimitService:
 
         # Store updated window data
         await self.cache_service.set(
-            cache_key,
-            json.dumps(data),
-            ttl=config["window"] + 60
+            cache_key, json.dumps(data), ttl=config["window"] + 60
         )
 
         return {
             "allowed": allowed,
             "remaining": max(0, config["requests"] - data["count"]),
             "reset_at": reset_at,
-            "retry_after": int(reset_at - current_time) if not allowed else None
+            "retry_after": int(reset_at - current_time) if not allowed else None,
         }
 
     async def _leaky_bucket_check(
@@ -834,7 +826,7 @@ class RateLimitService:
         scope: RateLimitScope,
         config: Dict[str, Any],
         endpoint: Optional[str],
-        metadata: Optional[Dict[str, Any]]
+        metadata: Optional[Dict[str, Any]],
     ) -> Dict[str, Any]:
         """Leaky bucket algorithm implementation."""
         cache_key = self._get_cache_key(identifier, scope, endpoint)
@@ -846,10 +838,7 @@ class RateLimitService:
         if bucket_data:
             bucket = json.loads(bucket_data)
         else:
-            bucket = {
-                "volume": 0,
-                "last_leak": current_time
-            }
+            bucket = {"volume": 0, "last_leak": current_time}
 
         # Leak based on elapsed time
         time_passed = current_time - bucket["last_leak"]
@@ -867,27 +856,29 @@ class RateLimitService:
             allowed = False
 
         # Calculate retry after
-        retry_after = None if allowed else int((bucket["volume"] - config["requests"]) / leak_rate)
+        retry_after = (
+            None
+            if allowed
+            else int((bucket["volume"] - config["requests"]) / leak_rate)
+        )
 
         # Store updated bucket state
         await self.cache_service.set(
-            cache_key,
-            json.dumps(bucket),
-            ttl=config["window"] * 2
+            cache_key, json.dumps(bucket), ttl=config["window"] * 2
         )
 
         return {
             "allowed": allowed,
             "remaining": max(0, int(config["requests"] - bucket["volume"])),
             "reset_at": None,
-            "retry_after": retry_after
+            "retry_after": retry_after,
         }
 
     async def _get_rate_limit_config(
         self,
         scope: RateLimitScope,
         endpoint: Optional[str] = None,
-        custom_limit: Optional[Dict[str, Any]] = None
+        custom_limit: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """Get rate limit configuration for scope and endpoint."""
         if custom_limit:
@@ -906,10 +897,7 @@ class RateLimitService:
         return self.default_limits.get(scope, {"requests": 100, "window": 3600})
 
     def _get_cache_key(
-        self,
-        identifier: str,
-        scope: RateLimitScope,
-        endpoint: Optional[str] = None
+        self, identifier: str, scope: RateLimitScope, endpoint: Optional[str] = None
     ) -> str:
         """Generate cache key for rate limiting state."""
         key = f"rate_limit:{scope.value}:{identifier}"
@@ -960,7 +948,7 @@ class RateLimitService:
         endpoint: Optional[str],
         algorithm: RateLimitAlgorithm,
         result: Dict[str, Any],
-        metadata: Optional[Dict[str, Any]]
+        metadata: Optional[Dict[str, Any]],
     ) -> None:
         """Log rate limit check for analytics."""
         try:
@@ -974,14 +962,12 @@ class RateLimitService:
                 "allowed": result["allowed"],
                 "remaining": result["remaining"],
                 "timestamp": datetime.utcnow().isoformat(),
-                "metadata": metadata or {}
+                "metadata": metadata or {},
             }
 
             # Store with short TTL for analytics aggregation
             await self.cache_service.set(
-                event_key,
-                json.dumps(event_data),
-                ttl=3600  # 1 hour
+                event_key, json.dumps(event_data), ttl=3600  # 1 hour
             )
 
         except Exception as e:
@@ -992,34 +978,38 @@ class RateLimitService:
         identifier: str,
         scope: RateLimitScope,
         result: Dict[str, Any],
-        config: Dict[str, Any]
+        config: Dict[str, Any],
     ) -> None:
         """Check if rate limit alerts should be triggered."""
         try:
             # Check if we should alert on high usage or blocking
             if not result["allowed"]:
                 # Rate limit exceeded - trigger alert
-                await self.event_emitter.emit(Event(
-                    event_type="rate_limit.exceeded",
-                    data={
-                        "identifier": identifier,
-                        "scope": scope.value,
-                        "config": config,
-                        "timestamp": datetime.utcnow().isoformat()
-                    }
-                ))
+                await self.event_emitter.emit(
+                    Event(
+                        event_type="rate_limit.exceeded",
+                        data={
+                            "identifier": identifier,
+                            "scope": scope.value,
+                            "config": config,
+                            "timestamp": datetime.utcnow().isoformat(),
+                        },
+                    )
+                )
             elif result["remaining"] / config["requests"] < 0.1:
                 # Low quota remaining - trigger warning
-                await self.event_emitter.emit(Event(
-                    event_type="rate_limit.quota_low",
-                    data={
-                        "identifier": identifier,
-                        "scope": scope.value,
-                        "remaining": result["remaining"],
-                        "total": config["requests"],
-                        "timestamp": datetime.utcnow().isoformat()
-                    }
-                ))
+                await self.event_emitter.emit(
+                    Event(
+                        event_type="rate_limit.quota_low",
+                        data={
+                            "identifier": identifier,
+                            "scope": scope.value,
+                            "remaining": result["remaining"],
+                            "total": config["requests"],
+                            "timestamp": datetime.utcnow().isoformat(),
+                        },
+                    )
+                )
 
         except Exception as e:
             logger.error("Failed to check rate limit alerts", error=str(e))
@@ -1036,16 +1026,20 @@ class RateLimitService:
 
             # In production, check actual admin permissions
             # For now, assume all active users can manage rate limits
-            user_roles = [role.name.lower() for role in user.roles] if hasattr(user, 'roles') else []
+            user_roles = (
+                [role.name.lower() for role in user.roles]
+                if hasattr(user, "roles")
+                else []
+            )
 
-            if not any(role in user_roles for role in ['admin', 'super_admin']):
-                raise RateLimitError("Admin privileges required for rate limit management")
+            if not any(role in user_roles for role in ["admin", "super_admin"]):
+                raise RateLimitError(
+                    "Admin privileges required for rate limit management"
+                )
 
         except Exception as e:
             logger.error(
-                "Failed to validate admin permissions",
-                user_id=user_id,
-                error=str(e)
+                "Failed to validate admin permissions", user_id=user_id, error=str(e)
             )
             raise RateLimitError("Permission validation failed")
 

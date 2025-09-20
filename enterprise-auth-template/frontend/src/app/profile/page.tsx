@@ -52,7 +52,7 @@ interface LinkedAccount {
   linked_at: string;
 }
 
-export default function ProfilePage(): JSX.Element {
+export default function ProfilePage(): React.ReactElement {
   const { user, logout } = useRequireAuth();
   const router = useRouter();
   const [linkedAccounts, setLinkedAccounts] = useState<LinkedAccount[]>([]);

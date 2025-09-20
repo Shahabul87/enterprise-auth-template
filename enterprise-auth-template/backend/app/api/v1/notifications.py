@@ -20,7 +20,7 @@ from app.models.notification import (
     NotificationType,
     NotificationPriority,
     NotificationStatus,
-    NotificationCategory
+    NotificationCategory,
 )
 from app.services.notification_service import NotificationService
 
@@ -33,13 +33,27 @@ class NotificationRequest(BaseModel):
     """Request model for creating notifications."""
 
     user_id: Optional[str] = Field(None, description="Target user ID (admin only)")
-    title: str = Field(..., min_length=1, max_length=200, description="Notification title")
-    message: str = Field(..., min_length=1, max_length=1000, description="Notification message")
-    notification_type: NotificationType = Field(..., description="Notification delivery type")
-    priority: NotificationPriority = Field(NotificationPriority.NORMAL, description="Notification priority")
-    category: NotificationCategory = Field(NotificationCategory.ACCOUNT, description="Notification category")
-    data: Optional[Dict[str, Any]] = Field(None, description="Additional structured data")
-    template_id: Optional[str] = Field(None, description="Template ID for styled notifications")
+    title: str = Field(
+        ..., min_length=1, max_length=200, description="Notification title"
+    )
+    message: str = Field(
+        ..., min_length=1, max_length=1000, description="Notification message"
+    )
+    notification_type: NotificationType = Field(
+        ..., description="Notification delivery type"
+    )
+    priority: NotificationPriority = Field(
+        NotificationPriority.NORMAL, description="Notification priority"
+    )
+    category: NotificationCategory = Field(
+        NotificationCategory.ACCOUNT, description="Notification category"
+    )
+    data: Optional[Dict[str, Any]] = Field(
+        None, description="Additional structured data"
+    )
+    template_id: Optional[str] = Field(
+        None, description="Template ID for styled notifications"
+    )
     scheduled_at: Optional[datetime] = Field(None, description="Schedule delivery time")
     expires_at: Optional[datetime] = Field(None, description="Expiration time")
 
@@ -51,7 +65,7 @@ class NotificationRequest(BaseModel):
                 "notification_type": "email",
                 "priority": "normal",
                 "category": "account",
-                "data": {"action_url": "/profile", "button_text": "Complete Profile"}
+                "data": {"action_url": "/profile", "button_text": "Complete Profile"},
             }
         }
     )
@@ -60,14 +74,30 @@ class NotificationRequest(BaseModel):
 class BulkNotificationRequest(BaseModel):
     """Request model for bulk notifications."""
 
-    user_ids: List[str] = Field(..., min_length=1, description="List of target user IDs")
-    title: str = Field(..., min_length=1, max_length=200, description="Notification title")
-    message: str = Field(..., min_length=1, max_length=1000, description="Notification message")
-    notification_type: NotificationType = Field(..., description="Notification delivery type")
-    priority: NotificationPriority = Field(NotificationPriority.NORMAL, description="Notification priority")
-    category: NotificationCategory = Field(NotificationCategory.ACCOUNT, description="Notification category")
-    data: Optional[Dict[str, Any]] = Field(None, description="Additional structured data")
-    template_id: Optional[str] = Field(None, description="Template ID for styled notifications")
+    user_ids: List[str] = Field(
+        ..., min_length=1, description="List of target user IDs"
+    )
+    title: str = Field(
+        ..., min_length=1, max_length=200, description="Notification title"
+    )
+    message: str = Field(
+        ..., min_length=1, max_length=1000, description="Notification message"
+    )
+    notification_type: NotificationType = Field(
+        ..., description="Notification delivery type"
+    )
+    priority: NotificationPriority = Field(
+        NotificationPriority.NORMAL, description="Notification priority"
+    )
+    category: NotificationCategory = Field(
+        NotificationCategory.ACCOUNT, description="Notification category"
+    )
+    data: Optional[Dict[str, Any]] = Field(
+        None, description="Additional structured data"
+    )
+    template_id: Optional[str] = Field(
+        None, description="Template ID for styled notifications"
+    )
     scheduled_at: Optional[datetime] = Field(None, description="Schedule delivery time")
 
     model_config = ConfigDict(
@@ -78,7 +108,7 @@ class BulkNotificationRequest(BaseModel):
                 "message": "We will be performing scheduled maintenance on Sunday at 2 AM UTC.",
                 "notification_type": "email",
                 "priority": "high",
-                "category": "system"
+                "category": "system",
             }
         }
     )
@@ -105,7 +135,9 @@ class NotificationResponse(BaseModel):
 class NotificationListResponse(BaseModel):
     """Response model for notification lists."""
 
-    notifications: List[NotificationResponse] = Field(..., description="List of notifications")
+    notifications: List[NotificationResponse] = Field(
+        ..., description="List of notifications"
+    )
     total: int = Field(..., description="Total number of notifications")
     unread_count: int = Field(..., description="Number of unread notifications")
     has_more: bool = Field(..., description="Whether more notifications exist")
@@ -120,8 +152,12 @@ class NotificationStatsResponse(BaseModel):
     pending_notifications: int = Field(..., description="Pending delivery")
     delivery_rate: float = Field(..., description="Overall delivery rate")
     type_breakdown: Dict[str, int] = Field(..., description="Notifications by type")
-    category_breakdown: Dict[str, int] = Field(..., description="Notifications by category")
-    recent_activity: List[Dict[str, Any]] = Field(..., description="Recent notification activity")
+    category_breakdown: Dict[str, int] = Field(
+        ..., description="Notifications by category"
+    )
+    recent_activity: List[Dict[str, Any]] = Field(
+        ..., description="Recent notification activity"
+    )
 
 
 class NotificationPreferencesResponse(BaseModel):
@@ -133,7 +169,9 @@ class NotificationPreferencesResponse(BaseModel):
     in_app_notifications: bool = Field(..., description="In-app notifications enabled")
     marketing_emails: bool = Field(..., description="Marketing emails enabled")
     security_alerts: bool = Field(..., description="Security alerts enabled")
-    frequency_settings: Dict[str, str] = Field(..., description="Frequency settings by category")
+    frequency_settings: Dict[str, str] = Field(
+        ..., description="Frequency settings by category"
+    )
 
 
 class MessageResponse(BaseModel):
@@ -174,7 +212,7 @@ async def create_notification(
             if "admin:access" not in current_user.permissions:
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
-                    detail="Insufficient permissions to create notifications for other users"
+                    detail="Insufficient permissions to create notifications for other users",
                 )
         else:
             target_user_id = current_user.id
@@ -190,10 +228,14 @@ async def create_notification(
             data=notification_request.data,
             template_id=notification_request.template_id,
             scheduled_at=notification_request.scheduled_at,
-            expires_at=notification_request.expires_at
+            expires_at=notification_request.expires_at,
         )
 
-        logger.info("Notification created", notification_id=notification.id, user_id=target_user_id)
+        logger.info(
+            "Notification created",
+            notification_id=notification.id,
+            user_id=target_user_id,
+        )
 
         return NotificationResponse(
             id=notification.id,
@@ -206,9 +248,15 @@ async def create_notification(
             data=notification.data,
             read_at=notification.read_at.isoformat() if notification.read_at else None,
             sent_at=notification.sent_at.isoformat() if notification.sent_at else None,
-            delivered_at=notification.delivered_at.isoformat() if notification.delivered_at else None,
+            delivered_at=(
+                notification.delivered_at.isoformat()
+                if notification.delivered_at
+                else None
+            ),
             created_at=notification.created_at.isoformat(),
-            expires_at=notification.expires_at.isoformat() if notification.expires_at else None
+            expires_at=(
+                notification.expires_at.isoformat() if notification.expires_at else None
+            ),
         )
 
     except HTTPException:
@@ -217,14 +265,16 @@ async def create_notification(
         logger.error("Failed to create notification", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to create notification"
+            detail="Failed to create notification",
         )
 
 
 @router.post("/bulk", response_model=Dict[str, Any])
 async def create_bulk_notifications(
     bulk_request: BulkNotificationRequest,
-    current_user: CurrentUser = Depends(require_permissions(["notifications:bulk", "admin:access"])),
+    current_user: CurrentUser = Depends(
+        require_permissions(["notifications:bulk", "admin:access"])
+    ),
     db: AsyncSession = Depends(get_db_session),
 ) -> Dict[str, Any]:
     """
@@ -241,7 +291,11 @@ async def create_bulk_notifications(
     Returns:
         Dict: Bulk operation results
     """
-    logger.info("Bulk notification creation requested", user_id=current_user.id, count=len(bulk_request.user_ids))
+    logger.info(
+        "Bulk notification creation requested",
+        user_id=current_user.id,
+        count=len(bulk_request.user_ids),
+    )
 
     try:
         notification_service = NotificationService(db)
@@ -249,22 +303,26 @@ async def create_bulk_notifications(
         # Prepare notification data for each user
         notifications = []
         for user_id in bulk_request.user_ids:
-            notifications.append({
-                "user_id": user_id,
-                "title": bulk_request.title,
-                "message": bulk_request.message,
-                "notification_type": bulk_request.notification_type,
-                "priority": bulk_request.priority,
-                "category": bulk_request.category,
-                "data": bulk_request.data,
-                "template_id": bulk_request.template_id,
-                "scheduled_at": bulk_request.scheduled_at
-            })
+            notifications.append(
+                {
+                    "user_id": user_id,
+                    "title": bulk_request.title,
+                    "message": bulk_request.message,
+                    "notification_type": bulk_request.notification_type,
+                    "priority": bulk_request.priority,
+                    "category": bulk_request.category,
+                    "data": bulk_request.data,
+                    "template_id": bulk_request.template_id,
+                    "scheduled_at": bulk_request.scheduled_at,
+                }
+            )
 
         # Create bulk notifications
         result = await notification_service.send_bulk_notifications(notifications)
 
-        logger.info("Bulk notifications created", user_id=current_user.id, result=result)
+        logger.info(
+            "Bulk notifications created", user_id=current_user.id, result=result
+        )
 
         return result
 
@@ -272,16 +330,22 @@ async def create_bulk_notifications(
         logger.error("Failed to create bulk notifications", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to create bulk notifications"
+            detail="Failed to create bulk notifications",
         )
 
 
 @router.get("/", response_model=NotificationListResponse)
 async def get_notifications(
-    limit: int = Query(50, ge=1, le=100, description="Number of notifications to return"),
+    limit: int = Query(
+        50, ge=1, le=100, description="Number of notifications to return"
+    ),
     offset: int = Query(0, ge=0, description="Number of notifications to skip"),
-    status_filter: Optional[NotificationStatus] = Query(None, description="Filter by status"),
-    category_filter: Optional[NotificationCategory] = Query(None, description="Filter by category"),
+    status_filter: Optional[NotificationStatus] = Query(
+        None, description="Filter by status"
+    ),
+    category_filter: Optional[NotificationCategory] = Query(
+        None, description="Filter by category"
+    ),
     unread_only: bool = Query(False, description="Show only unread notifications"),
     current_user: CurrentUser = Depends(get_current_user),
     db: AsyncSession = Depends(get_db_session),
@@ -304,7 +368,9 @@ async def get_notifications(
     Returns:
         NotificationListResponse: Paginated notification list
     """
-    logger.debug("Notifications requested", user_id=current_user.id, limit=limit, offset=offset)
+    logger.debug(
+        "Notifications requested", user_id=current_user.id, limit=limit, offset=offset
+    )
 
     try:
         notification_service = NotificationService(db)
@@ -316,16 +382,13 @@ async def get_notifications(
             offset=offset,
             status_filter=status_filter,
             category_filter=category_filter,
-            unread_only=unread_only
+            unread_only=unread_only,
         )
 
         # Get unread count
         if not unread_only:
             _, unread_count = await notification_service.get_user_notifications(
-                user_id=current_user.id,
-                limit=1,
-                offset=0,
-                unread_only=True
+                user_id=current_user.id, limit=1, offset=0, unread_only=True
             )
         else:
             unread_count = total_count
@@ -333,34 +396,54 @@ async def get_notifications(
         # Convert to response format
         notification_responses = []
         for notification in notifications:
-            notification_responses.append(NotificationResponse(
-                id=notification.id,
-                title=notification.title,
-                message=notification.message,
-                type=notification.type.value,
-                priority=notification.priority.value,
-                category=notification.category.value,
-                status=notification.status.value,
-                data=notification.data,
-                read_at=notification.read_at.isoformat() if notification.read_at else None,
-                sent_at=notification.sent_at.isoformat() if notification.sent_at else None,
-                delivered_at=notification.delivered_at.isoformat() if notification.delivered_at else None,
-                created_at=notification.created_at.isoformat(),
-                expires_at=notification.expires_at.isoformat() if notification.expires_at else None
-            ))
+            notification_responses.append(
+                NotificationResponse(
+                    id=notification.id,
+                    title=notification.title,
+                    message=notification.message,
+                    type=notification.type.value,
+                    priority=notification.priority.value,
+                    category=notification.category.value,
+                    status=notification.status.value,
+                    data=notification.data,
+                    read_at=(
+                        notification.read_at.isoformat()
+                        if notification.read_at
+                        else None
+                    ),
+                    sent_at=(
+                        notification.sent_at.isoformat()
+                        if notification.sent_at
+                        else None
+                    ),
+                    delivered_at=(
+                        notification.delivered_at.isoformat()
+                        if notification.delivered_at
+                        else None
+                    ),
+                    created_at=notification.created_at.isoformat(),
+                    expires_at=(
+                        notification.expires_at.isoformat()
+                        if notification.expires_at
+                        else None
+                    ),
+                )
+            )
 
         return NotificationListResponse(
             notifications=notification_responses,
             total=total_count,
             unread_count=unread_count,
-            has_more=(offset + limit) < total_count
+            has_more=(offset + limit) < total_count,
         )
 
     except Exception as e:
-        logger.error("Failed to get notifications", user_id=current_user.id, error=str(e))
+        logger.error(
+            "Failed to get notifications", user_id=current_user.id, error=str(e)
+        )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve notifications"
+            detail="Failed to retrieve notifications",
         )
 
 
@@ -383,20 +466,22 @@ async def mark_notification_read(
     Returns:
         MessageResponse: Success message
     """
-    logger.debug("Mark notification read requested", user_id=current_user.id, notification_id=notification_id)
+    logger.debug(
+        "Mark notification read requested",
+        user_id=current_user.id,
+        notification_id=notification_id,
+    )
 
     try:
         notification_service = NotificationService(db)
 
         success = await notification_service.mark_notification_read(
-            notification_id=notification_id,
-            user_id=current_user.id
+            notification_id=notification_id, user_id=current_user.id
         )
 
         if not success:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Notification not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="Notification not found"
             )
 
         return MessageResponse(message="Notification marked as read")
@@ -407,7 +492,7 @@ async def mark_notification_read(
         logger.error("Failed to mark notification as read", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to mark notification as read"
+            detail="Failed to mark notification as read",
         )
 
 
@@ -441,7 +526,7 @@ async def mark_all_notifications_read(
         logger.error("Failed to mark all notifications as read", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to mark all notifications as read"
+            detail="Failed to mark all notifications as read",
         )
 
 
@@ -464,20 +549,22 @@ async def delete_notification(
     Returns:
         MessageResponse: Success message
     """
-    logger.info("Delete notification requested", user_id=current_user.id, notification_id=notification_id)
+    logger.info(
+        "Delete notification requested",
+        user_id=current_user.id,
+        notification_id=notification_id,
+    )
 
     try:
         notification_service = NotificationService(db)
 
         success = await notification_service.delete_notification(
-            notification_id=notification_id,
-            user_id=current_user.id
+            notification_id=notification_id, user_id=current_user.id
         )
 
         if not success:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Notification not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="Notification not found"
             )
 
         return MessageResponse(message="Notification deleted")
@@ -488,14 +575,16 @@ async def delete_notification(
         logger.error("Failed to delete notification", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to delete notification"
+            detail="Failed to delete notification",
         )
 
 
 @router.get("/stats", response_model=NotificationStatsResponse)
 async def get_notification_statistics(
     days: int = Query(30, ge=1, le=365, description="Number of days for statistics"),
-    current_user: CurrentUser = Depends(require_permissions(["notifications:stats", "admin:access"])),
+    current_user: CurrentUser = Depends(
+        require_permissions(["notifications:stats", "admin:access"])
+    ),
     db: AsyncSession = Depends(get_db_session),
 ) -> NotificationStatsResponse:
     """
@@ -520,21 +609,21 @@ async def get_notification_statistics(
         stats = await notification_service.get_notification_statistics(days=days)
 
         return NotificationStatsResponse(
-            total_notifications=stats.get('total_notifications', 0),
-            sent_notifications=stats.get('sent_notifications', 0),
-            failed_notifications=stats.get('failed_notifications', 0),
-            pending_notifications=stats.get('pending_notifications', 0),
-            delivery_rate=stats.get('delivery_rate', 0.0),
-            type_breakdown=stats.get('type_breakdown', {}),
-            category_breakdown=stats.get('category_breakdown', {}),
-            recent_activity=stats.get('recent_activity', [])
+            total_notifications=stats.get("total_notifications", 0),
+            sent_notifications=stats.get("sent_notifications", 0),
+            failed_notifications=stats.get("failed_notifications", 0),
+            pending_notifications=stats.get("pending_notifications", 0),
+            delivery_rate=stats.get("delivery_rate", 0.0),
+            type_breakdown=stats.get("type_breakdown", {}),
+            category_breakdown=stats.get("category_breakdown", {}),
+            recent_activity=stats.get("recent_activity", []),
         )
 
     except Exception as e:
         logger.error("Failed to get notification statistics", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve notification statistics"
+            detail="Failed to retrieve notification statistics",
         )
 
 
@@ -562,28 +651,33 @@ async def get_notification_preferences(
         notification_service = NotificationService(db)
 
         # This would typically get preferences from user profile or separate table
-        preferences = await notification_service._get_user_notification_preferences(current_user.id)
+        preferences = await notification_service._get_user_notification_preferences(
+            current_user.id
+        )
 
         return NotificationPreferencesResponse(
-            email_notifications=preferences.get('email_enabled', True),
-            push_notifications=preferences.get('push_enabled', True),
-            sms_notifications=preferences.get('sms_enabled', False),
-            in_app_notifications=preferences.get('in_app_enabled', True),
-            marketing_emails=preferences.get('marketing_enabled', False),
-            security_alerts=preferences.get('security_enabled', True),
-            frequency_settings=preferences.get('frequency_settings', {
-                'security': 'immediate',
-                'account': 'immediate',
-                'billing': 'daily',
-                'marketing': 'weekly'
-            })
+            email_notifications=preferences.get("email_enabled", True),
+            push_notifications=preferences.get("push_enabled", True),
+            sms_notifications=preferences.get("sms_enabled", False),
+            in_app_notifications=preferences.get("in_app_enabled", True),
+            marketing_emails=preferences.get("marketing_enabled", False),
+            security_alerts=preferences.get("security_enabled", True),
+            frequency_settings=preferences.get(
+                "frequency_settings",
+                {
+                    "security": "immediate",
+                    "account": "immediate",
+                    "billing": "daily",
+                    "marketing": "weekly",
+                },
+            ),
         )
 
     except Exception as e:
         logger.error("Failed to get notification preferences", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve notification preferences"
+            detail="Failed to retrieve notification preferences",
         )
 
 
@@ -615,20 +709,18 @@ async def update_notification_preferences(
         # Update user notification preferences
         # This would typically update user profile or separate preferences table
         preference_data = {
-            'email_enabled': preferences.email_notifications,
-            'push_enabled': preferences.push_notifications,
-            'sms_enabled': preferences.sms_notifications,
-            'in_app_enabled': preferences.in_app_notifications,
-            'marketing_enabled': preferences.marketing_emails,
-            'security_enabled': preferences.security_alerts,
-            'frequency_settings': preferences.frequency_settings
+            "email_enabled": preferences.email_notifications,
+            "push_enabled": preferences.push_notifications,
+            "sms_enabled": preferences.sms_notifications,
+            "in_app_enabled": preferences.in_app_notifications,
+            "marketing_enabled": preferences.marketing_emails,
+            "security_enabled": preferences.security_alerts,
+            "frequency_settings": preferences.frequency_settings,
         }
 
         # Cache updated preferences
         await notification_service.cache_service.set(
-            f"user_notification_prefs:{current_user.id}",
-            preference_data,
-            ttl=3600
+            f"user_notification_prefs:{current_user.id}", preference_data, ttl=3600
         )
 
         logger.info("Notification preferences updated", user_id=current_user.id)
@@ -639,5 +731,5 @@ async def update_notification_preferences(
         logger.error("Failed to update notification preferences", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to update notification preferences"
+            detail="Failed to update notification preferences",
         )

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../providers/auth_provider.dart';
-import '../../../core/errors/app_exception.dart';
+import 'package:flutter_auth_template/presentation/providers/auth_provider.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
 
 class ForgotPasswordPage extends HookConsumerWidget {
   const ForgotPasswordPage({super.key});
@@ -27,7 +27,7 @@ class ForgotPasswordPage extends HookConsumerWidget {
       errorMessage.value = null;
 
       try {
-        await authNotifier.requestPasswordReset(emailController.text.trim());
+        await authNotifier.forgotPassword(emailController.text.trim());
         isSuccess.value = true;
       } catch (e) {
         errorMessage.value = e is AppException

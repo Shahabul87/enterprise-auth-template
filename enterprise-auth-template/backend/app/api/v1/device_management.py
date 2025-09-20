@@ -93,7 +93,9 @@ class DeviceTrustRequest(BaseModel):
 class ForceLogoutRequest(BaseModel):
     """Force logout request model."""
 
-    session_ids: Optional[List[str]] = Field(None, description="Specific session IDs to logout")
+    session_ids: Optional[List[str]] = Field(
+        None, description="Specific session IDs to logout"
+    )
     except_current: bool = Field(True, description="Keep current session active")
     reason: Optional[str] = Field(None, description="Reason for force logout")
 
@@ -181,7 +183,9 @@ async def get_registered_devices(
     try:
         # Get unique devices from sessions
         result = await db.execute(
-            select(UserSession.device_id, UserSession.user_agent, UserSession.device_name)
+            select(
+                UserSession.device_id, UserSession.user_agent, UserSession.device_name
+            )
             .where(
                 and_(
                     UserSession.user_id == current_user.id,
@@ -198,7 +202,8 @@ async def get_registered_devices(
 
             device = DeviceInfo(
                 device_id=device_id,
-                device_name=device_name or device_info.get("device_name", "Unknown Device"),
+                device_name=device_name
+                or device_info.get("device_name", "Unknown Device"),
                 device_type=device_info.get("device_type", "desktop"),
                 os_name=device_info.get("os_name"),
                 os_version=device_info.get("os_version"),
@@ -243,8 +248,7 @@ async def register_device(
         current_token = req.headers.get("Authorization", "").replace("Bearer ", "")
 
         result = await db.execute(
-            select(UserSession)
-            .where(
+            select(UserSession).where(
                 and_(
                     UserSession.user_id == current_user.id,
                     UserSession.session_token == current_token,
@@ -328,8 +332,7 @@ async def revoke_session(
     try:
         # Find the session
         result = await db.execute(
-            select(UserSession)
-            .where(
+            select(UserSession).where(
                 and_(
                     UserSession.id == session_id,
                     UserSession.user_id == current_user.id,
@@ -408,8 +411,7 @@ async def force_logout(
             terminated_count = 0
             for session_id in request.session_ids:
                 result = await db.execute(
-                    select(UserSession)
-                    .where(
+                    select(UserSession).where(
                         and_(
                             UserSession.id == session_id,
                             UserSession.user_id == current_user.id,
@@ -493,7 +495,9 @@ async def trust_device(
                 )
             )
             .values(
-                metadata=UserSession.metadata.op("||")({"is_trusted": request.is_trusted})
+                metadata=UserSession.metadata.op("||")(
+                    {"is_trusted": request.is_trusted}
+                )
             )
         )
 
@@ -614,6 +618,8 @@ def _parse_user_agent(user_agent: Optional[str]) -> dict:
 
     # Generate device name
     if device_info["os_name"] and device_info["browser_name"]:
-        device_info["device_name"] = f"{device_info['browser_name']} on {device_info['os_name']}"
+        device_info["device_name"] = (
+            f"{device_info['browser_name']} on {device_info['os_name']}"
+        )
 
     return device_info

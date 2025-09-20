@@ -27,7 +27,7 @@ export default function RoleDeleteDialog({
   open,
   onClose,
   onSuccess,
-}: RoleDeleteDialogProps): JSX.Element {
+}: RoleDeleteDialogProps): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 

@@ -25,6 +25,7 @@ logger = structlog.get_logger(__name__)
 
 class PasswordManagementError(Exception):
     """Password management related errors."""
+
     pass
 
 
@@ -98,11 +99,7 @@ class PasswordManagementService:
                 await self._create_reset_token(user.id, reset_token, ip_address)
 
                 # Send reset email
-                await self._send_reset_email(
-                    user.email,
-                    user.full_name,
-                    reset_token
-                )
+                await self._send_reset_email(user.email, user.full_name, reset_token)
 
                 await self.session.commit()
 
@@ -172,10 +169,7 @@ class PasswordManagementService:
             user_domain.set_password(new_password)  # This validates the password
 
             # Update password in database
-            await self.user_repo.update_password(
-                user.id,
-                user_domain.hashed_password
-            )
+            await self.user_repo.update_password(user.id, user_domain.hashed_password)
 
             # Mark token as used
             await self._mark_token_used(reset_record.id)
@@ -184,10 +178,7 @@ class PasswordManagementService:
             await self._invalidate_user_sessions(user.id)
 
             # Send confirmation email
-            await self._send_password_changed_email(
-                user.email,
-                user.full_name
-            )
+            await self._send_password_changed_email(user.email, user.full_name)
 
             await self.session.commit()
 
@@ -250,16 +241,10 @@ class PasswordManagementService:
                 raise PasswordManagementError("Password change failed")
 
             # Update password in database
-            await self.user_repo.update_password(
-                user.id,
-                user_domain.hashed_password
-            )
+            await self.user_repo.update_password(user.id, user_domain.hashed_password)
 
             # Send confirmation email
-            await self._send_password_changed_email(
-                user.email,
-                user.full_name
-            )
+            await self._send_password_changed_email(user.email, user.full_name)
 
             await self.session.commit()
 
@@ -340,11 +325,12 @@ class PasswordManagementService:
                 ip_address=ip_address,
                 recent_requests=recent_requests,
             )
-            raise PasswordManagementError("Too many reset requests. Please try again later.")
+            raise PasswordManagementError(
+                "Too many reset requests. Please try again later."
+            )
 
     async def _find_valid_reset_token(
-        self,
-        reset_token: str
+        self, reset_token: str
     ) -> Optional[PasswordResetToken]:
         """
         Find and validate a reset token.
@@ -400,10 +386,7 @@ class PasswordManagementService:
         stmt = (
             update(PasswordResetToken)
             .where(PasswordResetToken.id == token_id)
-            .values(
-                is_used=True,
-                used_at=datetime.utcnow()
-            )
+            .values(is_used=True, used_at=datetime.utcnow())
         )
         await self.session.execute(stmt)
 
@@ -423,10 +406,7 @@ class PasswordManagementService:
             update(RefreshToken)
             .where(RefreshToken.user_id == user_id)
             .where(RefreshToken.is_revoked == False)
-            .values(
-                is_revoked=True,
-                revoked_at=datetime.utcnow()
-            )
+            .values(is_revoked=True, revoked_at=datetime.utcnow())
         )
         await self.session.execute(stmt)
 
@@ -435,10 +415,7 @@ class PasswordManagementService:
             update(UserSession)
             .where(UserSession.user_id == user_id)
             .where(UserSession.is_active == True)
-            .values(
-                is_active=False,
-                ended_at=datetime.utcnow()
-            )
+            .values(is_active=False, ended_at=datetime.utcnow())
         )
         await self.session.execute(stmt)
 
@@ -467,6 +444,7 @@ class PasswordManagementService:
         """
         try:
             from app.services.email_service import email_service
+
             await email_service.send_password_reset_email(
                 to_email=email,
                 user_name=user_name,
@@ -494,6 +472,7 @@ class PasswordManagementService:
         """
         try:
             from app.services.email_service import email_service
+
             await email_service.send_password_changed_email(
                 to_email=email,
                 user_name=user_name,

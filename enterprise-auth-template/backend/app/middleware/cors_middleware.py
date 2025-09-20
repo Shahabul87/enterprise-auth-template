@@ -116,7 +116,11 @@ class OriginValidator:
                 try:
                     self.regex_patterns.append(re.compile(pattern))
                 except re.error as e:
-                    logger.error("Invalid CORS origin regex pattern", pattern=pattern, error=str(e))
+                    logger.error(
+                        "Invalid CORS origin regex pattern",
+                        pattern=pattern,
+                        error=str(e),
+                    )
 
         # Add development patterns if enabled
         if allow_development:
@@ -125,7 +129,9 @@ class OriginValidator:
                 try:
                     self.regex_patterns.append(re.compile(pattern))
                 except re.error as e:
-                    logger.error("Invalid development pattern", pattern=pattern, error=str(e))
+                    logger.error(
+                        "Invalid development pattern", pattern=pattern, error=str(e)
+                    )
 
         # Build subdomain patterns if enabled
         self.subdomain_patterns: List[re.Pattern] = []
@@ -139,7 +145,9 @@ class OriginValidator:
                     try:
                         self.subdomain_patterns.append(re.compile(pattern))
                     except re.error as e:
-                        logger.error("Invalid subdomain pattern", origin=origin, error=str(e))
+                        logger.error(
+                            "Invalid subdomain pattern", origin=origin, error=str(e)
+                        )
 
         logger.info(
             "CORS origin validator initialized",
@@ -201,7 +209,9 @@ class OriginValidator:
                 "CORS origin blocked",
                 origin=origin,
                 path=request_path,
-                allowed_origins=list(self.allowed_origins)[:5],  # Log first 5 for debugging
+                allowed_origins=list(self.allowed_origins)[
+                    :5
+                ],  # Log first 5 for debugging
             )
 
         return is_allowed
@@ -235,9 +245,15 @@ class CORSConfig:
             self.allowed_headers.extend(SECURITY_HEADERS)
 
         # Remove duplicates and normalize
-        self.allowed_methods = list(set(method.upper() for method in self.allowed_methods))
-        self.allowed_headers = list(set(header.lower() for header in self.allowed_headers))
-        self.exposed_headers = list(set(header.lower() for header in self.exposed_headers))
+        self.allowed_methods = list(
+            set(method.upper() for method in self.allowed_methods)
+        )
+        self.allowed_headers = list(
+            set(header.lower() for header in self.allowed_headers)
+        )
+        self.exposed_headers = list(
+            set(header.lower() for header in self.exposed_headers)
+        )
 
         # Initialize origin validator
         self.origin_validator = OriginValidator(
@@ -334,7 +350,11 @@ class CORSMiddleware(BaseHTTPMiddleware):
 
         # Auto-detect development mode if not specified
         if enable_development_mode is None:
-            enable_development_mode = settings.ENVIRONMENT.lower() in ["development", "dev", "local"]
+            enable_development_mode = settings.ENVIRONMENT.lower() in [
+                "development",
+                "dev",
+                "local",
+            ]
 
         # Default CORS configuration
         self.default_config = CORSConfig(
@@ -420,19 +440,13 @@ class CORSMiddleware(BaseHTTPMiddleware):
         return self.default_config
 
     async def _handle_preflight(
-        self,
-        request: Request,
-        origin: str,
-        cors_config: CORSConfig
+        self, request: Request, origin: str, cors_config: CORSConfig
     ) -> StarletteResponse:
         """Handle CORS preflight requests."""
         # Validate origin
         if not cors_config.origin_validator.validate_and_log(origin, request.url.path):
             # Return minimal response for disallowed origins
-            return StarletteResponse(
-                status_code=204,
-                headers={"Content-Length": "0"}
-            )
+            return StarletteResponse(status_code=204, headers={"Content-Length": "0"})
 
         # Get requested method and headers
         requested_method = request.headers.get("access-control-request-method", "")
@@ -446,15 +460,16 @@ class CORSMiddleware(BaseHTTPMiddleware):
                 method=requested_method,
                 path=request.url.path,
             )
-            return StarletteResponse(
-                status_code=204,
-                headers={"Content-Length": "0"}
-            )
+            return StarletteResponse(status_code=204, headers={"Content-Length": "0"})
 
         # Validate requested headers
         if requested_headers:
-            requested_header_list = [h.strip().lower() for h in requested_headers.split(",")]
-            disallowed_headers = set(requested_header_list) - set(cors_config.allowed_headers)
+            requested_header_list = [
+                h.strip().lower() for h in requested_headers.split(",")
+            ]
+            disallowed_headers = set(requested_header_list) - set(
+                cors_config.allowed_headers
+            )
             if disallowed_headers:
                 logger.warning(
                     "CORS preflight: headers not allowed",
@@ -463,8 +478,7 @@ class CORSMiddleware(BaseHTTPMiddleware):
                     path=request.url.path,
                 )
                 return StarletteResponse(
-                    status_code=204,
-                    headers={"Content-Length": "0"}
+                    status_code=204, headers={"Content-Length": "0"}
                 )
 
         # Generate CORS headers for successful preflight
@@ -482,7 +496,7 @@ class CORSMiddleware(BaseHTTPMiddleware):
             headers={
                 **cors_headers,
                 "Content-Length": "0",
-            }
+            },
         )
 
 
@@ -490,7 +504,7 @@ def create_cors_middleware(
     app,
     allowed_origins: Optional[List[str]] = None,
     enable_development_mode: Optional[bool] = None,
-    **kwargs
+    **kwargs,
 ) -> CORSMiddleware:
     """
     Factory function to create CORS middleware with environment-specific defaults.
@@ -510,17 +524,23 @@ def create_cors_middleware(
         if hasattr(settings, "CORS_ORIGINS") and settings.CORS_ORIGINS:
             # Handle both string and list formats
             if isinstance(settings.CORS_ORIGINS, str):
-                allowed_origins = [origin.strip() for origin in settings.CORS_ORIGINS.split(",")]
+                allowed_origins = [
+                    origin.strip() for origin in settings.CORS_ORIGINS.split(",")
+                ]
             elif isinstance(settings.CORS_ORIGINS, list):
                 allowed_origins = settings.CORS_ORIGINS
 
     # Auto-detect development mode if not specified
     if enable_development_mode is None:
-        enable_development_mode = settings.ENVIRONMENT.lower() in ["development", "dev", "local"]
+        enable_development_mode = settings.ENVIRONMENT.lower() in [
+            "development",
+            "dev",
+            "local",
+        ]
 
     return CORSMiddleware(
         app,
         allowed_origins=allowed_origins,
         enable_development_mode=enable_development_mode,
-        **kwargs
+        **kwargs,
     )

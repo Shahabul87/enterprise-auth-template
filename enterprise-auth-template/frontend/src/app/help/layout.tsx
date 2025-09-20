@@ -83,7 +83,7 @@ const quickLinks = [
   },
 ];
 
-export default function HelpLayout({ children }: HelpLayoutProps): JSX.Element {
+export default function HelpLayout({ children }: HelpLayoutProps): React.ReactElement {
   const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState('');
 

@@ -50,7 +50,7 @@ interface RoleTableProps {
   className?: string;
 }
 
-export default function RoleTable({ className }: RoleTableProps): JSX.Element {
+export default function RoleTable({ className }: RoleTableProps): React.ReactElement {
   const { hasPermission } = useAuth();
 
   // State management
@@ -116,7 +116,7 @@ export default function RoleTable({ className }: RoleTableProps): JSX.Element {
   }, [loadRoles]);
 
   // Render role row
-  const renderRoleRow = (role: RoleWithUserCount): JSX.Element => {
+  const renderRoleRow = (role: RoleWithUserCount): React.ReactElement => {
     const isSystemRole = role.name === 'admin' || role.name === 'user';
 
     return (

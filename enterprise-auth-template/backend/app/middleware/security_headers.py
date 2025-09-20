@@ -151,7 +151,10 @@ class CSPBuilder:
                 policy_parts.append(f"{directive} {' '.join(sources)}")
             else:
                 # Some directives don't need sources (e.g., upgrade-insecure-requests)
-                if directive in ["upgrade-insecure-requests", "block-all-mixed-content"]:
+                if directive in [
+                    "upgrade-insecure-requests",
+                    "block-all-mixed-content",
+                ]:
                     policy_parts.append(directive)
 
         return "; ".join(policy_parts)
@@ -187,7 +190,10 @@ class PermissionsPolicyBuilder:
         for directive, allowlist in self.policy.items():
             if allowlist:
                 # Format: directive=(origin1 origin2)
-                origins = " ".join(f'"{origin}"' if origin != "self" else origin for origin in allowlist)
+                origins = " ".join(
+                    f'"{origin}"' if origin != "self" else origin
+                    for origin in allowlist
+                )
                 policy_parts.append(f"{directive}=({origins})")
             else:
                 # Empty allowlist means feature is disabled
@@ -206,29 +212,22 @@ class SecurityHeadersConfig:
         hsts_max_age: int = DEFAULT_HSTS_MAX_AGE,
         hsts_include_subdomains: bool = DEFAULT_HSTS_INCLUDE_SUBDOMAINS,
         hsts_preload: bool = DEFAULT_HSTS_PRELOAD,
-
         # Frame options
         frame_options: str = DEFAULT_FRAME_OPTIONS,
-
         # Content type options
         content_type_options: str = DEFAULT_CONTENT_TYPE_OPTIONS,
-
         # XSS protection
         xss_protection: str = DEFAULT_XSS_PROTECTION,
-
         # Referrer policy
         referrer_policy: str = DEFAULT_REFERRER_POLICY,
-
         # CSP configuration
         enable_csp: bool = True,
         csp_policy: Optional[Dict[str, List[str]]] = None,
         csp_report_uri: Optional[str] = None,
         csp_report_only: bool = False,
-
         # Permissions policy
         enable_permissions_policy: bool = True,
         permissions_policy: Optional[Dict[str, List[str]]] = None,
-
         # Cross-Origin policies
         enable_coep: bool = True,
         coep_policy: str = "same-origin",
@@ -236,17 +235,20 @@ class SecurityHeadersConfig:
         coop_policy: str = "same-origin",
         enable_corp: bool = True,
         corp_policy: str = "same-origin",
-
         # Additional custom headers
         custom_headers: Optional[Dict[str, str]] = None,
-
         # Environment-specific settings
         force_https: Optional[bool] = None,
     ):
         """Initialize security headers configuration."""
         # Auto-detect HTTPS requirement based on environment
         if force_https is None:
-            force_https = settings.ENVIRONMENT.lower() not in ["development", "dev", "local", "test"]
+            force_https = settings.ENVIRONMENT.lower() not in [
+                "development",
+                "dev",
+                "local",
+                "test",
+            ]
 
         self.enable_hsts = enable_hsts and force_https
         self.hsts_max_age = hsts_max_age
@@ -282,9 +284,7 @@ class SecurityHeadersConfig:
             self.permissions_builder = PermissionsPolicyBuilder(permissions_policy)
 
     def get_security_headers(
-        self,
-        request_path: str,
-        is_https: bool = False
+        self, request_path: str, is_https: bool = False
     ) -> Dict[str, str]:
         """Generate security headers for the given request."""
         headers = {}
@@ -312,7 +312,11 @@ class SecurityHeadersConfig:
 
         # Content Security Policy
         if self.enable_csp:
-            csp_header = "Content-Security-Policy-Report-Only" if self.csp_report_only else "Content-Security-Policy"
+            csp_header = (
+                "Content-Security-Policy-Report-Only"
+                if self.csp_report_only
+                else "Content-Security-Policy"
+            )
 
             # Adjust CSP based on request path
             if self._is_api_path(request_path):
@@ -345,14 +349,16 @@ class SecurityHeadersConfig:
             headers["Cross-Origin-Resource-Policy"] = self.corp_policy
 
         # Additional security headers
-        headers.update({
-            "X-Permitted-Cross-Domain-Policies": "none",
-            "X-Download-Options": "noopen",
-            "X-Robots-Tag": "none",
-            "Cache-Control": "no-store, no-cache, must-revalidate, private",
-            "Pragma": "no-cache",
-            "Expires": "0",
-        })
+        headers.update(
+            {
+                "X-Permitted-Cross-Domain-Policies": "none",
+                "X-Download-Options": "noopen",
+                "X-Robots-Tag": "none",
+                "Cache-Control": "no-store, no-cache, must-revalidate, private",
+                "Pragma": "no-cache",
+                "Expires": "0",
+            }
+        )
 
         # Custom headers
         headers.update(self.custom_headers)
@@ -419,12 +425,14 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         security_config = self._get_security_config_for_path(request.url.path)
 
         # Determine if request is over HTTPS
-        is_https = request.url.scheme == "https" or request.headers.get("x-forwarded-proto") == "https"
+        is_https = (
+            request.url.scheme == "https"
+            or request.headers.get("x-forwarded-proto") == "https"
+        )
 
         # Generate security headers
         security_headers = security_config.get_security_headers(
-            request.url.path,
-            is_https
+            request.url.path, is_https
         )
 
         # Apply security headers to response
@@ -433,7 +441,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
         # Add security context to request state for other middleware
         request.state.security_headers_applied = True
-        request.state.csp_nonce = getattr(security_config, 'csp_builder', None)
+        request.state.csp_nonce = getattr(security_config, "csp_builder", None)
 
         # Log security headers application
         if self.enable_security_logging:
@@ -465,9 +473,11 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         violations = []
 
         # Check for missing HTTPS in production
-        if (self.default_config.force_https and
-            request.url.scheme != "https" and
-            request.headers.get("x-forwarded-proto") != "https"):
+        if (
+            self.default_config.force_https
+            and request.url.scheme != "https"
+            and request.headers.get("x-forwarded-proto") != "https"
+        ):
             violations.append("http_in_production")
 
         # Check for sensitive data in URL parameters
@@ -479,7 +489,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
         # Check response headers for potential info disclosure
         server_header = response.headers.get("server", "")
-        if server_header and ("apache" in server_header.lower() or "nginx" in server_header.lower()):
+        if server_header and (
+            "apache" in server_header.lower() or "nginx" in server_header.lower()
+        ):
             violations.append("server_version_disclosure")
 
         # Log violations
@@ -498,7 +510,7 @@ def create_security_headers_middleware(
     enable_hsts: Optional[bool] = None,
     enable_csp: Optional[bool] = None,
     csp_report_uri: Optional[str] = None,
-    **kwargs
+    **kwargs,
 ) -> SecurityHeadersMiddleware:
     """
     Factory function to create security headers middleware.
@@ -515,7 +527,12 @@ def create_security_headers_middleware(
     """
     # Auto-detect HTTPS requirements based on environment
     if enable_hsts is None:
-        enable_hsts = settings.ENVIRONMENT.lower() not in ["development", "dev", "local", "test"]
+        enable_hsts = settings.ENVIRONMENT.lower() not in [
+            "development",
+            "dev",
+            "local",
+            "test",
+        ]
 
     if enable_csp is None:
         enable_csp = True
@@ -524,7 +541,7 @@ def create_security_headers_middleware(
         enable_hsts=enable_hsts,
         enable_csp=enable_csp,
         csp_report_uri=csp_report_uri,
-        **kwargs
+        **kwargs,
     )
 
     return SecurityHeadersMiddleware(app, config=config)

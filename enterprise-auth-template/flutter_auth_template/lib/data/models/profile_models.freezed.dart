@@ -503,6 +503,7 @@ ProfileUpdateRequest _$ProfileUpdateRequestFromJson(Map<String, dynamic> json) {
 mixin _$ProfileUpdateRequest {
   String? get firstName => throw _privateConstructorUsedError;
   String? get lastName => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
   String? get phoneNumber => throw _privateConstructorUsedError;
   String? get bio => throw _privateConstructorUsedError;
   String? get timezone => throw _privateConstructorUsedError;
@@ -528,6 +529,7 @@ abstract class $ProfileUpdateRequestCopyWith<$Res> {
   $Res call({
     String? firstName,
     String? lastName,
+    String? name,
     String? phoneNumber,
     String? bio,
     String? timezone,
@@ -555,6 +557,7 @@ class _$ProfileUpdateRequestCopyWithImpl<
   $Res call({
     Object? firstName = freezed,
     Object? lastName = freezed,
+    Object? name = freezed,
     Object? phoneNumber = freezed,
     Object? bio = freezed,
     Object? timezone = freezed,
@@ -569,6 +572,10 @@ class _$ProfileUpdateRequestCopyWithImpl<
             lastName: freezed == lastName
                 ? _value.lastName
                 : lastName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            name: freezed == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
                       as String?,
             phoneNumber: freezed == phoneNumber
                 ? _value.phoneNumber
@@ -604,6 +611,7 @@ abstract class _$$ProfileUpdateRequestImplCopyWith<$Res>
   $Res call({
     String? firstName,
     String? lastName,
+    String? name,
     String? phoneNumber,
     String? bio,
     String? timezone,
@@ -627,6 +635,7 @@ class __$$ProfileUpdateRequestImplCopyWithImpl<$Res>
   $Res call({
     Object? firstName = freezed,
     Object? lastName = freezed,
+    Object? name = freezed,
     Object? phoneNumber = freezed,
     Object? bio = freezed,
     Object? timezone = freezed,
@@ -641,6 +650,10 @@ class __$$ProfileUpdateRequestImplCopyWithImpl<$Res>
         lastName: freezed == lastName
             ? _value.lastName
             : lastName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        name: freezed == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
                   as String?,
         phoneNumber: freezed == phoneNumber
             ? _value.phoneNumber
@@ -669,6 +682,7 @@ class _$ProfileUpdateRequestImpl implements _ProfileUpdateRequest {
   const _$ProfileUpdateRequestImpl({
     this.firstName,
     this.lastName,
+    this.name,
     this.phoneNumber,
     this.bio,
     this.timezone,
@@ -683,6 +697,8 @@ class _$ProfileUpdateRequestImpl implements _ProfileUpdateRequest {
   @override
   final String? lastName;
   @override
+  final String? name;
+  @override
   final String? phoneNumber;
   @override
   final String? bio;
@@ -693,7 +709,7 @@ class _$ProfileUpdateRequestImpl implements _ProfileUpdateRequest {
 
   @override
   String toString() {
-    return 'ProfileUpdateRequest(firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, bio: $bio, timezone: $timezone, language: $language)';
+    return 'ProfileUpdateRequest(firstName: $firstName, lastName: $lastName, name: $name, phoneNumber: $phoneNumber, bio: $bio, timezone: $timezone, language: $language)';
   }
 
   @override
@@ -705,6 +721,7 @@ class _$ProfileUpdateRequestImpl implements _ProfileUpdateRequest {
                 other.firstName == firstName) &&
             (identical(other.lastName, lastName) ||
                 other.lastName == lastName) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
             (identical(other.bio, bio) || other.bio == bio) &&
@@ -720,6 +737,7 @@ class _$ProfileUpdateRequestImpl implements _ProfileUpdateRequest {
     runtimeType,
     firstName,
     lastName,
+    name,
     phoneNumber,
     bio,
     timezone,
@@ -748,6 +766,7 @@ abstract class _ProfileUpdateRequest implements ProfileUpdateRequest {
   const factory _ProfileUpdateRequest({
     final String? firstName,
     final String? lastName,
+    final String? name,
     final String? phoneNumber,
     final String? bio,
     final String? timezone,
@@ -761,6 +780,8 @@ abstract class _ProfileUpdateRequest implements ProfileUpdateRequest {
   String? get firstName;
   @override
   String? get lastName;
+  @override
+  String? get name;
   @override
   String? get phoneNumber;
   @override

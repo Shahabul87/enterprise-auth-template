@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
-import '../storage/secure_storage_service.dart';
+import 'package:flutter_auth_template/core/storage/secure_storage_service.dart';
 
 /// CSRF Protection Service
 ///

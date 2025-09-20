@@ -1,0 +1,581 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_auth_template/data/models/auth_response.dart';
+import 'package:flutter_auth_template/domain/entities/user.dart';
+
+void main() {
+  group('AuthResponse Model', () {
+    group('fromJson', () {
+      test('should deserialize from JSON correctly', () {
+        // Arrange
+        final json = {
+          'access_token': 'access_123',
+          'refresh_token': 'refresh_456',
+          'token_type': 'Bearer',
+          'expires_in': 3600,
+          'user': {
+            'id': '1',
+            'email': 'test@example.com',
+            'name': 'Test User',
+            'email_verified': true,
+            'created_at': '2024-01-01T00:00:00Z',
+            'updated_at': '2024-01-15T00:00:00Z',
+            'roles': ['user', 'admin'],
+            'permissions': ['read', 'write'],
+          },
+        };
+
+        // Act
+        final authResponse = AuthResponse.fromJson(json);
+
+        // Assert
+        expect(authResponse.accessToken, equals('access_123'));
+        expect(authResponse.refreshToken, equals('refresh_456'));
+        expect(authResponse.tokenType, equals('Bearer'));
+        expect(authResponse.expiresIn, equals(3600));
+        expect(authResponse.user.id, equals('1'));
+        expect(authResponse.user.email, equals('test@example.com'));
+        expect(authResponse.user.name, equals('Test User'));
+        expect(authResponse.user.emailVerified, isTrue);
+        expect(authResponse.user.roles, contains('admin'));
+        expect(authResponse.user.permissions, contains('write'));
+      });
+
+      test('should handle minimal JSON data', () {
+        // Arrange
+        final json = {
+          'access_token': 'token',
+          'user': {
+            'id': '1',
+            'email': 'user@example.com',
+            'created_at': '2024-01-01T00:00:00Z',
+          },
+        };
+
+        // Act
+        final authResponse = AuthResponse.fromJson(json);
+
+        // Assert
+        expect(authResponse.accessToken, equals('token'));
+        expect(authResponse.refreshToken, isNull);
+        expect(authResponse.tokenType, equals('Bearer')); // Default value
+        expect(authResponse.user.id, equals('1'));
+        expect(authResponse.user.email, equals('user@example.com'));
+        expect(authResponse.user.name, isNull);
+      });
+
+      test('should handle null optional fields', () {
+        // Arrange
+        final json = {
+          'access_token': 'token',
+          'refresh_token': null,
+          'token_type': null,
+          'expires_in': null,
+          'user': {
+            'id': '1',
+            'email': 'user@example.com',
+            'name': null,
+            'email_verified': null,
+            'created_at': '2024-01-01T00:00:00Z',
+            'updated_at': null,
+            'roles': null,
+            'permissions': null,
+          },
+        };
+
+        // Act
+        final authResponse = AuthResponse.fromJson(json);
+
+        // Assert
+        expect(authResponse.accessToken, equals('token'));
+        expect(authResponse.refreshToken, isNull);
+        expect(authResponse.tokenType, equals('Bearer'));
+        expect(authResponse.expiresIn, isNull);
+        expect(authResponse.user.name, isNull);
+        expect(authResponse.user.emailVerified, isFalse); // Default
+        expect(authResponse.user.roles, isEmpty);
+        expect(authResponse.user.permissions, isEmpty);
+      });
+
+      test('should parse ISO 8601 dates correctly', () {
+        // Arrange
+        final json = {
+          'access_token': 'token',
+          'user': {
+            'id': '1',
+            'email': 'user@example.com',
+            'created_at': '2024-01-01T12:30:45.123Z',
+            'updated_at': '2024-01-15T08:15:30.456Z',
+          },
+        };
+
+        // Act
+        final authResponse = AuthResponse.fromJson(json);
+
+        // Assert
+        expect(authResponse.user.createdAt, isA<DateTime>());
+        expect(authResponse.user.createdAt.year, equals(2024));
+        expect(authResponse.user.createdAt.month, equals(1));
+        expect(authResponse.user.createdAt.day, equals(1));
+        expect(authResponse.user.updatedAt?.month, equals(1));
+        expect(authResponse.user.updatedAt?.day, equals(15));
+      });
+    });
+
+    group('toJson', () {
+      test('should serialize to JSON correctly', () {
+        // Arrange
+        final user = User(
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime(2024,
+        updatedAt: DateTime.now(),
+      ),
+          updatedAt: DateTime(2024, 1, 15),
+          roles: ['user', 'admin'],
+          permissions: ['read', 'write'],
+        );
+
+        final authResponse = AuthResponse(
+          accessToken: 'access_123',
+          refreshToken: 'refresh_456',
+          tokenType: 'Bearer',
+          expiresIn: 3600,
+          user: user,
+        );
+
+        // Act
+        final json = authResponse.toJson();
+
+        // Assert
+        expect(json['access_token'], equals('access_123'));
+        expect(json['refresh_token'], equals('refresh_456'));
+        expect(json['token_type'], equals('Bearer'));
+        expect(json['expires_in'], equals(3600));
+        expect(json['user']['id'], equals('1'));
+        expect(json['user']['email'], equals('test@example.com'));
+        expect(json['user']['name'], equals('Test User'));
+        expect(json['user']['email_verified'], isTrue);
+        expect(json['user']['roles'], contains('admin'));
+        expect(json['user']['permissions'], contains('write'));
+      });
+
+      test('should handle null fields in serialization', () {
+        // Arrange
+        final user = User(
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime(2024,
+        updatedAt: DateTime.now(),
+      ),
+        );
+
+        final authResponse = AuthResponse(
+          accessToken: 'token',
+          user: user,
+        );
+
+        // Act
+        final json = authResponse.toJson();
+
+        // Assert
+        expect(json['access_token'], equals('token'));
+        expect(json['refresh_token'], isNull);
+        expect(json['token_type'], equals('Bearer'));
+        expect(json['expires_in'], isNull);
+        expect(json['user']['name'], isNull);
+        expect(json['user']['updated_at'], isNull);
+      });
+
+      test('should format dates as ISO 8601 strings', () {
+        // Arrange
+        final user = User(
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime(2024,
+        updatedAt: DateTime.now(),
+      ),
+          updatedAt: DateTime(2024, 1, 15, 8, 15, 30),
+        );
+
+        final authResponse = AuthResponse(
+          accessToken: 'token',
+          user: user,
+        );
+
+        // Act
+        final json = authResponse.toJson();
+
+        // Assert
+        expect(json['user']['created_at'], contains('2024-01-01'));
+        expect(json['user']['created_at'], contains('12:30:45'));
+        expect(json['user']['updated_at'], contains('2024-01-15'));
+        expect(json['user']['updated_at'], contains('08:15:30'));
+      });
+    });
+
+    group('copyWith', () {
+      test('should create a copy with updated fields', () {
+        // Arrange
+        final original = AuthResponse(
+          accessToken: 'original_access',
+          refreshToken: 'original_refresh',
+          tokenType: 'Bearer',
+          expiresIn: 3600,
+          user: User(
+        id: '1',
+        email: 'original@example.com',
+        name: 'Original User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime(2024,
+        updatedAt: DateTime.now(),
+      ),
+          ),
+        );
+
+        // Act
+        final updated = original.copyWith(
+          accessToken: 'new_access',
+          expiresIn: 7200,
+        );
+
+        // Assert
+        expect(updated.accessToken, equals('new_access'));
+        expect(updated.refreshToken, equals('original_refresh'));
+        expect(updated.tokenType, equals('Bearer'));
+        expect(updated.expiresIn, equals(7200));
+        expect(updated.user.email, equals('original@example.com'));
+      });
+
+      test('should preserve original values when not specified', () {
+        // Arrange
+        final original = AuthResponse(
+          accessToken: 'token',
+          refreshToken: 'refresh',
+          tokenType: 'Bearer',
+          expiresIn: 3600,
+          user: User(
+        id: '1',
+        email: 'user@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime(2024,
+        updatedAt: DateTime.now(),
+      ),
+          ),
+        );
+
+        // Act
+        final copy = original.copyWith(updatedAt: DateTime.now());
+
+        // Assert
+        expect(copy.accessToken, equals(original.accessToken));
+        expect(copy.refreshToken, equals(original.refreshToken));
+        expect(copy.tokenType, equals(original.tokenType));
+        expect(copy.expiresIn, equals(original.expiresIn));
+        expect(copy.user, equals(original.user));
+      });
+    });
+
+    group('equality', () {
+      test('should be equal when all fields match', () {
+        // Arrange
+        final user1 = User(
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime(2024,
+        updatedAt: DateTime.now(),
+      ),
+        );
+
+        final user2 = User(
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime(2024,
+        updatedAt: DateTime.now(),
+      ),
+        );
+
+        final auth1 = AuthResponse(
+          accessToken: 'token',
+          refreshToken: 'refresh',
+          user: user1,
+        );
+
+        final auth2 = AuthResponse(
+          accessToken: 'token',
+          refreshToken: 'refresh',
+          user: user2,
+        );
+
+        // Assert
+        expect(auth1, equals(auth2));
+        expect(auth1.hashCode, equals(auth2.hashCode));
+      });
+
+      test('should not be equal when fields differ', () {
+        // Arrange
+        final user = User(
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime(2024,
+        updatedAt: DateTime.now(),
+      ),
+        );
+
+        final auth1 = AuthResponse(
+          accessToken: 'token1',
+          user: user,
+        );
+
+        final auth2 = AuthResponse(
+          accessToken: 'token2',
+          user: user,
+        );
+
+        // Assert
+        expect(auth1, isNot(equals(auth2)));
+      });
+    });
+
+    group('validation', () {
+      test('should validate required fields', () {
+        // Assert
+        expect(
+          () => AuthResponse.fromJson({
+            'user': {
+              'id': '1',
+              'email': 'test@example.com',
+              'created_at': '2024-01-01T00:00:00Z',
+            }
+          }),
+          throwsA(isA<TypeError>()),
+        );
+      });
+
+      test('should validate email format', () {
+        // Arrange
+        final user = User(
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+        // Assert
+        expect(user.email, contains('@'));
+        expect(user.email, contains('.'));
+      });
+
+      test('should handle malformed JSON gracefully', () {
+        // Arrange
+        final malformedJson = {
+          'access_token': 123, // Should be string
+          'user': {
+            'id': '1',
+            'email': 'test@example.com',
+            'created_at': 'invalid-date',
+          }
+        };
+
+        // Assert
+        expect(
+          () => AuthResponse.fromJson(malformedJson),
+          throwsA(isA<FormatException>()),
+        );
+      });
+    });
+
+    group('token expiry', () {
+      test('should calculate token expiry time', () {
+        // Arrange
+        final authResponse = AuthResponse(
+          accessToken: 'token',
+          expiresIn: 3600, // 1 hour
+          user: User(
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+        );
+
+        // Act
+        final expiryTime = authResponse.getExpiryTime();
+
+        // Assert
+        expect(expiryTime, isNotNull);
+        expect(
+          expiryTime!.difference(DateTime.now()).inMinutes,
+          closeTo(60, 1),
+        );
+      });
+
+      test('should check if token is expired', () {
+        // Arrange
+        final expiredAuth = AuthResponse(
+          accessToken: 'token',
+          expiresIn: -1, // Already expired
+          user: User(
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+        );
+
+        final validAuth = AuthResponse(
+          accessToken: 'token',
+          expiresIn: 3600, // 1 hour from now
+          user: User(
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+        );
+
+        // Assert
+        expect(expiredAuth.isTokenExpired(), isTrue);
+        expect(validAuth.isTokenExpired(), isFalse);
+      });
+    });
+
+    group('user roles and permissions', () {
+      test('should check if user has specific role', () {
+        // Arrange
+        final user = User(
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+          roles: ['user', 'admin'],
+        );
+
+        final authResponse = AuthResponse(
+          accessToken: 'token',
+          user: user,
+        );
+
+        // Assert
+        expect(authResponse.hasRole('admin'), isTrue);
+        expect(authResponse.hasRole('superadmin'), isFalse);
+      });
+
+      test('should check if user has specific permission', () {
+        // Arrange
+        final user = User(
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+          permissions: ['read', 'write', 'delete'],
+        );
+
+        final authResponse = AuthResponse(
+          accessToken: 'token',
+          user: user,
+        );
+
+        // Assert
+        expect(authResponse.hasPermission('write'), isTrue);
+        expect(authResponse.hasPermission('execute'), isFalse);
+      });
+
+      test('should check multiple permissions', () {
+        // Arrange
+        final user = User(
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        isEmailVerified: false,
+        isTwoFactorEnabled: false,
+        roles: ['user'],
+        permissions: [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+          permissions: ['read', 'write'],
+        );
+
+        final authResponse = AuthResponse(
+          accessToken: 'token',
+          user: user,
+        );
+
+        // Assert
+        expect(authResponse.hasAllPermissions(['read', 'write']), isTrue);
+        expect(authResponse.hasAllPermissions(['read', 'write', 'delete']), isFalse);
+        expect(authResponse.hasAnyPermission(['delete', 'write']), isTrue);
+        expect(authResponse.hasAnyPermission(['delete', 'execute']), isFalse);
+      });
+    });
+  });
+}

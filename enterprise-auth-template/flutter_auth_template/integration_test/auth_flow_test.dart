@@ -5,15 +5,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 
-import 'package:flutter_auth_template/main.dart' as app;
-import 'package:flutter_auth_template/services/auth_service.dart';
-import 'package:flutter_auth_template/services/oauth_service.dart';
+import 'package:flutter_auth_template/app/app.dart';
+import 'package:flutter_auth_template/data/services/auth_service.dart';
+import 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart';
 import 'package:flutter_auth_template/core/storage/secure_storage_service.dart';
+import 'package:google_sign_in/google_sign_in.dart' as google;
 import 'package:flutter_auth_template/data/models/auth_request.dart';
+import 'package:flutter_auth_template/data/models/auth_response.dart';
 import 'package:flutter_auth_template/domain/entities/user.dart';
 import 'package:flutter_auth_template/core/network/api_response.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
 
-import '../test/services/auth_service_test.mocks.dart';
+import 'auth_flow_test.mocks.dart';
 
 @GenerateMocks([AuthService, OAuthService, SecureStorageService])
 void main() {
@@ -35,9 +38,9 @@ void main() {
         overrides: [
           authServiceProvider.overrideWithValue(mockAuthService),
           oauthServiceProvider.overrideWithValue(mockOAuthService),
-          secureStorageProvider.overrideWithValue(mockSecureStorage),
+          secureStorageServiceProvider.overrideWithValue(mockSecureStorage),
         ],
-        child: app.MyApp(),
+        child: const FlutterAuthApp(),
       );
     }
 
@@ -71,7 +74,11 @@ void main() {
         password: 'password123',
       );
 
-      final loginResponse = ApiResponse.success(mockUser);
+      final loginResponse = AuthResponseData(
+        user: mockUser,
+        accessToken: 'test_access_token',
+        refreshToken: 'test_refresh_token',
+      );
       when(mockAuthService.login(loginRequest)).thenAnswer((_) async => loginResponse);
 
       // Act - Fill login form and submit
@@ -121,10 +128,16 @@ void main() {
       const registerRequest = RegisterRequest(
         email: 'newuser@example.com',
         password: 'SecurePass123!',
-        name: 'New User',
+        fullName: 'New User',
+        confirmPassword: 'SecurePass123!',
+        agreeToTerms: true,
       );
 
-      final registerResponse = ApiResponse.success(mockUser);
+      final registerResponse = AuthResponseData(
+        user: mockUser,
+        accessToken: 'test_access_token',
+        refreshToken: 'test_refresh_token',
+      );
       when(mockAuthService.register(registerRequest)).thenAnswer((_) async => registerResponse);
 
       // Act - Fill registration form
@@ -162,13 +175,9 @@ void main() {
         password: 'password123',
       );
 
-      // Mock login response that requires 2FA
-      final twoFAResponse = ApiResponse<User>.error(
-        'Two-factor authentication required',
-        'REQUIRES_2FA',
-        data: {'tempToken': 'temp-123'},
-      );
-      when(mockAuthService.login(loginRequest)).thenAnswer((_) async => twoFAResponse);
+      // Mock login response that requires 2FA (throw exception for 2FA requirement)
+      when(mockAuthService.login(loginRequest))
+          .thenThrow(const TwoFactorRequiredException('Two-factor authentication required'));
 
       // Act - Login with credentials
       await tester.enterText(find.byType(TextFormField).first, 'test@example.com');
@@ -195,8 +204,12 @@ void main() {
         updatedAt: DateTime.now(),
       );
 
-      final verify2FAResponse = ApiResponse.success(mockUser);
-      when(mockAuthService.verify2FA('123456', token: 'temp-123', isBackup: false))
+      final verify2FAResponse = AuthResponseData(
+        user: mockUser,
+        accessToken: 'test_access_token',
+        refreshToken: 'test_refresh_token',
+      );
+      when(mockAuthService.verifyTwoFactorCode('123456'))
           .thenAnswer((_) async => verify2FAResponse);
 
       // Act - Enter 2FA code
@@ -235,13 +248,9 @@ void main() {
         updatedAt: DateTime.now(),
       );
 
-      final googleResult = GoogleSignInResult(
-        user: mockUser,
-        isNewUser: false,
-      );
+      // Mock Google Sign-In result - we'll just test the flow without actual account
 
-      final googleResponse = ApiResponse.success(googleResult);
-      when(mockOAuthService.signInWithGoogle()).thenAnswer((_) async => googleResponse);
+      when(mockOAuthService.signInWithGoogle()).thenAnswer((_) async => null);
 
       // Act - Tap Google sign-in button
       final googleButton = find.text('Continue with Google');
@@ -270,8 +279,7 @@ void main() {
 
       when(mockSecureStorage.getAccessToken()).thenAnswer((_) async => 'valid-token');
       
-      final getCurrentUserResponse = ApiResponse.success(mockUser);
-      when(mockAuthService.getCurrentUser()).thenAnswer((_) async => getCurrentUserResponse);
+      when(mockAuthService.getCurrentUser()).thenAnswer((_) async => mockUser);
 
       // Start app (should go to dashboard)
       await tester.pumpWidget(createApp());
@@ -281,8 +289,7 @@ void main() {
       expect(find.text('Dashboard'), findsOneWidget);
 
       // Arrange - Mock logout
-      final logoutResponse = ApiResponse<void>.success(null);
-      when(mockAuthService.logout()).thenAnswer((_) async => logoutResponse);
+      when(mockAuthService.logout()).thenAnswer((_) async => null);
 
       // Act - Open menu and logout
       final menuButton = find.byType(PopupMenuButton<String>);
@@ -320,11 +327,9 @@ void main() {
         password: 'wrongpassword',
       );
 
-      final errorResponse = ApiResponse<User>.error(
-        'Invalid email or password',
-        'INVALID_CREDENTIALS',
-      );
-      when(mockAuthService.login(loginRequest)).thenAnswer((_) async => errorResponse);
+      // Mock failed login - throw exception
+      when(mockAuthService.login(loginRequest))
+          .thenThrow(const InvalidCredentialsException('Invalid email or password'));
 
       // Act - Try to login with wrong credentials
       await tester.enterText(find.byType(TextFormField).first, 'test@example.com');

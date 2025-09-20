@@ -6,20 +6,20 @@ part 'webhook_models.g.dart';
 @freezed
 class Webhook with _$Webhook {
   const factory Webhook({
-    required String id,
-    required String name,
-    required String description,
-    required String url,
-    required String secret,
-    required List<String> events,
-    required bool isActive,
-    required String httpMethod,
-    required Map<String, String> headers,
-    required int timeoutSeconds,
-    required int maxRetries,
-    required bool verifyTls,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    String? id,
+    String? name,
+    String? description,
+    String? url,
+    String? secret,
+    List<String>? events,
+    bool? isActive,
+    String? httpMethod,
+    Map<String, String>? headers,
+    int? timeoutSeconds,
+    int? maxRetries,
+    bool? verifyTls,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     DateTime? lastTriggeredAt,
     WebhookStatus? status,
     int? successCount,
@@ -90,16 +90,16 @@ class WebhookListResponse with _$WebhookListResponse {
 @freezed
 class WebhookDelivery with _$WebhookDelivery {
   const factory WebhookDelivery({
-    required String id,
-    required String webhookId,
-    required String event,
-    required Map<String, dynamic> payload,
-    required int statusCode,
-    required String response,
-    required DateTime createdAt,
-    required DateTime deliveredAt,
-    required bool success,
-    required int attempt,
+    String? id,
+    String? webhookId,
+    String? event,
+    Map<String, dynamic>? payload,
+    int? statusCode,
+    String? response,
+    DateTime? createdAt,
+    DateTime? deliveredAt,
+    bool? success,
+    int? attempt,
     String? error,
     int? responseTime,
     Map<String, String>? requestHeaders,
@@ -113,12 +113,12 @@ class WebhookDelivery with _$WebhookDelivery {
 @freezed
 class WebhookEvent with _$WebhookEvent {
   const factory WebhookEvent({
-    required String id,
-    required String name,
-    required String description,
-    required String category,
-    required Map<String, dynamic> samplePayload,
-    required bool isEnabled,
+    String? id,
+    String? name,
+    String? description,
+    String? category,
+    Map<String, dynamic>? samplePayload,
+    bool? isEnabled,
   }) = _WebhookEvent;
 
   factory WebhookEvent.fromJson(Map<String, dynamic> json) =>
@@ -128,16 +128,16 @@ class WebhookEvent with _$WebhookEvent {
 @freezed
 class WebhookStats with _$WebhookStats {
   const factory WebhookStats({
-    required String webhookId,
-    required int totalDeliveries,
-    required int successfulDeliveries,
-    required int failedDeliveries,
-    required double successRate,
-    required double averageResponseTime,
-    required DateTime lastDelivery,
-    required Map<String, int> deliveriesByDay,
-    required Map<String, int> deliveriesByEvent,
-    required List<WebhookDelivery> recentDeliveries,
+    String? webhookId,
+    int? totalDeliveries,
+    int? successfulDeliveries,
+    int? failedDeliveries,
+    double? successRate,
+    double? averageResponseTime,
+    DateTime? lastDelivery,
+    Map<String, int>? deliveriesByDay,
+    Map<String, int>? deliveriesByEvent,
+    List<WebhookDelivery>? recentDeliveries,
   }) = _WebhookStats;
 
   factory WebhookStats.fromJson(Map<String, dynamic> json) =>
@@ -158,10 +158,10 @@ class WebhookTestRequest with _$WebhookTestRequest {
 @freezed
 class WebhookTestResponse with _$WebhookTestResponse {
   const factory WebhookTestResponse({
-    required bool success,
-    required int statusCode,
-    required String response,
-    required int responseTime,
+    bool? success,
+    int? statusCode,
+    String? response,
+    int? responseTime,
     String? error,
     Map<String, String>? requestHeaders,
     Map<String, String>? responseHeaders,
@@ -174,14 +174,14 @@ class WebhookTestResponse with _$WebhookTestResponse {
 @freezed
 class WebhookTemplate with _$WebhookTemplate {
   const factory WebhookTemplate({
-    required String id,
-    required String name,
-    required String description,
-    required String category,
-    required String url,
-    required List<String> events,
-    required Map<String, String> headers,
-    required Map<String, dynamic> config,
+    String? id,
+    String? name,
+    String? description,
+    String? category,
+    String? url,
+    List<String>? events,
+    Map<String, String>? headers,
+    Map<String, dynamic>? config,
     String? documentation,
   }) = _WebhookTemplate;
 

@@ -1,11 +1,13 @@
 import 'dart:developer' as developer;
+
+import 'package:app_links/app_links.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:app_links/app_links.dart';
-import '../errors/app_exception.dart';
-import '../constants/api_constants.dart';
+
+import 'package:flutter_auth_template/core/constants/api_constants.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
 
 final oauthServiceProvider = Provider<OAuthService>((ref) {
   return OAuthService();
@@ -14,28 +16,59 @@ final oauthServiceProvider = Provider<OAuthService>((ref) {
 class OAuthService {
   late final GoogleSignIn _googleSignIn;
   late final AppLinks _appLinks;
+  GoogleSignInAccount? _currentUser;
+  bool _isInitialized = false;
 
   OAuthService() {
-    _initializeGoogleSignIn();
+    _googleSignIn = GoogleSignIn.instance;
     _appLinks = AppLinks();
+    _initializeGoogleSignIn();
   }
 
-  void _initializeGoogleSignIn() {
-    _googleSignIn = GoogleSignIn(
-      scopes: [
-        'email',
-        'profile',
-      ],
-    );
+  Future<void> _initializeGoogleSignIn() async {
+    if (!_isInitialized) {
+      try {
+        await _googleSignIn.initialize();
+        _isInitialized = true;
+
+        // Listen to authentication events
+        _googleSignIn.authenticationEvents.listen((event) {
+          switch (event) {
+            case GoogleSignInAuthenticationEventSignIn():
+              _currentUser = event.user;
+              developer.log('User signed in: ${event.user.email}', name: 'OAuthService');
+              break;
+            case GoogleSignInAuthenticationEventSignOut():
+              _currentUser = null;
+              developer.log('User signed out', name: 'OAuthService');
+              break;
+          }
+        });
+      } catch (e) {
+        developer.log(
+          'Google Sign-In initialization failed: $e',
+          name: 'OAuthService',
+          level: 1000,
+        );
+        _isInitialized = false;
+      }
+    }
   }
 
   /// Google Sign-In Methods
 
+  /// Ensure Google Sign-In is initialized
+  Future<void> _ensureInitialized() async {
+    if (!_isInitialized) {
+      await _initializeGoogleSignIn();
+    }
+  }
+
   /// Check if Google Sign-In is available
   Future<bool> isGoogleSignInAvailable() async {
     try {
-      // Try to initialize without signing in
-      return true; // Google Sign-In is generally available on most platforms
+      await _ensureInitialized();
+      return _isInitialized;
     } catch (e) {
       developer.log(
         'Google Sign-In availability check failed: $e',
@@ -49,15 +82,25 @@ class OAuthService {
   /// Perform Google Sign-In
   Future<GoogleSignInAccount?> signInWithGoogle() async {
     try {
-      final googleSignIn = _googleSignIn;
+      await _ensureInitialized();
 
       // Check if already signed in
-      GoogleSignInAccount? account = googleSignIn.currentUser;
-
-      if (account == null) {
-        // Perform sign-in
-        account = await googleSignIn.signIn();
+      if (_currentUser != null) {
+        developer.log(
+          'Already signed in: ${_currentUser!.email}',
+          name: 'OAuthService',
+        );
+        return _currentUser;
       }
+
+      // Try lightweight authentication first, then full authentication if needed
+      final GoogleSignInAccount? account = await _googleSignIn.attemptLightweightAuthentication() ??
+          await _googleSignIn.authenticate(
+            scopeHint: [
+              'email',
+              'profile',
+            ],
+          );
 
       if (account == null) {
         developer.log(
@@ -67,6 +110,7 @@ class OAuthService {
         return null;
       }
 
+      _currentUser = account;
       developer.log(
         'Google Sign-In successful: ${account.email}',
         name: 'OAuthService',
@@ -92,16 +136,16 @@ class OAuthService {
   /// Get Google authentication token
   Future<String?> getGoogleAuthToken(GoogleSignInAccount account) async {
     try {
-      final auth = await account.authentication;
+      final auth = account.authentication;
 
       // For backend integration, we typically need the ID token
       final String? idToken = auth.idToken;
-      final String? accessToken = auth.accessToken;
 
       developer.log('Google auth token obtained', name: 'OAuthService');
 
-      // Return ID token for backend verification, fallback to access token
-      return idToken ?? accessToken;
+      // Return ID token for backend verification
+      // Note: In v7.1.1, access tokens are handled differently through authorization client
+      return idToken;
     } catch (e) {
       developer.log(
         'Google auth token retrieval failed: $e',
@@ -115,11 +159,34 @@ class OAuthService {
     }
   }
 
+  /// Get access token for specific scopes
+  Future<String?> getAccessTokenForScopes(List<String> scopes) async {
+    try {
+      await _ensureInitialized();
+
+      final authClient = _googleSignIn.authorizationClient;
+      var authorization = await authClient.authorizationForScopes(scopes);
+
+      authorization ??= await authClient.authorizeScopes(scopes);
+
+      developer.log('Access token obtained for scopes: ${scopes.join(', ')}', name: 'OAuthService');
+      return authorization?.accessToken;
+    } catch (e) {
+      developer.log(
+        'Failed to get access token for scopes: $e',
+        name: 'OAuthService',
+        level: 1000,
+      );
+      return null;
+    }
+  }
+
   /// Sign out from Google
   Future<void> signOutFromGoogle() async {
     try {
-      final dynamic googleSignIn = _googleSignIn;
-      await googleSignIn.signOut();
+      await _ensureInitialized();
+      await _googleSignIn.signOut();
+      _currentUser = null;
       developer.log('Google Sign-Out successful', name: 'OAuthService');
     } catch (e) {
       developer.log(
@@ -133,14 +200,12 @@ class OAuthService {
 
   /// Check if currently signed in to Google
   bool isSignedInToGoogle() {
-    final dynamic googleSignIn = _googleSignIn;
-    return googleSignIn.currentUser != null;
+    return _currentUser != null;
   }
 
   /// Get current Google user
   GoogleSignInAccount? getCurrentGoogleUser() {
-    final dynamic googleSignIn = _googleSignIn;
-    return googleSignIn.currentUser as GoogleSignInAccount?;
+    return _currentUser;
   }
 
   /// Generic OAuth Methods (for GitHub, Discord, etc.)

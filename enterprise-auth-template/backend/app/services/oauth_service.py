@@ -21,6 +21,7 @@ from app.core.config import get_settings
 from app.core.security import create_access_token, create_refresh_token
 from app.models.user import User
 from app.schemas.auth import OAuthProvider, OAuthUserInfo
+
 # Import new refactored services
 from app.services.auth.authentication_service import AuthenticationService
 from app.services.auth.registration_service import RegistrationService
@@ -133,7 +134,9 @@ class OAuthService:
         self.role_repo = RoleRepository(db)
         # Initialize services
         self.auth_service = AuthenticationService(db, self.user_repo, self.session_repo)
-        self.registration_service = RegistrationService(db, self.user_repo, self.role_repo)
+        self.registration_service = RegistrationService(
+            db, self.user_repo, self.role_repo
+        )
         self.redirect_uri = f"{settings.FRONTEND_URL}/auth/callback"
 
         # Initialize OAuth client
@@ -228,7 +231,14 @@ class OAuthService:
         """
         provider = provider.lower()
 
-        if provider not in ["google", "github", "discord", "facebook", "apple", "microsoft"]:
+        if provider not in [
+            "google",
+            "github",
+            "discord",
+            "facebook",
+            "apple",
+            "microsoft",
+        ]:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Unsupported OAuth provider: {provider}",

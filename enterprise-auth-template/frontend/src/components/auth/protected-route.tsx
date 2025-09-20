@@ -9,7 +9,7 @@ export function ProtectedRoute({
   requiredPermissions = [],
   requiredRoles = [],
   fallback = <div className='flex items-center justify-center min-h-screen'>Access Denied</div>,
-}: ProtectedRouteProps): JSX.Element {
+}: ProtectedRouteProps): React.ReactElement {
   const { user, isAuthenticated, isLoading, hasPermission, hasRole } = useAuthStore();
 
   // Show loading state

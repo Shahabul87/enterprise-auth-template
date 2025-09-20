@@ -54,14 +54,15 @@ ID_FORMAT_CUSTOM = "custom"
 
 # Thread-local storage alternative using contextvars (Python 3.7+)
 import contextvars
+
 request_id_context: contextvars.ContextVar[Optional[str]] = contextvars.ContextVar(
-    'request_id', default=None
+    "request_id", default=None
 )
 correlation_id_context: contextvars.ContextVar[Optional[str]] = contextvars.ContextVar(
-    'correlation_id', default=None
+    "correlation_id", default=None
 )
 trace_id_context: contextvars.ContextVar[Optional[str]] = contextvars.ContextVar(
-    'trace_id', default=None
+    "trace_id", default=None
 )
 
 
@@ -80,9 +81,16 @@ class RequestIDGenerator:
         self.custom_prefix = custom_prefix
 
         # Validate format
-        valid_formats = {ID_FORMAT_UUID4, ID_FORMAT_UUID1, ID_FORMAT_TIMESTAMP, ID_FORMAT_CUSTOM}
+        valid_formats = {
+            ID_FORMAT_UUID4,
+            ID_FORMAT_UUID1,
+            ID_FORMAT_TIMESTAMP,
+            ID_FORMAT_CUSTOM,
+        }
         if id_format not in valid_formats:
-            raise ValueError(f"Invalid ID format: {id_format}. Must be one of {valid_formats}")
+            raise ValueError(
+                f"Invalid ID format: {id_format}. Must be one of {valid_formats}"
+            )
 
     def generate_request_id(self) -> str:
         """Generate a new request ID."""
@@ -92,12 +100,12 @@ class RequestIDGenerator:
             id_value = str(uuid.uuid1())
         elif self.id_format == ID_FORMAT_TIMESTAMP:
             timestamp = int(time.time() * 1000000)  # Microsecond precision
-            random_suffix = str(uuid.uuid4()).split('-')[-1]
+            random_suffix = str(uuid.uuid4()).split("-")[-1]
             id_value = f"{timestamp}-{random_suffix}"
         elif self.id_format == ID_FORMAT_CUSTOM:
             # Custom format: timestamp + uuid4 (shortened)
             timestamp = int(time.time())
-            short_uuid = str(uuid.uuid4()).replace('-', '')[:12]
+            short_uuid = str(uuid.uuid4()).replace("-", "")[:12]
             id_value = f"{timestamp}-{short_uuid}"
         else:
             # Fallback to UUID4
@@ -112,14 +120,18 @@ class RequestIDGenerator:
         # Create a shorter trace ID for distributed tracing
         if self.id_format == ID_FORMAT_TIMESTAMP:
             # Extract timestamp and create shorter trace ID
-            parts = request_id.replace(self.custom_prefix + "-" if self.custom_prefix else "", "").split('-')
+            parts = request_id.replace(
+                self.custom_prefix + "-" if self.custom_prefix else "", ""
+            ).split("-")
             if len(parts) >= 2:
                 return f"trace-{parts[0]}-{parts[1][:8]}"
 
         # Default: use first part of UUID
-        base_id = request_id.replace(self.custom_prefix + "-" if self.custom_prefix else "", "")
-        if '-' in base_id:
-            trace_part = base_id.split('-')[0]
+        base_id = request_id.replace(
+            self.custom_prefix + "-" if self.custom_prefix else "", ""
+        )
+        if "-" in base_id:
+            trace_part = base_id.split("-")[0]
         else:
             trace_part = base_id[:16]
 
@@ -133,7 +145,7 @@ class RequestIDGenerator:
         # Remove custom prefix if present
         id_to_check = request_id
         if self.custom_prefix and request_id.startswith(self.custom_prefix + "-"):
-            id_to_check = request_id[len(self.custom_prefix) + 1:]
+            id_to_check = request_id[len(self.custom_prefix) + 1 :]
 
         try:
             if self.id_format in [ID_FORMAT_UUID4, ID_FORMAT_UUID1]:
@@ -142,11 +154,11 @@ class RequestIDGenerator:
                 return True
             elif self.id_format == ID_FORMAT_TIMESTAMP:
                 # Check timestamp-random format
-                parts = id_to_check.split('-')
+                parts = id_to_check.split("-")
                 return len(parts) >= 2 and parts[0].isdigit()
             elif self.id_format == ID_FORMAT_CUSTOM:
                 # Check custom timestamp-uuid format
-                parts = id_to_check.split('-')
+                parts = id_to_check.split("-")
                 return len(parts) >= 2 and parts[0].isdigit() and len(parts[1]) >= 8
 
             return True  # Accept any format for unknown types
@@ -199,7 +211,9 @@ class RequestTracker:
 class RequestContext:
     """Request context manager for storing request-scoped data."""
 
-    def __init__(self, request_id: str, correlation_id: str, trace_id: Optional[str] = None):
+    def __init__(
+        self, request_id: str, correlation_id: str, trace_id: Optional[str] = None
+    ):
         """Initialize request context."""
         self.request_id = request_id
         self.correlation_id = correlation_id
@@ -352,8 +366,9 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
             self.active_requests[request_id] = request_context.tracker
             request_context.tracker.set_metadata("method", request.method)
             request_context.tracker.set_metadata("path", request.url.path)
-            request_context.tracker.set_metadata("client_ip",
-                request.client.host if request.client else "unknown")
+            request_context.tracker.set_metadata(
+                "client_ip", request.client.host if request.client else "unknown"
+            )
 
         # Log request start
         if self.log_request_ids:
@@ -381,7 +396,9 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
             # Finish performance tracking
             if self.enable_performance_tracking and request_id in self.active_requests:
                 request_context.tracker.finish_tracking()
-                request_context.tracker.set_metadata("status_code", response.status_code)
+                request_context.tracker.set_metadata(
+                    "status_code", response.status_code
+                )
 
                 # Log request completion
                 if self.log_request_ids:
@@ -391,7 +408,7 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
                         request_id=request_id,
                         status_code=response.status_code,
                         duration_ms=summary.get("duration_ms"),
-                        **summary.get("metadata", {})
+                        **summary.get("metadata", {}),
                     )
 
             return response
@@ -445,16 +462,23 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
                 # Validate client-provided ID if required
                 if self.validate_client_id:
                     if self.id_generator.validate_request_id(client_id):
-                        logger.debug("Using client-provided request ID", request_id=client_id)
+                        logger.debug(
+                            "Using client-provided request ID", request_id=client_id
+                        )
                         return client_id
                     else:
                         logger.warning(
                             "Invalid client-provided request ID, generating new one",
-                            client_request_id=client_id[:50],  # Limit length for logging
+                            client_request_id=client_id[
+                                :50
+                            ],  # Limit length for logging
                         )
                 else:
                     # Accept client ID without validation
-                    logger.debug("Using client-provided request ID (unvalidated)", request_id=client_id)
+                    logger.debug(
+                        "Using client-provided request ID (unvalidated)",
+                        request_id=client_id,
+                    )
                     return client_id
 
         # Generate new request ID
@@ -480,10 +504,7 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
 
 
 def create_request_id_middleware(
-    app,
-    id_format: Optional[str] = None,
-    custom_prefix: Optional[str] = None,
-    **kwargs
+    app, id_format: Optional[str] = None, custom_prefix: Optional[str] = None, **kwargs
 ) -> RequestIDMiddleware:
     """
     Factory function to create request ID middleware.
@@ -505,15 +526,16 @@ def create_request_id_middleware(
         custom_prefix = getattr(settings, "REQUEST_ID_PREFIX", "")
 
     return RequestIDMiddleware(
-        app,
-        id_format=id_format,
-        custom_prefix=custom_prefix,
-        **kwargs
+        app, id_format=id_format, custom_prefix=custom_prefix, **kwargs
     )
 
 
 @contextmanager
-def request_context_manager(request_id: str, correlation_id: Optional[str] = None, trace_id: Optional[str] = None):
+def request_context_manager(
+    request_id: str,
+    correlation_id: Optional[str] = None,
+    trace_id: Optional[str] = None,
+):
     """
     Context manager for setting request IDs in async contexts.
 

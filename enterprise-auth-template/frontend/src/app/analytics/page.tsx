@@ -97,7 +97,7 @@ const timeRanges = [
   { label: 'Last 12 months', value: '12m' },
 ];
 
-export default function AnalyticsPage(): JSX.Element {
+export default function AnalyticsPage(): React.ReactElement {
   const { user, hasPermission } = useRequireAuth();
   const [data] = useState<AnalyticsData>(mockAnalyticsData);
   const [selectedTimeRange, setSelectedTimeRange] = useState('30d');

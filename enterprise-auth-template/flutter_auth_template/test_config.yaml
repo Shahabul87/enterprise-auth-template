@@ -1,0 +1,86 @@
+# Flutter Test Configuration for Optimized Performance
+# This file configures test behavior to prevent resource exhaustion
+
+# Test execution settings
+test_runner:
+  # Limit concurrent test processes to prevent system overload
+  concurrency: 2
+
+  # Timeout settings to prevent hanging tests
+  default_timeout: "2m"
+  integration_timeout: "5m"
+
+  # Resource management
+  max_memory_per_test: "512MB"
+  cleanup_between_tests: true
+
+  # Coverage settings (disabled by default for speed)
+  coverage_enabled: false
+  coverage_exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.mocks.dart"
+    - "build/**"
+    - "test_helpers/**"
+
+# Reporter configuration
+reporter:
+  type: "expanded"  # Show detailed test results
+  show_passing: true
+  show_failing: true
+  show_skipped: true
+
+  # Output settings
+  colors: true
+  verbose: false
+
+# Test discovery patterns
+test_patterns:
+  unit_tests: "test/unit/**/*_test.dart"
+  widget_tests: "test/widget/**/*_test.dart"
+  integration_tests: "test/integration/**/*_test.dart"
+
+# Platform-specific settings
+platforms:
+  flutter_tester:
+    enable_software_rendering: true
+    enable_test_fonts: true
+    disable_asset_fonts: true
+    deterministic_rendering: true
+
+# Memory and performance optimization
+optimization:
+  # Clean build artifacts between test runs
+  clean_before_run: false
+
+  # Disable asset building for unit tests
+  test_assets: false
+
+  # VM settings for better performance
+  vm_options:
+    - "--old_gen_heap_size=2048"
+    - "--max_heap_size=2048"
+    - "--optimization_counter_threshold=5"
+
+# Test folder execution order (from simple to complex)
+execution_order:
+  - "test/core/basic_test.dart"
+  - "test/unit/core"
+  - "test/unit/data"
+  - "test/unit/domain"
+  - "test/core/error"
+  - "test/core/network"
+  - "test/core/security"
+  - "test/core/services"
+  - "test/data/models"
+  - "test/data/services"
+  - "test/services"
+  - "test/providers"
+  - "test/unit/providers"
+  - "test/widget/pages"
+  - "test/widget/auth"
+  - "test/widgets/common"
+  - "test/screens/auth"
+  - "test/presentation/pages"
+  - "test/presentation/widgets"
+  - "test/integration"

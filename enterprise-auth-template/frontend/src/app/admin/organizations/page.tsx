@@ -106,7 +106,7 @@ const ORGANIZATION_ROLES: Record<OrganizationRole, { label: string; description:
   viewer: { label: 'Viewer', description: 'Read-only access to organization' },
 };
 
-export default function OrganizationsPage(): JSX.Element {
+export default function OrganizationsPage(): React.ReactElement {
   const { user } = useRequireAuth();
   const [organizations, setOrganizations] = useState<OrganizationResponse[]>([]);
   const [selectedOrganization, setSelectedOrganization] = useState<OrganizationResponse | null>(null);
@@ -350,7 +350,7 @@ export default function OrganizationsPage(): JSX.Element {
     });
   };
 
-  const getRoleIcon = (role: OrganizationRole): JSX.Element => {
+  const getRoleIcon = (role: OrganizationRole): React.ReactElement => {
     switch (role) {
       case 'owner':
         return <Crown className="h-4 w-4 text-yellow-500" />;
@@ -365,7 +365,7 @@ export default function OrganizationsPage(): JSX.Element {
     }
   };
 
-  const getStatusIcon = (status: 'active' | 'invited' | 'suspended'): JSX.Element => {
+  const getStatusIcon = (status: 'active' | 'invited' | 'suspended'): React.ReactElement => {
     switch (status) {
       case 'active':
         return <CheckCircle className="h-4 w-4 text-green-500" />;

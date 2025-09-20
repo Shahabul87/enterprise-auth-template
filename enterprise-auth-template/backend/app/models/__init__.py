@@ -24,7 +24,7 @@ from app.models.notification import (
     NotificationType,
     NotificationPriority,
     NotificationStatus,
-    NotificationCategory
+    NotificationCategory,
 )
 from app.models.device import UserDevice
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../domain/entities/auth_state.dart';
-import '../../providers/auth_provider.dart';
-import '../../widgets/auth/enhanced_registration_form.dart';
+import 'package:flutter_auth_template/domain/entities/auth_state.dart';
+import 'package:flutter_auth_template/presentation/providers/auth_provider.dart';
+import 'package:flutter_auth_template/presentation/widgets/auth/enhanced_registration_form.dart';
 
 class RegisterPage extends ConsumerWidget {
   const RegisterPage({super.key});

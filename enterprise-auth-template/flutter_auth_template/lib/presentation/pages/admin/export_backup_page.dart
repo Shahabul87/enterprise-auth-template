@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../data/models/export_models.dart';
-import '../../../data/services/export_api_service.dart';
-import '../../widgets/common/loading_widget.dart';
-import '../../widgets/common/error_widget.dart';
+import 'package:flutter_auth_template/data/models/export_models.dart';
+import 'package:flutter_auth_template/data/models/admin_models.dart';
+import 'package:flutter_auth_template/data/services/export_api_service.dart';
+import 'package:flutter_auth_template/presentation/widgets/common/loading_widget.dart';
+import 'package:flutter_auth_template/presentation/widgets/common/error_widget.dart';
 
 final exportApiServiceProvider = Provider((ref) => ExportApiService());
 

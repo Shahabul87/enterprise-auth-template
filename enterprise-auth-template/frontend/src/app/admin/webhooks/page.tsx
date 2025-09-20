@@ -129,7 +129,7 @@ const WEBHOOK_EVENTS: Record<WebhookEventType, { label: string; description: str
   'api_key.deleted': { label: 'API Key Deleted', description: 'When API key is deleted', category: 'API Key' },
 };
 
-export default function WebhooksPage(): JSX.Element {
+export default function WebhooksPage(): React.ReactElement {
   const { user } = useRequireAuth();
   const [webhooks, setWebhooks] = useState<WebhookResponse[]>([]);
   const [selectedWebhook, setSelectedWebhook] = useState<WebhookResponse | null>(null);
@@ -413,7 +413,7 @@ export default function WebhooksPage(): JSX.Element {
     });
   };
 
-  const getStatusIcon = (status: WebhookStatus): JSX.Element => {
+  const getStatusIcon = (status: WebhookStatus): React.ReactElement => {
     switch (status) {
       case 'active':
         return <CheckCircle className="h-4 w-4 text-green-500" />;
@@ -428,7 +428,7 @@ export default function WebhooksPage(): JSX.Element {
     }
   };
 
-  const getDeliveryStatusIcon = (status: DeliveryStatus): JSX.Element => {
+  const getDeliveryStatusIcon = (status: DeliveryStatus): React.ReactElement => {
     switch (status) {
       case 'success':
         return <CheckCircle className="h-4 w-4 text-green-500" />;

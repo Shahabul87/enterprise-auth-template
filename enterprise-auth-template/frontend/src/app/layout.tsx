@@ -52,7 +52,7 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-export default function RootLayout({ children }: RootLayoutProps): JSX.Element {
+export default function RootLayout({ children }: RootLayoutProps): React.ReactElement {
   return (
     <html lang='en' suppressHydrationWarning>
       <body className={cn(inter.className, 'min-h-screen bg-background antialiased')}>

@@ -10,7 +10,8 @@ from unittest.mock import AsyncMock, patch
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.services.user.user_crud_service import UserCRUDService
-from app.models.user import User, Role, UserRole
+from app.models.user import User
+from app.models.role import Role, UserRole
 from app.schemas.user import UserCreate, UserUpdate
 from app.core.security import get_password_hash
 

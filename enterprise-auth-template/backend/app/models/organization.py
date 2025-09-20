@@ -22,130 +22,81 @@ class Organization(Base):
     __tablename__ = "organizations"
 
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid.uuid4,
-        index=True
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True
     )
-    name: Mapped[str] = mapped_column(
-        String(100),
-        nullable=False,
-        index=True
-    )
+    name: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
     slug: Mapped[str] = mapped_column(
         String(100),
         unique=True,
         nullable=False,
         index=True,
-        comment="URL-friendly unique identifier"
+        comment="URL-friendly unique identifier",
     )
-    display_name: Mapped[str] = mapped_column(
-        String(150),
-        nullable=False
-    )
-    description: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True
-    )
-    email: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False
-    )
-    phone: Mapped[Optional[str]] = mapped_column(
-        String(50),
-        nullable=True
-    )
-    website: Mapped[Optional[str]] = mapped_column(
-        String(255),
-        nullable=True
-    )
-    logo_url: Mapped[Optional[str]] = mapped_column(
-        String(500),
-        nullable=True
-    )
+    display_name: Mapped[str] = mapped_column(String(150), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    email: Mapped[str] = mapped_column(String(255), nullable=False)
+    phone: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    website: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    logo_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     # Organization settings
     settings: Mapped[Optional[dict]] = mapped_column(
-        JSON,
-        nullable=True,
-        default=dict,
-        comment="Organization-specific settings"
+        JSON, nullable=True, default=dict, comment="Organization-specific settings"
     )
 
     # Subscription/Plan information
     plan_type: Mapped[str] = mapped_column(
-        String(50),
-        default="free",
-        nullable=False,
-        comment="Subscription plan type"
+        String(50), default="free", nullable=False, comment="Subscription plan type"
     )
     max_users: Mapped[int] = mapped_column(
-        default=5,
-        nullable=False,
-        comment="Maximum allowed users"
+        default=5, nullable=False, comment="Maximum allowed users"
     )
     max_api_keys: Mapped[int] = mapped_column(
-        default=2,
-        nullable=False,
-        comment="Maximum allowed API keys"
+        default=2, nullable=False, comment="Maximum allowed API keys"
     )
 
     # Status
     is_active: Mapped[bool] = mapped_column(
-        Boolean,
-        default=True,
-        nullable=False,
-        index=True
+        Boolean, default=True, nullable=False, index=True
     )
     is_verified: Mapped[bool] = mapped_column(
-        Boolean,
-        default=False,
-        nullable=False,
-        comment="Email verification status"
+        Boolean, default=False, nullable=False, comment="Email verification status"
     )
 
-    # Owner
-    owner_id: Mapped[uuid.UUID] = mapped_column(
+    # Owner - nullable to break circular dependency
+    owner_id: Mapped[Optional[uuid.UUID]] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("users.id"),
-        nullable=False
+        ForeignKey("users.id", ondelete="SET NULL", use_alter=True),
+        nullable=True,
+        index=True
     )
 
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow,
-        nullable=False
+        DateTime, default=datetime.utcnow, nullable=False
     )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        nullable=False
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
     )
-    verified_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime,
-        nullable=True
-    )
+    verified_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
 
     # Relationships
-    owner: Mapped["User"] = relationship(
+    owner: Mapped[Optional["User"]] = relationship(
         "User",
         foreign_keys=[owner_id],
-        back_populates="owned_organizations"
+        back_populates="owned_organizations",
+        lazy="select"
     )
 
     users: Mapped[List["User"]] = relationship(
         "User",
         foreign_keys="User.organization_id",
         back_populates="organization",
-        lazy="dynamic"
+        lazy="select"
     )
 
     api_keys: Mapped[List["APIKey"]] = relationship(
-        "APIKey",
-        back_populates="organization",
-        cascade="all, delete-orphan"
+        "APIKey", back_populates="organization", cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:
@@ -185,12 +136,13 @@ class Organization(Base):
             "user_count": self.get_user_count(),
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
-            "verified_at": self.verified_at.isoformat() if self.verified_at else None
+            "verified_at": self.verified_at.isoformat() if self.verified_at else None,
         }
 
 
 class PlanTypes:
     """Organization plan types."""
+
     FREE = "free"
     STARTER = "starter"
     PROFESSIONAL = "professional"

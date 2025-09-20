@@ -23,7 +23,7 @@ from app.models.notification import (
     NotificationType,
     NotificationPriority,
     NotificationStatus,
-    NotificationCategory
+    NotificationCategory,
 )
 from app.models.user import User
 from app.services.cache_service import CacheService
@@ -34,16 +34,19 @@ logger = structlog.get_logger(__name__)
 
 class NotificationError(Exception):
     """Base exception for notification-related errors."""
+
     pass
 
 
 class NotificationDeliveryError(NotificationError):
     """Exception raised when notification delivery fails."""
+
     pass
 
 
 class NotificationValidationError(NotificationError):
     """Exception raised when notification data validation fails."""
+
     pass
 
 
@@ -65,7 +68,7 @@ class NotificationService:
         self,
         session: AsyncSession,
         cache_service: Optional[CacheService] = None,
-        event_emitter: Optional[EventEmitter] = None
+        event_emitter: Optional[EventEmitter] = None,
     ) -> None:
         """
         Initialize notification service.
@@ -88,20 +91,28 @@ class NotificationService:
         try:
             # Email provider
             from app.services.enhanced_email_service import enhanced_email_service
+
             self._providers[NotificationType.EMAIL] = enhanced_email_service
 
             # SMS provider (if configured)
-            if hasattr(settings, 'SMS_PROVIDER_URL') and settings.SMS_PROVIDER_URL:
+            if hasattr(settings, "SMS_PROVIDER_URL") and settings.SMS_PROVIDER_URL:
                 from app.services.sms_service import sms_service
+
                 self._providers[NotificationType.SMS] = sms_service
 
             # Push notification provider (if configured)
-            if hasattr(settings, 'PUSH_NOTIFICATION_KEY') and settings.PUSH_NOTIFICATION_KEY:
+            if (
+                hasattr(settings, "PUSH_NOTIFICATION_KEY")
+                and settings.PUSH_NOTIFICATION_KEY
+            ):
                 from app.services.push_service import push_service
+
                 self._providers[NotificationType.PUSH] = push_service
 
         except ImportError as e:
-            logger.warning("Failed to initialize some notification providers", error=str(e))
+            logger.warning(
+                "Failed to initialize some notification providers", error=str(e)
+            )
 
     async def create_notification(
         self,
@@ -115,7 +126,7 @@ class NotificationService:
         template_id: Optional[str] = None,
         scheduled_at: Optional[datetime] = None,
         expires_at: Optional[datetime] = None,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
     ) -> Notification:
         """
         Create a new notification.
@@ -146,16 +157,20 @@ class NotificationService:
             user = result.scalar_one_or_none()
 
             if not user or not user.is_active:
-                raise NotificationValidationError(f"User {user_id} not found or inactive")
+                raise NotificationValidationError(
+                    f"User {user_id} not found or inactive"
+                )
 
             # Check user notification preferences
             user_preferences = await self._get_user_notification_preferences(user_id)
-            if not self._is_notification_allowed(notification_type, category, user_preferences):
+            if not self._is_notification_allowed(
+                notification_type, category, user_preferences
+            ):
                 logger.info(
                     "Notification blocked by user preferences",
                     user_id=user_id,
                     type=notification_type,
-                    category=category
+                    category=category,
                 )
                 # Still create the notification but mark as cancelled
                 notification_type = NotificationType.IN_APP
@@ -177,24 +192,28 @@ class NotificationService:
                 expires_at=expires_at,
                 metadata=metadata or {},
                 created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
+                updated_at=datetime.utcnow(),
             )
 
             self.session.add(notification)
             await self.session.flush()
 
             # Emit event for audit logging
-            await self.event_emitter.emit(Event(
-                type="notification.created",
-                data={
-                    "notification_id": notification.id,
-                    "user_id": user_id,
-                    "type": notification_type,
-                    "priority": priority,
-                    "category": category,
-                    "scheduled_at": scheduled_at.isoformat() if scheduled_at else None
-                }
-            ))
+            await self.event_emitter.emit(
+                Event(
+                    type="notification.created",
+                    data={
+                        "notification_id": notification.id,
+                        "user_id": user_id,
+                        "type": notification_type,
+                        "priority": priority,
+                        "category": category,
+                        "scheduled_at": (
+                            scheduled_at.isoformat() if scheduled_at else None
+                        ),
+                    },
+                )
+            )
 
             # Schedule immediate delivery if not scheduled for later
             if not scheduled_at or scheduled_at <= datetime.utcnow():
@@ -207,7 +226,7 @@ class NotificationService:
                 notification_id=notification.id,
                 user_id=user_id,
                 type=notification_type,
-                priority=priority
+                priority=priority,
             )
 
             return notification
@@ -221,14 +240,12 @@ class NotificationService:
                 "Failed to create notification",
                 user_id=user_id,
                 type=notification_type,
-                error=str(e)
+                error=str(e),
             )
             raise NotificationError(f"Failed to create notification: {str(e)}")
 
     async def send_notification(
-        self,
-        notification_id: str,
-        force_delivery: bool = False
+        self, notification_id: str, force_delivery: bool = False
     ) -> bool:
         """
         Send a specific notification immediately.
@@ -257,8 +274,13 @@ class NotificationService:
                 raise NotificationError(f"Notification {notification_id} not found")
 
             # Check if already sent
-            if notification.status in [NotificationStatus.SENT, NotificationStatus.DELIVERED]:
-                logger.info("Notification already sent", notification_id=notification_id)
+            if notification.status in [
+                NotificationStatus.SENT,
+                NotificationStatus.DELIVERED,
+            ]:
+                logger.info(
+                    "Notification already sent", notification_id=notification_id
+                )
                 return True
 
             # Check if expired
@@ -266,22 +288,20 @@ class NotificationService:
                 await self._update_notification_status(
                     notification_id,
                     NotificationStatus.CANCELLED,
-                    "Notification expired"
+                    "Notification expired",
                 )
                 return False
 
             # Apply rate limiting unless forced
             if not force_delivery:
                 rate_limit_ok = await self._check_rate_limit(
-                    notification.user_id,
-                    notification.type,
-                    notification.category
+                    notification.user_id, notification.type, notification.category
                 )
                 if not rate_limit_ok:
                     logger.warning(
                         "Notification delivery rate limited",
                         notification_id=notification_id,
-                        user_id=notification.user_id
+                        user_id=notification.user_id,
                     )
                     # Reschedule for later
                     await self._reschedule_notification(notification, minutes=15)
@@ -294,16 +314,18 @@ class NotificationService:
                 await self._update_notification_status(
                     notification_id,
                     NotificationStatus.SENT,
-                    f"Successfully delivered via {notification.type}"
+                    f"Successfully delivered via {notification.type}",
                 )
 
                 # Update delivery statistics
-                await self._update_delivery_stats(notification.user_id, notification.type, True)
+                await self._update_delivery_stats(
+                    notification.user_id, notification.type, True
+                )
 
                 logger.info(
                     "Notification delivered successfully",
                     notification_id=notification_id,
-                    type=notification.type
+                    type=notification.type,
                 )
 
             else:
@@ -317,18 +339,15 @@ class NotificationService:
             logger.error(
                 "Notification delivery failed",
                 notification_id=notification_id,
-                error=str(e)
+                error=str(e),
             )
             await self._handle_delivery_failure(
-                notification if 'notification' in locals() else None,
-                error=str(e)
+                notification if "notification" in locals() else None, error=str(e)
             )
             raise NotificationError(f"Notification delivery failed: {str(e)}")
 
     async def send_bulk_notifications(
-        self,
-        notifications: List[Dict[str, Any]],
-        batch_size: int = 50
+        self, notifications: List[Dict[str, Any]], batch_size: int = 50
     ) -> Dict[str, Any]:
         """
         Send multiple notifications efficiently in batches.
@@ -348,12 +367,12 @@ class NotificationService:
 
             # Process in batches to avoid memory issues
             for i in range(0, total_count, batch_size):
-                batch = notifications[i:i + batch_size]
+                batch = notifications[i : i + batch_size]
                 batch_results = await self._process_notification_batch(batch)
 
-                created_notifications.extend(batch_results['created'])
-                success_count += batch_results['success']
-                failed_count += batch_results['failed']
+                created_notifications.extend(batch_results["created"])
+                success_count += batch_results["success"]
+                failed_count += batch_results["failed"]
 
                 # Small delay between batches to prevent overwhelming the system
                 if i + batch_size < total_count:
@@ -375,14 +394,14 @@ class NotificationService:
                 total=total_count,
                 success=success_count,
                 failed=failed_count,
-                batches=len(range(0, total_count, batch_size))
+                batches=len(range(0, total_count, batch_size)),
             )
 
             return {
                 "total": total_count,
                 "success": success_count,
                 "failed": failed_count,
-                "created_notifications": [n.id for n in created_notifications]
+                "created_notifications": [n.id for n in created_notifications],
             }
 
         except Exception as e:
@@ -397,7 +416,7 @@ class NotificationService:
         offset: int = 0,
         status_filter: Optional[NotificationStatus] = None,
         category_filter: Optional[NotificationCategory] = None,
-        unread_only: bool = False
+        unread_only: bool = False,
     ) -> Tuple[List[Notification], int]:
         """
         Get notifications for a user with filtering and pagination.
@@ -446,17 +465,11 @@ class NotificationService:
 
         except Exception as e:
             logger.error(
-                "Failed to get user notifications",
-                user_id=user_id,
-                error=str(e)
+                "Failed to get user notifications", user_id=user_id, error=str(e)
             )
             raise NotificationError(f"Failed to get user notifications: {str(e)}")
 
-    async def mark_notification_read(
-        self,
-        notification_id: str,
-        user_id: str
-    ) -> bool:
+    async def mark_notification_read(self, notification_id: str, user_id: str) -> bool:
         """
         Mark a notification as read.
 
@@ -473,13 +486,10 @@ class NotificationService:
                 .where(
                     and_(
                         Notification.id == notification_id,
-                        Notification.user_id == user_id
+                        Notification.user_id == user_id,
                     )
                 )
-                .values(
-                    read_at=datetime.utcnow(),
-                    updated_at=datetime.utcnow()
-                )
+                .values(read_at=datetime.utcnow(), updated_at=datetime.utcnow())
             )
             result = await self.session.execute(stmt)
             await self.session.commit()
@@ -489,7 +499,7 @@ class NotificationService:
                 logger.debug(
                     "Notification marked as read",
                     notification_id=notification_id,
-                    user_id=user_id
+                    user_id=user_id,
                 )
 
             return success
@@ -500,7 +510,7 @@ class NotificationService:
                 "Failed to mark notification as read",
                 notification_id=notification_id,
                 user_id=user_id,
-                error=str(e)
+                error=str(e),
             )
             raise NotificationError(f"Failed to mark notification as read: {str(e)}")
 
@@ -519,23 +529,17 @@ class NotificationService:
                 update(Notification)
                 .where(
                     and_(
-                        Notification.user_id == user_id,
-                        Notification.read_at.is_(None)
+                        Notification.user_id == user_id, Notification.read_at.is_(None)
                     )
                 )
-                .values(
-                    read_at=datetime.utcnow(),
-                    updated_at=datetime.utcnow()
-                )
+                .values(read_at=datetime.utcnow(), updated_at=datetime.utcnow())
             )
             result = await self.session.execute(stmt)
             await self.session.commit()
 
             count = result.rowcount
             logger.info(
-                "All notifications marked as read",
-                user_id=user_id,
-                count=count
+                "All notifications marked as read", user_id=user_id, count=count
             )
 
             return count
@@ -545,15 +549,13 @@ class NotificationService:
             logger.error(
                 "Failed to mark all notifications as read",
                 user_id=user_id,
-                error=str(e)
+                error=str(e),
             )
-            raise NotificationError(f"Failed to mark all notifications as read: {str(e)}")
+            raise NotificationError(
+                f"Failed to mark all notifications as read: {str(e)}"
+            )
 
-    async def delete_notification(
-        self,
-        notification_id: str,
-        user_id: str
-    ) -> bool:
+    async def delete_notification(self, notification_id: str, user_id: str) -> bool:
         """
         Delete a notification (soft delete by marking as cancelled).
 
@@ -570,12 +572,11 @@ class NotificationService:
                 .where(
                     and_(
                         Notification.id == notification_id,
-                        Notification.user_id == user_id
+                        Notification.user_id == user_id,
                     )
                 )
                 .values(
-                    status=NotificationStatus.CANCELLED,
-                    updated_at=datetime.utcnow()
+                    status=NotificationStatus.CANCELLED, updated_at=datetime.utcnow()
                 )
             )
             result = await self.session.execute(stmt)
@@ -586,7 +587,7 @@ class NotificationService:
                 logger.info(
                     "Notification deleted",
                     notification_id=notification_id,
-                    user_id=user_id
+                    user_id=user_id,
                 )
 
             return success
@@ -597,14 +598,12 @@ class NotificationService:
                 "Failed to delete notification",
                 notification_id=notification_id,
                 user_id=user_id,
-                error=str(e)
+                error=str(e),
             )
             raise NotificationError(f"Failed to delete notification: {str(e)}")
 
     async def get_notification_statistics(
-        self,
-        user_id: Optional[str] = None,
-        days: int = 30
+        self, user_id: Optional[str] = None, days: int = 30
     ) -> Dict[str, Any]:
         """
         Get notification delivery statistics.
@@ -659,7 +658,7 @@ class NotificationService:
                 "status_counts": status_counts,
                 "type_counts": type_counts,
                 "category_counts": category_counts,
-                "generated_at": datetime.utcnow().isoformat()
+                "generated_at": datetime.utcnow().isoformat(),
             }
 
         except Exception as e:
@@ -667,7 +666,7 @@ class NotificationService:
                 "Failed to get notification statistics",
                 user_id=user_id,
                 days=days,
-                error=str(e)
+                error=str(e),
             )
             raise NotificationError(f"Failed to get notification statistics: {str(e)}")
 
@@ -687,7 +686,7 @@ class NotificationService:
                 logger.warning(
                     "No provider available for notification type",
                     type=notification.type,
-                    notification_id=notification.id
+                    notification_id=notification.id,
                 )
                 return False
 
@@ -709,14 +708,12 @@ class NotificationService:
                 "Notification delivery provider failed",
                 notification_id=notification.id,
                 type=notification.type,
-                error=str(e)
+                error=str(e),
             )
             return False
 
     async def _deliver_email_notification(
-        self,
-        notification: Notification,
-        provider: Any
+        self, notification: Notification, provider: Any
     ) -> bool:
         """Deliver email notification."""
         try:
@@ -727,52 +724,48 @@ class NotificationService:
                 message=notification.message,
                 category=notification.category,
                 data=notification.data,
-                template_id=notification.template_id
+                template_id=notification.template_id,
             )
             return True
         except Exception as e:
             logger.error(
                 "Email notification delivery failed",
                 notification_id=notification.id,
-                error=str(e)
+                error=str(e),
             )
             return False
 
     async def _deliver_sms_notification(
-        self,
-        notification: Notification,
-        provider: Any
+        self, notification: Notification, provider: Any
     ) -> bool:
         """Deliver SMS notification."""
         try:
             # SMS delivery would depend on user having a phone number
-            phone = getattr(notification.user, 'phone_number', None)
+            phone = getattr(notification.user, "phone_number", None)
             if not phone:
                 logger.warning(
                     "Cannot send SMS - user has no phone number",
                     notification_id=notification.id,
-                    user_id=notification.user_id
+                    user_id=notification.user_id,
                 )
                 return False
 
             await provider.send_sms(
                 to_phone=phone,
                 message=f"{notification.title}: {notification.message}",
-                data=notification.data
+                data=notification.data,
             )
             return True
         except Exception as e:
             logger.error(
                 "SMS notification delivery failed",
                 notification_id=notification.id,
-                error=str(e)
+                error=str(e),
             )
             return False
 
     async def _deliver_push_notification(
-        self,
-        notification: Notification,
-        provider: Any
+        self, notification: Notification, provider: Any
     ) -> bool:
         """Deliver push notification."""
         try:
@@ -781,21 +774,18 @@ class NotificationService:
                 user_id=notification.user_id,
                 title=notification.title,
                 message=notification.message,
-                data=notification.data
+                data=notification.data,
             )
             return True
         except Exception as e:
             logger.error(
                 "Push notification delivery failed",
                 notification_id=notification.id,
-                error=str(e)
+                error=str(e),
             )
             return False
 
-    async def _get_user_notification_preferences(
-        self,
-        user_id: str
-    ) -> Dict[str, Any]:
+    async def _get_user_notification_preferences(self, user_id: str) -> Dict[str, Any]:
         """Get user notification preferences from cache or database."""
         cache_key = f"user_notification_prefs:{user_id}"
 
@@ -813,15 +803,13 @@ class NotificationService:
                 "security": {"email": True, "sms": False, "push": True},
                 "account": {"email": True, "sms": False, "push": False},
                 "billing": {"email": True, "sms": False, "push": False},
-                "marketing": {"email": False, "sms": False, "push": False}
-            }
+                "marketing": {"email": False, "sms": False, "push": False},
+            },
         }
 
         # Cache for 1 hour
         await self.cache_service.set(
-            cache_key,
-            json.dumps(default_preferences),
-            ttl=3600
+            cache_key, json.dumps(default_preferences), ttl=3600
         )
 
         return default_preferences
@@ -830,7 +818,7 @@ class NotificationService:
         self,
         notification_type: NotificationType,
         category: NotificationCategory,
-        preferences: Dict[str, Any]
+        preferences: Dict[str, Any],
     ) -> bool:
         """Check if notification is allowed based on user preferences."""
         # Check global type preference
@@ -846,7 +834,7 @@ class NotificationService:
         self,
         user_id: str,
         notification_type: NotificationType,
-        category: NotificationCategory
+        category: NotificationCategory,
     ) -> bool:
         """Check rate limit for user/type/category combination."""
         cache_key = f"notification_rate_limit:{user_id}:{notification_type.value}:{category.value}"
@@ -854,9 +842,9 @@ class NotificationService:
         # Different limits based on type and category
         limits = {
             NotificationType.EMAIL: 100,  # per hour
-            NotificationType.SMS: 10,     # per hour
-            NotificationType.PUSH: 50,    # per hour
-            NotificationType.IN_APP: 200  # per hour
+            NotificationType.SMS: 10,  # per hour
+            NotificationType.PUSH: 50,  # per hour
+            NotificationType.IN_APP: 200,  # per hour
         }
 
         limit = limits.get(notification_type, 50)
@@ -870,8 +858,7 @@ class NotificationService:
         return True
 
     async def _queue_notification_for_delivery(
-        self,
-        notification: Notification
+        self, notification: Notification
     ) -> None:
         """Queue notification for immediate delivery."""
         # In a production environment, this would add to a message queue
@@ -887,20 +874,17 @@ class NotificationService:
             logger.error(
                 "Async notification delivery failed",
                 notification_id=notification_id,
-                error=str(e)
+                error=str(e),
             )
 
     async def _update_notification_status(
         self,
         notification_id: str,
         status: NotificationStatus,
-        error_message: Optional[str] = None
+        error_message: Optional[str] = None,
     ) -> None:
         """Update notification status."""
-        update_values = {
-            "status": status,
-            "updated_at": datetime.utcnow()
-        }
+        update_values = {"status": status, "updated_at": datetime.utcnow()}
 
         if status == NotificationStatus.SENT:
             update_values["sent_at"] = datetime.utcnow()
@@ -918,9 +902,7 @@ class NotificationService:
         await self.session.commit()
 
     async def _handle_delivery_failure(
-        self,
-        notification: Optional[Notification],
-        error: Optional[str] = None
+        self, notification: Optional[Notification], error: Optional[str] = None
     ) -> None:
         """Handle notification delivery failure with retry logic."""
         if not notification:
@@ -932,7 +914,7 @@ class NotificationService:
 
         if retry_count < max_retries:
             # Schedule retry with exponential backoff
-            delay_minutes = 2 ** retry_count  # 2, 4, 8 minutes
+            delay_minutes = 2**retry_count  # 2, 4, 8 minutes
             retry_at = datetime.utcnow() + timedelta(minutes=delay_minutes)
 
             stmt = (
@@ -942,7 +924,7 @@ class NotificationService:
                     retry_count=retry_count,
                     scheduled_at=retry_at,
                     error_message=error,
-                    updated_at=datetime.utcnow()
+                    updated_at=datetime.utcnow(),
                 )
             )
             await self.session.execute(stmt)
@@ -952,20 +934,18 @@ class NotificationService:
                 notification_id=notification.id,
                 retry_count=retry_count,
                 retry_at=retry_at.isoformat(),
-                error=error
+                error=error,
             )
         else:
             # Max retries reached, mark as failed
             await self._update_notification_status(
                 notification.id,
                 NotificationStatus.FAILED,
-                error or "Max retries exceeded"
+                error or "Max retries exceeded",
             )
 
     async def _reschedule_notification(
-        self,
-        notification: Notification,
-        minutes: int
+        self, notification: Notification, minutes: int
     ) -> None:
         """Reschedule notification for later delivery."""
         new_time = datetime.utcnow() + timedelta(minutes=minutes)
@@ -973,19 +953,13 @@ class NotificationService:
         stmt = (
             update(Notification)
             .where(Notification.id == notification.id)
-            .values(
-                scheduled_at=new_time,
-                updated_at=datetime.utcnow()
-            )
+            .values(scheduled_at=new_time, updated_at=datetime.utcnow())
         )
         await self.session.execute(stmt)
         await self.session.commit()
 
     async def _update_delivery_stats(
-        self,
-        user_id: str,
-        notification_type: NotificationType,
-        success: bool
+        self, user_id: str, notification_type: NotificationType, success: bool
     ) -> None:
         """Update delivery statistics."""
         cache_key = f"notification_stats:{user_id}:{notification_type.value}"
@@ -1002,15 +976,10 @@ class NotificationService:
             stats["failed"] += 1
 
         # Cache for 24 hours
-        await self.cache_service.set(
-            cache_key,
-            json.dumps(stats),
-            ttl=86400
-        )
+        await self.cache_service.set(cache_key, json.dumps(stats), ttl=86400)
 
     async def _process_notification_batch(
-        self,
-        batch: List[Dict[str, Any]]
+        self, batch: List[Dict[str, Any]]
     ) -> Dict[str, Any]:
         """Process a batch of notifications."""
         created = []
@@ -1026,15 +995,11 @@ class NotificationService:
                 logger.error(
                     "Failed to create notification in batch",
                     data=notification_data,
-                    error=str(e)
+                    error=str(e),
                 )
                 failed += 1
 
-        return {
-            "created": created,
-            "success": success,
-            "failed": failed
-        }
+        return {"created": created, "success": success, "failed": failed}
 
 
 # Global instance

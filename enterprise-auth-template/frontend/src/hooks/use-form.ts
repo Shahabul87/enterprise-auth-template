@@ -208,8 +208,8 @@ export function useForm<T extends Record<string, unknown>>(
   const [submitCount, setSubmitCount] = useState<number>(0);
 
   const initialValuesRef = useRef<T>(initialValues);
-  const validationTimeoutRef = useRef<NodeJS.Timeout>();
-  const autoSaveTimeoutRef = useRef<NodeJS.Timeout>();
+  const validationTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Debounced values for validation
   const debouncedValues = useDebounce(values, validationDelay);

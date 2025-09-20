@@ -38,7 +38,7 @@ class RoleService:
         is_system: bool = False,
         priority: int = 0,
         permissions: Optional[List[str]] = None,
-        current_user: Optional[User] = None
+        current_user: Optional[User] = None,
     ) -> Role:
         """
         Create a new role.
@@ -68,7 +68,7 @@ class RoleService:
                 description=description,
                 is_system=is_system,
                 priority=priority,
-                is_active=True
+                is_active=True,
             )
 
             # Assign permissions if provided
@@ -87,7 +87,7 @@ class RoleService:
                     action="role.create",
                     resource_type="role",
                     resource_id=str(role.id),
-                    details={"role_name": name}
+                    details={"role_name": name},
                 )
 
             logger.info(f"Created role: {name}")
@@ -104,27 +104,28 @@ class RoleService:
 
     async def get_role_by_id(self, role_id: UUID) -> Optional[Role]:
         """Get role by ID with permissions."""
-        query = select(Role).options(
-            selectinload(Role.permissions)
-        ).where(Role.id == role_id)
+        query = (
+            select(Role)
+            .options(selectinload(Role.permissions))
+            .where(Role.id == role_id)
+        )
 
         result = await self.db.execute(query)
         return result.scalar_one_or_none()
 
     async def get_role_by_name(self, name: str) -> Optional[Role]:
         """Get role by name with permissions."""
-        query = select(Role).options(
-            selectinload(Role.permissions)
-        ).where(Role.name == name)
+        query = (
+            select(Role)
+            .options(selectinload(Role.permissions))
+            .where(Role.name == name)
+        )
 
         result = await self.db.execute(query)
         return result.scalar_one_or_none()
 
     async def get_all_roles(
-        self,
-        skip: int = 0,
-        limit: int = 100,
-        include_inactive: bool = False
+        self, skip: int = 0, limit: int = 100, include_inactive: bool = False
     ) -> List[Role]:
         """
         Get all roles with pagination.
@@ -137,9 +138,11 @@ class RoleService:
         Returns:
             List of roles
         """
-        query = select(Role).options(
-            selectinload(Role.permissions)
-        ).order_by(Role.priority.desc(), Role.name)
+        query = (
+            select(Role)
+            .options(selectinload(Role.permissions))
+            .order_by(Role.priority.desc(), Role.name)
+        )
 
         if not include_inactive:
             query = query.where(Role.is_active == True)
@@ -156,7 +159,7 @@ class RoleService:
         description: Optional[str] = None,
         priority: Optional[int] = None,
         is_active: Optional[bool] = None,
-        current_user: Optional[User] = None
+        current_user: Optional[User] = None,
     ) -> Role:
         """
         Update role information.
@@ -201,20 +204,20 @@ class RoleService:
                 action="role.update",
                 resource_type="role",
                 resource_id=str(role_id),
-                details={"changes": {
-                    "display_name": display_name,
-                    "description": description,
-                    "priority": priority,
-                    "is_active": is_active
-                }}
+                details={
+                    "changes": {
+                        "display_name": display_name,
+                        "description": description,
+                        "priority": priority,
+                        "is_active": is_active,
+                    }
+                },
             )
 
         return role
 
     async def delete_role(
-        self,
-        role_id: UUID,
-        current_user: Optional[User] = None
+        self, role_id: UUID, current_user: Optional[User] = None
     ) -> bool:
         """
         Delete a role.
@@ -235,9 +238,9 @@ class RoleService:
 
         # Check if role is assigned to users
         user_count = await self.db.scalar(
-            select(func.count()).select_from(UserRole).where(
-                UserRole.role_id == role_id
-            )
+            select(func.count())
+            .select_from(UserRole)
+            .where(UserRole.role_id == role_id)
         )
 
         if user_count > 0:
@@ -253,7 +256,7 @@ class RoleService:
                 action="role.delete",
                 resource_type="role",
                 resource_id=str(role_id),
-                details={"role_name": role.name}
+                details={"role_name": role.name},
             )
 
         logger.info(f"Deleted role: {role.name}")
@@ -263,7 +266,7 @@ class RoleService:
         self,
         role_id: UUID,
         permission_names: List[str],
-        current_user: Optional[User] = None
+        current_user: Optional[User] = None,
     ) -> Role:
         """
         Assign permissions to a role.
@@ -297,7 +300,7 @@ class RoleService:
                 action="role.assign_permissions",
                 resource_type="role",
                 resource_id=str(role_id),
-                details={"permissions": permission_names}
+                details={"permissions": permission_names},
             )
 
         return role
@@ -306,7 +309,7 @@ class RoleService:
         self,
         role_id: UUID,
         permission_names: List[str],
-        current_user: Optional[User] = None
+        current_user: Optional[User] = None,
     ) -> Role:
         """
         Remove permissions from a role.
@@ -340,16 +343,13 @@ class RoleService:
                 action="role.remove_permissions",
                 resource_type="role",
                 resource_id=str(role_id),
-                details={"permissions": permission_names}
+                details={"permissions": permission_names},
             )
 
         return role
 
     async def assign_role_to_user(
-        self,
-        user_id: UUID,
-        role_id: UUID,
-        assigned_by: Optional[UUID] = None
+        self, user_id: UUID, role_id: UUID, assigned_by: Optional[UUID] = None
     ) -> bool:
         """
         Assign a role to a user.
@@ -377,10 +377,7 @@ class RoleService:
         # Check if already assigned
         existing = await self.db.execute(
             select(UserRole).where(
-                and_(
-                    UserRole.user_id == user_id,
-                    UserRole.role_id == role_id
-                )
+                and_(UserRole.user_id == user_id, UserRole.role_id == role_id)
             )
         )
 
@@ -388,11 +385,7 @@ class RoleService:
             return True  # Already assigned
 
         # Assign role
-        user_role = UserRole(
-            user_id=user_id,
-            role_id=role_id,
-            assigned_by=assigned_by
-        )
+        user_role = UserRole(user_id=user_id, role_id=role_id, assigned_by=assigned_by)
         self.db.add(user_role)
 
         await self.db.commit()
@@ -404,17 +397,14 @@ class RoleService:
                 action="role.assign_to_user",
                 resource_type="user",
                 resource_id=str(user_id),
-                details={"role_name": role.name}
+                details={"role_name": role.name},
             )
 
         logger.info(f"Assigned role {role.name} to user {user.email}")
         return True
 
     async def remove_role_from_user(
-        self,
-        user_id: UUID,
-        role_id: UUID,
-        removed_by: Optional[UUID] = None
+        self, user_id: UUID, role_id: UUID, removed_by: Optional[UUID] = None
     ) -> bool:
         """
         Remove a role from a user.
@@ -430,10 +420,7 @@ class RoleService:
         # Delete the assignment
         user_role = await self.db.execute(
             select(UserRole).where(
-                and_(
-                    UserRole.user_id == user_id,
-                    UserRole.role_id == role_id
-                )
+                and_(UserRole.user_id == user_id, UserRole.role_id == role_id)
             )
         )
         user_role_instance = user_role.scalar_one_or_none()
@@ -451,7 +438,7 @@ class RoleService:
                 action="role.remove_from_user",
                 resource_type="user",
                 resource_id=str(user_id),
-                details={"role_id": str(role_id)}
+                details={"role_id": str(role_id)},
             )
 
         return True
@@ -470,10 +457,7 @@ class RoleService:
         return result.scalars().all()
 
     async def get_users_with_role(
-        self,
-        role_id: UUID,
-        skip: int = 0,
-        limit: int = 100
+        self, role_id: UUID, skip: int = 0, limit: int = 100
     ) -> List[User]:
         """Get all users with a specific role."""
         query = (
@@ -487,11 +471,7 @@ class RoleService:
         result = await self.db.execute(query)
         return result.scalars().all()
 
-    async def user_has_permission(
-        self,
-        user_id: UUID,
-        permission_name: str
-    ) -> bool:
+    async def user_has_permission(self, user_id: UUID, permission_name: str) -> bool:
         """
         Check if a user has a specific permission through their roles.
 
@@ -523,7 +503,9 @@ class RoleService:
                     permissions = []
                     if role_name == SystemRoles.SUPER_ADMIN:
                         # Super admin gets all permissions
-                        permissions = [p["name"] for p in SystemPermissions.get_all_permissions()]
+                        permissions = [
+                            p["name"] for p in SystemPermissions.get_all_permissions()
+                        ]
                     elif role_name == SystemRoles.ADMIN:
                         # Admin gets most permissions except system-level ones
                         permissions = [
@@ -552,7 +534,7 @@ class RoleService:
                         description=f"System role: {display_name}",
                         is_system=True,
                         priority=100 if role_name == SystemRoles.SUPER_ADMIN else 50,
-                        permissions=permissions
+                        permissions=permissions,
                     )
 
                     logger.info(f"Created system role: {role_name}")

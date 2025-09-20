@@ -20,7 +20,7 @@ class Event:
         event_type: str,
         data: Optional[Dict[str, Any]] = None,
         user_id: Optional[str] = None,
-        timestamp: Optional[datetime] = None
+        timestamp: Optional[datetime] = None,
     ):
         self.event_type = event_type
         self.data = data or {}
@@ -49,7 +49,7 @@ class EventEmitter:
                 event_type=event.event_type,
                 user_id=event.user_id,
                 timestamp=event.timestamp.isoformat(),
-                data=event.data
+                data=event.data,
             )
 
             # Call registered listeners
@@ -64,11 +64,9 @@ class EventEmitter:
                         logger.error(
                             "Error in event listener",
                             event_type=event.event_type,
-                            error=str(e)
+                            error=str(e),
                         )
         except Exception as e:
             logger.error(
-                "Error emitting event",
-                event_type=event.event_type,
-                error=str(e)
+                "Error emitting event", event_type=event.event_type, error=str(e)
             )

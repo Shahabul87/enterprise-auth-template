@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../providers/auth_provider.dart';
-import '../screens/splash_screen.dart';
-import '../screens/auth/modern_login_screen.dart';
-import '../screens/auth/modern_register_screen.dart';
-import '../screens/auth/two_factor_setup_screen.dart';
-import '../screens/auth/two_factor_verify_screen.dart';
-import '../screens/dashboard_screen.dart';
-import '../screens/home/modern_home_screen.dart';
-import '../screens/home/public_home_screen.dart';
-import '../presentation/pages/auth/forgot_password_page.dart';
+import 'package:flutter_auth_template/presentation/providers/auth_provider.dart';
+import 'package:flutter_auth_template/presentation/pages/splash_screen.dart';
+import 'package:flutter_auth_template/presentation/pages/auth/modern_login_screen.dart';
+import 'package:flutter_auth_template/presentation/pages/auth/modern_register_screen.dart';
+import 'package:flutter_auth_template/presentation/pages/auth/two_factor_setup_screen.dart';
+import 'package:flutter_auth_template/presentation/pages/auth/two_factor_verify_screen.dart';
+import 'package:flutter_auth_template/presentation/pages/dashboard/dashboard_screen.dart';
+import 'package:flutter_auth_template/presentation/pages/home/modern_home_screen.dart';
+import 'package:flutter_auth_template/presentation/pages/home/public_home_screen.dart';
+import 'package:flutter_auth_template/presentation/pages/auth/forgot_password_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   // final authState = ref.watch(authStateProvider); // Unused variable

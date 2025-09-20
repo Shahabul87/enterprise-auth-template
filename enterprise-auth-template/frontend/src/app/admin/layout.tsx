@@ -9,6 +9,6 @@ interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
-export default function AdminRootLayout({ children }: AdminLayoutProps): JSX.Element {
+export default function AdminRootLayout({ children }: AdminLayoutProps): React.ReactElement {
   return <>{children}</>;
 }

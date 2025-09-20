@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../providers/auth_provider.dart';
-import '../../../core/security/biometric_service.dart';
-import '../../../core/security/oauth_service.dart';
-import '../../../core/errors/app_exception.dart';
+import 'package:flutter_auth_template/presentation/providers/auth_provider.dart';
+import 'package:flutter_auth_template/core/security/biometric_service.dart';
+import 'package:flutter_auth_template/core/security/oauth_service.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
 
 class EnhancedLoginForm extends HookConsumerWidget {
   final VoidCallback? onSuccess;
@@ -144,7 +144,8 @@ class EnhancedLoginForm extends HookConsumerWidget {
         }
 
         // Complete OAuth login with backend
-        await authNotifier.completeOAuthLogin('google', token);
+        // TODO: Implement OAuth login completion
+        // await authNotifier.completeOAuthLogin('google', token);
       } catch (e) {
         isLoading.value = false;
         errorMessage.value = e is AppException

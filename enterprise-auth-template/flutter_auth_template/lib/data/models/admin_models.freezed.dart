@@ -3748,3 +3748,2756 @@ abstract class _BulkOperationResult implements BulkOperationResult {
   _$$BulkOperationResultImplCopyWith<_$BulkOperationResultImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+CreateIpBlockRuleRequest _$CreateIpBlockRuleRequestFromJson(
+  Map<String, dynamic> json,
+) {
+  return _CreateIpBlockRuleRequest.fromJson(json);
+}
+
+/// @nodoc
+mixin _$CreateIpBlockRuleRequest {
+  String get ipAddress => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  bool get isActive => throw _privateConstructorUsedError;
+  DateTime? get expiresAt => throw _privateConstructorUsedError;
+
+  /// Serializes this CreateIpBlockRuleRequest to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of CreateIpBlockRuleRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $CreateIpBlockRuleRequestCopyWith<CreateIpBlockRuleRequest> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CreateIpBlockRuleRequestCopyWith<$Res> {
+  factory $CreateIpBlockRuleRequestCopyWith(
+    CreateIpBlockRuleRequest value,
+    $Res Function(CreateIpBlockRuleRequest) then,
+  ) = _$CreateIpBlockRuleRequestCopyWithImpl<$Res, CreateIpBlockRuleRequest>;
+  @useResult
+  $Res call({
+    String ipAddress,
+    String? description,
+    bool isActive,
+    DateTime? expiresAt,
+  });
+}
+
+/// @nodoc
+class _$CreateIpBlockRuleRequestCopyWithImpl<
+  $Res,
+  $Val extends CreateIpBlockRuleRequest
+>
+    implements $CreateIpBlockRuleRequestCopyWith<$Res> {
+  _$CreateIpBlockRuleRequestCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of CreateIpBlockRuleRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? ipAddress = null,
+    Object? description = freezed,
+    Object? isActive = null,
+    Object? expiresAt = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            ipAddress: null == ipAddress
+                ? _value.ipAddress
+                : ipAddress // ignore: cast_nullable_to_non_nullable
+                      as String,
+            description: freezed == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            isActive: null == isActive
+                ? _value.isActive
+                : isActive // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            expiresAt: freezed == expiresAt
+                ? _value.expiresAt
+                : expiresAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$CreateIpBlockRuleRequestImplCopyWith<$Res>
+    implements $CreateIpBlockRuleRequestCopyWith<$Res> {
+  factory _$$CreateIpBlockRuleRequestImplCopyWith(
+    _$CreateIpBlockRuleRequestImpl value,
+    $Res Function(_$CreateIpBlockRuleRequestImpl) then,
+  ) = __$$CreateIpBlockRuleRequestImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String ipAddress,
+    String? description,
+    bool isActive,
+    DateTime? expiresAt,
+  });
+}
+
+/// @nodoc
+class __$$CreateIpBlockRuleRequestImplCopyWithImpl<$Res>
+    extends
+        _$CreateIpBlockRuleRequestCopyWithImpl<
+          $Res,
+          _$CreateIpBlockRuleRequestImpl
+        >
+    implements _$$CreateIpBlockRuleRequestImplCopyWith<$Res> {
+  __$$CreateIpBlockRuleRequestImplCopyWithImpl(
+    _$CreateIpBlockRuleRequestImpl _value,
+    $Res Function(_$CreateIpBlockRuleRequestImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of CreateIpBlockRuleRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? ipAddress = null,
+    Object? description = freezed,
+    Object? isActive = null,
+    Object? expiresAt = freezed,
+  }) {
+    return _then(
+      _$CreateIpBlockRuleRequestImpl(
+        ipAddress: null == ipAddress
+            ? _value.ipAddress
+            : ipAddress // ignore: cast_nullable_to_non_nullable
+                  as String,
+        description: freezed == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        isActive: null == isActive
+            ? _value.isActive
+            : isActive // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        expiresAt: freezed == expiresAt
+            ? _value.expiresAt
+            : expiresAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CreateIpBlockRuleRequestImpl implements _CreateIpBlockRuleRequest {
+  const _$CreateIpBlockRuleRequestImpl({
+    required this.ipAddress,
+    this.description,
+    this.isActive = true,
+    this.expiresAt,
+  });
+
+  factory _$CreateIpBlockRuleRequestImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CreateIpBlockRuleRequestImplFromJson(json);
+
+  @override
+  final String ipAddress;
+  @override
+  final String? description;
+  @override
+  @JsonKey()
+  final bool isActive;
+  @override
+  final DateTime? expiresAt;
+
+  @override
+  String toString() {
+    return 'CreateIpBlockRuleRequest(ipAddress: $ipAddress, description: $description, isActive: $isActive, expiresAt: $expiresAt)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CreateIpBlockRuleRequestImpl &&
+            (identical(other.ipAddress, ipAddress) ||
+                other.ipAddress == ipAddress) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.isActive, isActive) ||
+                other.isActive == isActive) &&
+            (identical(other.expiresAt, expiresAt) ||
+                other.expiresAt == expiresAt));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, ipAddress, description, isActive, expiresAt);
+
+  /// Create a copy of CreateIpBlockRuleRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CreateIpBlockRuleRequestImplCopyWith<_$CreateIpBlockRuleRequestImpl>
+  get copyWith =>
+      __$$CreateIpBlockRuleRequestImplCopyWithImpl<
+        _$CreateIpBlockRuleRequestImpl
+      >(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CreateIpBlockRuleRequestImplToJson(this);
+  }
+}
+
+abstract class _CreateIpBlockRuleRequest implements CreateIpBlockRuleRequest {
+  const factory _CreateIpBlockRuleRequest({
+    required final String ipAddress,
+    final String? description,
+    final bool isActive,
+    final DateTime? expiresAt,
+  }) = _$CreateIpBlockRuleRequestImpl;
+
+  factory _CreateIpBlockRuleRequest.fromJson(Map<String, dynamic> json) =
+      _$CreateIpBlockRuleRequestImpl.fromJson;
+
+  @override
+  String get ipAddress;
+  @override
+  String? get description;
+  @override
+  bool get isActive;
+  @override
+  DateTime? get expiresAt;
+
+  /// Create a copy of CreateIpBlockRuleRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CreateIpBlockRuleRequestImplCopyWith<_$CreateIpBlockRuleRequestImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}
+
+CreateRateLimitRuleRequest _$CreateRateLimitRuleRequestFromJson(
+  Map<String, dynamic> json,
+) {
+  return _CreateRateLimitRuleRequest.fromJson(json);
+}
+
+/// @nodoc
+mixin _$CreateRateLimitRuleRequest {
+  String get endpoint => throw _privateConstructorUsedError;
+  int get maxRequests => throw _privateConstructorUsedError;
+  int get windowSeconds => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  bool get isActive => throw _privateConstructorUsedError;
+
+  /// Serializes this CreateRateLimitRuleRequest to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of CreateRateLimitRuleRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $CreateRateLimitRuleRequestCopyWith<CreateRateLimitRuleRequest>
+  get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CreateRateLimitRuleRequestCopyWith<$Res> {
+  factory $CreateRateLimitRuleRequestCopyWith(
+    CreateRateLimitRuleRequest value,
+    $Res Function(CreateRateLimitRuleRequest) then,
+  ) =
+      _$CreateRateLimitRuleRequestCopyWithImpl<
+        $Res,
+        CreateRateLimitRuleRequest
+      >;
+  @useResult
+  $Res call({
+    String endpoint,
+    int maxRequests,
+    int windowSeconds,
+    String? description,
+    bool isActive,
+  });
+}
+
+/// @nodoc
+class _$CreateRateLimitRuleRequestCopyWithImpl<
+  $Res,
+  $Val extends CreateRateLimitRuleRequest
+>
+    implements $CreateRateLimitRuleRequestCopyWith<$Res> {
+  _$CreateRateLimitRuleRequestCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of CreateRateLimitRuleRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? endpoint = null,
+    Object? maxRequests = null,
+    Object? windowSeconds = null,
+    Object? description = freezed,
+    Object? isActive = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            endpoint: null == endpoint
+                ? _value.endpoint
+                : endpoint // ignore: cast_nullable_to_non_nullable
+                      as String,
+            maxRequests: null == maxRequests
+                ? _value.maxRequests
+                : maxRequests // ignore: cast_nullable_to_non_nullable
+                      as int,
+            windowSeconds: null == windowSeconds
+                ? _value.windowSeconds
+                : windowSeconds // ignore: cast_nullable_to_non_nullable
+                      as int,
+            description: freezed == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            isActive: null == isActive
+                ? _value.isActive
+                : isActive // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$CreateRateLimitRuleRequestImplCopyWith<$Res>
+    implements $CreateRateLimitRuleRequestCopyWith<$Res> {
+  factory _$$CreateRateLimitRuleRequestImplCopyWith(
+    _$CreateRateLimitRuleRequestImpl value,
+    $Res Function(_$CreateRateLimitRuleRequestImpl) then,
+  ) = __$$CreateRateLimitRuleRequestImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String endpoint,
+    int maxRequests,
+    int windowSeconds,
+    String? description,
+    bool isActive,
+  });
+}
+
+/// @nodoc
+class __$$CreateRateLimitRuleRequestImplCopyWithImpl<$Res>
+    extends
+        _$CreateRateLimitRuleRequestCopyWithImpl<
+          $Res,
+          _$CreateRateLimitRuleRequestImpl
+        >
+    implements _$$CreateRateLimitRuleRequestImplCopyWith<$Res> {
+  __$$CreateRateLimitRuleRequestImplCopyWithImpl(
+    _$CreateRateLimitRuleRequestImpl _value,
+    $Res Function(_$CreateRateLimitRuleRequestImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of CreateRateLimitRuleRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? endpoint = null,
+    Object? maxRequests = null,
+    Object? windowSeconds = null,
+    Object? description = freezed,
+    Object? isActive = null,
+  }) {
+    return _then(
+      _$CreateRateLimitRuleRequestImpl(
+        endpoint: null == endpoint
+            ? _value.endpoint
+            : endpoint // ignore: cast_nullable_to_non_nullable
+                  as String,
+        maxRequests: null == maxRequests
+            ? _value.maxRequests
+            : maxRequests // ignore: cast_nullable_to_non_nullable
+                  as int,
+        windowSeconds: null == windowSeconds
+            ? _value.windowSeconds
+            : windowSeconds // ignore: cast_nullable_to_non_nullable
+                  as int,
+        description: freezed == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        isActive: null == isActive
+            ? _value.isActive
+            : isActive // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CreateRateLimitRuleRequestImpl implements _CreateRateLimitRuleRequest {
+  const _$CreateRateLimitRuleRequestImpl({
+    required this.endpoint,
+    required this.maxRequests,
+    required this.windowSeconds,
+    this.description,
+    this.isActive = true,
+  });
+
+  factory _$CreateRateLimitRuleRequestImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$CreateRateLimitRuleRequestImplFromJson(json);
+
+  @override
+  final String endpoint;
+  @override
+  final int maxRequests;
+  @override
+  final int windowSeconds;
+  @override
+  final String? description;
+  @override
+  @JsonKey()
+  final bool isActive;
+
+  @override
+  String toString() {
+    return 'CreateRateLimitRuleRequest(endpoint: $endpoint, maxRequests: $maxRequests, windowSeconds: $windowSeconds, description: $description, isActive: $isActive)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CreateRateLimitRuleRequestImpl &&
+            (identical(other.endpoint, endpoint) ||
+                other.endpoint == endpoint) &&
+            (identical(other.maxRequests, maxRequests) ||
+                other.maxRequests == maxRequests) &&
+            (identical(other.windowSeconds, windowSeconds) ||
+                other.windowSeconds == windowSeconds) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.isActive, isActive) ||
+                other.isActive == isActive));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    endpoint,
+    maxRequests,
+    windowSeconds,
+    description,
+    isActive,
+  );
+
+  /// Create a copy of CreateRateLimitRuleRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CreateRateLimitRuleRequestImplCopyWith<_$CreateRateLimitRuleRequestImpl>
+  get copyWith =>
+      __$$CreateRateLimitRuleRequestImplCopyWithImpl<
+        _$CreateRateLimitRuleRequestImpl
+      >(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CreateRateLimitRuleRequestImplToJson(this);
+  }
+}
+
+abstract class _CreateRateLimitRuleRequest
+    implements CreateRateLimitRuleRequest {
+  const factory _CreateRateLimitRuleRequest({
+    required final String endpoint,
+    required final int maxRequests,
+    required final int windowSeconds,
+    final String? description,
+    final bool isActive,
+  }) = _$CreateRateLimitRuleRequestImpl;
+
+  factory _CreateRateLimitRuleRequest.fromJson(Map<String, dynamic> json) =
+      _$CreateRateLimitRuleRequestImpl.fromJson;
+
+  @override
+  String get endpoint;
+  @override
+  int get maxRequests;
+  @override
+  int get windowSeconds;
+  @override
+  String? get description;
+  @override
+  bool get isActive;
+
+  /// Create a copy of CreateRateLimitRuleRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CreateRateLimitRuleRequestImplCopyWith<_$CreateRateLimitRuleRequestImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}
+
+RestorePoint _$RestorePointFromJson(Map<String, dynamic> json) {
+  return _RestorePoint.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RestorePoint {
+  String get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  int get size => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
+  Map<String, dynamic> get metadata => throw _privateConstructorUsedError;
+
+  /// Serializes this RestorePoint to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of RestorePoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $RestorePointCopyWith<RestorePoint> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RestorePointCopyWith<$Res> {
+  factory $RestorePointCopyWith(
+    RestorePoint value,
+    $Res Function(RestorePoint) then,
+  ) = _$RestorePointCopyWithImpl<$Res, RestorePoint>;
+  @useResult
+  $Res call({
+    String id,
+    String name,
+    DateTime createdAt,
+    int size,
+    String description,
+    Map<String, dynamic> metadata,
+  });
+}
+
+/// @nodoc
+class _$RestorePointCopyWithImpl<$Res, $Val extends RestorePoint>
+    implements $RestorePointCopyWith<$Res> {
+  _$RestorePointCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of RestorePoint
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? createdAt = null,
+    Object? size = null,
+    Object? description = null,
+    Object? metadata = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            size: null == size
+                ? _value.size
+                : size // ignore: cast_nullable_to_non_nullable
+                      as int,
+            description: null == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String,
+            metadata: null == metadata
+                ? _value.metadata
+                : metadata // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$RestorePointImplCopyWith<$Res>
+    implements $RestorePointCopyWith<$Res> {
+  factory _$$RestorePointImplCopyWith(
+    _$RestorePointImpl value,
+    $Res Function(_$RestorePointImpl) then,
+  ) = __$$RestorePointImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String id,
+    String name,
+    DateTime createdAt,
+    int size,
+    String description,
+    Map<String, dynamic> metadata,
+  });
+}
+
+/// @nodoc
+class __$$RestorePointImplCopyWithImpl<$Res>
+    extends _$RestorePointCopyWithImpl<$Res, _$RestorePointImpl>
+    implements _$$RestorePointImplCopyWith<$Res> {
+  __$$RestorePointImplCopyWithImpl(
+    _$RestorePointImpl _value,
+    $Res Function(_$RestorePointImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of RestorePoint
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? createdAt = null,
+    Object? size = null,
+    Object? description = null,
+    Object? metadata = null,
+  }) {
+    return _then(
+      _$RestorePointImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        size: null == size
+            ? _value.size
+            : size // ignore: cast_nullable_to_non_nullable
+                  as int,
+        description: null == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String,
+        metadata: null == metadata
+            ? _value._metadata
+            : metadata // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$RestorePointImpl implements _RestorePoint {
+  const _$RestorePointImpl({
+    required this.id,
+    required this.name,
+    required this.createdAt,
+    required this.size,
+    required this.description,
+    required final Map<String, dynamic> metadata,
+  }) : _metadata = metadata;
+
+  factory _$RestorePointImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RestorePointImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String name;
+  @override
+  final DateTime createdAt;
+  @override
+  final int size;
+  @override
+  final String description;
+  final Map<String, dynamic> _metadata;
+  @override
+  Map<String, dynamic> get metadata {
+    if (_metadata is EqualUnmodifiableMapView) return _metadata;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_metadata);
+  }
+
+  @override
+  String toString() {
+    return 'RestorePoint(id: $id, name: $name, createdAt: $createdAt, size: $size, description: $description, metadata: $metadata)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RestorePointImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.size, size) || other.size == size) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            const DeepCollectionEquality().equals(other._metadata, _metadata));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    name,
+    createdAt,
+    size,
+    description,
+    const DeepCollectionEquality().hash(_metadata),
+  );
+
+  /// Create a copy of RestorePoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RestorePointImplCopyWith<_$RestorePointImpl> get copyWith =>
+      __$$RestorePointImplCopyWithImpl<_$RestorePointImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RestorePointImplToJson(this);
+  }
+}
+
+abstract class _RestorePoint implements RestorePoint {
+  const factory _RestorePoint({
+    required final String id,
+    required final String name,
+    required final DateTime createdAt,
+    required final int size,
+    required final String description,
+    required final Map<String, dynamic> metadata,
+  }) = _$RestorePointImpl;
+
+  factory _RestorePoint.fromJson(Map<String, dynamic> json) =
+      _$RestorePointImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get name;
+  @override
+  DateTime get createdAt;
+  @override
+  int get size;
+  @override
+  String get description;
+  @override
+  Map<String, dynamic> get metadata;
+
+  /// Create a copy of RestorePoint
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$RestorePointImplCopyWith<_$RestorePointImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+CreateExportRequest _$CreateExportRequestFromJson(Map<String, dynamic> json) {
+  return _CreateExportRequest.fromJson(json);
+}
+
+/// @nodoc
+mixin _$CreateExportRequest {
+  String get format => throw _privateConstructorUsedError;
+  List<String> get tables => throw _privateConstructorUsedError;
+  bool get includeMetadata => throw _privateConstructorUsedError;
+  DateTime? get startDate => throw _privateConstructorUsedError;
+  DateTime? get endDate => throw _privateConstructorUsedError;
+
+  /// Serializes this CreateExportRequest to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of CreateExportRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $CreateExportRequestCopyWith<CreateExportRequest> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CreateExportRequestCopyWith<$Res> {
+  factory $CreateExportRequestCopyWith(
+    CreateExportRequest value,
+    $Res Function(CreateExportRequest) then,
+  ) = _$CreateExportRequestCopyWithImpl<$Res, CreateExportRequest>;
+  @useResult
+  $Res call({
+    String format,
+    List<String> tables,
+    bool includeMetadata,
+    DateTime? startDate,
+    DateTime? endDate,
+  });
+}
+
+/// @nodoc
+class _$CreateExportRequestCopyWithImpl<$Res, $Val extends CreateExportRequest>
+    implements $CreateExportRequestCopyWith<$Res> {
+  _$CreateExportRequestCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of CreateExportRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? format = null,
+    Object? tables = null,
+    Object? includeMetadata = null,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            format: null == format
+                ? _value.format
+                : format // ignore: cast_nullable_to_non_nullable
+                      as String,
+            tables: null == tables
+                ? _value.tables
+                : tables // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            includeMetadata: null == includeMetadata
+                ? _value.includeMetadata
+                : includeMetadata // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            startDate: freezed == startDate
+                ? _value.startDate
+                : startDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            endDate: freezed == endDate
+                ? _value.endDate
+                : endDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$CreateExportRequestImplCopyWith<$Res>
+    implements $CreateExportRequestCopyWith<$Res> {
+  factory _$$CreateExportRequestImplCopyWith(
+    _$CreateExportRequestImpl value,
+    $Res Function(_$CreateExportRequestImpl) then,
+  ) = __$$CreateExportRequestImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String format,
+    List<String> tables,
+    bool includeMetadata,
+    DateTime? startDate,
+    DateTime? endDate,
+  });
+}
+
+/// @nodoc
+class __$$CreateExportRequestImplCopyWithImpl<$Res>
+    extends _$CreateExportRequestCopyWithImpl<$Res, _$CreateExportRequestImpl>
+    implements _$$CreateExportRequestImplCopyWith<$Res> {
+  __$$CreateExportRequestImplCopyWithImpl(
+    _$CreateExportRequestImpl _value,
+    $Res Function(_$CreateExportRequestImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of CreateExportRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? format = null,
+    Object? tables = null,
+    Object? includeMetadata = null,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
+  }) {
+    return _then(
+      _$CreateExportRequestImpl(
+        format: null == format
+            ? _value.format
+            : format // ignore: cast_nullable_to_non_nullable
+                  as String,
+        tables: null == tables
+            ? _value._tables
+            : tables // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        includeMetadata: null == includeMetadata
+            ? _value.includeMetadata
+            : includeMetadata // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        startDate: freezed == startDate
+            ? _value.startDate
+            : startDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        endDate: freezed == endDate
+            ? _value.endDate
+            : endDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CreateExportRequestImpl implements _CreateExportRequest {
+  const _$CreateExportRequestImpl({
+    required this.format,
+    required final List<String> tables,
+    this.includeMetadata = true,
+    this.startDate,
+    this.endDate,
+  }) : _tables = tables;
+
+  factory _$CreateExportRequestImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CreateExportRequestImplFromJson(json);
+
+  @override
+  final String format;
+  final List<String> _tables;
+  @override
+  List<String> get tables {
+    if (_tables is EqualUnmodifiableListView) return _tables;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tables);
+  }
+
+  @override
+  @JsonKey()
+  final bool includeMetadata;
+  @override
+  final DateTime? startDate;
+  @override
+  final DateTime? endDate;
+
+  @override
+  String toString() {
+    return 'CreateExportRequest(format: $format, tables: $tables, includeMetadata: $includeMetadata, startDate: $startDate, endDate: $endDate)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CreateExportRequestImpl &&
+            (identical(other.format, format) || other.format == format) &&
+            const DeepCollectionEquality().equals(other._tables, _tables) &&
+            (identical(other.includeMetadata, includeMetadata) ||
+                other.includeMetadata == includeMetadata) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.endDate, endDate) || other.endDate == endDate));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    format,
+    const DeepCollectionEquality().hash(_tables),
+    includeMetadata,
+    startDate,
+    endDate,
+  );
+
+  /// Create a copy of CreateExportRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CreateExportRequestImplCopyWith<_$CreateExportRequestImpl> get copyWith =>
+      __$$CreateExportRequestImplCopyWithImpl<_$CreateExportRequestImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CreateExportRequestImplToJson(this);
+  }
+}
+
+abstract class _CreateExportRequest implements CreateExportRequest {
+  const factory _CreateExportRequest({
+    required final String format,
+    required final List<String> tables,
+    final bool includeMetadata,
+    final DateTime? startDate,
+    final DateTime? endDate,
+  }) = _$CreateExportRequestImpl;
+
+  factory _CreateExportRequest.fromJson(Map<String, dynamic> json) =
+      _$CreateExportRequestImpl.fromJson;
+
+  @override
+  String get format;
+  @override
+  List<String> get tables;
+  @override
+  bool get includeMetadata;
+  @override
+  DateTime? get startDate;
+  @override
+  DateTime? get endDate;
+
+  /// Create a copy of CreateExportRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CreateExportRequestImplCopyWith<_$CreateExportRequestImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+CreateBackupRequest _$CreateBackupRequestFromJson(Map<String, dynamic> json) {
+  return _CreateBackupRequest.fromJson(json);
+}
+
+/// @nodoc
+mixin _$CreateBackupRequest {
+  String get name => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
+  bool get includeUserData => throw _privateConstructorUsedError;
+  bool get includeSystemData => throw _privateConstructorUsedError;
+  bool get compress => throw _privateConstructorUsedError;
+
+  /// Serializes this CreateBackupRequest to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of CreateBackupRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $CreateBackupRequestCopyWith<CreateBackupRequest> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CreateBackupRequestCopyWith<$Res> {
+  factory $CreateBackupRequestCopyWith(
+    CreateBackupRequest value,
+    $Res Function(CreateBackupRequest) then,
+  ) = _$CreateBackupRequestCopyWithImpl<$Res, CreateBackupRequest>;
+  @useResult
+  $Res call({
+    String name,
+    String description,
+    bool includeUserData,
+    bool includeSystemData,
+    bool compress,
+  });
+}
+
+/// @nodoc
+class _$CreateBackupRequestCopyWithImpl<$Res, $Val extends CreateBackupRequest>
+    implements $CreateBackupRequestCopyWith<$Res> {
+  _$CreateBackupRequestCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of CreateBackupRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? description = null,
+    Object? includeUserData = null,
+    Object? includeSystemData = null,
+    Object? compress = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            description: null == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String,
+            includeUserData: null == includeUserData
+                ? _value.includeUserData
+                : includeUserData // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            includeSystemData: null == includeSystemData
+                ? _value.includeSystemData
+                : includeSystemData // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            compress: null == compress
+                ? _value.compress
+                : compress // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$CreateBackupRequestImplCopyWith<$Res>
+    implements $CreateBackupRequestCopyWith<$Res> {
+  factory _$$CreateBackupRequestImplCopyWith(
+    _$CreateBackupRequestImpl value,
+    $Res Function(_$CreateBackupRequestImpl) then,
+  ) = __$$CreateBackupRequestImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String name,
+    String description,
+    bool includeUserData,
+    bool includeSystemData,
+    bool compress,
+  });
+}
+
+/// @nodoc
+class __$$CreateBackupRequestImplCopyWithImpl<$Res>
+    extends _$CreateBackupRequestCopyWithImpl<$Res, _$CreateBackupRequestImpl>
+    implements _$$CreateBackupRequestImplCopyWith<$Res> {
+  __$$CreateBackupRequestImplCopyWithImpl(
+    _$CreateBackupRequestImpl _value,
+    $Res Function(_$CreateBackupRequestImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of CreateBackupRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? description = null,
+    Object? includeUserData = null,
+    Object? includeSystemData = null,
+    Object? compress = null,
+  }) {
+    return _then(
+      _$CreateBackupRequestImpl(
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        description: null == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String,
+        includeUserData: null == includeUserData
+            ? _value.includeUserData
+            : includeUserData // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        includeSystemData: null == includeSystemData
+            ? _value.includeSystemData
+            : includeSystemData // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        compress: null == compress
+            ? _value.compress
+            : compress // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CreateBackupRequestImpl implements _CreateBackupRequest {
+  const _$CreateBackupRequestImpl({
+    required this.name,
+    required this.description,
+    this.includeUserData = true,
+    this.includeSystemData = true,
+    this.compress = true,
+  });
+
+  factory _$CreateBackupRequestImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CreateBackupRequestImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String description;
+  @override
+  @JsonKey()
+  final bool includeUserData;
+  @override
+  @JsonKey()
+  final bool includeSystemData;
+  @override
+  @JsonKey()
+  final bool compress;
+
+  @override
+  String toString() {
+    return 'CreateBackupRequest(name: $name, description: $description, includeUserData: $includeUserData, includeSystemData: $includeSystemData, compress: $compress)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CreateBackupRequestImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.includeUserData, includeUserData) ||
+                other.includeUserData == includeUserData) &&
+            (identical(other.includeSystemData, includeSystemData) ||
+                other.includeSystemData == includeSystemData) &&
+            (identical(other.compress, compress) ||
+                other.compress == compress));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    name,
+    description,
+    includeUserData,
+    includeSystemData,
+    compress,
+  );
+
+  /// Create a copy of CreateBackupRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CreateBackupRequestImplCopyWith<_$CreateBackupRequestImpl> get copyWith =>
+      __$$CreateBackupRequestImplCopyWithImpl<_$CreateBackupRequestImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CreateBackupRequestImplToJson(this);
+  }
+}
+
+abstract class _CreateBackupRequest implements CreateBackupRequest {
+  const factory _CreateBackupRequest({
+    required final String name,
+    required final String description,
+    final bool includeUserData,
+    final bool includeSystemData,
+    final bool compress,
+  }) = _$CreateBackupRequestImpl;
+
+  factory _CreateBackupRequest.fromJson(Map<String, dynamic> json) =
+      _$CreateBackupRequestImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get description;
+  @override
+  bool get includeUserData;
+  @override
+  bool get includeSystemData;
+  @override
+  bool get compress;
+
+  /// Create a copy of CreateBackupRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CreateBackupRequestImplCopyWith<_$CreateBackupRequestImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+BackupSchedule _$BackupScheduleFromJson(Map<String, dynamic> json) {
+  return _BackupSchedule.fromJson(json);
+}
+
+/// @nodoc
+mixin _$BackupSchedule {
+  String get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  String get cronExpression => throw _privateConstructorUsedError;
+  bool get isActive => throw _privateConstructorUsedError;
+  DateTime? get lastRun => throw _privateConstructorUsedError;
+  DateTime? get nextRun => throw _privateConstructorUsedError;
+
+  /// Serializes this BackupSchedule to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of BackupSchedule
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $BackupScheduleCopyWith<BackupSchedule> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $BackupScheduleCopyWith<$Res> {
+  factory $BackupScheduleCopyWith(
+    BackupSchedule value,
+    $Res Function(BackupSchedule) then,
+  ) = _$BackupScheduleCopyWithImpl<$Res, BackupSchedule>;
+  @useResult
+  $Res call({
+    String id,
+    String name,
+    String cronExpression,
+    bool isActive,
+    DateTime? lastRun,
+    DateTime? nextRun,
+  });
+}
+
+/// @nodoc
+class _$BackupScheduleCopyWithImpl<$Res, $Val extends BackupSchedule>
+    implements $BackupScheduleCopyWith<$Res> {
+  _$BackupScheduleCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of BackupSchedule
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? cronExpression = null,
+    Object? isActive = null,
+    Object? lastRun = freezed,
+    Object? nextRun = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            cronExpression: null == cronExpression
+                ? _value.cronExpression
+                : cronExpression // ignore: cast_nullable_to_non_nullable
+                      as String,
+            isActive: null == isActive
+                ? _value.isActive
+                : isActive // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            lastRun: freezed == lastRun
+                ? _value.lastRun
+                : lastRun // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            nextRun: freezed == nextRun
+                ? _value.nextRun
+                : nextRun // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$BackupScheduleImplCopyWith<$Res>
+    implements $BackupScheduleCopyWith<$Res> {
+  factory _$$BackupScheduleImplCopyWith(
+    _$BackupScheduleImpl value,
+    $Res Function(_$BackupScheduleImpl) then,
+  ) = __$$BackupScheduleImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String id,
+    String name,
+    String cronExpression,
+    bool isActive,
+    DateTime? lastRun,
+    DateTime? nextRun,
+  });
+}
+
+/// @nodoc
+class __$$BackupScheduleImplCopyWithImpl<$Res>
+    extends _$BackupScheduleCopyWithImpl<$Res, _$BackupScheduleImpl>
+    implements _$$BackupScheduleImplCopyWith<$Res> {
+  __$$BackupScheduleImplCopyWithImpl(
+    _$BackupScheduleImpl _value,
+    $Res Function(_$BackupScheduleImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of BackupSchedule
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? name = null,
+    Object? cronExpression = null,
+    Object? isActive = null,
+    Object? lastRun = freezed,
+    Object? nextRun = freezed,
+  }) {
+    return _then(
+      _$BackupScheduleImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        cronExpression: null == cronExpression
+            ? _value.cronExpression
+            : cronExpression // ignore: cast_nullable_to_non_nullable
+                  as String,
+        isActive: null == isActive
+            ? _value.isActive
+            : isActive // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        lastRun: freezed == lastRun
+            ? _value.lastRun
+            : lastRun // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        nextRun: freezed == nextRun
+            ? _value.nextRun
+            : nextRun // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$BackupScheduleImpl implements _BackupSchedule {
+  const _$BackupScheduleImpl({
+    required this.id,
+    required this.name,
+    required this.cronExpression,
+    this.isActive = true,
+    this.lastRun,
+    this.nextRun,
+  });
+
+  factory _$BackupScheduleImpl.fromJson(Map<String, dynamic> json) =>
+      _$$BackupScheduleImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String name;
+  @override
+  final String cronExpression;
+  @override
+  @JsonKey()
+  final bool isActive;
+  @override
+  final DateTime? lastRun;
+  @override
+  final DateTime? nextRun;
+
+  @override
+  String toString() {
+    return 'BackupSchedule(id: $id, name: $name, cronExpression: $cronExpression, isActive: $isActive, lastRun: $lastRun, nextRun: $nextRun)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BackupScheduleImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.cronExpression, cronExpression) ||
+                other.cronExpression == cronExpression) &&
+            (identical(other.isActive, isActive) ||
+                other.isActive == isActive) &&
+            (identical(other.lastRun, lastRun) || other.lastRun == lastRun) &&
+            (identical(other.nextRun, nextRun) || other.nextRun == nextRun));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    name,
+    cronExpression,
+    isActive,
+    lastRun,
+    nextRun,
+  );
+
+  /// Create a copy of BackupSchedule
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BackupScheduleImplCopyWith<_$BackupScheduleImpl> get copyWith =>
+      __$$BackupScheduleImplCopyWithImpl<_$BackupScheduleImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$BackupScheduleImplToJson(this);
+  }
+}
+
+abstract class _BackupSchedule implements BackupSchedule {
+  const factory _BackupSchedule({
+    required final String id,
+    required final String name,
+    required final String cronExpression,
+    final bool isActive,
+    final DateTime? lastRun,
+    final DateTime? nextRun,
+  }) = _$BackupScheduleImpl;
+
+  factory _BackupSchedule.fromJson(Map<String, dynamic> json) =
+      _$BackupScheduleImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get name;
+  @override
+  String get cronExpression;
+  @override
+  bool get isActive;
+  @override
+  DateTime? get lastRun;
+  @override
+  DateTime? get nextRun;
+
+  /// Create a copy of BackupSchedule
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$BackupScheduleImplCopyWith<_$BackupScheduleImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+RetentionPolicy _$RetentionPolicyFromJson(Map<String, dynamic> json) {
+  return _RetentionPolicy.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RetentionPolicy {
+  int get daysToKeep => throw _privateConstructorUsedError;
+  int get maxBackups => throw _privateConstructorUsedError;
+  bool get autoDelete => throw _privateConstructorUsedError;
+  bool get notifyBeforeDelete => throw _privateConstructorUsedError;
+
+  /// Serializes this RetentionPolicy to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of RetentionPolicy
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $RetentionPolicyCopyWith<RetentionPolicy> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RetentionPolicyCopyWith<$Res> {
+  factory $RetentionPolicyCopyWith(
+    RetentionPolicy value,
+    $Res Function(RetentionPolicy) then,
+  ) = _$RetentionPolicyCopyWithImpl<$Res, RetentionPolicy>;
+  @useResult
+  $Res call({
+    int daysToKeep,
+    int maxBackups,
+    bool autoDelete,
+    bool notifyBeforeDelete,
+  });
+}
+
+/// @nodoc
+class _$RetentionPolicyCopyWithImpl<$Res, $Val extends RetentionPolicy>
+    implements $RetentionPolicyCopyWith<$Res> {
+  _$RetentionPolicyCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of RetentionPolicy
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? daysToKeep = null,
+    Object? maxBackups = null,
+    Object? autoDelete = null,
+    Object? notifyBeforeDelete = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            daysToKeep: null == daysToKeep
+                ? _value.daysToKeep
+                : daysToKeep // ignore: cast_nullable_to_non_nullable
+                      as int,
+            maxBackups: null == maxBackups
+                ? _value.maxBackups
+                : maxBackups // ignore: cast_nullable_to_non_nullable
+                      as int,
+            autoDelete: null == autoDelete
+                ? _value.autoDelete
+                : autoDelete // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            notifyBeforeDelete: null == notifyBeforeDelete
+                ? _value.notifyBeforeDelete
+                : notifyBeforeDelete // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$RetentionPolicyImplCopyWith<$Res>
+    implements $RetentionPolicyCopyWith<$Res> {
+  factory _$$RetentionPolicyImplCopyWith(
+    _$RetentionPolicyImpl value,
+    $Res Function(_$RetentionPolicyImpl) then,
+  ) = __$$RetentionPolicyImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    int daysToKeep,
+    int maxBackups,
+    bool autoDelete,
+    bool notifyBeforeDelete,
+  });
+}
+
+/// @nodoc
+class __$$RetentionPolicyImplCopyWithImpl<$Res>
+    extends _$RetentionPolicyCopyWithImpl<$Res, _$RetentionPolicyImpl>
+    implements _$$RetentionPolicyImplCopyWith<$Res> {
+  __$$RetentionPolicyImplCopyWithImpl(
+    _$RetentionPolicyImpl _value,
+    $Res Function(_$RetentionPolicyImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of RetentionPolicy
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? daysToKeep = null,
+    Object? maxBackups = null,
+    Object? autoDelete = null,
+    Object? notifyBeforeDelete = null,
+  }) {
+    return _then(
+      _$RetentionPolicyImpl(
+        daysToKeep: null == daysToKeep
+            ? _value.daysToKeep
+            : daysToKeep // ignore: cast_nullable_to_non_nullable
+                  as int,
+        maxBackups: null == maxBackups
+            ? _value.maxBackups
+            : maxBackups // ignore: cast_nullable_to_non_nullable
+                  as int,
+        autoDelete: null == autoDelete
+            ? _value.autoDelete
+            : autoDelete // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        notifyBeforeDelete: null == notifyBeforeDelete
+            ? _value.notifyBeforeDelete
+            : notifyBeforeDelete // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$RetentionPolicyImpl implements _RetentionPolicy {
+  const _$RetentionPolicyImpl({
+    required this.daysToKeep,
+    required this.maxBackups,
+    this.autoDelete = false,
+    this.notifyBeforeDelete = true,
+  });
+
+  factory _$RetentionPolicyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RetentionPolicyImplFromJson(json);
+
+  @override
+  final int daysToKeep;
+  @override
+  final int maxBackups;
+  @override
+  @JsonKey()
+  final bool autoDelete;
+  @override
+  @JsonKey()
+  final bool notifyBeforeDelete;
+
+  @override
+  String toString() {
+    return 'RetentionPolicy(daysToKeep: $daysToKeep, maxBackups: $maxBackups, autoDelete: $autoDelete, notifyBeforeDelete: $notifyBeforeDelete)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RetentionPolicyImpl &&
+            (identical(other.daysToKeep, daysToKeep) ||
+                other.daysToKeep == daysToKeep) &&
+            (identical(other.maxBackups, maxBackups) ||
+                other.maxBackups == maxBackups) &&
+            (identical(other.autoDelete, autoDelete) ||
+                other.autoDelete == autoDelete) &&
+            (identical(other.notifyBeforeDelete, notifyBeforeDelete) ||
+                other.notifyBeforeDelete == notifyBeforeDelete));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    daysToKeep,
+    maxBackups,
+    autoDelete,
+    notifyBeforeDelete,
+  );
+
+  /// Create a copy of RetentionPolicy
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RetentionPolicyImplCopyWith<_$RetentionPolicyImpl> get copyWith =>
+      __$$RetentionPolicyImplCopyWithImpl<_$RetentionPolicyImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RetentionPolicyImplToJson(this);
+  }
+}
+
+abstract class _RetentionPolicy implements RetentionPolicy {
+  const factory _RetentionPolicy({
+    required final int daysToKeep,
+    required final int maxBackups,
+    final bool autoDelete,
+    final bool notifyBeforeDelete,
+  }) = _$RetentionPolicyImpl;
+
+  factory _RetentionPolicy.fromJson(Map<String, dynamic> json) =
+      _$RetentionPolicyImpl.fromJson;
+
+  @override
+  int get daysToKeep;
+  @override
+  int get maxBackups;
+  @override
+  bool get autoDelete;
+  @override
+  bool get notifyBeforeDelete;
+
+  /// Create a copy of RetentionPolicy
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$RetentionPolicyImplCopyWith<_$RetentionPolicyImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+SessionAnalytics _$SessionAnalyticsFromJson(Map<String, dynamic> json) {
+  return _SessionAnalytics.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SessionAnalytics {
+  int get totalSessions => throw _privateConstructorUsedError;
+  int get activeSessions => throw _privateConstructorUsedError;
+  double get averageSessionDuration => throw _privateConstructorUsedError;
+  Map<String, int> get sessionsByPlatform => throw _privateConstructorUsedError;
+  Map<String, int> get sessionsByLocation => throw _privateConstructorUsedError;
+
+  /// Serializes this SessionAnalytics to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of SessionAnalytics
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $SessionAnalyticsCopyWith<SessionAnalytics> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SessionAnalyticsCopyWith<$Res> {
+  factory $SessionAnalyticsCopyWith(
+    SessionAnalytics value,
+    $Res Function(SessionAnalytics) then,
+  ) = _$SessionAnalyticsCopyWithImpl<$Res, SessionAnalytics>;
+  @useResult
+  $Res call({
+    int totalSessions,
+    int activeSessions,
+    double averageSessionDuration,
+    Map<String, int> sessionsByPlatform,
+    Map<String, int> sessionsByLocation,
+  });
+}
+
+/// @nodoc
+class _$SessionAnalyticsCopyWithImpl<$Res, $Val extends SessionAnalytics>
+    implements $SessionAnalyticsCopyWith<$Res> {
+  _$SessionAnalyticsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of SessionAnalytics
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? totalSessions = null,
+    Object? activeSessions = null,
+    Object? averageSessionDuration = null,
+    Object? sessionsByPlatform = null,
+    Object? sessionsByLocation = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            totalSessions: null == totalSessions
+                ? _value.totalSessions
+                : totalSessions // ignore: cast_nullable_to_non_nullable
+                      as int,
+            activeSessions: null == activeSessions
+                ? _value.activeSessions
+                : activeSessions // ignore: cast_nullable_to_non_nullable
+                      as int,
+            averageSessionDuration: null == averageSessionDuration
+                ? _value.averageSessionDuration
+                : averageSessionDuration // ignore: cast_nullable_to_non_nullable
+                      as double,
+            sessionsByPlatform: null == sessionsByPlatform
+                ? _value.sessionsByPlatform
+                : sessionsByPlatform // ignore: cast_nullable_to_non_nullable
+                      as Map<String, int>,
+            sessionsByLocation: null == sessionsByLocation
+                ? _value.sessionsByLocation
+                : sessionsByLocation // ignore: cast_nullable_to_non_nullable
+                      as Map<String, int>,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$SessionAnalyticsImplCopyWith<$Res>
+    implements $SessionAnalyticsCopyWith<$Res> {
+  factory _$$SessionAnalyticsImplCopyWith(
+    _$SessionAnalyticsImpl value,
+    $Res Function(_$SessionAnalyticsImpl) then,
+  ) = __$$SessionAnalyticsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    int totalSessions,
+    int activeSessions,
+    double averageSessionDuration,
+    Map<String, int> sessionsByPlatform,
+    Map<String, int> sessionsByLocation,
+  });
+}
+
+/// @nodoc
+class __$$SessionAnalyticsImplCopyWithImpl<$Res>
+    extends _$SessionAnalyticsCopyWithImpl<$Res, _$SessionAnalyticsImpl>
+    implements _$$SessionAnalyticsImplCopyWith<$Res> {
+  __$$SessionAnalyticsImplCopyWithImpl(
+    _$SessionAnalyticsImpl _value,
+    $Res Function(_$SessionAnalyticsImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of SessionAnalytics
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? totalSessions = null,
+    Object? activeSessions = null,
+    Object? averageSessionDuration = null,
+    Object? sessionsByPlatform = null,
+    Object? sessionsByLocation = null,
+  }) {
+    return _then(
+      _$SessionAnalyticsImpl(
+        totalSessions: null == totalSessions
+            ? _value.totalSessions
+            : totalSessions // ignore: cast_nullable_to_non_nullable
+                  as int,
+        activeSessions: null == activeSessions
+            ? _value.activeSessions
+            : activeSessions // ignore: cast_nullable_to_non_nullable
+                  as int,
+        averageSessionDuration: null == averageSessionDuration
+            ? _value.averageSessionDuration
+            : averageSessionDuration // ignore: cast_nullable_to_non_nullable
+                  as double,
+        sessionsByPlatform: null == sessionsByPlatform
+            ? _value._sessionsByPlatform
+            : sessionsByPlatform // ignore: cast_nullable_to_non_nullable
+                  as Map<String, int>,
+        sessionsByLocation: null == sessionsByLocation
+            ? _value._sessionsByLocation
+            : sessionsByLocation // ignore: cast_nullable_to_non_nullable
+                  as Map<String, int>,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SessionAnalyticsImpl implements _SessionAnalytics {
+  const _$SessionAnalyticsImpl({
+    required this.totalSessions,
+    required this.activeSessions,
+    required this.averageSessionDuration,
+    required final Map<String, int> sessionsByPlatform,
+    required final Map<String, int> sessionsByLocation,
+  }) : _sessionsByPlatform = sessionsByPlatform,
+       _sessionsByLocation = sessionsByLocation;
+
+  factory _$SessionAnalyticsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SessionAnalyticsImplFromJson(json);
+
+  @override
+  final int totalSessions;
+  @override
+  final int activeSessions;
+  @override
+  final double averageSessionDuration;
+  final Map<String, int> _sessionsByPlatform;
+  @override
+  Map<String, int> get sessionsByPlatform {
+    if (_sessionsByPlatform is EqualUnmodifiableMapView)
+      return _sessionsByPlatform;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_sessionsByPlatform);
+  }
+
+  final Map<String, int> _sessionsByLocation;
+  @override
+  Map<String, int> get sessionsByLocation {
+    if (_sessionsByLocation is EqualUnmodifiableMapView)
+      return _sessionsByLocation;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_sessionsByLocation);
+  }
+
+  @override
+  String toString() {
+    return 'SessionAnalytics(totalSessions: $totalSessions, activeSessions: $activeSessions, averageSessionDuration: $averageSessionDuration, sessionsByPlatform: $sessionsByPlatform, sessionsByLocation: $sessionsByLocation)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SessionAnalyticsImpl &&
+            (identical(other.totalSessions, totalSessions) ||
+                other.totalSessions == totalSessions) &&
+            (identical(other.activeSessions, activeSessions) ||
+                other.activeSessions == activeSessions) &&
+            (identical(other.averageSessionDuration, averageSessionDuration) ||
+                other.averageSessionDuration == averageSessionDuration) &&
+            const DeepCollectionEquality().equals(
+              other._sessionsByPlatform,
+              _sessionsByPlatform,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._sessionsByLocation,
+              _sessionsByLocation,
+            ));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    totalSessions,
+    activeSessions,
+    averageSessionDuration,
+    const DeepCollectionEquality().hash(_sessionsByPlatform),
+    const DeepCollectionEquality().hash(_sessionsByLocation),
+  );
+
+  /// Create a copy of SessionAnalytics
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SessionAnalyticsImplCopyWith<_$SessionAnalyticsImpl> get copyWith =>
+      __$$SessionAnalyticsImplCopyWithImpl<_$SessionAnalyticsImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SessionAnalyticsImplToJson(this);
+  }
+}
+
+abstract class _SessionAnalytics implements SessionAnalytics {
+  const factory _SessionAnalytics({
+    required final int totalSessions,
+    required final int activeSessions,
+    required final double averageSessionDuration,
+    required final Map<String, int> sessionsByPlatform,
+    required final Map<String, int> sessionsByLocation,
+  }) = _$SessionAnalyticsImpl;
+
+  factory _SessionAnalytics.fromJson(Map<String, dynamic> json) =
+      _$SessionAnalyticsImpl.fromJson;
+
+  @override
+  int get totalSessions;
+  @override
+  int get activeSessions;
+  @override
+  double get averageSessionDuration;
+  @override
+  Map<String, int> get sessionsByPlatform;
+  @override
+  Map<String, int> get sessionsByLocation;
+
+  /// Create a copy of SessionAnalytics
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SessionAnalyticsImplCopyWith<_$SessionAnalyticsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+UserSessionDetails _$UserSessionDetailsFromJson(Map<String, dynamic> json) {
+  return _UserSessionDetails.fromJson(json);
+}
+
+/// @nodoc
+mixin _$UserSessionDetails {
+  String get sessionId => throw _privateConstructorUsedError;
+  String get userId => throw _privateConstructorUsedError;
+  DateTime get startTime => throw _privateConstructorUsedError;
+  DateTime? get endTime => throw _privateConstructorUsedError;
+  SessionStatus get status => throw _privateConstructorUsedError;
+  String get ipAddress => throw _privateConstructorUsedError;
+  String get userAgent => throw _privateConstructorUsedError;
+  String? get location => throw _privateConstructorUsedError;
+
+  /// Serializes this UserSessionDetails to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of UserSessionDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $UserSessionDetailsCopyWith<UserSessionDetails> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $UserSessionDetailsCopyWith<$Res> {
+  factory $UserSessionDetailsCopyWith(
+    UserSessionDetails value,
+    $Res Function(UserSessionDetails) then,
+  ) = _$UserSessionDetailsCopyWithImpl<$Res, UserSessionDetails>;
+  @useResult
+  $Res call({
+    String sessionId,
+    String userId,
+    DateTime startTime,
+    DateTime? endTime,
+    SessionStatus status,
+    String ipAddress,
+    String userAgent,
+    String? location,
+  });
+}
+
+/// @nodoc
+class _$UserSessionDetailsCopyWithImpl<$Res, $Val extends UserSessionDetails>
+    implements $UserSessionDetailsCopyWith<$Res> {
+  _$UserSessionDetailsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of UserSessionDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? sessionId = null,
+    Object? userId = null,
+    Object? startTime = null,
+    Object? endTime = freezed,
+    Object? status = null,
+    Object? ipAddress = null,
+    Object? userAgent = null,
+    Object? location = freezed,
+  }) {
+    return _then(
+      _value.copyWith(
+            sessionId: null == sessionId
+                ? _value.sessionId
+                : sessionId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            startTime: null == startTime
+                ? _value.startTime
+                : startTime // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            endTime: freezed == endTime
+                ? _value.endTime
+                : endTime // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as SessionStatus,
+            ipAddress: null == ipAddress
+                ? _value.ipAddress
+                : ipAddress // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userAgent: null == userAgent
+                ? _value.userAgent
+                : userAgent // ignore: cast_nullable_to_non_nullable
+                      as String,
+            location: freezed == location
+                ? _value.location
+                : location // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$UserSessionDetailsImplCopyWith<$Res>
+    implements $UserSessionDetailsCopyWith<$Res> {
+  factory _$$UserSessionDetailsImplCopyWith(
+    _$UserSessionDetailsImpl value,
+    $Res Function(_$UserSessionDetailsImpl) then,
+  ) = __$$UserSessionDetailsImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String sessionId,
+    String userId,
+    DateTime startTime,
+    DateTime? endTime,
+    SessionStatus status,
+    String ipAddress,
+    String userAgent,
+    String? location,
+  });
+}
+
+/// @nodoc
+class __$$UserSessionDetailsImplCopyWithImpl<$Res>
+    extends _$UserSessionDetailsCopyWithImpl<$Res, _$UserSessionDetailsImpl>
+    implements _$$UserSessionDetailsImplCopyWith<$Res> {
+  __$$UserSessionDetailsImplCopyWithImpl(
+    _$UserSessionDetailsImpl _value,
+    $Res Function(_$UserSessionDetailsImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of UserSessionDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? sessionId = null,
+    Object? userId = null,
+    Object? startTime = null,
+    Object? endTime = freezed,
+    Object? status = null,
+    Object? ipAddress = null,
+    Object? userAgent = null,
+    Object? location = freezed,
+  }) {
+    return _then(
+      _$UserSessionDetailsImpl(
+        sessionId: null == sessionId
+            ? _value.sessionId
+            : sessionId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        startTime: null == startTime
+            ? _value.startTime
+            : startTime // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        endTime: freezed == endTime
+            ? _value.endTime
+            : endTime // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as SessionStatus,
+        ipAddress: null == ipAddress
+            ? _value.ipAddress
+            : ipAddress // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userAgent: null == userAgent
+            ? _value.userAgent
+            : userAgent // ignore: cast_nullable_to_non_nullable
+                  as String,
+        location: freezed == location
+            ? _value.location
+            : location // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$UserSessionDetailsImpl implements _UserSessionDetails {
+  const _$UserSessionDetailsImpl({
+    required this.sessionId,
+    required this.userId,
+    required this.startTime,
+    this.endTime,
+    required this.status,
+    required this.ipAddress,
+    required this.userAgent,
+    this.location,
+  });
+
+  factory _$UserSessionDetailsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UserSessionDetailsImplFromJson(json);
+
+  @override
+  final String sessionId;
+  @override
+  final String userId;
+  @override
+  final DateTime startTime;
+  @override
+  final DateTime? endTime;
+  @override
+  final SessionStatus status;
+  @override
+  final String ipAddress;
+  @override
+  final String userAgent;
+  @override
+  final String? location;
+
+  @override
+  String toString() {
+    return 'UserSessionDetails(sessionId: $sessionId, userId: $userId, startTime: $startTime, endTime: $endTime, status: $status, ipAddress: $ipAddress, userAgent: $userAgent, location: $location)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UserSessionDetailsImpl &&
+            (identical(other.sessionId, sessionId) ||
+                other.sessionId == sessionId) &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.startTime, startTime) ||
+                other.startTime == startTime) &&
+            (identical(other.endTime, endTime) || other.endTime == endTime) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.ipAddress, ipAddress) ||
+                other.ipAddress == ipAddress) &&
+            (identical(other.userAgent, userAgent) ||
+                other.userAgent == userAgent) &&
+            (identical(other.location, location) ||
+                other.location == location));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    sessionId,
+    userId,
+    startTime,
+    endTime,
+    status,
+    ipAddress,
+    userAgent,
+    location,
+  );
+
+  /// Create a copy of UserSessionDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UserSessionDetailsImplCopyWith<_$UserSessionDetailsImpl> get copyWith =>
+      __$$UserSessionDetailsImplCopyWithImpl<_$UserSessionDetailsImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$UserSessionDetailsImplToJson(this);
+  }
+}
+
+abstract class _UserSessionDetails implements UserSessionDetails {
+  const factory _UserSessionDetails({
+    required final String sessionId,
+    required final String userId,
+    required final DateTime startTime,
+    final DateTime? endTime,
+    required final SessionStatus status,
+    required final String ipAddress,
+    required final String userAgent,
+    final String? location,
+  }) = _$UserSessionDetailsImpl;
+
+  factory _UserSessionDetails.fromJson(Map<String, dynamic> json) =
+      _$UserSessionDetailsImpl.fromJson;
+
+  @override
+  String get sessionId;
+  @override
+  String get userId;
+  @override
+  DateTime get startTime;
+  @override
+  DateTime? get endTime;
+  @override
+  SessionStatus get status;
+  @override
+  String get ipAddress;
+  @override
+  String get userAgent;
+  @override
+  String? get location;
+
+  /// Create a copy of UserSessionDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UserSessionDetailsImplCopyWith<_$UserSessionDetailsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+SessionSecurityAlert _$SessionSecurityAlertFromJson(Map<String, dynamic> json) {
+  return _SessionSecurityAlert.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SessionSecurityAlert {
+  String get id => throw _privateConstructorUsedError;
+  String get sessionId => throw _privateConstructorUsedError;
+  String get userId => throw _privateConstructorUsedError;
+  String get alertType => throw _privateConstructorUsedError;
+  String get message => throw _privateConstructorUsedError;
+  DateTime get timestamp => throw _privateConstructorUsedError;
+  String get severity => throw _privateConstructorUsedError;
+  bool get isResolved => throw _privateConstructorUsedError;
+
+  /// Serializes this SessionSecurityAlert to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of SessionSecurityAlert
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $SessionSecurityAlertCopyWith<SessionSecurityAlert> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SessionSecurityAlertCopyWith<$Res> {
+  factory $SessionSecurityAlertCopyWith(
+    SessionSecurityAlert value,
+    $Res Function(SessionSecurityAlert) then,
+  ) = _$SessionSecurityAlertCopyWithImpl<$Res, SessionSecurityAlert>;
+  @useResult
+  $Res call({
+    String id,
+    String sessionId,
+    String userId,
+    String alertType,
+    String message,
+    DateTime timestamp,
+    String severity,
+    bool isResolved,
+  });
+}
+
+/// @nodoc
+class _$SessionSecurityAlertCopyWithImpl<
+  $Res,
+  $Val extends SessionSecurityAlert
+>
+    implements $SessionSecurityAlertCopyWith<$Res> {
+  _$SessionSecurityAlertCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of SessionSecurityAlert
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? sessionId = null,
+    Object? userId = null,
+    Object? alertType = null,
+    Object? message = null,
+    Object? timestamp = null,
+    Object? severity = null,
+    Object? isResolved = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            sessionId: null == sessionId
+                ? _value.sessionId
+                : sessionId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            alertType: null == alertType
+                ? _value.alertType
+                : alertType // ignore: cast_nullable_to_non_nullable
+                      as String,
+            message: null == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                      as String,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            severity: null == severity
+                ? _value.severity
+                : severity // ignore: cast_nullable_to_non_nullable
+                      as String,
+            isResolved: null == isResolved
+                ? _value.isResolved
+                : isResolved // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$SessionSecurityAlertImplCopyWith<$Res>
+    implements $SessionSecurityAlertCopyWith<$Res> {
+  factory _$$SessionSecurityAlertImplCopyWith(
+    _$SessionSecurityAlertImpl value,
+    $Res Function(_$SessionSecurityAlertImpl) then,
+  ) = __$$SessionSecurityAlertImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String id,
+    String sessionId,
+    String userId,
+    String alertType,
+    String message,
+    DateTime timestamp,
+    String severity,
+    bool isResolved,
+  });
+}
+
+/// @nodoc
+class __$$SessionSecurityAlertImplCopyWithImpl<$Res>
+    extends _$SessionSecurityAlertCopyWithImpl<$Res, _$SessionSecurityAlertImpl>
+    implements _$$SessionSecurityAlertImplCopyWith<$Res> {
+  __$$SessionSecurityAlertImplCopyWithImpl(
+    _$SessionSecurityAlertImpl _value,
+    $Res Function(_$SessionSecurityAlertImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of SessionSecurityAlert
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? sessionId = null,
+    Object? userId = null,
+    Object? alertType = null,
+    Object? message = null,
+    Object? timestamp = null,
+    Object? severity = null,
+    Object? isResolved = null,
+  }) {
+    return _then(
+      _$SessionSecurityAlertImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        sessionId: null == sessionId
+            ? _value.sessionId
+            : sessionId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        alertType: null == alertType
+            ? _value.alertType
+            : alertType // ignore: cast_nullable_to_non_nullable
+                  as String,
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        severity: null == severity
+            ? _value.severity
+            : severity // ignore: cast_nullable_to_non_nullable
+                  as String,
+        isResolved: null == isResolved
+            ? _value.isResolved
+            : isResolved // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SessionSecurityAlertImpl implements _SessionSecurityAlert {
+  const _$SessionSecurityAlertImpl({
+    required this.id,
+    required this.sessionId,
+    required this.userId,
+    required this.alertType,
+    required this.message,
+    required this.timestamp,
+    required this.severity,
+    this.isResolved = false,
+  });
+
+  factory _$SessionSecurityAlertImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SessionSecurityAlertImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String sessionId;
+  @override
+  final String userId;
+  @override
+  final String alertType;
+  @override
+  final String message;
+  @override
+  final DateTime timestamp;
+  @override
+  final String severity;
+  @override
+  @JsonKey()
+  final bool isResolved;
+
+  @override
+  String toString() {
+    return 'SessionSecurityAlert(id: $id, sessionId: $sessionId, userId: $userId, alertType: $alertType, message: $message, timestamp: $timestamp, severity: $severity, isResolved: $isResolved)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SessionSecurityAlertImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.sessionId, sessionId) ||
+                other.sessionId == sessionId) &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.alertType, alertType) ||
+                other.alertType == alertType) &&
+            (identical(other.message, message) || other.message == message) &&
+            (identical(other.timestamp, timestamp) ||
+                other.timestamp == timestamp) &&
+            (identical(other.severity, severity) ||
+                other.severity == severity) &&
+            (identical(other.isResolved, isResolved) ||
+                other.isResolved == isResolved));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    sessionId,
+    userId,
+    alertType,
+    message,
+    timestamp,
+    severity,
+    isResolved,
+  );
+
+  /// Create a copy of SessionSecurityAlert
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SessionSecurityAlertImplCopyWith<_$SessionSecurityAlertImpl>
+  get copyWith =>
+      __$$SessionSecurityAlertImplCopyWithImpl<_$SessionSecurityAlertImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SessionSecurityAlertImplToJson(this);
+  }
+}
+
+abstract class _SessionSecurityAlert implements SessionSecurityAlert {
+  const factory _SessionSecurityAlert({
+    required final String id,
+    required final String sessionId,
+    required final String userId,
+    required final String alertType,
+    required final String message,
+    required final DateTime timestamp,
+    required final String severity,
+    final bool isResolved,
+  }) = _$SessionSecurityAlertImpl;
+
+  factory _SessionSecurityAlert.fromJson(Map<String, dynamic> json) =
+      _$SessionSecurityAlertImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get sessionId;
+  @override
+  String get userId;
+  @override
+  String get alertType;
+  @override
+  String get message;
+  @override
+  DateTime get timestamp;
+  @override
+  String get severity;
+  @override
+  bool get isResolved;
+
+  /// Create a copy of SessionSecurityAlert
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SessionSecurityAlertImplCopyWith<_$SessionSecurityAlertImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}

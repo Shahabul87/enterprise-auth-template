@@ -27,7 +27,7 @@ export default function UserDeleteDialog({
   open,
   onClose,
   onSuccess,
-}: UserDeleteDialogProps): JSX.Element {
+}: UserDeleteDialogProps): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 

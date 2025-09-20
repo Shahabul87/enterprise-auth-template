@@ -3,7 +3,7 @@
 import { useGuestOnly } from '@/stores/auth.store';
 import { ModernRegisterForm } from '@/components/auth/modern-register-form';
 
-export default function RegisterPage(): JSX.Element {
+export default function RegisterPage(): React.ReactElement {
   const { isLoading } = useGuestOnly('/dashboard');
 
   if (isLoading) {

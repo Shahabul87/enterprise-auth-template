@@ -156,9 +156,7 @@ class SessionCleanupService:
 
             # Find expired sessions
             result = await db.execute(
-                select(UserSession).where(
-                    UserSession.last_activity < cutoff_time
-                )
+                select(UserSession).where(UserSession.last_activity < cutoff_time)
             )
             expired_sessions = result.scalars().all()
 
@@ -209,7 +207,7 @@ class SessionCleanupService:
                 user_sessions = result.scalars().all()
 
                 # Keep only the most recent sessions
-                sessions_to_remove = user_sessions[self.max_sessions_per_user:]
+                sessions_to_remove = user_sessions[self.max_sessions_per_user :]
 
                 for session in sessions_to_remove:
                     await db.delete(session)
@@ -283,11 +281,14 @@ class SessionCleanupService:
         try:
             # This would typically move old data to an archive table
             # For now, we'll just count old records
-            cutoff_date = datetime.utcnow() - timedelta(days=self.analytics_retention_days)
+            cutoff_date = datetime.utcnow() - timedelta(
+                days=self.analytics_retention_days
+            )
 
             result = await db.execute(
-                select(func.count(UserSession.id))
-                .where(UserSession.created_at < cutoff_date)
+                select(func.count(UserSession.id)).where(
+                    UserSession.created_at < cutoff_date
+                )
             )
 
             old_record_count = result.scalar() or 0
@@ -306,7 +307,9 @@ class SessionCleanupService:
             )
             return 0
 
-    async def get_session_analytics(self, user_id: Optional[int] = None) -> Dict[str, Any]:
+    async def get_session_analytics(
+        self, user_id: Optional[int] = None
+    ) -> Dict[str, Any]:
         """
         Get session analytics.
 
@@ -339,7 +342,9 @@ class SessionCleanupService:
                 analytics["total_sessions"] = len(sessions)
 
                 # Calculate analytics
-                cutoff_time = datetime.utcnow() - timedelta(seconds=self.session_timeout)
+                cutoff_time = datetime.utcnow() - timedelta(
+                    seconds=self.session_timeout
+                )
                 active_sessions = []
                 expired_sessions = []
 
@@ -370,7 +375,9 @@ class SessionCleanupService:
                         (s.last_activity - s.created_at).total_seconds()
                         for s in sessions
                     )
-                    analytics["average_session_duration"] = total_duration / len(sessions)
+                    analytics["average_session_duration"] = total_duration / len(
+                        sessions
+                    )
 
                 return analytics
 
@@ -382,7 +389,9 @@ class SessionCleanupService:
                 )
                 return {}
 
-    async def force_logout_user(self, user_id: int, except_session: Optional[str] = None) -> int:
+    async def force_logout_user(
+        self, user_id: int, except_session: Optional[str] = None
+    ) -> int:
         """
         Force logout a user from all sessions.
 
@@ -437,7 +446,9 @@ class SessionCleanupService:
         async for db in get_db():
             try:
                 result = await db.execute(
-                    delete(UserSession).where(UserSession.session_token == session_token)
+                    delete(UserSession).where(
+                        UserSession.session_token == session_token
+                    )
                 )
                 await db.commit()
 

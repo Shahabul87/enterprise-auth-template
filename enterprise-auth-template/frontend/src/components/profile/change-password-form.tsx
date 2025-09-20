@@ -28,7 +28,7 @@ interface ChangePasswordFormProps {
   onSuccess?: () => void;
 }
 
-export function ChangePasswordForm({ onSuccess }: ChangePasswordFormProps): JSX.Element {
+export function ChangePasswordForm({ onSuccess }: ChangePasswordFormProps): React.ReactElement {
   const [isComplete, setIsComplete] = React.useState<boolean>(false);
 
   const { form, isSubmitting, error, handleSubmit } = useAuthForm<ChangePasswordFormData>({

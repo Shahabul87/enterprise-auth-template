@@ -57,7 +57,9 @@ class EmailService:
         self.provider = self._initialize_provider()
 
         # Check if email service is configured
-        self.is_configured: bool = self.provider.is_configured() if self.provider else False
+        self.is_configured: bool = (
+            self.provider.is_configured() if self.provider else False
+        )
 
         # Template manager
         self.template_manager = email_template_manager
@@ -85,7 +87,9 @@ class EmailService:
             elif provider_type == "aws_ses":
                 config = {
                     "access_key_id": getattr(settings, "AWS_ACCESS_KEY_ID", None),
-                    "secret_access_key": getattr(settings, "AWS_SECRET_ACCESS_KEY", None),
+                    "secret_access_key": getattr(
+                        settings, "AWS_SECRET_ACCESS_KEY", None
+                    ),
                     "region": getattr(settings, "AWS_REGION", "us-east-1"),
                 }
 
@@ -199,9 +203,7 @@ class EmailService:
         Returns:
             bool: True if email sent successfully
         """
-        verification_url = (
-            f"{self.frontend_url}/auth/verify?token={verification_token}"
-        )
+        verification_url = f"{self.frontend_url}/auth/verify?token={verification_token}"
         subject = f"Verify your {self.app_name} account"
 
         # Use template manager
@@ -220,7 +222,10 @@ class EmailService:
                 template_content.get("html", ""),
                 template_content.get("text"),
                 tags=["verification", "registration"],
-                metadata={"user_name": user_name, "token": verification_token[:8] + "..."},
+                metadata={
+                    "user_name": user_name,
+                    "token": verification_token[:8] + "...",
+                },
             )
         except Exception as e:
             logger.error(f"Failed to render template: {e}")
@@ -644,7 +649,7 @@ class EmailService:
         subject = f"Welcome to {self.app_name}! 🎉"
 
         # Try to use template if available
-        if hasattr(self.template_manager, 'env') and self.template_manager.env:
+        if hasattr(self.template_manager, "env") and self.template_manager.env:
             try:
                 template = self.template_manager.env.get_template("welcome.html")
                 html_content = template.render(
@@ -660,7 +665,9 @@ class EmailService:
                     current_year=datetime.now().year,
                 )
             except Exception as e:
-                logger.warning(f"Failed to load welcome template: {e}, using inline template")
+                logger.warning(
+                    f"Failed to load welcome template: {e}, using inline template"
+                )
                 html_content = self._get_inline_welcome_html(user_name, dashboard_url)
         else:
             html_content = self._get_inline_welcome_html(user_name, dashboard_url)
@@ -776,9 +783,11 @@ class EmailService:
         subject = f"Your {self.app_name} verification code: {verification_code}"
 
         # Try to use template if available
-        if hasattr(self.template_manager, 'env') and self.template_manager.env:
+        if hasattr(self.template_manager, "env") and self.template_manager.env:
             try:
-                template = self.template_manager.env.get_template("2fa_verification.html")
+                template = self.template_manager.env.get_template(
+                    "2fa_verification.html"
+                )
                 html_content = template.render(
                     app_name=self.app_name,
                     user_name=user_name,
@@ -798,7 +807,9 @@ class EmailService:
                     session_id="XXXX-XXXX-XXXX",  # This would come from session data
                 )
             except Exception as e:
-                logger.warning(f"Failed to load 2FA template: {e}, using inline template")
+                logger.warning(
+                    f"Failed to load 2FA template: {e}, using inline template"
+                )
                 html_content = self._get_inline_2fa_html(
                     user_name, verification_code, expires_in
                 )
@@ -895,7 +906,7 @@ class EmailService:
         notification_type: str,
         notification_title: str,
         notification_message: str,
-        **kwargs
+        **kwargs,
     ) -> bool:
         """
         Send account notification email.
@@ -915,47 +926,46 @@ class EmailService:
         import uuid
 
         # Set notification icons based on type
-        icons = {
-            'success': '✅',
-            'warning': '⚠️',
-            'danger': '🚨',
-            'info': 'ℹ️'
-        }
+        icons = {"success": "✅", "warning": "⚠️", "danger": "🚨", "info": "ℹ️"}
 
-        notification_icon = icons.get(notification_type, 'ℹ️')
+        notification_icon = icons.get(notification_type, "ℹ️")
         subject = f"{notification_icon} {notification_title} - {self.app_name}"
 
         # Default URLs
         template_vars = {
-            'app_name': self.app_name,
-            'user_name': user_name,
-            'user_email': to_email,
-            'notification_type': notification_type,
-            'notification_title': notification_title,
-            'notification_message': notification_message,
-            'notification_icon': notification_icon,
-            'notification_id': str(uuid.uuid4()),
-            'sent_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC"),
-            'current_year': datetime.now().year,
-            'dashboard_url': f"{self.frontend_url}/dashboard",
-            'security_settings_url': f"{self.frontend_url}/settings/security",
-            'activity_log_url': f"{self.frontend_url}/settings/activity",
-            'support_url': f"{self.frontend_url}/support",
-            'help_center_url': f"{self.frontend_url}/help",
-            'change_password_url': f"{self.frontend_url}/settings/password",
-            'unsubscribe_url': f"{self.frontend_url}/settings/notifications",
-            'privacy_url': f"{self.frontend_url}/privacy",
-            'security_guide_url': f"{self.frontend_url}/help/security",
-            **kwargs  # Include any additional variables passed
+            "app_name": self.app_name,
+            "user_name": user_name,
+            "user_email": to_email,
+            "notification_type": notification_type,
+            "notification_title": notification_title,
+            "notification_message": notification_message,
+            "notification_icon": notification_icon,
+            "notification_id": str(uuid.uuid4()),
+            "sent_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC"),
+            "current_year": datetime.now().year,
+            "dashboard_url": f"{self.frontend_url}/dashboard",
+            "security_settings_url": f"{self.frontend_url}/settings/security",
+            "activity_log_url": f"{self.frontend_url}/settings/activity",
+            "support_url": f"{self.frontend_url}/support",
+            "help_center_url": f"{self.frontend_url}/help",
+            "change_password_url": f"{self.frontend_url}/settings/password",
+            "unsubscribe_url": f"{self.frontend_url}/settings/notifications",
+            "privacy_url": f"{self.frontend_url}/privacy",
+            "security_guide_url": f"{self.frontend_url}/help/security",
+            **kwargs,  # Include any additional variables passed
         }
 
         # Try to use template if available
-        if hasattr(self.template_manager, 'env') and self.template_manager.env:
+        if hasattr(self.template_manager, "env") and self.template_manager.env:
             try:
-                template = self.template_manager.env.get_template("account_notification.html")
+                template = self.template_manager.env.get_template(
+                    "account_notification.html"
+                )
                 html_content = template.render(**template_vars)
             except Exception as e:
-                logger.warning(f"Failed to load notification template: {e}, using inline template")
+                logger.warning(
+                    f"Failed to load notification template: {e}, using inline template"
+                )
                 html_content = self._get_inline_notification_html(**template_vars)
         else:
             html_content = self._get_inline_notification_html(**template_vars)
@@ -980,20 +990,20 @@ class EmailService:
 
     def _get_inline_notification_html(self, **kwargs) -> str:
         """Get inline HTML template for account notifications."""
-        notification_type = kwargs.get('notification_type', 'info')
-        user_name = kwargs.get('user_name', '')
-        notification_message = kwargs.get('notification_message', '')
-        notification_icon = kwargs.get('notification_icon', 'ℹ️')
+        notification_type = kwargs.get("notification_type", "info")
+        user_name = kwargs.get("user_name", "")
+        notification_message = kwargs.get("notification_message", "")
+        notification_icon = kwargs.get("notification_icon", "ℹ️")
 
         # Color scheme based on notification type
         colors = {
-            'success': {'bg': '#10b981', 'border': '#10b981', 'text': '#166534'},
-            'warning': {'bg': '#f59e0b', 'border': '#f59e0b', 'text': '#92400e'},
-            'danger': {'bg': '#dc2626', 'border': '#dc2626', 'text': '#b91c1c'},
-            'info': {'bg': '#3b82f6', 'border': '#3b82f6', 'text': '#1e40af'}
+            "success": {"bg": "#10b981", "border": "#10b981", "text": "#166534"},
+            "warning": {"bg": "#f59e0b", "border": "#f59e0b", "text": "#92400e"},
+            "danger": {"bg": "#dc2626", "border": "#dc2626", "text": "#b91c1c"},
+            "info": {"bg": "#3b82f6", "border": "#3b82f6", "text": "#1e40af"},
         }
 
-        color = colors.get(notification_type, colors['info'])
+        color = colors.get(notification_type, colors["info"])
 
         return f"""
         <!DOCTYPE html>

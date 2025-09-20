@@ -1,0 +1,26 @@
+00:00 +0: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/basic_test.dart
+00:00 +0: Core Functionality Tests User Model Tests User model can be created from JSON
+00:00 +1: Core Functionality Tests User Model Tests User model can be serialized to JSON
+00:00 +2: Core Functionality Tests Auth Request Models Tests LoginRequest can be created and serialized
+00:00 +3: Core Functionality Tests Auth Request Models Tests RegisterRequest can be created and serialized
+00:00 +4: Core Functionality Tests Auth Request Models Tests ForgotPasswordRequest can be created and serialized
+00:00 +5: Core Functionality Tests Auth Request Models Tests ResetPasswordRequest can be created and serialized
+00:00 +6: Core Functionality Tests API Response Tests ApiResponse.success creates successful response
+00:00 +7: Core Functionality Tests API Response Tests ApiResponse.error creates error response
+00:00 +8: Core Functionality Tests API Response Tests ApiResponse handles loading state
+00:00 +9: Core Functionality Tests API Constants Tests Auth endpoints are defined correctly
+00:00 +10: Core Functionality Tests API Constants Tests User endpoints are defined correctly
+00:00 +11: Core Functionality Tests API Constants Tests Two-factor endpoints are defined correctly
+00:00 +12: Core Functionality Tests API Constants Tests OAuth endpoints are defined correctly
+00:00 +13: Core Functionality Tests API Constants Tests Magic link endpoints are defined correctly
+00:00 +14: Core Functionality Tests Validation Logic Tests email validation patterns
+00:00 +15: Core Functionality Tests Validation Logic Tests password strength validation
+00:00 +16: Core Functionality Tests Validation Logic Tests token validation patterns
+00:00 +17: Core Functionality Tests Error Code Constants Tests API error codes are defined
+00:00 +18: Core Functionality Tests Configuration Constants Tests timeout values are reasonable
+00:00 +19: Core Functionality Tests Configuration Constants Tests cache keys are defined
+00:00 +20: Core Functionality Tests Configuration Constants Tests supported OAuth providers are listed
+00:00 +21: Core Functionality Tests Configuration Constants Tests two-factor authentication constants
+00:00 +22: Core Functionality Tests Configuration Constants Tests password requirements
+00:00 +23: Core Functionality Tests Date and Time Handling DateTime parsing and formatting
+00:00 +24: All tests passed!

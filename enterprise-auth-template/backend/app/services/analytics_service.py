@@ -13,8 +13,17 @@ from enum import Enum
 
 import structlog
 from sqlalchemy import (
-    select, update, and_, or_, desc, asc, func,
-    text, case, extract, distinct
+    select,
+    update,
+    and_,
+    or_,
+    desc,
+    asc,
+    func,
+    text,
+    case,
+    extract,
+    distinct,
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -35,6 +44,7 @@ logger = structlog.get_logger(__name__)
 
 class MetricType(str, Enum):
     """Types of metrics that can be collected."""
+
     COUNTER = "counter"
     GAUGE = "gauge"
     HISTOGRAM = "histogram"
@@ -43,6 +53,7 @@ class MetricType(str, Enum):
 
 class TimeRange(str, Enum):
     """Time range options for analytics queries."""
+
     LAST_HOUR = "1h"
     LAST_DAY = "1d"
     LAST_WEEK = "1w"
@@ -53,6 +64,7 @@ class TimeRange(str, Enum):
 
 class AnalyticsError(Exception):
     """Base exception for analytics-related errors."""
+
     pass
 
 
@@ -74,7 +86,7 @@ class AnalyticsService:
         self,
         session: AsyncSession,
         cache_service: Optional[CacheService] = None,
-        event_emitter: Optional[EventEmitter] = None
+        event_emitter: Optional[EventEmitter] = None,
     ) -> None:
         """
         Initialize analytics service.
@@ -94,7 +106,7 @@ class AnalyticsService:
         value: Union[int, float],
         metric_type: MetricType = MetricType.COUNTER,
         tags: Optional[Dict[str, str]] = None,
-        timestamp: Optional[datetime] = None
+        timestamp: Optional[datetime] = None,
     ) -> str:
         """
         Record a custom metric.
@@ -121,7 +133,12 @@ class AnalyticsService:
             if hourly_data:
                 hourly_data = json.loads(hourly_data)
             else:
-                hourly_data = {"count": 0, "sum": 0, "min": float('inf'), "max": float('-inf')}
+                hourly_data = {
+                    "count": 0,
+                    "sum": 0,
+                    "min": float("inf"),
+                    "max": float("-inf"),
+                }
 
             # Update aggregations
             hourly_data["count"] += 1
@@ -131,9 +148,7 @@ class AnalyticsService:
 
             # Store updated data with 25-hour TTL (allows for timezone differences)
             await self.cache_service.set(
-                cache_key,
-                json.dumps(hourly_data),
-                ttl=25 * 3600
+                cache_key, json.dumps(hourly_data), ttl=25 * 3600
             )
 
             # Also store individual metric for detailed analysis
@@ -144,13 +159,13 @@ class AnalyticsService:
                 "value": value,
                 "type": metric_type.value,
                 "tags": tags or {},
-                "timestamp": timestamp.isoformat()
+                "timestamp": timestamp.isoformat(),
             }
 
             await self.cache_service.set(
                 detail_key,
                 json.dumps(metric_detail),
-                ttl=7 * 24 * 3600  # 7 days for detailed metrics
+                ttl=7 * 24 * 3600,  # 7 days for detailed metrics
             )
 
             logger.debug(
@@ -158,24 +173,21 @@ class AnalyticsService:
                 metric_id=metric_id,
                 name=name,
                 value=value,
-                type=metric_type.value
+                type=metric_type.value,
             )
 
             return metric_id
 
         except Exception as e:
             logger.error(
-                "Failed to record metric",
-                name=name,
-                value=value,
-                error=str(e)
+                "Failed to record metric", name=name, value=value, error=str(e)
             )
             raise AnalyticsError(f"Failed to record metric: {str(e)}")
 
     async def get_user_analytics(
         self,
         time_range: TimeRange = TimeRange.LAST_MONTH,
-        organization_id: Optional[str] = None
+        organization_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Get comprehensive user analytics.
@@ -201,9 +213,8 @@ class AnalyticsService:
             total_users = total_result.scalar()
 
             # Active users (logged in during period)
-            active_stmt = (
-                select(func.count(distinct(UserSession.user_id)))
-                .where(UserSession.created_at >= start_date)
+            active_stmt = select(func.count(distinct(UserSession.user_id))).where(
+                UserSession.created_at >= start_date
             )
             active_result = await self.session.execute(active_stmt)
             active_users = active_result.scalar()
@@ -211,8 +222,8 @@ class AnalyticsService:
             # New users by day
             new_users_stmt = (
                 select(
-                    func.date(User.created_at).label('date'),
-                    func.count(User.id).label('count')
+                    func.date(User.created_at).label("date"),
+                    func.count(User.id).label("count"),
                 )
                 .where(User.created_at >= start_date)
                 .group_by(func.date(User.created_at))
@@ -226,10 +237,7 @@ class AnalyticsService:
 
             # Users by verification status
             verification_stmt = (
-                select(
-                    User.is_verified,
-                    func.count(User.id).label('count')
-                )
+                select(User.is_verified, func.count(User.id).label("count"))
                 .where(and_(*conditions))
                 .group_by(User.is_verified)
             )
@@ -241,10 +249,7 @@ class AnalyticsService:
 
             # Users by role
             role_stmt = (
-                select(
-                    Role.name,
-                    func.count(User.id).label('count')
-                )
+                select(Role.name, func.count(User.id).label("count"))
                 .join(User.roles)
                 .where(User.created_at >= start_date)
                 .group_by(Role.name)
@@ -261,26 +266,26 @@ class AnalyticsService:
                 "end_date": datetime.utcnow().isoformat(),
                 "total_users": total_users,
                 "active_users": active_users,
-                "activation_rate": (active_users / total_users * 100) if total_users > 0 else 0,
+                "activation_rate": (
+                    (active_users / total_users * 100) if total_users > 0 else 0
+                ),
                 "new_users_by_day": new_users_by_day,
                 "verification_stats": verification_stats,
                 "users_by_role": users_by_role,
                 "retention": retention_data,
-                "generated_at": datetime.utcnow().isoformat()
+                "generated_at": datetime.utcnow().isoformat(),
             }
 
         except Exception as e:
             logger.error(
-                "Failed to get user analytics",
-                time_range=time_range,
-                error=str(e)
+                "Failed to get user analytics", time_range=time_range, error=str(e)
             )
             raise AnalyticsError(f"Failed to get user analytics: {str(e)}")
 
     async def get_security_analytics(
         self,
         time_range: TimeRange = TimeRange.LAST_WEEK,
-        organization_id: Optional[str] = None
+        organization_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Get security-focused analytics and threat intelligence.
@@ -299,7 +304,9 @@ class AnalyticsService:
             login_stats = await self._get_login_analytics(start_date)
 
             # Failed authentication patterns
-            failed_auth_stats = await self._get_failed_authentication_analytics(start_date)
+            failed_auth_stats = await self._get_failed_authentication_analytics(
+                start_date
+            )
 
             # Session security analysis
             session_stats = await self._get_session_security_analytics(start_date)
@@ -323,20 +330,17 @@ class AnalyticsService:
                 "suspicious_activity": suspicious_activity,
                 "geographic_distribution": geo_stats,
                 "threat_summary": threat_summary,
-                "generated_at": datetime.utcnow().isoformat()
+                "generated_at": datetime.utcnow().isoformat(),
             }
 
         except Exception as e:
             logger.error(
-                "Failed to get security analytics",
-                time_range=time_range,
-                error=str(e)
+                "Failed to get security analytics", time_range=time_range, error=str(e)
             )
             raise AnalyticsError(f"Failed to get security analytics: {str(e)}")
 
     async def get_performance_metrics(
-        self,
-        time_range: TimeRange = TimeRange.LAST_DAY
+        self, time_range: TimeRange = TimeRange.LAST_DAY
     ) -> Dict[str, Any]:
         """
         Get system performance metrics.
@@ -374,20 +378,17 @@ class AnalyticsService:
                 "cache_performance": cache_metrics,
                 "error_rates": error_metrics,
                 "resource_utilization": resource_metrics,
-                "generated_at": datetime.utcnow().isoformat()
+                "generated_at": datetime.utcnow().isoformat(),
             }
 
         except Exception as e:
             logger.error(
-                "Failed to get performance metrics",
-                time_range=time_range,
-                error=str(e)
+                "Failed to get performance metrics", time_range=time_range, error=str(e)
             )
             raise AnalyticsError(f"Failed to get performance metrics: {str(e)}")
 
     async def get_business_intelligence(
-        self,
-        time_range: TimeRange = TimeRange.LAST_QUARTER
+        self, time_range: TimeRange = TimeRange.LAST_QUARTER
     ) -> Dict[str, Any]:
         """
         Get business intelligence analytics.
@@ -425,14 +426,14 @@ class AnalyticsService:
                 "notification_analytics": notification_analytics,
                 "webhook_analytics": webhook_analytics,
                 "growth_trends": growth_trends,
-                "generated_at": datetime.utcnow().isoformat()
+                "generated_at": datetime.utcnow().isoformat(),
             }
 
         except Exception as e:
             logger.error(
                 "Failed to get business intelligence",
                 time_range=time_range,
-                error=str(e)
+                error=str(e),
             )
             raise AnalyticsError(f"Failed to get business intelligence: {str(e)}")
 
@@ -441,7 +442,7 @@ class AnalyticsService:
         name: str,
         query_config: Dict[str, Any],
         schedule: Optional[str] = None,
-        recipients: Optional[List[str]] = None
+        recipients: Optional[List[str]] = None,
     ) -> str:
         """
         Create a custom analytics report.
@@ -466,14 +467,12 @@ class AnalyticsService:
                 "schedule": schedule,
                 "recipients": recipients or [],
                 "created_at": datetime.utcnow().isoformat(),
-                "last_run": None
+                "last_run": None,
             }
 
             cache_key = f"custom_report:{report_id}"
             await self.cache_service.set(
-                cache_key,
-                json.dumps(report_config),
-                ttl=90 * 24 * 3600  # 90 days
+                cache_key, json.dumps(report_config), ttl=90 * 24 * 3600  # 90 days
             )
 
             # Add to reports list
@@ -486,26 +485,20 @@ class AnalyticsService:
 
             reports_list.append(report_id)
             await self.cache_service.set(
-                reports_key,
-                json.dumps(reports_list),
-                ttl=90 * 24 * 3600
+                reports_key, json.dumps(reports_list), ttl=90 * 24 * 3600
             )
 
             logger.info(
                 "Custom report created",
                 report_id=report_id,
                 name=name,
-                schedule=schedule
+                schedule=schedule,
             )
 
             return report_id
 
         except Exception as e:
-            logger.error(
-                "Failed to create custom report",
-                name=name,
-                error=str(e)
-            )
+            logger.error("Failed to create custom report", name=name, error=str(e))
             raise AnalyticsError(f"Failed to create custom report: {str(e)}")
 
     async def generate_report(self, report_id: str) -> Dict[str, Any]:
@@ -535,26 +528,20 @@ class AnalyticsService:
             # Update last run time
             report_config["last_run"] = datetime.utcnow().isoformat()
             await self.cache_service.set(
-                cache_key,
-                json.dumps(report_config),
-                ttl=90 * 24 * 3600
+                cache_key, json.dumps(report_config), ttl=90 * 24 * 3600
             )
 
             return {
                 "report_id": report_id,
                 "name": report_config["name"],
                 "generated_at": datetime.utcnow().isoformat(),
-                "data": report_data
+                "data": report_data,
             }
 
         except AnalyticsError:
             raise
         except Exception as e:
-            logger.error(
-                "Failed to generate report",
-                report_id=report_id,
-                error=str(e)
-            )
+            logger.error("Failed to generate report", report_id=report_id, error=str(e))
             raise AnalyticsError(f"Failed to generate report: {str(e)}")
 
     def _get_start_date(self, time_range: TimeRange) -> datetime:
@@ -582,8 +569,8 @@ class AnalyticsService:
             # Define cohorts by signup date
             cohort_stmt = (
                 select(
-                    func.date(User.created_at).label('cohort_date'),
-                    func.count(User.id).label('cohort_size')
+                    func.date(User.created_at).label("cohort_date"),
+                    func.count(User.id).label("cohort_size"),
                 )
                 .where(User.created_at >= start_date)
                 .group_by(func.date(User.created_at))
@@ -608,21 +595,38 @@ class AnalyticsService:
                     cohort_date, 30, cohort_size
                 )
 
-                retention_data.append({
-                    "cohort_date": cohort_date.isoformat(),
-                    "cohort_size": cohort_size,
-                    "day_1_retention": day_1_retention,
-                    "day_7_retention": day_7_retention,
-                    "day_30_retention": day_30_retention
-                })
+                retention_data.append(
+                    {
+                        "cohort_date": cohort_date.isoformat(),
+                        "cohort_size": cohort_size,
+                        "day_1_retention": day_1_retention,
+                        "day_7_retention": day_7_retention,
+                        "day_30_retention": day_30_retention,
+                    }
+                )
 
             return {
                 "cohorts": retention_data,
                 "overall_retention": {
-                    "day_1": sum(c["day_1_retention"] for c in retention_data) / len(retention_data) if retention_data else 0,
-                    "day_7": sum(c["day_7_retention"] for c in retention_data) / len(retention_data) if retention_data else 0,
-                    "day_30": sum(c["day_30_retention"] for c in retention_data) / len(retention_data) if retention_data else 0
-                }
+                    "day_1": (
+                        sum(c["day_1_retention"] for c in retention_data)
+                        / len(retention_data)
+                        if retention_data
+                        else 0
+                    ),
+                    "day_7": (
+                        sum(c["day_7_retention"] for c in retention_data)
+                        / len(retention_data)
+                        if retention_data
+                        else 0
+                    ),
+                    "day_30": (
+                        sum(c["day_30_retention"] for c in retention_data)
+                        / len(retention_data)
+                        if retention_data
+                        else 0
+                    ),
+                },
             }
 
         except Exception as e:
@@ -630,10 +634,7 @@ class AnalyticsService:
             return {"cohorts": [], "overall_retention": {}}
 
     async def _calculate_cohort_retention(
-        self,
-        cohort_date: datetime,
-        days: int,
-        cohort_size: int
+        self, cohort_date: datetime, days: int, cohort_size: int
     ) -> float:
         """Calculate retention rate for a specific cohort and period."""
         try:
@@ -646,7 +647,7 @@ class AnalyticsService:
                 .where(
                     and_(
                         func.date(User.created_at) == cohort_date,
-                        UserSession.created_at >= target_date
+                        UserSession.created_at >= target_date,
                     )
                 )
             )
@@ -663,21 +664,16 @@ class AnalyticsService:
         """Get login analytics data."""
         try:
             # Total login attempts
-            total_stmt = (
-                select(func.count(UserSession.id))
-                .where(UserSession.created_at >= start_date)
+            total_stmt = select(func.count(UserSession.id)).where(
+                UserSession.created_at >= start_date
             )
             total_result = await self.session.execute(total_stmt)
             total_logins = total_result.scalar()
 
             # Successful logins
-            successful_stmt = (
-                select(func.count(UserSession.id))
-                .where(
-                    and_(
-                        UserSession.created_at >= start_date,
-                        UserSession.is_active == True
-                    )
+            successful_stmt = select(func.count(UserSession.id)).where(
+                and_(
+                    UserSession.created_at >= start_date, UserSession.is_active == True
                 )
             )
             successful_result = await self.session.execute(successful_stmt)
@@ -686,12 +682,12 @@ class AnalyticsService:
             # Logins by hour
             hourly_stmt = (
                 select(
-                    extract('hour', UserSession.created_at).label('hour'),
-                    func.count(UserSession.id).label('count')
+                    extract("hour", UserSession.created_at).label("hour"),
+                    func.count(UserSession.id).label("count"),
                 )
                 .where(UserSession.created_at >= start_date)
-                .group_by(extract('hour', UserSession.created_at))
-                .order_by('hour')
+                .group_by(extract("hour", UserSession.created_at))
+                .order_by("hour")
             )
             hourly_result = await self.session.execute(hourly_stmt)
             logins_by_hour = {int(row.hour): row.count for row in hourly_result}
@@ -699,15 +695,19 @@ class AnalyticsService:
             return {
                 "total_logins": total_logins,
                 "successful_logins": successful_logins,
-                "success_rate": (successful_logins / total_logins * 100) if total_logins > 0 else 0,
-                "logins_by_hour": logins_by_hour
+                "success_rate": (
+                    (successful_logins / total_logins * 100) if total_logins > 0 else 0
+                ),
+                "logins_by_hour": logins_by_hour,
             }
 
         except Exception as e:
             logger.error("Failed to get login analytics", error=str(e))
             return {"total_logins": 0, "successful_logins": 0, "success_rate": 0}
 
-    async def _get_failed_authentication_analytics(self, start_date: datetime) -> Dict[str, Any]:
+    async def _get_failed_authentication_analytics(
+        self, start_date: datetime
+    ) -> Dict[str, Any]:
         """Analyze failed authentication patterns."""
         try:
             # This would require audit logs or login attempt tracking
@@ -716,34 +716,34 @@ class AnalyticsService:
                 "failed_attempts": 0,
                 "unique_ips": 0,
                 "blocked_accounts": 0,
-                "attack_patterns": []
+                "attack_patterns": [],
             }
 
         except Exception:
             return {"failed_attempts": 0}
 
-    async def _get_session_security_analytics(self, start_date: datetime) -> Dict[str, Any]:
+    async def _get_session_security_analytics(
+        self, start_date: datetime
+    ) -> Dict[str, Any]:
         """Analyze session security metrics."""
         try:
             # Average session duration
-            avg_duration_stmt = (
-                select(func.avg(
-                    extract('epoch', UserSession.ended_at - UserSession.created_at)
-                ))
-                .where(
-                    and_(
-                        UserSession.created_at >= start_date,
-                        UserSession.ended_at.is_not(None)
-                    )
+            avg_duration_stmt = select(
+                func.avg(
+                    extract("epoch", UserSession.ended_at - UserSession.created_at)
+                )
+            ).where(
+                and_(
+                    UserSession.created_at >= start_date,
+                    UserSession.ended_at.is_not(None),
                 )
             )
             avg_result = await self.session.execute(avg_duration_stmt)
             avg_duration = avg_result.scalar() or 0
 
             # Active sessions count
-            active_stmt = (
-                select(func.count(UserSession.id))
-                .where(UserSession.is_active == True)
+            active_stmt = select(func.count(UserSession.id)).where(
+                UserSession.is_active == True
             )
             active_result = await self.session.execute(active_stmt)
             active_sessions = active_result.scalar()
@@ -751,13 +751,15 @@ class AnalyticsService:
             return {
                 "average_session_duration_minutes": avg_duration / 60,
                 "active_sessions": active_sessions,
-                "session_timeout_events": 0  # Would need audit data
+                "session_timeout_events": 0,  # Would need audit data
             }
 
         except Exception:
             return {"average_session_duration_minutes": 0, "active_sessions": 0}
 
-    async def _detect_suspicious_activity(self, start_date: datetime) -> List[Dict[str, Any]]:
+    async def _detect_suspicious_activity(
+        self, start_date: datetime
+    ) -> List[Dict[str, Any]]:
         """Detect patterns of suspicious activity."""
         try:
             # This would implement ML-based anomaly detection
@@ -772,10 +774,7 @@ class AnalyticsService:
         try:
             # This would analyze IP addresses for geographic data
             # Placeholder implementation
-            return {
-                "countries": {},
-                "suspicious_locations": []
-            }
+            return {"countries": {}, "suspicious_locations": []}
 
         except Exception:
             return {"countries": {}}
@@ -787,13 +786,15 @@ class AnalyticsService:
                 "threat_level": "low",
                 "active_threats": 0,
                 "blocked_attempts": 0,
-                "recommendations": []
+                "recommendations": [],
             }
 
         except Exception:
             return {"threat_level": "unknown"}
 
-    async def _get_api_performance_metrics(self, start_date: datetime) -> Dict[str, Any]:
+    async def _get_api_performance_metrics(
+        self, start_date: datetime
+    ) -> Dict[str, Any]:
         """Get API performance metrics from cache."""
         try:
             # Aggregate cached API metrics
@@ -805,31 +806,35 @@ class AnalyticsService:
                 "average_response_time_ms": 150,
                 "p95_response_time_ms": 300,
                 "requests_per_minute": 45,
-                "error_rate_percent": 0.5
+                "error_rate_percent": 0.5,
             }
 
         except Exception:
             return {}
 
-    async def _get_database_performance_metrics(self, start_date: datetime) -> Dict[str, Any]:
+    async def _get_database_performance_metrics(
+        self, start_date: datetime
+    ) -> Dict[str, Any]:
         """Get database performance metrics."""
         try:
             return {
                 "average_query_time_ms": 25,
                 "slow_queries": 2,
-                "connection_pool_usage_percent": 35
+                "connection_pool_usage_percent": 35,
             }
 
         except Exception:
             return {}
 
-    async def _get_cache_performance_metrics(self, start_date: datetime) -> Dict[str, Any]:
+    async def _get_cache_performance_metrics(
+        self, start_date: datetime
+    ) -> Dict[str, Any]:
         """Get cache performance metrics."""
         try:
             return {
                 "hit_rate_percent": 85,
                 "miss_rate_percent": 15,
-                "eviction_rate": 0.1
+                "eviction_rate": 0.1,
             }
 
         except Exception:
@@ -838,22 +843,20 @@ class AnalyticsService:
     async def _get_error_rate_metrics(self, start_date: datetime) -> Dict[str, Any]:
         """Get error rate metrics."""
         try:
-            return {
-                "4xx_errors": 12,
-                "5xx_errors": 3,
-                "total_requests": 10000
-            }
+            return {"4xx_errors": 12, "5xx_errors": 3, "total_requests": 10000}
 
         except Exception:
             return {}
 
-    async def _get_resource_utilization_metrics(self, start_date: datetime) -> Dict[str, Any]:
+    async def _get_resource_utilization_metrics(
+        self, start_date: datetime
+    ) -> Dict[str, Any]:
         """Get resource utilization metrics."""
         try:
             return {
                 "cpu_usage_percent": 45,
                 "memory_usage_percent": 60,
-                "disk_usage_percent": 25
+                "disk_usage_percent": 25,
             }
 
         except Exception:
@@ -865,8 +868,8 @@ class AnalyticsService:
             # Daily active users
             dau_stmt = (
                 select(
-                    func.date(UserSession.created_at).label('date'),
-                    func.count(distinct(UserSession.user_id)).label('active_users')
+                    func.date(UserSession.created_at).label("date"),
+                    func.count(distinct(UserSession.user_id)).label("active_users"),
                 )
                 .where(UserSession.created_at >= start_date)
                 .group_by(func.date(UserSession.created_at))
@@ -881,20 +884,22 @@ class AnalyticsService:
             return {
                 "daily_active_users": daily_active_users,
                 "session_frequency": {},
-                "feature_adoption": {}
+                "feature_adoption": {},
             }
 
         except Exception:
             return {"daily_active_users": []}
 
-    async def _get_feature_usage_analytics(self, start_date: datetime) -> Dict[str, Any]:
+    async def _get_feature_usage_analytics(
+        self, start_date: datetime
+    ) -> Dict[str, Any]:
         """Analyze feature usage patterns."""
         try:
             # This would analyze API endpoint usage or feature flags
             return {
                 "most_used_features": [],
                 "feature_adoption_rate": {},
-                "abandoned_features": []
+                "abandoned_features": [],
             }
 
         except Exception:
@@ -905,10 +910,7 @@ class AnalyticsService:
         try:
             # Notification delivery stats
             delivery_stmt = (
-                select(
-                    Notification.status,
-                    func.count(Notification.id).label('count')
-                )
+                select(Notification.status, func.count(Notification.id).label("count"))
                 .where(Notification.created_at >= start_date)
                 .group_by(Notification.status)
             )
@@ -916,29 +918,29 @@ class AnalyticsService:
             delivery_stats = {row.status: row.count for row in delivery_result}
 
             # Read rates
-            read_stmt = (
-                select(func.count(Notification.id))
-                .where(
-                    and_(
-                        Notification.created_at >= start_date,
-                        Notification.read_at.is_not(None)
-                    )
+            read_stmt = select(func.count(Notification.id)).where(
+                and_(
+                    Notification.created_at >= start_date,
+                    Notification.read_at.is_not(None),
                 )
             )
             read_result = await self.session.execute(read_stmt)
             read_notifications = read_result.scalar()
 
-            total_stmt = (
-                select(func.count(Notification.id))
-                .where(Notification.created_at >= start_date)
+            total_stmt = select(func.count(Notification.id)).where(
+                Notification.created_at >= start_date
             )
             total_result = await self.session.execute(total_stmt)
             total_notifications = total_result.scalar()
 
             return {
                 "delivery_stats": delivery_stats,
-                "read_rate_percent": (read_notifications / total_notifications * 100) if total_notifications > 0 else 0,
-                "engagement_by_type": {}
+                "read_rate_percent": (
+                    (read_notifications / total_notifications * 100)
+                    if total_notifications > 0
+                    else 0
+                ),
+                "engagement_by_type": {},
             }
 
         except Exception:
@@ -951,7 +953,7 @@ class AnalyticsService:
             success_stmt = (
                 select(
                     WebhookDelivery.status,
-                    func.count(WebhookDelivery.id).label('count')
+                    func.count(WebhookDelivery.id).label("count"),
                 )
                 .where(WebhookDelivery.created_at >= start_date)
                 .group_by(WebhookDelivery.status)
@@ -962,7 +964,7 @@ class AnalyticsService:
             return {
                 "delivery_stats": delivery_stats,
                 "popular_events": {},
-                "average_response_time": 0
+                "average_response_time": 0,
             }
 
         except Exception:
@@ -974,8 +976,8 @@ class AnalyticsService:
             # User growth trend
             growth_stmt = (
                 select(
-                    func.date(User.created_at).label('date'),
-                    func.count(User.id).label('new_users')
+                    func.date(User.created_at).label("date"),
+                    func.count(User.id).label("new_users"),
                 )
                 .where(User.created_at >= start_date)
                 .group_by(func.date(User.created_at))
@@ -990,21 +992,20 @@ class AnalyticsService:
             return {
                 "user_growth": growth_data,
                 "growth_rate_percent": 0,  # Would calculate based on trend
-                "projection": {}
+                "projection": {},
             }
 
         except Exception:
             return {"user_growth": []}
 
-    async def _execute_custom_query(self, query_config: Dict[str, Any]) -> Dict[str, Any]:
+    async def _execute_custom_query(
+        self, query_config: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Execute a custom analytics query."""
         try:
             # This would implement a safe query builder/executor
             # For now, return placeholder
-            return {
-                "results": [],
-                "query_time_ms": 150
-            }
+            return {"results": [], "query_time_ms": 150}
 
         except Exception as e:
             logger.error("Failed to execute custom query", error=str(e))

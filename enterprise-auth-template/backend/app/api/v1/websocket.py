@@ -1,6 +1,7 @@
 """
 WebSocket API endpoints
 """
+
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, Query, status
 from fastapi.responses import HTMLResponse
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,7 +12,7 @@ import logging
 
 from app.core.config import get_settings
 from app.core.database import get_db_session
-# from app.core.redis import get_redis_client  # Redis disabled for tests
+from app.core.redis_client import get_redis_client
 from app.services.websocket_manager import manager
 from app.models.user import User
 from app.models.session import UserSession
@@ -23,17 +24,14 @@ router = APIRouter(tags=["websocket"])
 
 
 async def get_current_user_ws(
-    token: str = Query(...),
-    db: AsyncSession = Depends(get_db_session)
+    token: str = Query(...), db: AsyncSession = Depends(get_db_session)
 ) -> Optional[User]:
     """Get current user from WebSocket token"""
     try:
         settings = get_settings()
         # Decode JWT token
         payload = jwt.decode(
-            token,
-            settings.JWT_SECRET_KEY,
-            algorithms=[settings.JWT_ALGORITHM]
+            token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
         )
         user_id = payload.get("sub")
 
@@ -69,14 +67,18 @@ async def websocket_endpoint(
     # Authenticate user
     user = await get_current_user_ws(token, db)
     if not user:
-        await websocket.close(code=status.WS_1008_POLICY_VIOLATION, reason="Unauthorized")
+        await websocket.close(
+            code=status.WS_1008_POLICY_VIOLATION, reason="Unauthorized"
+        )
         return
 
     # Validate session if provided
     if session_id:
-        session = await db.get(Session, session_id)
+        session = await db.get(UserSession, session_id)
         if not session or session.user_id != user.id or not session.is_active:
-            await websocket.close(code=status.WS_1008_POLICY_VIOLATION, reason="Invalid session")
+            await websocket.close(
+                code=status.WS_1008_POLICY_VIOLATION, reason="Invalid session"
+            )
             return
     else:
         # Generate a temporary session ID for this WebSocket connection
@@ -84,6 +86,7 @@ async def websocket_endpoint(
 
     # Set Redis client for the manager
     if not manager.redis_client:
+        redis_client = await get_redis_client()
         manager.redis_client = redis_client
 
     # Connect the WebSocket
@@ -94,8 +97,8 @@ async def websocket_endpoint(
         metadata={
             "user_email": user.email,
             "user_name": user.full_name or user.email,
-            "connected_at": datetime.utcnow().isoformat()
-        }
+            "connected_at": datetime.utcnow().isoformat(),
+        },
     )
 
     try:
@@ -107,11 +110,11 @@ async def websocket_endpoint(
                 "user": {
                     "id": user.id,
                     "email": user.email,
-                    "name": user.full_name or user.email
+                    "name": user.full_name or user.email,
                 },
-                "timestamp": datetime.utcnow().isoformat()
+                "timestamp": datetime.utcnow().isoformat(),
             },
-            websocket=websocket
+            websocket=websocket,
         )
 
         # Main message loop
@@ -144,13 +147,16 @@ async def admin_websocket_endpoint(
     # Authenticate admin user
     user = await get_current_user_ws(token, db)
     if not user or not user.is_superuser:
-        await websocket.close(code=status.WS_1008_POLICY_VIOLATION, reason="Admin access required")
+        await websocket.close(
+            code=status.WS_1008_POLICY_VIOLATION, reason="Admin access required"
+        )
         return
 
     session_id = f"admin_ws_{user.id}_{datetime.utcnow().timestamp()}"
 
     # Set Redis client for the manager
     if not manager.redis_client:
+        redis_client = await get_redis_client()
         manager.redis_client = redis_client
 
     # Connect the WebSocket
@@ -162,8 +168,8 @@ async def admin_websocket_endpoint(
             "admin": True,
             "user_email": user.email,
             "user_name": user.full_name or user.email,
-            "connected_at": datetime.utcnow().isoformat()
-        }
+            "connected_at": datetime.utcnow().isoformat(),
+        },
     )
 
     try:
@@ -174,9 +180,9 @@ async def admin_websocket_endpoint(
                 "type": "admin_connected",
                 "connections": manager.get_connection_count(),
                 "connected_users": manager.get_connected_users(),
-                "timestamp": datetime.utcnow().isoformat()
+                "timestamp": datetime.utcnow().isoformat(),
             },
-            websocket=websocket
+            websocket=websocket,
         )
 
         # Admin message loop
@@ -186,48 +192,55 @@ async def admin_websocket_endpoint(
 
             # Handle admin commands
             if command == "get_stats":
-                await websocket.send_json({
-                    "type": "stats",
-                    "total_connections": manager.get_connection_count(),
-                    "connected_users": manager.get_connected_users(),
-                    "timestamp": datetime.utcnow().isoformat()
-                })
+                await websocket.send_json(
+                    {
+                        "type": "stats",
+                        "total_connections": manager.get_connection_count(),
+                        "connected_users": manager.get_connected_users(),
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
 
             elif command == "broadcast":
                 message = data.get("message", {})
                 await manager.broadcast(message)
-                await websocket.send_json({
-                    "type": "broadcast_sent",
-                    "timestamp": datetime.utcnow().isoformat()
-                })
+                await websocket.send_json(
+                    {
+                        "type": "broadcast_sent",
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
 
             elif command == "send_to_user":
                 target_user = data.get("target_user")
                 message = data.get("message", {})
                 if target_user:
                     await manager.send_personal_message(target_user, message)
-                    await websocket.send_json({
-                        "type": "message_sent",
-                        "target_user": target_user,
-                        "timestamp": datetime.utcnow().isoformat()
-                    })
+                    await websocket.send_json(
+                        {
+                            "type": "message_sent",
+                            "target_user": target_user,
+                            "timestamp": datetime.utcnow().isoformat(),
+                        }
+                    )
 
             elif command == "system_alert":
                 alert_type = data.get("alert_type")
                 alert_data = data.get("alert_data", {})
                 target_users = data.get("target_users")
                 await manager.send_system_alert(alert_type, alert_data, target_users)
-                await websocket.send_json({
-                    "type": "alert_sent",
-                    "timestamp": datetime.utcnow().isoformat()
-                })
+                await websocket.send_json(
+                    {"type": "alert_sent", "timestamp": datetime.utcnow().isoformat()}
+                )
 
             else:
-                await websocket.send_json({
-                    "type": "error",
-                    "error": "Unknown command",
-                    "timestamp": datetime.utcnow().isoformat()
-                })
+                await websocket.send_json(
+                    {
+                        "type": "error",
+                        "error": "Unknown command",
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
 
     except WebSocketDisconnect:
         logger.info(f"Admin WebSocket disconnected for user {user.id}")

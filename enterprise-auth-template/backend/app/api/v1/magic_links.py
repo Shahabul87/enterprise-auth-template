@@ -24,8 +24,11 @@ router = APIRouter(prefix="/magic-links", tags=["magic-links"])
 try:
     import redis.asyncio as redis
     from app.core.config import get_settings
+
     settings = get_settings()
-    redis_client = redis.from_url(str(settings.REDIS_URL)) if settings.REDIS_URL else None
+    redis_client = (
+        redis.from_url(str(settings.REDIS_URL)) if settings.REDIS_URL else None
+    )
     rate_limiter = RateLimiter(redis_client=redis_client)
 except Exception:
     rate_limiter = RateLimiter(redis_client=None)
@@ -41,14 +44,15 @@ async def magic_link_request_rate_limit(request: Request):
         limit=5,
         window=900,  # 15 minutes
         client_ip=client_ip,
-        endpoint="/magic-links/request"
+        endpoint="/magic-links/request",
     )
 
     if not allowed:
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            detail="Too many magic link requests. Please wait before trying again."
+            detail="Too many magic link requests. Please wait before trying again.",
         )
+
 
 async def magic_link_verify_rate_limit(request: Request):
     """Rate limit for magic link verification: 10 requests per 5 minutes per IP."""
@@ -60,13 +64,13 @@ async def magic_link_verify_rate_limit(request: Request):
         limit=10,
         window=300,  # 5 minutes
         client_ip=client_ip,
-        endpoint="/magic-links/verify"
+        endpoint="/magic-links/verify",
     )
 
     if not allowed:
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            detail="Too many magic link verification attempts. Please wait before trying again."
+            detail="Too many magic link verification attempts. Please wait before trying again.",
         )
 
 

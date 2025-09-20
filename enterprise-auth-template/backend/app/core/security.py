@@ -243,7 +243,7 @@ def create_access_token(
             "permissions": permissions,
             "type": "access",
             "session_id": session_id or secrets.token_urlsafe(16),
-            "client_id": client_id,
+            "client_id": client_id or "unknown",
             # Security metadata
             "token_version": "2.0",
             "security_level": "enterprise",
@@ -301,7 +301,9 @@ def create_access_token(
 
 
 def create_refresh_token(
-    user_id: str, expires_delta: Optional[timedelta] = None, session_id: Optional[str] = None
+    user_id: str,
+    expires_delta: Optional[timedelta] = None,
+    session_id: Optional[str] = None,
 ) -> tuple[str, str]:
     """
     Create a JWT refresh token with unique token ID.
@@ -652,7 +654,7 @@ def is_token_blacklisted(jti: str) -> bool:
 def clear_token_blacklist() -> None:
     """Clear the token blacklist (for testing purposes)."""
     global _token_blacklist
-    _token_blacklist.clear()
+    _token_blacklist = set()
 
 
 def create_secure_session_id() -> str:

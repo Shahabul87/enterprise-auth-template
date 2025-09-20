@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
-import '../../../app/theme.dart';
+import 'package:flutter_auth_template/app/theme.dart';
 
 class BiometricAuthWidget extends ConsumerStatefulWidget {
   final VoidCallback? onSuccess;

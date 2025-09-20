@@ -15,6 +15,7 @@ import secrets
 
 class SessionStatus(Enum):
     """Session status enumeration."""
+
     ACTIVE = "active"
     EXPIRED = "expired"
     REVOKED = "revoked"
@@ -267,13 +268,12 @@ class SessionDomain:
 
         # Track IP address changes
         if ip_address and ip_address != self.ip_address:
-            if 'ip_history' not in self.metadata:
-                self.metadata['ip_history'] = []
+            if "ip_history" not in self.metadata:
+                self.metadata["ip_history"] = []
 
-            self.metadata['ip_history'].append({
-                'ip': self.ip_address,
-                'until': datetime.utcnow().isoformat()
-            })
+            self.metadata["ip_history"].append(
+                {"ip": self.ip_address, "until": datetime.utcnow().isoformat()}
+            )
             self.ip_address = ip_address
 
     def revoke(self, reason: Optional[str] = None) -> None:
@@ -287,7 +287,7 @@ class SessionDomain:
         self.ended_at = datetime.utcnow()
 
         if reason:
-            self.metadata['revocation_reason'] = reason
+            self.metadata["revocation_reason"] = reason
 
     def validate_fingerprint(self, fingerprint: str) -> bool:
         """
@@ -299,10 +299,10 @@ class SessionDomain:
         Returns:
             bool: True if fingerprint matches
         """
-        if 'fingerprint_hash' not in self.metadata:
+        if "fingerprint_hash" not in self.metadata:
             return True  # No fingerprint stored
 
-        stored_hash = self.metadata['fingerprint_hash']
+        stored_hash = self.metadata["fingerprint_hash"]
         provided_hash = self._hash_fingerprint(fingerprint)
         return stored_hash == provided_hash
 
@@ -313,7 +313,7 @@ class SessionDomain:
         Args:
             fingerprint: Client fingerprint
         """
-        self.metadata['fingerprint_hash'] = self._hash_fingerprint(fingerprint)
+        self.metadata["fingerprint_hash"] = self._hash_fingerprint(fingerprint)
 
     def _hash_fingerprint(self, fingerprint: str) -> str:
         """
@@ -325,10 +325,10 @@ class SessionDomain:
         Returns:
             str: Hashed fingerprint
         """
-        salt = self.metadata.get('fingerprint_salt')
+        salt = self.metadata.get("fingerprint_salt")
         if not salt:
             salt = secrets.token_hex(16)
-            self.metadata['fingerprint_salt'] = salt
+            self.metadata["fingerprint_salt"] = salt
 
         combined = f"{fingerprint}{salt}{self.id}"
         return hashlib.sha256(combined.encode()).hexdigest()
@@ -476,6 +476,6 @@ class SessionDomain:
             last_activity=entity.last_activity,
             is_active=entity.is_active,
             ended_at=entity.ended_at,
-            privilege_level=getattr(entity, 'privilege_level', 'user'),
-            metadata=getattr(entity, 'metadata', {}),
+            privilege_level=getattr(entity, "privilege_level", "user"),
+            metadata=getattr(entity, "metadata", {}),
         )

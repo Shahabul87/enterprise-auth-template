@@ -180,7 +180,9 @@ class RateLimitManager:
             config = EndpointRateLimits.FILE_UPLOAD
         elif "search" in endpoint.lower():
             config = EndpointRateLimits.SEARCH
-        elif any(method in endpoint.lower() for method in ["post", "put", "patch", "delete"]):
+        elif any(
+            method in endpoint.lower() for method in ["post", "put", "patch", "delete"]
+        ):
             config = EndpointRateLimits.API_WRITE
         elif "get" in endpoint.lower():
             config = EndpointRateLimits.API_READ
@@ -263,7 +265,9 @@ class RateLimitManager:
             User-friendly message
         """
         if "login" in endpoint.lower():
-            return f"Too many login attempts. Please try again in {retry_after} seconds."
+            return (
+                f"Too many login attempts. Please try again in {retry_after} seconds."
+            )
         elif "register" in endpoint.lower():
             return f"Registration limit reached. Please try again in {retry_after} seconds."
         elif "password" in endpoint.lower():

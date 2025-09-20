@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../data/models/api_key_models.dart';
-import '../../../data/services/api_key_service.dart';
-import '../../widgets/loading_indicators.dart';
-import '../../widgets/empty_state.dart';
-import '../../widgets/dialog_components.dart';
+import 'package:flutter_auth_template/data/models/api_key_models.dart';
+import 'package:flutter_auth_template/data/services/api_key_service.dart';
+import 'package:flutter_auth_template/presentation/widgets/loading_indicators.dart';
+import 'package:flutter_auth_template/presentation/widgets/empty_state.dart';
+import 'package:flutter_auth_template/presentation/widgets/dialog_components.dart';
 
 class ApiKeyManagementPage extends ConsumerStatefulWidget {
   const ApiKeyManagementPage({super.key});

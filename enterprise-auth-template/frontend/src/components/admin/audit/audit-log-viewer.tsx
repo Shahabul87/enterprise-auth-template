@@ -76,10 +76,10 @@ function AuditLogDetailsDialog({
   log,
   open,
   onClose,
-}: AuditLogDetailsDialogProps): JSX.Element | null {
+}: AuditLogDetailsDialogProps): React.ReactElement | null {
   if (!log) return null;
 
-  const getActionIcon = (action: string): JSX.Element => {
+  const getActionIcon = (action: string): React.ReactElement => {
     if (action.includes('create')) return <Database className='h-4 w-4' />;
     if (action.includes('update') || action.includes('edit'))
       return <Settings className='h-4 w-4' />;
@@ -169,7 +169,7 @@ function AuditLogDetailsDialog({
   );
 }
 
-export default function AuditLogViewer({ className }: AuditLogViewerProps): JSX.Element {
+export default function AuditLogViewer({ className }: AuditLogViewerProps): React.ReactElement {
   const { hasPermission } = useAuth();
 
   // State management
@@ -288,7 +288,7 @@ export default function AuditLogViewer({ className }: AuditLogViewerProps): JSX.
   };
 
   // Get action icon
-  const getActionIcon = (action: string): JSX.Element => {
+  const getActionIcon = (action: string): React.ReactElement => {
     if (action.includes('create')) return <Database className='h-3 w-3' />;
     if (action.includes('update') || action.includes('edit'))
       return <Settings className='h-3 w-3' />;
@@ -298,7 +298,7 @@ export default function AuditLogViewer({ className }: AuditLogViewerProps): JSX.
   };
 
   // Render log row
-  const renderLogRow = (log: AuditLog): JSX.Element => {
+  const renderLogRow = (log: AuditLog): React.ReactElement => {
     return (
       <TableRow
         key={log.id}

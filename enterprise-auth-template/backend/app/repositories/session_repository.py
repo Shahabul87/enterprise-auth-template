@@ -47,7 +47,9 @@ class SessionRepository(ISessionRepository):
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 
-    async def update(self, session_id: str, session_data: Dict[str, Any]) -> Optional[UserSession]:
+    async def update(
+        self, session_id: str, session_data: Dict[str, Any]
+    ) -> Optional[UserSession]:
         """Update session data."""
         stmt = (
             update(UserSession)
@@ -72,14 +74,11 @@ class SessionRepository(ISessionRepository):
 
     async def find_active_sessions(self, user_id: UUID) -> List[UserSession]:
         """Find all active sessions for a user."""
-        stmt = (
-            select(UserSession)
-            .where(
-                and_(
-                    UserSession.user_id == user_id,
-                    UserSession.is_active == True,
-                    UserSession.expires_at > datetime.utcnow()
-                )
+        stmt = select(UserSession).where(
+            and_(
+                UserSession.user_id == user_id,
+                UserSession.is_active == True,
+                UserSession.expires_at > datetime.utcnow(),
             )
         )
         result = await self.session.execute(stmt)
@@ -90,10 +89,7 @@ class SessionRepository(ISessionRepository):
         stmt = (
             update(UserSession)
             .where(UserSession.id == session_id)
-            .values(
-                is_active=False,
-                ended_at=datetime.utcnow()
-            )
+            .values(is_active=False, ended_at=datetime.utcnow())
         )
         result = await self.session.execute(stmt)
         return result.rowcount > 0
@@ -103,19 +99,14 @@ class SessionRepository(ISessionRepository):
         stmt = (
             update(UserSession)
             .where(UserSession.id == session_id)
-            .values(
-                expires_at=expires_at,
-                last_activity=datetime.utcnow()
-            )
+            .values(expires_at=expires_at, last_activity=datetime.utcnow())
         )
         result = await self.session.execute(stmt)
         return result.rowcount > 0
 
     async def cleanup_expired(self) -> int:
         """Clean up expired sessions. Returns count of deleted sessions."""
-        stmt = delete(UserSession).where(
-            UserSession.expires_at < datetime.utcnow()
-        )
+        stmt = delete(UserSession).where(UserSession.expires_at < datetime.utcnow())
         result = await self.session.execute(stmt)
         return result.rowcount
 
@@ -154,9 +145,7 @@ class SessionRepository(ISessionRepository):
             update(RefreshToken)
             .where(RefreshToken.user_id == user_id)
             .where(RefreshToken.revoked_at.is_(None))
-            .values(
-                revoked_at=datetime.utcnow()
-            )
+            .values(revoked_at=datetime.utcnow())
         )
         result = await self.session.execute(stmt)
         return result.rowcount
@@ -167,10 +156,7 @@ class SessionRepository(ISessionRepository):
             update(UserSession)
             .where(UserSession.user_id == user_id)
             .where(UserSession.is_active == True)
-            .values(
-                is_active=False,
-                ended_at=datetime.utcnow()
-            )
+            .values(is_active=False, ended_at=datetime.utcnow())
         )
         result = await self.session.execute(stmt)
         return result.rowcount

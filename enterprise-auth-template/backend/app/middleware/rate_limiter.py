@@ -52,7 +52,9 @@ class RateLimitConfig:
     # Strict limits for sensitive endpoints (relaxed for development)
     AUTH = {
         "requests": 20 if settings.ENVIRONMENT == "development" else 5,
-        "window": 60 if settings.ENVIRONMENT == "development" else 300,  # 1 minute in dev, 5 minutes in prod
+        "window": (
+            60 if settings.ENVIRONMENT == "development" else 300
+        ),  # 1 minute in dev, 5 minutes in prod
         "message": "Too many authentication attempts. Please wait before trying again.",
     }
 

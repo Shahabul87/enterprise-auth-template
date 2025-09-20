@@ -51,7 +51,7 @@ interface NotificationSettings {
 
 // Remove mock data - using real API
 
-export default function NotificationsPage(): JSX.Element {
+export default function NotificationsPage(): React.ReactElement {
   const { user } = useRequireAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [settings, setSettings] = useState<NotificationSettings>({

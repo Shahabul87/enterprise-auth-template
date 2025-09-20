@@ -151,11 +151,7 @@ class EmailTemplateManager:
 
         raise ValueError(f"Template '{template_name}' not found")
 
-    def render_template(
-        self,
-        template_name: str,
-        **context: Any
-    ) -> Dict[str, str]:
+    def render_template(self, template_name: str, **context: Any) -> Dict[str, str]:
         """
         Render a template with context.
 

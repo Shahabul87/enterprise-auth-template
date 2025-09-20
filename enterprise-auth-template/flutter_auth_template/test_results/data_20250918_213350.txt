@@ -1,0 +1,697 @@
+00:00 +0: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart
+00:00 +0: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl login should return authenticated response on successful login
+00:00 +1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl login should throw error when login fails with invalid credentials
+00:00 +2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl login should handle network errors
+00:00 +3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl login should save user data on successful login
+00:00 +4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl register should return authenticated response on successful registration
+00:00 +5: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl register should handle email already exists error
+00:00 +6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl register should validate password requirements
+00:00 +7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl register should handle network errors during registration
+00:00 +8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl logout should clear tokens on logout
+00:00 +9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl logout should handle logout errors gracefully
+00:00 +9 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl logout should handle logout errors gracefully [E]
+  AppException.network(message: Network error during logout, statusCode: null, endpoint: null, details: null)
+  package:mockito/src/mock.dart 598:7                                              PostExpectation.thenThrow.<fn>
+  package:mockito/src/mock.dart 194:47                                             Mock.noSuchMethod
+  test/unit/data/repositories/auth_repository_impl_test.mocks.dart 112:14          MockAuthService.logout
+  package:flutter_auth_template/data/repositories/auth_repository_impl.dart 68:26  AuthRepositoryImpl.logout
+  test/unit/data/repositories/auth_repository_impl_test.dart 287:26                main.<fn>.<fn>.<fn>
+  
+00:00 +9 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl refreshToken should refresh tokens successfully
+00:00 +10 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl refreshToken should handle invalid refresh token
+00:00 +11 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl getCurrentUser should return current user from service
+00:00 +12 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl getCurrentUser should throw unauthorized error when not authenticated
+00:00 +13 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl forgotPassword should send forgot password request
+00:00 +14 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl forgotPassword should not throw error for non-existent email
+00:00 +15 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl resetPassword should reset password successfully
+00:00 +16 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl resetPassword should throw error for invalid token
+00:00 +17 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl isAuthenticated should return true when authenticated
+00:00 +18 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl isAuthenticated should return false when not authenticated
+00:00 +19 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/repositories/auth_repository_impl_test.dart: AuthRepositoryImpl clearAuthData should clear all authentication data
+00:00 +20 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart
+00:00 +20 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService search should return SearchResult when API call is successful
+00:00 +20 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService search should return SearchResult when API call is successful [E]
+  Exception: Search failed: type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/services/search_api_service.dart 43:7  SearchApiService.search
+  
+00:00 +20 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService search should throw exception when request fails
+00:00 +21 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService getSuggestions should return list of SearchSuggestion
+00:00 +21 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService getSuggestions should return list of SearchSuggestion [E]
+  Exception: Get suggestions failed: type 'Null' is not a subtype of type 'num' in type cast
+  package:flutter_auth_template/data/services/search_api_service.dart 72:7  SearchApiService.getSuggestions
+  
+00:00 +21 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService getFacets should return list of SearchFacet
+00:00 +21 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService getFacets should return list of SearchFacet [E]
+  Exception: Get facets failed: type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/services/search_api_service.dart 103:7  SearchApiService.getFacets
+  
+00:00 +21 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService getSavedSearches should return list of SavedSearch
+00:00 +21 -5: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService getSavedSearches should return list of SavedSearch [E]
+  Exception: Get saved searches failed: type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/services/search_api_service.dart 126:7  SearchApiService.getSavedSearches
+  
+00:00 +21 -5: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService saveSearch should save search successfully
+00:00 +21 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService saveSearch should save search successfully [E]
+  Exception: Save search failed: type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/services/search_api_service.dart 164:7  SearchApiService.saveSearch
+  
+00:00 +21 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService deleteSavedSearch should delete saved search successfully
+00:00 +22 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService deleteSavedSearch should throw exception when deletion fails
+00:00 +23 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService getSearchIndices should return list of SearchIndex
+00:00 +23 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService getSearchIndices should return list of SearchIndex [E]
+  Exception: Get search indices failed: type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/services/search_api_service.dart 205:7  SearchApiService.getSearchIndices
+  
+00:00 +23 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService rebuildIndex should rebuild index successfully
+00:00 +24 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService pauseIndex should pause index successfully
+00:00 +25 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService resumeIndex should resume index successfully
+00:00 +26 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService getSearchAnalytics should return SearchAnalytics with date range
+00:00 +26 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService getSearchAnalytics should return SearchAnalytics with date range [E]
+  Exception: Get search analytics failed: type 'Null' is not a subtype of type 'num' in type cast
+  package:flutter_auth_template/data/services/search_api_service.dart 294:7  SearchApiService.getSearchAnalytics
+  
+00:00 +26 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService trackSearchClick should track search click without throwing
+00:00 +27 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService trackSearchClick should not throw even when tracking fails
+00:00 +28 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService getRecentSearches should return list of recent searches
+00:00 +29 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService clearSearchHistory should clear search history successfully
+00:00 +30 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService clearSearchHistory should throw exception when clearing fails
+00:00 +31 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService Error Handling should handle network errors gracefully
+00:00 +32 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService Error Handling should handle invalid JSON response
+00:00 +33 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/search_api_service_test.dart: SearchApiService Error Handling should handle 404 responses
+00:00 +34 -8: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart
+00:01 +34 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService getWebhooks should return WebhookListResponse when API call is successful
+00:01 +34 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService getWebhooks should return WebhookListResponse when API call is successful [E]
+  type 'Null' is not a subtype of type 'bool' in type cast
+  package:flutter_auth_template/data/models/webhook_models.g.dart 159:28         _$$WebhookListResponseImplFromJson
+  package:flutter_auth_template/data/models/webhook_models.freezed.dart 1643:7   new _$WebhookListResponseImpl.fromJson
+  package:flutter_auth_template/data/models/webhook_models.freezed.dart 1466:31  _$WebhookListResponseFromJson
+  package:flutter_auth_template/data/models/webhook_models.dart 87:7             new WebhookListResponse.fromJson
+  package:flutter_auth_template/data/services/webhook_api_service.dart 42:36     WebhookApiService.getWebhooks
+  
+00:01 +34 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService getWebhooks should throw ServerException when API returns error
+00:01 +35 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService getWebhooks should handle DioException and throw NetworkException
+00:01 +36 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService getWebhook should return Webhook when API call is successful
+00:01 +37 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService createWebhook should create webhook successfully
+00:01 +38 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService updateWebhook should update webhook successfully
+00:01 +39 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService deleteWebhook should delete webhook successfully
+00:01 +40 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService deleteWebhook should throw ServerException when delete fails
+00:01 +41 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService enableWebhook should enable webhook successfully
+00:01 +42 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService disableWebhook should disable webhook successfully
+00:01 +43 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService testWebhook should test webhook successfully
+00:01 +44 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService getWebhookDeliveries should return list of WebhookDelivery
+00:01 +45 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService getWebhookStats should return WebhookStats
+00:01 +46 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService retryWebhookDelivery should retry webhook delivery successfully
+00:01 +47 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService getAvailableEvents should return list of WebhookEvent
+00:01 +48 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService getWebhookTemplates should return list of WebhookTemplate
+00:01 +49 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService createWebhookFromTemplate should create webhook from template successfully
+00:01 +50 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService validateWebhookUrl should validate webhook URL successfully
+00:01 +51 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService generateWebhookSecret should generate webhook secret successfully
+00:01 +52 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService Error Handling should handle DioException with response data
+00:01 +53 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService Error Handling should handle DioException without response data
+00:01 +54 -9: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService Error Handling should handle empty query parameters correctly
+00:01 +54 -10: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/webhook_api_service_test.dart: WebhookApiService Error Handling should handle empty query parameters correctly [E]
+  type 'Null' is not a subtype of type 'bool' in type cast
+  package:flutter_auth_template/data/models/webhook_models.g.dart 159:28         _$$WebhookListResponseImplFromJson
+  package:flutter_auth_template/data/models/webhook_models.freezed.dart 1643:7   new _$WebhookListResponseImpl.fromJson
+  package:flutter_auth_template/data/models/webhook_models.freezed.dart 1466:31  _$WebhookListResponseFromJson
+  package:flutter_auth_template/data/models/webhook_models.dart 87:7             new WebhookListResponse.fromJson
+  package:flutter_auth_template/data/services/webhook_api_service.dart 42:36     WebhookApiService.getWebhooks
+  
+00:01 +54 -10: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart
+00:01 +54 -10: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService getDashboardData should return AdminDashboardData when API call is successful
+00:01 +54 -11: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService getDashboardData should return AdminDashboardData when API call is successful [E]
+  Error getting dashboard data: type 'Null' is not a subtype of type 'num' in type cast
+  package:flutter_auth_template/data/services/admin_api_service.dart 34:7  AdminApiService.getDashboardData
+  
+00:01 +54 -11: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService getDashboardData should throw ServerException when API returns error
+00:01 +55 -11: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService getDashboardData should throw UnknownException for unexpected errors
+00:01 +56 -11: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService getSystemStats should return SystemStats when API call is successful
+00:01 +57 -11: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService getUsers should return list of users with default parameters
+00:01 +57 -12: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService getUsers should return list of users with default parameters [E]
+  Error getting users: type 'Null' is not a subtype of type 'bool' in type cast
+  package:flutter_auth_template/data/services/admin_api_service.dart 99:7  AdminApiService.getUsers
+  
+00:01 +57 -12: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService getUsers should return filtered users when search parameter is provided
+00:01 +57 -13: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService getUsers should return filtered users when search parameter is provided [E]
+  Error getting users: type 'Null' is not a subtype of type 'bool' in type cast
+  package:flutter_auth_template/data/services/admin_api_service.dart 99:7  AdminApiService.getUsers
+  
+00:01 +57 -13: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService getUserDetails should return user details for valid userId
+00:01 +57 -14: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService getUserDetails should return user details for valid userId [E]
+  Error getting user details: type 'Null' is not a subtype of type 'bool' in type cast
+  package:flutter_auth_template/data/services/admin_api_service.dart 120:7  AdminApiService.getUserDetails
+  
+00:01 +57 -14: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService updateUser should update user successfully
+00:01 +57 -15: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService updateUser should update user successfully [E]
+  Error updating user: type 'Null' is not a subtype of type 'bool' in type cast
+  package:flutter_auth_template/data/services/admin_api_service.dart 148:7  AdminApiService.updateUser
+  
+00:01 +57 -15: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService suspendUser should suspend user with reason and duration
+00:01 +58 -15: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService suspendUser should suspend user permanently without duration
+00:01 +59 -15: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService unsuspendUser should unsuspend user successfully
+00:01 +60 -15: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService deleteUser should soft delete user by default
+00:01 +61 -15: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService deleteUser should hard delete user when specified
+00:01 +62 -15: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService getAuditLogs should return audit logs with filters
+00:01 +62 -16: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService getAuditLogs should return audit logs with filters [E]
+  Error getting audit logs: type '_Map<dynamic, dynamic>' is not a subtype of type 'Map<String, dynamic>' in type cast
+  package:flutter_auth_template/data/services/admin_api_service.dart 379:7  AdminApiService.getAuditLogs
+  
+00:01 +62 -16: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService toggleMaintenanceMode should enable maintenance mode with message
+00:01 +63 -16: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService toggleMaintenanceMode should disable maintenance mode
+00:01 +64 -16: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService clearCache should clear specific cache type
+00:01 +65 -16: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/admin_api_service_test.dart: AdminApiService clearCache should clear all cache when no type specified
+00:01 +66 -16: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart
+00:02 +66 -16: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getDashboardAnalytics should return AnalyticsDashboard when API call is successful
+00:02 +66 -17: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getDashboardAnalytics should return AnalyticsDashboard when API call is successful [E]
+  type 'Null' is not a subtype of type 'Map<String, dynamic>' in type cast
+  package:flutter_auth_template/data/models/analytics_models.g.dart 13:27        _$$AnalyticsDashboardImplFromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 253:7  new _$AnalyticsDashboardImpl.fromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 19:30  _$AnalyticsDashboardFromJson
+  package:flutter_auth_template/data/models/analytics_models.dart 17:7           new AnalyticsDashboard.fromJson
+  package:flutter_auth_template/data/services/analytics_api_service.dart 39:35   AnalyticsApiService.getDashboardAnalytics
+  
+00:02 +66 -17: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getDashboardAnalytics should include date parameters when provided
+00:02 +66 -18: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getDashboardAnalytics should include date parameters when provided [E]
+  type 'Null' is not a subtype of type 'Map<String, dynamic>' in type cast
+  package:flutter_auth_template/data/models/analytics_models.g.dart 13:27        _$$AnalyticsDashboardImplFromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 253:7  new _$AnalyticsDashboardImpl.fromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 19:30  _$AnalyticsDashboardFromJson
+  package:flutter_auth_template/data/models/analytics_models.dart 17:7           new AnalyticsDashboard.fromJson
+  package:flutter_auth_template/data/services/analytics_api_service.dart 39:35   AnalyticsApiService.getDashboardAnalytics
+  
+00:02 +66 -18: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getDashboardAnalytics should throw ServerException when API returns error
+00:02 +67 -18: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getDashboardAnalytics should handle DioException properly
+00:02 +68 -18: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getUserAnalytics should return UserAnalytics with groupBy parameter
+00:02 +68 -19: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getUserAnalytics should return UserAnalytics with groupBy parameter [E]
+  type 'Null' is not a subtype of type 'num' in type cast
+  package:flutter_auth_template/data/models/analytics_models.g.dart 42:41         _$$UserAnalyticsImplFromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 589:7   new _$UserAnalyticsImpl.fromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 351:25  _$UserAnalyticsFromJson
+  package:flutter_auth_template/data/models/analytics_models.dart 36:7            new UserAnalytics.fromJson
+  package:flutter_auth_template/data/services/analytics_api_service.dart 77:30    AnalyticsApiService.getUserAnalytics
+  
+00:02 +68 -19: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getAuthenticationAnalytics should return AuthenticationAnalytics when successful
+00:02 +68 -20: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getAuthenticationAnalytics should return AuthenticationAnalytics when successful [E]
+  type 'Null' is not a subtype of type 'Map<dynamic, dynamic>' in type cast
+  package:flutter_auth_template/data/models/analytics_models.g.dart 81:64         _$$AuthenticationAnalyticsImplFromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 971:7   new _$AuthenticationAnalyticsImpl.fromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 755:35  _$AuthenticationAnalyticsFromJson
+  package:flutter_auth_template/data/models/analytics_models.dart 53:7            new AuthenticationAnalytics.fromJson
+  package:flutter_auth_template/data/services/analytics_api_service.dart 115:40   AnalyticsApiService.getAuthenticationAnalytics
+  
+00:02 +68 -20: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getSecurityAnalytics should return SecurityAnalytics with date range
+00:02 +68 -21: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getSecurityAnalytics should return SecurityAnalytics with date range [E]
+  type 'Null' is not a subtype of type 'num' in type cast
+  package:flutter_auth_template/data/models/analytics_models.g.dart 107:49         _$$SecurityAnalyticsImplFromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 1330:7   new _$SecurityAnalyticsImpl.fromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 1121:29  _$SecurityAnalyticsFromJson
+  package:flutter_auth_template/data/models/analytics_models.dart 70:7             new SecurityAnalytics.fromJson
+  package:flutter_auth_template/data/services/analytics_api_service.dart 153:34    AnalyticsApiService.getSecurityAnalytics
+  
+00:02 +68 -21: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getApiUsageAnalytics should return ApiUsageAnalytics with apiKeyId filter
+00:02 +68 -22: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getApiUsageAnalytics should return ApiUsageAnalytics with apiKeyId filter [E]
+  type 'Null' is not a subtype of type 'num' in type cast
+  package:flutter_auth_template/data/models/analytics_models.g.dart 141:41         _$$ApiUsageAnalyticsImplFromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 1696:7   new _$ApiUsageAnalyticsImpl.fromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 1472:29  _$ApiUsageAnalyticsFromJson
+  package:flutter_auth_template/data/models/analytics_models.dart 88:7             new ApiUsageAnalytics.fromJson
+  package:flutter_auth_template/data/services/analytics_api_service.dart 195:34    AnalyticsApiService.getApiUsageAnalytics
+  
+00:02 +68 -22: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getSystemPerformance should return SystemPerformance with interval
+00:02 +68 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getSystemPerformance should return SystemPerformance with interval [E]
+  type 'Null' is not a subtype of type 'num' in type cast
+  package:flutter_auth_template/data/models/analytics_models.g.dart 174:49         _$$SystemPerformanceImplFromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 2062:7   new _$SystemPerformanceImpl.fromJson
+  package:flutter_auth_template/data/models/analytics_models.freezed.dart 1856:29  _$SystemPerformanceFromJson
+  package:flutter_auth_template/data/models/analytics_models.dart 105:7            new SystemPerformance.fromJson
+  package:flutter_auth_template/data/services/analytics_api_service.dart 233:34    AnalyticsApiService.getSystemPerformance
+  
+00:02 +68 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService executeCustomQuery should execute custom query successfully
+00:02 +69 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getAvailableMetrics should return list of available metrics
+00:02 +70 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService exportAnalytics should export analytics and return download URL
+00:02 +71 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getAnalyticsAlerts should return list of analytics alerts
+00:02 +72 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService createAnalyticsAlert should create analytics alert successfully
+00:02 +73 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/analytics_api_service_test.dart: AnalyticsApiService getRealTimeAnalytics should return stream of real-time analytics
+00:02 +74 -23: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart
+00:02 +74 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService login should return auth response on successful login
+00:02 +75 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService login should throw AuthenticationException on invalid credentials
+00:02 +76 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService login should throw ValidationException on invalid input
+00:02 +77 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService register should return auth response on successful registration
+00:02 +78 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService register should throw ValidationException when email already exists
+00:02 +79 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService logout should logout successfully
+00:02 +80 -23: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService logout should handle logout errors gracefully
+00:02 +80 -24: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService logout should handle logout errors gracefully [E]
+  Connection failed
+  package:flutter_auth_template/data/services/auth_service.dart 87:7  AuthService.logout
+  test/unit/data/services/auth_service_test.dart 238:27               main.<fn>.<fn>.<fn>
+  
+00:02 +80 -24: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService refreshToken should refresh tokens successfully
+00:02 +81 -24: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService refreshToken should throw AuthenticationException on invalid refresh token
+00:02 +82 -24: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService forgotPassword should send password reset email successfully
+00:02 +83 -24: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService forgotPassword should throw ValidationException for non-existent email
+00:02 +84 -24: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService resetPassword should reset password successfully
+00:02 +85 -24: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService resetPassword should throw ValidationException for invalid token
+00:02 +86 -24: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService verifyEmail should verify email successfully
+00:02 +86 -25: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService verifyEmail should verify email successfully [E]
+  MissingStubError: 'get'
+  No stub was found which matches the arguments of this method call:
+  get('/auth/verify-email', {queryParameters: null, options: null, cancelToken: null})
+  
+  Add a stub for this method using Mockito's 'when' API, or generate the MockApiClient mock with the @GenerateNiceMocks annotation (see https://pub.dev/documentation/mockito/latest/annotations/MockSpec-class.html).
+  package:mockito/src/mock.dart 200:7                                   Mock._noSuchMethod
+  package:mockito/src/mock.dart 194:47                                  Mock.noSuchMethod
+  test/unit/data/services/auth_service_test.mocks.dart 59:14            MockApiClient.get
+  package:flutter_auth_template/data/services/auth_service.dart 130:41  AuthService.verifyEmail
+  test/unit/data/services/auth_service_test.dart 427:27                 main.<fn>.<fn>.<fn>
+  
+00:02 +86 -25: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService verifyEmail should throw ValidationException for invalid verification token
+00:02 +86 -26: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService verifyEmail should throw ValidationException for invalid verification token [E]
+  Expected: throws <Instance of 'AppException'>
+    Actual: <Closure: () => Future<void>>
+     Which: threw MissingStubError:<MissingStubError: 'get'
+                  No stub was found which matches the arguments of this method call:
+                  get('/auth/verify-email', {queryParameters: null, options: null, cancelToken: null})
+                  
+                  Add a stub for this method using Mockito's 'when' API, or generate the MockApiClient mock with the @GenerateNiceMocks annotation (see https://pub.dev/documentation/mockito/latest/annotations/MockSpec-class.html).>
+            stack package:mockito/src/mock.dart 200:7                                   Mock._noSuchMethod
+                  package:mockito/src/mock.dart 194:47                                  Mock.noSuchMethod
+                  test/unit/data/services/auth_service_test.mocks.dart 59:14            MockApiClient.get
+                  package:flutter_auth_template/data/services/auth_service.dart 130:41  AuthService.verifyEmail
+                  test/unit/data/services/auth_service_test.dart 454:41                 main.<fn>.<fn>.<fn>.<fn>
+                  package:matcher                                                       expect
+                  package:flutter_test/src/widget_tester.dart 473:18                    expect
+                  test/unit/data/services/auth_service_test.dart 453:9                  main.<fn>.<fn>.<fn>
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                       expect
+                  package:flutter_test/src/widget_tester.dart 473:18                    expect
+                  test/unit/data/services/auth_service_test.dart 453:9                  main.<fn>.<fn>.<fn>
+                  
+            which is not an instance of 'AppException'
+  
+  package:matcher                                       expect
+  package:flutter_test/src/widget_tester.dart 473:18    expect
+  test/unit/data/services/auth_service_test.dart 453:9  main.<fn>.<fn>.<fn>
+  
+00:02 +86 -26: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService getCurrentUser should return current user data
+00:02 +86 -27: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService getCurrentUser should return current user data [E]
+  MissingStubError: 'get'
+  No stub was found which matches the arguments of this method call:
+  get('/users/me', {queryParameters: null, options: null, cancelToken: null})
+  
+  Add a stub for this method using Mockito's 'when' API, or generate the MockApiClient mock with the @GenerateNiceMocks annotation (see https://pub.dev/documentation/mockito/latest/annotations/MockSpec-class.html).
+  package:mockito/src/mock.dart 200:7                                   Mock._noSuchMethod
+  package:mockito/src/mock.dart 194:47                                  Mock.noSuchMethod
+  test/unit/data/services/auth_service_test.mocks.dart 59:14            MockApiClient.get
+  package:flutter_auth_template/data/services/auth_service.dart 187:41  AuthService.getCurrentUser
+  test/unit/data/services/auth_service_test.dart 486:42                 main.<fn>.<fn>.<fn>
+  
+00:02 +86 -27: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService getCurrentUser should throw AuthenticationException when not authenticated
+00:02 +86 -28: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/auth_service_test.dart: AuthService getCurrentUser should throw AuthenticationException when not authenticated [E]
+  Expected: throws <Instance of 'AppException'>
+    Actual: <Closure: () => Future<User>>
+     Which: threw MissingStubError:<MissingStubError: 'get'
+                  No stub was found which matches the arguments of this method call:
+                  get('/users/me', {queryParameters: null, options: null, cancelToken: null})
+                  
+                  Add a stub for this method using Mockito's 'when' API, or generate the MockApiClient mock with the @GenerateNiceMocks annotation (see https://pub.dev/documentation/mockito/latest/annotations/MockSpec-class.html).>
+            stack package:mockito/src/mock.dart 200:7                                   Mock._noSuchMethod
+                  package:mockito/src/mock.dart 194:47                                  Mock.noSuchMethod
+                  test/unit/data/services/auth_service_test.mocks.dart 59:14            MockApiClient.get
+                  package:flutter_auth_template/data/services/auth_service.dart 187:41  AuthService.getCurrentUser
+                  test/unit/data/services/auth_service_test.dart 509:41                 main.<fn>.<fn>.<fn>.<fn>
+                  package:matcher                                                       expect
+                  package:flutter_test/src/widget_tester.dart 473:18                    expect
+                  test/unit/data/services/auth_service_test.dart 508:9                  main.<fn>.<fn>.<fn>
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                       expect
+                  package:flutter_test/src/widget_tester.dart 473:18                    expect
+                  test/unit/data/services/auth_service_test.dart 508:9                  main.<fn>.<fn>.<fn>
+                  
+            which is not an instance of 'AppException'
+  
+  package:matcher                                       expect
+  package:flutter_test/src/widget_tester.dart 473:18    expect
+  test/unit/data/services/auth_service_test.dart 508:9  main.<fn>.<fn>.<fn>
+  
+00:02 +86 -28: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart
+00:03 +86 -28: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService getApiKeys should return ApiKeyListResponse when API call is successful
+00:03 +86 -29: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService getApiKeys should return ApiKeyListResponse when API call is successful [E]
+  type 'Null' is not a subtype of type 'List<dynamic>' in type cast
+  package:flutter_auth_template/data/models/api_key_models.g.dart 133:29         _$$ApiKeyListResponseImplFromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 1572:7   new _$ApiKeyListResponseImpl.fromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 1395:30  _$ApiKeyListResponseFromJson
+  package:flutter_auth_template/data/models/api_key_models.dart 86:7             new ApiKeyListResponse.fromJson
+  package:flutter_auth_template/data/services/api_key_service.dart 40:35         ApiKeyService.getApiKeys
+  
+00:03 +86 -29: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService getApiKeys should include filter parameters when provided
+00:03 +86 -30: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService getApiKeys should include filter parameters when provided [E]
+  type 'Null' is not a subtype of type 'List<dynamic>' in type cast
+  package:flutter_auth_template/data/models/api_key_models.g.dart 133:29         _$$ApiKeyListResponseImplFromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 1572:7   new _$ApiKeyListResponseImpl.fromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 1395:30  _$ApiKeyListResponseFromJson
+  package:flutter_auth_template/data/models/api_key_models.dart 86:7             new ApiKeyListResponse.fromJson
+  package:flutter_auth_template/data/services/api_key_service.dart 40:35         ApiKeyService.getApiKeys
+  
+00:03 +86 -30: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService getApiKeys should throw ServerException when API returns error
+00:03 +87 -30: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService getApiKeys should handle DioException properly
+00:03 +88 -30: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService getApiKey should return ApiKey when API call is successful
+00:03 +88 -31: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService getApiKey should return ApiKey when API call is successful [E]
+  type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/models/api_key_models.g.dart 12:36        _$$ApiKeyImplFromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 320:7  new _$ApiKeyImpl.fromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 19:18  _$ApiKeyFromJson
+  package:flutter_auth_template/data/models/api_key_models.dart 26:57          new ApiKey.fromJson
+  package:flutter_auth_template/data/services/api_key_service.dart 61:23       ApiKeyService.getApiKey
+  
+00:03 +88 -31: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService getApiKey should throw ServerException when API key not found
+00:03 +89 -31: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService createApiKey should create API key and return ApiKeyCreateResponse
+00:03 +89 -32: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService createApiKey should create API key and return ApiKeyCreateResponse [E]
+  type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/models/api_key_models.g.dart 12:36          _$$ApiKeyImplFromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 320:7    new _$ApiKeyImpl.fromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 19:18    _$ApiKeyFromJson
+  package:flutter_auth_template/data/models/api_key_models.dart 26:57            new ApiKey.fromJson
+  package:flutter_auth_template/data/models/api_key_models.g.dart 117:18         _$$ApiKeyCreateResponseImplFromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 1322:7   new _$ApiKeyCreateResponseImpl.fromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 1177:32  _$ApiKeyCreateResponseFromJson
+  package:flutter_auth_template/data/models/api_key_models.dart 71:7             new ApiKeyCreateResponse.fromJson
+  package:flutter_auth_template/data/services/api_key_service.dart 83:37         ApiKeyService.createApiKey
+  
+00:03 +89 -32: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService createApiKey should throw ServerException when creation fails
+00:03 +90 -32: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService updateApiKey should update API key successfully
+00:03 +90 -33: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService updateApiKey should update API key successfully [E]
+  type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/models/api_key_models.g.dart 12:36        _$$ApiKeyImplFromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 320:7  new _$ApiKeyImpl.fromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 19:18  _$ApiKeyFromJson
+  package:flutter_auth_template/data/models/api_key_models.dart 26:57          new ApiKey.fromJson
+  package:flutter_auth_template/data/services/api_key_service.dart 108:23      ApiKeyService.updateApiKey
+  
+00:03 +90 -33: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService rotateApiKey should rotate API key and return new credentials
+00:03 +90 -34: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService rotateApiKey should rotate API key and return new credentials [E]
+  type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/models/api_key_models.g.dart 12:36          _$$ApiKeyImplFromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 320:7    new _$ApiKeyImpl.fromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 19:18    _$ApiKeyFromJson
+  package:flutter_auth_template/data/models/api_key_models.dart 26:57            new ApiKey.fromJson
+  package:flutter_auth_template/data/models/api_key_models.g.dart 117:18         _$$ApiKeyCreateResponseImplFromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 1322:7   new _$ApiKeyCreateResponseImpl.fromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 1177:32  _$ApiKeyCreateResponseFromJson
+  package:flutter_auth_template/data/models/api_key_models.dart 71:7             new ApiKeyCreateResponse.fromJson
+  package:flutter_auth_template/data/services/api_key_service.dart 190:37        ApiKeyService.rotateApiKey
+  
+00:03 +90 -34: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService deleteApiKey should delete API key successfully
+00:03 +91 -34: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService deleteApiKey should throw ServerException when deletion fails
+00:03 +92 -34: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService getApiKeyUsageStats should return API key usage statistics
+00:03 +92 -35: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService getApiKeyUsageStats should return API key usage statistics [E]
+  type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/models/api_key_models.g.dart 157:30         _$$ApiKeyUsageStatsImplFromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 1882:7   new _$ApiKeyUsageStatsImpl.fromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 1676:28  _$ApiKeyUsageStatsFromJson
+  package:flutter_auth_template/data/models/api_key_models.dart 103:7            new ApiKeyUsageStats.fromJson
+  package:flutter_auth_template/data/services/api_key_service.dart 225:33        ApiKeyService.getApiKeyUsageStats
+  
+00:03 +92 -35: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService activateApiKey should activate API key successfully
+00:03 +92 -36: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService activateApiKey should activate API key successfully [E]
+  type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/models/api_key_models.g.dart 12:36        _$$ApiKeyImplFromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 320:7  new _$ApiKeyImpl.fromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 19:18  _$ApiKeyFromJson
+  package:flutter_auth_template/data/models/api_key_models.dart 26:57          new ApiKey.fromJson
+  package:flutter_auth_template/data/services/api_key_service.dart 148:23      ApiKeyService.activateApiKey
+  
+00:03 +92 -36: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService deactivateApiKey should deactivate API key successfully
+00:03 +92 -37: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService deactivateApiKey should deactivate API key successfully [E]
+  type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/models/api_key_models.g.dart 12:36        _$$ApiKeyImplFromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 320:7  new _$ApiKeyImpl.fromJson
+  package:flutter_auth_template/data/models/api_key_models.freezed.dart 19:18  _$ApiKeyFromJson
+  package:flutter_auth_template/data/models/api_key_models.dart 26:57          new ApiKey.fromJson
+  package:flutter_auth_template/data/services/api_key_service.dart 169:23      ApiKeyService.deactivateApiKey
+  
+00:03 +92 -37: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService testApiKey should test API key successfully
+00:03 +93 -37: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/api_key_service_test.dart: ApiKeyService testApiKey should return test failure for bad API key
+00:03 +94 -37: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart
+00:03 +94 -37: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService getNotifications should return list of NotificationMessage when successful
+00:03 +94 -38: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService getNotifications should return list of NotificationMessage when successful [E]
+  Exception: Get notifications failed: Invalid argument(s): A value must be provided. Supported values: low, normal, high, urgent
+  package:flutter_auth_template/data/services/notification_api_service.dart 49:7  NotificationApiService.getNotifications
+  
+00:03 +94 -38: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService getNotifications should throw exception when request fails
+00:03 +95 -38: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService createNotification should create notification successfully
+00:03 +95 -39: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService createNotification should create notification successfully [E]
+  Exception: Create notification failed: Invalid argument(s): A value must be provided. Supported values: low, normal, high, urgent
+  package:flutter_auth_template/data/services/notification_api_service.dart 73:7  NotificationApiService.createNotification
+  
+00:03 +95 -39: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService markAsRead should mark notification as read successfully
+00:03 +96 -39: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService markAsRead should throw exception when marking as read fails
+00:03 +97 -39: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService markAllAsRead should mark all notifications as read successfully
+00:03 +98 -39: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService deleteNotification should delete notification successfully
+00:03 +99 -39: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService clearAllNotifications should clear all notifications successfully
+00:03 +100 -39: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Template Management getTemplates should return list of NotificationTemplate
+00:03 +100 -40: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Template Management getTemplates should return list of NotificationTemplate [E]
+  Exception: Get templates failed: type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/services/notification_api_service.dart 169:7  NotificationApiService.getTemplates
+  
+00:03 +100 -40: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Template Management createTemplate should create template successfully
+00:03 +100 -41: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Template Management createTemplate should create template successfully [E]
+  Exception: Create template failed: type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/services/notification_api_service.dart 193:7  NotificationApiService.createTemplate
+  
+00:03 +100 -41: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Template Management updateTemplate should update template successfully
+00:03 +101 -41: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Template Management deleteTemplate should delete template successfully
+00:03 +102 -41: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Preferences Management getPreferences should return NotificationPreferences
+00:03 +103 -41: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Preferences Management updatePreferences should update preferences successfully
+00:03 +104 -41: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Batch Management getBatches should return list of NotificationBatch
+00:03 +104 -42: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Batch Management getBatches should return list of NotificationBatch [E]
+  Exception: Get batches failed: type 'Null' is not a subtype of type 'List<dynamic>' in type cast
+  package:flutter_auth_template/data/services/notification_api_service.dart 306:7  NotificationApiService.getBatches
+  
+00:03 +104 -42: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Batch Management createBatch should create batch successfully
+00:03 +104 -43: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Batch Management createBatch should create batch successfully [E]
+  Exception: Create batch failed: type 'Null' is not a subtype of type 'List<dynamic>' in type cast
+  package:flutter_auth_template/data/services/notification_api_service.dart 342:7  NotificationApiService.createBatch
+  
+00:03 +104 -43: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Batch Management cancelBatch should cancel batch successfully
+00:03 +105 -43: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Subscription Management getSubscriptions should return list of NotificationSubscription
+00:03 +105 -44: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Subscription Management getSubscriptions should return list of NotificationSubscription [E]
+  Exception: Get subscriptions failed: type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/services/notification_api_service.dart 384:7  NotificationApiService.getSubscriptions
+  
+00:03 +105 -44: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Subscription Management createSubscription should create subscription successfully
+00:03 +105 -45: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Subscription Management createSubscription should create subscription successfully [E]
+  Exception: Create subscription failed: type 'Null' is not a subtype of type 'String' in type cast
+  package:flutter_auth_template/data/services/notification_api_service.dart 416:7  NotificationApiService.createSubscription
+  
+00:03 +105 -45: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Subscription Management deleteSubscription should delete subscription successfully
+00:03 +106 -45: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Analytics getAnalytics should return NotificationAnalytics
+00:03 +106 -46: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Analytics getAnalytics should return NotificationAnalytics [E]
+  Exception: Get analytics failed: type 'Null' is not a subtype of type 'Map<String, dynamic>' in type cast
+  package:flutter_auth_template/data/services/notification_api_service.dart 470:7  NotificationApiService.getAnalytics
+  
+00:03 +106 -46: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Analytics trackNotificationAction should track notification action without throwing
+00:03 +107 -46: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService Analytics trackNotificationAction should not throw even when tracking fails
+00:03 +108 -46: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService getUnreadCount should return unread count
+00:03 +109 -46: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService getUnreadCount should return 0 when count is null
+00:03 +110 -46: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/notification_api_service_test.dart: NotificationApiService sendTestNotification should send test notification successfully
+00:03 +111 -46: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/profile_api_service_test.dart
+test/unit/data/services/profile_api_service_test.dart:462:11: Error: No named parameter with the name 'profileVisibility'.
+          profileVisibility: 'private',
+          ^^^^^^^^^^^^^^^^^
+lib/data/models/profile_models.dart:131:17: Context: Found this candidate, but the arguments don't match.
+  const factory PrivacySettings({
+                ^
+test/unit/data/services/profile_api_service_test.dart:21:43: Error: The argument type 'MockApiClient' can't be assigned to the parameter type 'ApiClient'.
+ - 'MockApiClient' is from 'test/unit/data/services/profile_api_service_test.mocks.dart'.
+ - 'ApiClient' is from 'package:flutter_auth_template/infrastructure/services/api/api_client.dart' ('lib/infrastructure/services/api/api_client.dart').
+    profileApiService = ProfileApiService(mockApiClient);
+                                          ^
+test/unit/data/services/profile_api_service_test.dart:54:23: Error: The getter 'name' isn't defined for the type 'ProfileResponse'.
+ - 'ProfileResponse' is from 'package:flutter_auth_template/data/models/profile_models.dart' ('lib/data/models/profile_models.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'name'.
+        expect(result.name, equals('Test User'));
+                      ^^^^
+test/unit/data/services/profile_api_service_test.dart:135:23: Error: The getter 'name' isn't defined for the type 'ProfileResponse'.
+ - 'ProfileResponse' is from 'package:flutter_auth_template/data/models/profile_models.dart' ('lib/data/models/profile_models.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'name'.
+        expect(result.name, equals('Updated Name'));
+                      ^^^^
+test/unit/data/services/profile_api_service_test.dart:452:23: Error: The getter 'profileVisibility' isn't defined for the type 'PrivacySettings'.
+ - 'PrivacySettings' is from 'package:flutter_auth_template/data/models/profile_models.dart' ('lib/data/models/profile_models.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'profileVisibility'.
+        expect(result.profileVisibility, equals('public'));
+                      ^^^^^^^^^^^^^^^^^
+test/unit/data/services/profile_api_service_test.dart:487:23: Error: The getter 'profileVisibility' isn't defined for the type 'PrivacySettings'.
+ - 'PrivacySettings' is from 'package:flutter_auth_template/data/models/profile_models.dart' ('lib/data/models/profile_models.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'profileVisibility'.
+        expect(result.profileVisibility, equals('private'));
+                      ^^^^^^^^^^^^^^^^^
+00:03 +111 -47: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/profile_api_service_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/profile_api_service_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/profile_api_service_test.dart: test/unit/data/services/profile_api_service_test.dart:462:11: Error: No named parameter with the name 'profileVisibility'.
+            profileVisibility: 'private',
+            ^^^^^^^^^^^^^^^^^
+  lib/data/models/profile_models.dart:131:17: Context: Found this candidate, but the arguments don't match.
+    const factory PrivacySettings({
+                  ^
+  test/unit/data/services/profile_api_service_test.dart:21:43: Error: The argument type 'MockApiClient' can't be assigned to the parameter type 'ApiClient'.
+   - 'MockApiClient' is from 'test/unit/data/services/profile_api_service_test.mocks.dart'.
+   - 'ApiClient' is from 'package:flutter_auth_template/infrastructure/services/api/api_client.dart' ('lib/infrastructure/services/api/api_client.dart').
+      profileApiService = ProfileApiService(mockApiClient);
+                                            ^
+  test/unit/data/services/profile_api_service_test.dart:54:23: Error: The getter 'name' isn't defined for the type 'ProfileResponse'.
+   - 'ProfileResponse' is from 'package:flutter_auth_template/data/models/profile_models.dart' ('lib/data/models/profile_models.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'name'.
+          expect(result.name, equals('Test User'));
+                        ^^^^
+  test/unit/data/services/profile_api_service_test.dart:135:23: Error: The getter 'name' isn't defined for the type 'ProfileResponse'.
+   - 'ProfileResponse' is from 'package:flutter_auth_template/data/models/profile_models.dart' ('lib/data/models/profile_models.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'name'.
+          expect(result.name, equals('Updated Name'));
+                        ^^^^
+  test/unit/data/services/profile_api_service_test.dart:452:23: Error: The getter 'profileVisibility' isn't defined for the type 'PrivacySettings'.
+   - 'PrivacySettings' is from 'package:flutter_auth_template/data/models/profile_models.dart' ('lib/data/models/profile_models.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'profileVisibility'.
+          expect(result.profileVisibility, equals('public'));
+                        ^^^^^^^^^^^^^^^^^
+  test/unit/data/services/profile_api_service_test.dart:487:23: Error: The getter 'profileVisibility' isn't defined for the type 'PrivacySettings'.
+   - 'PrivacySettings' is from 'package:flutter_auth_template/data/models/profile_models.dart' ('lib/data/models/profile_models.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'profileVisibility'.
+          expect(result.profileVisibility, equals('private'));
+                        ^^^^^^^^^^^^^^^^^
+  .
+00:03 +111 -47: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/two_factor_api_service_test.dart
+test/unit/data/services/two_factor_api_service_test.dart:162:11: Error: No named parameter with the name 'secret'.
+          secret: 'JBSWY3DPEHPK3PXP',
+          ^^^^^^
+lib/data/models/two_factor_models.dart:52:17: Context: Found this candidate, but the arguments don't match.
+  const factory TwoFactorEnableRequest({
+                ^
+test/unit/data/services/two_factor_api_service_test.dart:207:11: Error: No named parameter with the name 'secret'.
+          secret: 'invalid-secret',
+          ^^^^^^
+lib/data/models/two_factor_models.dart:52:17: Context: Found this candidate, but the arguments don't match.
+  const factory TwoFactorEnableRequest({
+                ^
+test/unit/data/services/two_factor_api_service_test.dart:237:11: Error: No named parameter with the name 'rememberDevice'.
+          rememberDevice: true,
+          ^^^^^^^^^^^^^^
+lib/data/models/two_factor_models.dart:39:17: Context: Found this candidate, but the arguments don't match.
+  const factory TwoFactorVerifyRequest({
+                ^
+test/unit/data/services/two_factor_api_service_test.dart:21:47: Error: The argument type 'MockApiClient' can't be assigned to the parameter type 'ApiClient'.
+ - 'MockApiClient' is from 'test/unit/data/services/two_factor_api_service_test.mocks.dart'.
+ - 'ApiClient' is from 'package:flutter_auth_template/infrastructure/services/api/api_client.dart' ('lib/infrastructure/services/api/api_client.dart').
+    twoFactorApiService = TwoFactorApiService(mockApiClient);
+                                              ^
+test/unit/data/services/two_factor_api_service_test.dart:130:23: Error: The getter 'qrCodeUrl' isn't defined for the type 'TwoFactorSetupResponse'.
+ - 'TwoFactorSetupResponse' is from 'package:flutter_auth_template/data/models/two_factor_models.dart' ('lib/data/models/two_factor_models.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'qrCodeUrl'.
+        expect(result.qrCodeUrl, equals('https://example.com/qr.png'));
+                      ^^^^^^^^^
+test/unit/data/services/two_factor_api_service_test.dart:290:34: Error: The getter 'code' isn't defined for the type 'ValidationException'.
+ - 'ValidationException' is from 'package:flutter_auth_template/core/errors/app_exception.dart' ('lib/core/errors/app_exception.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'code'.
+                .having((e) => e.code, 'code', 'INVALID_2FA_CODE'),
+                                 ^^^^
+00:04 +111 -48: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/two_factor_api_service_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/two_factor_api_service_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/two_factor_api_service_test.dart: test/unit/data/services/two_factor_api_service_test.dart:162:11: Error: No named parameter with the name 'secret'.
+            secret: 'JBSWY3DPEHPK3PXP',
+            ^^^^^^
+  lib/data/models/two_factor_models.dart:52:17: Context: Found this candidate, but the arguments don't match.
+    const factory TwoFactorEnableRequest({
+                  ^
+  test/unit/data/services/two_factor_api_service_test.dart:207:11: Error: No named parameter with the name 'secret'.
+            secret: 'invalid-secret',
+            ^^^^^^
+  lib/data/models/two_factor_models.dart:52:17: Context: Found this candidate, but the arguments don't match.
+    const factory TwoFactorEnableRequest({
+                  ^
+  test/unit/data/services/two_factor_api_service_test.dart:237:11: Error: No named parameter with the name 'rememberDevice'.
+            rememberDevice: true,
+            ^^^^^^^^^^^^^^
+  lib/data/models/two_factor_models.dart:39:17: Context: Found this candidate, but the arguments don't match.
+    const factory TwoFactorVerifyRequest({
+                  ^
+  test/unit/data/services/two_factor_api_service_test.dart:21:47: Error: The argument type 'MockApiClient' can't be assigned to the parameter type 'ApiClient'.
+   - 'MockApiClient' is from 'test/unit/data/services/two_factor_api_service_test.mocks.dart'.
+   - 'ApiClient' is from 'package:flutter_auth_template/infrastructure/services/api/api_client.dart' ('lib/infrastructure/services/api/api_client.dart').
+      twoFactorApiService = TwoFactorApiService(mockApiClient);
+                                                ^
+  test/unit/data/services/two_factor_api_service_test.dart:130:23: Error: The getter 'qrCodeUrl' isn't defined for the type 'TwoFactorSetupResponse'.
+   - 'TwoFactorSetupResponse' is from 'package:flutter_auth_template/data/models/two_factor_models.dart' ('lib/data/models/two_factor_models.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'qrCodeUrl'.
+          expect(result.qrCodeUrl, equals('https://example.com/qr.png'));
+                        ^^^^^^^^^
+  test/unit/data/services/two_factor_api_service_test.dart:290:34: Error: The getter 'code' isn't defined for the type 'ValidationException'.
+   - 'ValidationException' is from 'package:flutter_auth_template/core/errors/app_exception.dart' ('lib/core/errors/app_exception.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'code'.
+                  .having((e) => e.code, 'code', 'INVALID_2FA_CODE'),
+                                   ^^^^
+  .
+00:04 +111 -48: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/export_api_service_test.dart
+test/unit/data/services/export_api_service_test.dart:356:13: Error: No named parameter with the name 'includeMedia'.
+            includeMedia: true,
+            ^^^^^^^^^^^^
+lib/data/models/export_models.dart:121:17: Context: Found this candidate, but the arguments don't match.
+  const factory BackupRequest({
+                ^
+test/unit/data/services/export_api_service_test.dart:506:13: Error: No named parameter with the name 'targetEnvironment'.
+            targetEnvironment: 'staging',
+            ^^^^^^^^^^^^^^^^^
+lib/data/models/export_models.dart:181:17: Context: Found this candidate, but the arguments don't match.
+  const factory RestoreRequest({
+                ^
+test/unit/data/services/export_api_service_test.dart:31:20: Error: The argument type 'Map<String, bool>' can't be assigned to the parameter type 'ExportFilters?'.
+ - 'Map' is from 'dart:core'.
+ - 'ExportFilters' is from 'package:flutter_auth_template/data/models/export_models.dart' ('lib/data/models/export_models.dart').
+          filters: {'active': true},
+                   ^
+test/unit/data/services/export_api_service_test.dart:337:23: Error: The getter 'totalExports' isn't defined for the type 'ExportStats'.
+ - 'ExportStats' is from 'package:flutter_auth_template/data/models/export_models.dart' ('lib/data/models/export_models.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'totalExports'.
+        expect(result.totalExports, equals(100));
+                      ^^^^^^^^^^^^
+00:04 +111 -49: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/export_api_service_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/export_api_service_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/export_api_service_test.dart: test/unit/data/services/export_api_service_test.dart:356:13: Error: No named parameter with the name 'includeMedia'.
+              includeMedia: true,
+              ^^^^^^^^^^^^
+  lib/data/models/export_models.dart:121:17: Context: Found this candidate, but the arguments don't match.
+    const factory BackupRequest({
+                  ^
+  test/unit/data/services/export_api_service_test.dart:506:13: Error: No named parameter with the name 'targetEnvironment'.
+              targetEnvironment: 'staging',
+              ^^^^^^^^^^^^^^^^^
+  lib/data/models/export_models.dart:181:17: Context: Found this candidate, but the arguments don't match.
+    const factory RestoreRequest({
+                  ^
+  test/unit/data/services/export_api_service_test.dart:31:20: Error: The argument type 'Map<String, bool>' can't be assigned to the parameter type 'ExportFilters?'.
+   - 'Map' is from 'dart:core'.
+   - 'ExportFilters' is from 'package:flutter_auth_template/data/models/export_models.dart' ('lib/data/models/export_models.dart').
+            filters: {'active': true},
+                     ^
+  test/unit/data/services/export_api_service_test.dart:337:23: Error: The getter 'totalExports' isn't defined for the type 'ExportStats'.
+   - 'ExportStats' is from 'package:flutter_auth_template/data/models/export_models.dart' ('lib/data/models/export_models.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'totalExports'.
+          expect(result.totalExports, equals(100));
+                        ^^^^^^^^^^^^
+  .
+00:04 +111 -49: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/device_api_service_test.dart
+test/unit/data/services/device_api_service_test.dart:159:11: Error: No named parameter with the name 'name'.
+          name: 'New Device',
+          ^^^^
+lib/data/models/device_models.dart:35:17: Context: Found this candidate, but the arguments don't match.
+  const factory DeviceRegistrationRequest({
+                ^
+00:05 +111 -50: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/device_api_service_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/device_api_service_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/data/services/device_api_service_test.dart: test/unit/data/services/device_api_service_test.dart:159:11: Error: No named parameter with the name 'name'.
+            name: 'New Device',
+            ^^^^
+  lib/data/models/device_models.dart:35:17: Context: Found this candidate, but the arguments don't match.
+    const factory DeviceRegistrationRequest({
+                  ^
+  .
+00:05 +111 -50: Some tests failed.

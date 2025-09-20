@@ -65,6 +65,7 @@ export interface PasswordResetRequest {
 export interface PasswordResetConfirm {
   token: string;
   new_password: string;
+  confirm_password?: string; // Optional for backward compatibility
 }
 
 export interface ConfirmResetPasswordRequest {

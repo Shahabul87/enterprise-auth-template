@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/constants/api_constants.dart';
-import '../../core/network/api_client.dart';
-import '../../core/errors/app_exception.dart';
-import '../models/analytics_models.dart';
+import 'package:flutter_auth_template/core/constants/api_constants.dart';
+import 'package:flutter_auth_template/core/network/api_client.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
+import 'package:flutter_auth_template/data/models/analytics_models.dart';
 
 final analyticsApiServiceProvider = Provider<AnalyticsApiService>((ref) {
   return AnalyticsApiService(ref.read(apiClientProvider));

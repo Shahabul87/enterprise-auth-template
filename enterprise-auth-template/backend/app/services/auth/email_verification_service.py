@@ -22,6 +22,7 @@ logger = structlog.get_logger(__name__)
 
 class EmailVerificationError(Exception):
     """Email verification related errors."""
+
     pass
 
 
@@ -156,21 +157,15 @@ class EmailVerificationService:
                 if existing_token:
                     # Update existing token
                     await self._update_verification_token(
-                        existing_token.id,
-                        verification_token
+                        existing_token.id, verification_token
                     )
                 else:
                     # Create new token
-                    await self._create_verification_token(
-                        user.id,
-                        verification_token
-                    )
+                    await self._create_verification_token(user.id, verification_token)
 
                 # Send verification email
                 await self._send_verification_email(
-                    user.email,
-                    user.full_name,
-                    verification_token
+                    user.email, user.full_name, verification_token
                 )
 
                 await self.session.commit()
@@ -291,8 +286,7 @@ class EmailVerificationService:
             return 0
 
     async def _find_valid_verification_token(
-        self,
-        verification_token: str
+        self, verification_token: str
     ) -> Optional[EmailVerificationToken]:
         """
         Find and validate a verification token.
@@ -313,8 +307,7 @@ class EmailVerificationService:
         return result.scalar_one_or_none()
 
     async def _find_user_verification_token(
-        self,
-        user_id: str
+        self, user_id: str
     ) -> Optional[EmailVerificationToken]:
         """
         Find active verification token for a user.
@@ -390,10 +383,7 @@ class EmailVerificationService:
         stmt = (
             update(EmailVerificationToken)
             .where(EmailVerificationToken.id == token_id)
-            .values(
-                is_used=True,
-                used_at=datetime.utcnow()
-            )
+            .values(is_used=True, used_at=datetime.utcnow())
         )
         await self.session.execute(stmt)
 
@@ -455,6 +445,7 @@ class EmailVerificationService:
             # Try enhanced email service first
             try:
                 from app.services.enhanced_email_service import enhanced_email_service
+
                 await enhanced_email_service.send_verification_email(
                     to_email=email,
                     user_name=user_name,
@@ -463,6 +454,7 @@ class EmailVerificationService:
             except ImportError:
                 # Fallback to basic email service
                 from app.services.email_service import email_service
+
                 await email_service.send_verification_email(
                     to_email=email,
                     user_name=user_name,
@@ -494,8 +486,9 @@ class EmailVerificationService:
         """
         try:
             from app.services.email_service import email_service
+
             # Send welcome email if method exists
-            if hasattr(email_service, 'send_welcome_email'):
+            if hasattr(email_service, "send_welcome_email"):
                 await email_service.send_welcome_email(
                     to_email=email,
                     user_name=user_name,

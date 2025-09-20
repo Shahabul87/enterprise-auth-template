@@ -8,45 +8,14 @@ import apiClient from '@/lib/api-client';
 import {
   startAuthentication,
   startRegistration,
-  browserSupportsWebAuthn
+  browserSupportsWebAuthn,
+  PublicKeyCredentialCreationOptionsJSON,
+  PublicKeyCredentialRequestOptionsJSON
 } from '@simplewebauthn/browser';
 
-export interface WebAuthnRegistrationOptions {
-  challenge: string;
-  rp: {
-    name: string;
-    id: string;
-  };
-  user: {
-    id: string;
-    name: string;
-    displayName: string;
-  };
-  pubKeyCredParams: Array<{
-    alg: number;
-    type: string;
-  }>;
-  timeout?: number;
-  attestation?: string;
-  authenticatorSelection?: {
-    authenticatorAttachment?: string;
-    requireResidentKey?: boolean;
-    residentKey?: string;
-    userVerification?: string;
-  };
-}
+export type WebAuthnRegistrationOptions = PublicKeyCredentialCreationOptionsJSON;
 
-export interface WebAuthnAuthenticationOptions {
-  challenge: string;
-  timeout?: number;
-  rpId: string;
-  userVerification?: string;
-  allowCredentials?: Array<{
-    id: string;
-    type: string;
-    transports?: string[];
-  }>;
-}
+export type WebAuthnAuthenticationOptions = PublicKeyCredentialRequestOptionsJSON;
 
 export interface WebAuthnCredential {
   id: string;

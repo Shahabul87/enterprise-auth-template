@@ -72,10 +72,7 @@ class RoleRepository(IRoleRepository):
         """Assign a role to a user."""
         # Check if assignment already exists
         stmt = select(UserRole).where(
-            and_(
-                UserRole.user_id == user_id,
-                UserRole.role_id == role_id
-            )
+            and_(UserRole.user_id == user_id, UserRole.role_id == role_id)
         )
         result = await self.session.execute(stmt)
 
@@ -91,31 +88,20 @@ class RoleRepository(IRoleRepository):
     async def remove_from_user(self, user_id: UUID, role_id: UUID) -> bool:
         """Remove a role from a user."""
         stmt = delete(UserRole).where(
-            and_(
-                UserRole.user_id == user_id,
-                UserRole.role_id == role_id
-            )
+            and_(UserRole.user_id == user_id, UserRole.role_id == role_id)
         )
         result = await self.session.execute(stmt)
         return result.rowcount > 0
 
     async def get_user_roles(self, user_id: UUID) -> List[Role]:
         """Get all roles assigned to a user."""
-        stmt = (
-            select(Role)
-            .join(UserRole)
-            .where(UserRole.user_id == user_id)
-        )
+        stmt = select(Role).join(UserRole).where(UserRole.user_id == user_id)
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 
     async def get_role_users(self, role_id: UUID) -> List[User]:
         """Get all users with a specific role."""
-        stmt = (
-            select(User)
-            .join(UserRole)
-            .where(UserRole.role_id == role_id)
-        )
+        stmt = select(User).join(UserRole).where(UserRole.role_id == role_id)
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 

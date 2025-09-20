@@ -45,7 +45,7 @@ function StatsCard({
   icon,
   trend,
   variant = 'default',
-}: StatsCardProps): JSX.Element {
+}: StatsCardProps): React.ReactElement {
   const variantStyles = {
     default: 'border-border',
     success: 'border-green-200 bg-green-50',
@@ -102,7 +102,7 @@ interface SystemHealthCardProps {
   };
 }
 
-function SystemHealthCard({ health }: SystemHealthCardProps): JSX.Element {
+function SystemHealthCard({ health }: SystemHealthCardProps): React.ReactElement {
   const getStatusColor = (status: string): string => {
     switch (status) {
       case 'healthy':
@@ -215,7 +215,7 @@ interface ActivityFeedProps {
   auditStats: AuditLogStats;
 }
 
-function ActivityFeed({ auditStats }: ActivityFeedProps): JSX.Element {
+function ActivityFeed({ auditStats }: ActivityFeedProps): React.ReactElement {
   return (
     <Card>
       <CardHeader>
@@ -273,7 +273,7 @@ function ActivityFeed({ auditStats }: ActivityFeedProps): JSX.Element {
   );
 }
 
-export default function AdminDashboard({ className }: AdminDashboardProps): JSX.Element {
+export default function AdminDashboard({ className }: AdminDashboardProps): React.ReactElement {
   const { hasPermission } = useAuth();
   const [stats, setStats] = useState<AdminDashboardStats | null>(null);
   const [systemHealth, setSystemHealth] = useState<SystemHealthCardProps['health'] | null>(null);

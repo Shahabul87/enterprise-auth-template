@@ -1,0 +1,309 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:convert';
+import 'app_exception.dart';
+import 'error_logger.dart';
+
+final errorHandlerProvider = Provider<ErrorHandler>((ref) {
+  return ErrorHandler(ref.read(errorLoggerProvider));
+});
+
+class ErrorHandler {
+  final ErrorLogger _logger;
+  
+  ErrorHandler(this._logger);
+
+  /// Handles exceptions and converts them to AppException
+  AppException handleException(dynamic error, [StackTrace? stackTrace]) {
+    AppException appException;
+
+    if (error is AppException) {
+      appException = error;
+    // Note: http.Response handling removed since http is not a dependency
+    } else if (error is SocketException) {
+      appException = AppException.connectivity(
+        message: 'No internet connection',
+        type: 'socket',
+        details: {'originalMessage': error.message},
+      );
+    } else if (error is TimeoutException) {
+      appException = AppException.timeout(
+        message: 'Request timed out',
+        duration: error.duration,
+      );
+    } else if (error is FormatException) {
+      appException = AppException.validation(
+        message: 'Invalid data format',
+        details: {'originalMessage': error.message},
+      );
+    } else if (error is HttpException) {
+      appException = AppException.network(
+        message: error.message,
+        statusCode: 500, // HttpException doesn't provide statusCode
+      );
+    } else {
+      appException = AppException.unknown(
+        message: 'An unexpected error occurred',
+        originalError: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    // Log the exception
+    _logger.logException(appException, stackTrace);
+
+    return appException;
+  }
+
+  /// Note: HTTP response handling removed since http package is not a dependency
+
+  /// Shows user-friendly error message
+  void showErrorToUser(BuildContext context, AppException exception) {
+    final userMessage = exception.userMessage;
+    
+    // Determine the type of UI feedback based on exception type
+    exception.when(
+      network: (message, statusCode, endpoint, details) => 
+          _showErrorSnackBar(context, userMessage, Icons.wifi_off),
+      authentication: (message, reason, details) => 
+          _showErrorDialog(context, 'Authentication Error', userMessage),
+      authorization: (message, requiredPermission, details) => 
+          _showErrorDialog(context, 'Access Denied', userMessage),
+      validation: (message, fieldErrors, details) => 
+          _showValidationErrors(context, userMessage, fieldErrors),
+      notFound: (message, resource, details) => 
+          _showErrorSnackBar(context, userMessage, Icons.search_off),
+      server: (message, statusCode, errorCode, details) => 
+          _showErrorSnackBar(context, userMessage, Icons.error),
+      timeout: (message, duration, details) => 
+          _showErrorSnackBar(context, userMessage, Icons.access_time),
+      connectivity: (message, type, details) => 
+          _showErrorSnackBar(context, userMessage, Icons.signal_wifi_off),
+      storage: (message, operation, details) => 
+          _showErrorSnackBar(context, userMessage, Icons.storage),
+      permission: (message, permission, details) => 
+          _showErrorDialog(context, 'Permission Required', userMessage),
+      rateLimited: (message, retryAfter, limit, details) => 
+          _showErrorSnackBar(context, userMessage, Icons.hourglass_empty),
+      business: (message, code, details) => 
+          _showErrorDialog(context, 'Error', userMessage),
+      unknown: (message, originalError, stackTrace, details) => 
+          _showErrorSnackBar(context, userMessage, Icons.error_outline),
+    );
+  }
+
+  void _showErrorSnackBar(BuildContext context, String message, IconData icon) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(icon, color: Colors.white),
+            const SizedBox(width: 8),
+            Expanded(child: Text(message)),
+          ],
+        ),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 4),
+        action: SnackBarAction(
+          label: 'Dismiss',
+          textColor: Colors.white,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ),
+    );
+  }
+
+  void _showErrorDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.error, color: Colors.red),
+            const SizedBox(width: 8),
+            Text(title),
+          ],
+        ),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showValidationErrors(
+    BuildContext context, 
+    String message, 
+    Map<String, List<String>>? fieldErrors,
+  ) {
+    if (fieldErrors?.isNotEmpty ?? false) {
+      final errorList = <String>[];
+      fieldErrors!.forEach((field, errors) {
+        for (final error in errors) {
+          errorList.add('$field: $error');
+        }
+      });
+      
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Row(
+            children: [
+              Icon(Icons.warning, color: Colors.orange),
+              SizedBox(width: 8),
+              Text('Validation Errors'),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: errorList.map((error) => 
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text('• $error'),
+                ),
+              ).toList(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      _showErrorSnackBar(context, message, Icons.warning);
+    }
+  }
+
+  /// Creates a retry mechanism for retryable exceptions
+  Future<T> withRetry<T>(
+    Future<T> Function() operation, {
+    int maxRetries = 3,
+    Duration? baseDelay,
+    bool Function(AppException)? shouldRetry,
+  }) async {
+    int attempt = 0;
+    
+    while (attempt <= maxRetries) {
+      try {
+        return await operation();
+      } catch (error, stackTrace) {
+        final appException = handleException(error, stackTrace);
+        
+        if (attempt == maxRetries || 
+            (shouldRetry != null && !shouldRetry(appException)) ||
+            (!appException.isRetryable)) {
+          throw appException;
+        }
+        
+        attempt++;
+        final delay = baseDelay ?? 
+                     appException.retryDelay ?? 
+                     Duration(seconds: attempt * 2);
+        
+        _logger.logRetryAttempt(appException, attempt, maxRetries, delay);
+        await Future.delayed(delay);
+      }
+    }
+    
+    throw AppException.unknown(message: 'Retry loop completed unexpectedly');
+  }
+
+  /// Wraps operations with comprehensive error handling
+  Future<T> safeExecute<T>(
+    Future<T> Function() operation, {
+    String? context,
+    T? fallbackValue,
+    bool silent = false,
+  }) async {
+    try {
+      return await operation();
+    } catch (error, stackTrace) {
+      final appException = handleException(error, stackTrace);
+      
+      if (context != null) {
+        _logger.logContextualError(appException, context);
+      }
+      
+      if (fallbackValue != null) {
+        return fallbackValue;
+      }
+      
+      if (!silent) {
+        rethrow;
+      }
+      
+      throw appException;
+    }
+  }
+
+  /// Global error handler for uncaught exceptions
+  void handleGlobalError(Object error, StackTrace stackTrace) {
+    final appException = handleException(error, stackTrace);
+    
+    // Log critical error
+    _logger.logCriticalError(appException, stackTrace);
+    
+    // In debug mode, also print to console
+    if (kDebugMode) {
+      debugPrint('Global Error: ${appException.technicalMessage}');
+      debugPrintStack(stackTrace: stackTrace);
+    }
+    
+    // Could also send to crash reporting service here
+    // crashReporter.recordError(appException, stackTrace);
+  }
+
+  /// Note: API error handling removed since http package is not a dependency
+  /// This functionality can be implemented when using dio or another HTTP client
+  
+  Map<String, List<String>>? _parseFieldErrors(Map<String, dynamic>? errorData) {
+    if (errorData == null) return null;
+    
+    // Handle different API error formats
+    final errors = errorData['errors'] ?? errorData['field_errors'] ?? errorData['validation_errors'];
+    
+    if (errors is Map<String, dynamic>) {
+      final fieldErrors = <String, List<String>>{};
+      errors.forEach((field, fieldErrorData) {
+        if (fieldErrorData is List) {
+          fieldErrors[field] = fieldErrorData.map((e) => e.toString()).toList();
+        } else if (fieldErrorData is String) {
+          fieldErrors[field] = [fieldErrorData];
+        }
+      });
+      return fieldErrors.isNotEmpty ? fieldErrors : null;
+    }
+    
+    return null;
+  }
+}
+
+/// Extension to easily handle exceptions in widgets
+extension ErrorHandlingExtension on WidgetRef {
+  void handleError(dynamic error, [StackTrace? stackTrace]) {
+    final errorHandler = read(errorHandlerProvider);
+    final appException = errorHandler.handleException(error, stackTrace);
+    // The error is logged automatically by the error handler
+    throw appException;
+  }
+  
+  void showError(BuildContext context, dynamic error, [StackTrace? stackTrace]) {
+    final errorHandler = read(errorHandlerProvider);
+    final appException = errorHandler.handleException(error, stackTrace);
+    errorHandler.showErrorToUser(context, appException);
+  }
+}

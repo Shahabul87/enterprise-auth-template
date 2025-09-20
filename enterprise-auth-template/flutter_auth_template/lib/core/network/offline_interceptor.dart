@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import '../services/offline_service.dart';
+import 'package:flutter_auth_template/core/services/offline_service.dart';
 
 class OfflineInterceptor extends Interceptor {
   final OfflineService _offlineService;

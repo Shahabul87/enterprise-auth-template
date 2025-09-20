@@ -4,7 +4,16 @@ API Key model for API authentication.
 
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Optional, List
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, Text, JSON, Integer
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    String,
+    Text,
+    JSON,
+    Integer,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import uuid
@@ -23,127 +32,80 @@ class APIKey(Base):
     __tablename__ = "api_keys"
 
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid.uuid4,
-        index=True
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True
     )
-    name: Mapped[str] = mapped_column(
-        String(100),
-        nullable=False
-    )
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
     key_prefix: Mapped[str] = mapped_column(
         String(10),
         nullable=False,
         index=True,
-        comment="First few characters of the key for identification"
+        comment="First few characters of the key for identification",
     )
     key_hash: Mapped[str] = mapped_column(
         String(255),
         nullable=False,
         unique=True,
-        comment="Hashed version of the API key"
+        comment="Hashed version of the API key",
     )
-    description: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True
-    )
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     # Scopes and permissions
     scopes: Mapped[List[str]] = mapped_column(
-        JSON,
-        nullable=False,
-        default=list,
-        comment="List of allowed scopes/permissions"
+        JSON, nullable=False, default=list, comment="List of allowed scopes/permissions"
     )
 
     # Rate limiting
     rate_limit: Mapped[int] = mapped_column(
-        Integer,
-        default=1000,
-        nullable=False,
-        comment="Requests per hour"
+        Integer, default=1000, nullable=False, comment="Requests per hour"
     )
 
     # IP restrictions
     allowed_ips: Mapped[Optional[List[str]]] = mapped_column(
         JSON,
         nullable=True,
-        comment="List of allowed IP addresses (null means all IPs allowed)"
+        comment="List of allowed IP addresses (null means all IPs allowed)",
     )
 
     # Usage tracking
-    last_used_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime,
-        nullable=True
-    )
-    last_used_ip: Mapped[Optional[str]] = mapped_column(
-        String(45),
-        nullable=True
-    )
-    usage_count: Mapped[int] = mapped_column(
-        Integer,
-        default=0,
-        nullable=False
-    )
+    last_used_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    last_used_ip: Mapped[Optional[str]] = mapped_column(String(45), nullable=True)
+    usage_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
     # Expiration
     expires_at: Mapped[Optional[datetime]] = mapped_column(
         DateTime,
         nullable=True,
-        comment="Key expiration date (null means never expires)"
+        comment="Key expiration date (null means never expires)",
     )
 
     # Status
     is_active: Mapped[bool] = mapped_column(
-        Boolean,
-        default=True,
-        nullable=False,
-        index=True
+        Boolean, default=True, nullable=False, index=True
     )
-    revoked_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime,
-        nullable=True
-    )
-    revoked_reason: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True
-    )
+    revoked_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    revoked_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     # Ownership
     user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("users.id"),
-        nullable=False
+        UUID(as_uuid=True), ForeignKey("users.id"), nullable=False
     )
     organization_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("organizations.id"),
-        nullable=True
+        UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=True
     )
 
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow,
-        nullable=False
+        DateTime, default=datetime.utcnow, nullable=False
     )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        nullable=False
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
     )
 
     # Relationships
-    user: Mapped["User"] = relationship(
-        "User",
-        back_populates="api_keys"
-    )
+    user: Mapped["User"] = relationship("User", back_populates="api_keys")
 
     organization: Mapped[Optional["Organization"]] = relationship(
-        "Organization",
-        back_populates="api_keys"
+        "Organization", back_populates="api_keys"
     )
 
     def __repr__(self) -> str:
@@ -161,6 +123,7 @@ class APIKey(Base):
     def _is_test_environment(cls) -> bool:
         """Check if running in test environment."""
         import os
+
         return os.getenv("ENVIRONMENT", "production").lower() in ["test", "development"]
 
     def is_expired(self) -> bool:
@@ -171,11 +134,7 @@ class APIKey(Base):
 
     def is_valid(self) -> bool:
         """Check if the API key is valid for use."""
-        return (
-            self.is_active and
-            not self.is_expired() and
-            self.revoked_at is None
-        )
+        return self.is_active and not self.is_expired() and self.revoked_at is None
 
     def can_access_scope(self, scope: str) -> bool:
         """Check if the API key has access to a specific scope."""
@@ -211,23 +170,31 @@ class APIKey(Base):
             "scopes": self.scopes,
             "rate_limit": self.rate_limit,
             "allowed_ips": self.allowed_ips,
-            "last_used_at": self.last_used_at.isoformat() if self.last_used_at else None,
+            "last_used_at": (
+                self.last_used_at.isoformat() if self.last_used_at else None
+            ),
             "last_used_ip": self.last_used_ip,
             "usage_count": self.usage_count,
             "expires_at": self.expires_at.isoformat() if self.expires_at else None,
             "is_active": self.is_active,
             "is_valid": self.is_valid(),
             "user_id": str(self.user_id),
-            "organization_id": str(self.organization_id) if self.organization_id else None,
+            "organization_id": (
+                str(self.organization_id) if self.organization_id else None
+            ),
             "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat()
+            "updated_at": self.updated_at.isoformat(),
         }
 
         if include_sensitive:
-            data.update({
-                "revoked_at": self.revoked_at.isoformat() if self.revoked_at else None,
-                "revoked_reason": self.revoked_reason
-            })
+            data.update(
+                {
+                    "revoked_at": (
+                        self.revoked_at.isoformat() if self.revoked_at else None
+                    ),
+                    "revoked_reason": self.revoked_reason,
+                }
+            )
 
         return data
 

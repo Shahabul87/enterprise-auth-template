@@ -26,7 +26,7 @@ interface ModernResetPasswordFormProps {
   token: string;
 }
 
-export function ModernResetPasswordForm({ token }: ModernResetPasswordFormProps): JSX.Element {
+export function ModernResetPasswordForm({ token }: ModernResetPasswordFormProps): React.ReactElement {
   const router = useRouter();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -80,7 +80,8 @@ export function ModernResetPasswordForm({ token }: ModernResetPasswordFormProps)
       const { authApi } = await import('@/lib/api/auth-api');
       await authApi.confirmPasswordReset({
         token,
-        password,
+        new_password: password,
+        confirm_password: confirmPassword,
       });
 
       setStatus('success');

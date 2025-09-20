@@ -20,15 +20,23 @@ router = APIRouter(prefix="/roles", tags=["roles"])
 # Request/Response schemas
 class RoleCreateRequest(BaseModel):
     """Request schema for creating a role."""
+
     name: str = Field(..., min_length=3, max_length=50, description="Unique role name")
-    display_name: str = Field(..., min_length=3, max_length=100, description="Display name")
-    description: Optional[str] = Field(None, max_length=500, description="Role description")
+    display_name: str = Field(
+        ..., min_length=3, max_length=100, description="Display name"
+    )
+    description: Optional[str] = Field(
+        None, max_length=500, description="Role description"
+    )
     priority: int = Field(0, ge=0, le=999, description="Role priority")
-    permissions: Optional[List[str]] = Field(None, description="List of permission names")
+    permissions: Optional[List[str]] = Field(
+        None, description="List of permission names"
+    )
 
 
 class RoleUpdateRequest(BaseModel):
     """Request schema for updating a role."""
+
     display_name: Optional[str] = Field(None, min_length=3, max_length=100)
     description: Optional[str] = Field(None, max_length=500)
     priority: Optional[int] = Field(None, ge=0, le=999)
@@ -37,17 +45,20 @@ class RoleUpdateRequest(BaseModel):
 
 class RolePermissionRequest(BaseModel):
     """Request schema for managing role permissions."""
+
     permissions: List[str] = Field(..., description="List of permission names")
 
 
 class AssignRoleRequest(BaseModel):
     """Request schema for assigning a role to a user."""
+
     user_id: UUID = Field(..., description="User ID")
     role_id: UUID = Field(..., description="Role ID")
 
 
 class RoleResponse(BaseModel):
     """Response schema for role data."""
+
     id: UUID
     name: str
     display_name: str
@@ -68,7 +79,7 @@ async def list_roles(
     limit: int = Query(100, ge=1, le=1000, description="Number of records to return"),
     include_inactive: bool = Query(False, description="Include inactive roles"),
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> List[RoleResponse]:
     """
     List all roles.
@@ -80,9 +91,7 @@ async def list_roles(
 
     service = RoleService(db)
     roles = await service.get_all_roles(
-        skip=skip,
-        limit=limit,
-        include_inactive=include_inactive
+        skip=skip, limit=limit, include_inactive=include_inactive
     )
 
     return [
@@ -96,7 +105,7 @@ async def list_roles(
             priority=role.priority,
             permissions=[p.name for p in role.permissions],
             created_at=role.created_at.isoformat(),
-            updated_at=role.updated_at.isoformat()
+            updated_at=role.updated_at.isoformat(),
         )
         for role in roles
     ]
@@ -106,7 +115,7 @@ async def list_roles(
 async def get_role(
     role_id: UUID,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> RoleResponse:
     """
     Get a specific role by ID.
@@ -122,7 +131,7 @@ async def get_role(
     if not role:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Role with ID {role_id} not found"
+            detail=f"Role with ID {role_id} not found",
         )
 
     return RoleResponse(
@@ -135,7 +144,7 @@ async def get_role(
         priority=role.priority,
         permissions=[p.name for p in role.permissions],
         created_at=role.created_at.isoformat(),
-        updated_at=role.updated_at.isoformat()
+        updated_at=role.updated_at.isoformat(),
     )
 
 
@@ -143,7 +152,7 @@ async def get_role(
 async def create_role(
     request: RoleCreateRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> RoleResponse:
     """
     Create a new role.
@@ -162,7 +171,7 @@ async def create_role(
             description=request.description,
             priority=request.priority,
             permissions=request.permissions,
-            current_user=current_user
+            current_user=current_user,
         )
 
         return RoleResponse(
@@ -175,13 +184,10 @@ async def create_role(
             priority=role.priority,
             permissions=[p.name for p in role.permissions],
             created_at=role.created_at.isoformat(),
-            updated_at=role.updated_at.isoformat()
+            updated_at=role.updated_at.isoformat(),
         )
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 @router.put("/{role_id}", response_model=RoleResponse)
@@ -189,7 +195,7 @@ async def update_role(
     role_id: UUID,
     request: RoleUpdateRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> RoleResponse:
     """
     Update a role.
@@ -208,7 +214,7 @@ async def update_role(
             description=request.description,
             priority=request.priority,
             is_active=request.is_active,
-            current_user=current_user
+            current_user=current_user,
         )
 
         return RoleResponse(
@@ -221,20 +227,17 @@ async def update_role(
             priority=role.priority,
             permissions=[p.name for p in role.permissions],
             created_at=role.created_at.isoformat(),
-            updated_at=role.updated_at.isoformat()
+            updated_at=role.updated_at.isoformat(),
         )
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 @router.delete("/{role_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_role(
     role_id: UUID,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> None:
     """
     Delete a role.
@@ -249,10 +252,7 @@ async def delete_role(
     try:
         await service.delete_role(role_id, current_user)
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 @router.post("/{role_id}/permissions", response_model=RoleResponse)
@@ -260,7 +260,7 @@ async def add_permissions_to_role(
     role_id: UUID,
     request: RolePermissionRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> RoleResponse:
     """
     Add permissions to a role.
@@ -276,7 +276,7 @@ async def add_permissions_to_role(
         role = await service.assign_permissions_to_role(
             role_id=role_id,
             permission_names=request.permissions,
-            current_user=current_user
+            current_user=current_user,
         )
 
         return RoleResponse(
@@ -289,13 +289,10 @@ async def add_permissions_to_role(
             priority=role.priority,
             permissions=[p.name for p in role.permissions],
             created_at=role.created_at.isoformat(),
-            updated_at=role.updated_at.isoformat()
+            updated_at=role.updated_at.isoformat(),
         )
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 @router.delete("/{role_id}/permissions", response_model=RoleResponse)
@@ -303,7 +300,7 @@ async def remove_permissions_from_role(
     role_id: UUID,
     request: RolePermissionRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> RoleResponse:
     """
     Remove permissions from a role.
@@ -319,7 +316,7 @@ async def remove_permissions_from_role(
         role = await service.remove_permissions_from_role(
             role_id=role_id,
             permission_names=request.permissions,
-            current_user=current_user
+            current_user=current_user,
         )
 
         return RoleResponse(
@@ -332,20 +329,17 @@ async def remove_permissions_from_role(
             priority=role.priority,
             permissions=[p.name for p in role.permissions],
             created_at=role.created_at.isoformat(),
-            updated_at=role.updated_at.isoformat()
+            updated_at=role.updated_at.isoformat(),
         )
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 @router.post("/assign", status_code=status.HTTP_200_OK)
 async def assign_role_to_user(
     request: AssignRoleRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> dict:
     """
     Assign a role to a user.
@@ -361,22 +355,19 @@ async def assign_role_to_user(
         success = await service.assign_role_to_user(
             user_id=request.user_id,
             role_id=request.role_id,
-            assigned_by=current_user.id
+            assigned_by=current_user.id,
         )
 
         return {"success": success, "message": "Role assigned successfully"}
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 @router.delete("/assign", status_code=status.HTTP_200_OK)
 async def remove_role_from_user(
     request: AssignRoleRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> dict:
     """
     Remove a role from a user.
@@ -389,15 +380,12 @@ async def remove_role_from_user(
     service = RoleService(db)
 
     success = await service.remove_role_from_user(
-        user_id=request.user_id,
-        role_id=request.role_id,
-        removed_by=current_user.id
+        user_id=request.user_id, role_id=request.role_id, removed_by=current_user.id
     )
 
     if not success:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Role assignment not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Role assignment not found"
         )
 
     return {"success": success, "message": "Role removed successfully"}
@@ -407,7 +395,7 @@ async def remove_role_from_user(
 async def get_user_roles(
     user_id: UUID,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> List[RoleResponse]:
     """
     Get all roles for a specific user.
@@ -432,7 +420,7 @@ async def get_user_roles(
             priority=role.priority,
             permissions=[p.name for p in role.permissions],
             created_at=role.created_at.isoformat(),
-            updated_at=role.updated_at.isoformat()
+            updated_at=role.updated_at.isoformat(),
         )
         for role in roles
     ]

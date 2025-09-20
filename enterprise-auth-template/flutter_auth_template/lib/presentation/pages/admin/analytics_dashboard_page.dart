@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../data/models/analytics_models.dart';
-import '../../../data/services/analytics_api_service.dart';
-import '../../widgets/loading_indicators.dart';
-import '../../widgets/charts/line_chart_widget.dart';
-import '../../widgets/charts/pie_chart_widget.dart';
-import '../../widgets/charts/bar_chart_widget.dart';
+import 'package:flutter_auth_template/data/models/analytics_models.dart';
+import 'package:flutter_auth_template/data/services/analytics_api_service.dart';
+import 'package:flutter_auth_template/presentation/widgets/loading_indicators.dart';
+import 'package:flutter_auth_template/presentation/widgets/charts/line_chart_widget.dart';
+import 'package:flutter_auth_template/presentation/widgets/charts/pie_chart_widget.dart';
+import 'package:flutter_auth_template/presentation/widgets/charts/bar_chart_widget.dart';
 
 class AnalyticsDashboardPage extends ConsumerStatefulWidget {
   const AnalyticsDashboardPage({super.key});

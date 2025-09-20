@@ -312,6 +312,7 @@ class SendGridProvider(EmailProvider):
         if not self._client:
             try:
                 from sendgrid import SendGridAPIClient  # type: ignore[import-not-found]
+
                 self._client = SendGridAPIClient(self.api_key)
             except ImportError:
                 raise ImportError(
@@ -343,8 +344,7 @@ class SendGridProvider(EmailProvider):
 
             # Build message
             from_addr = From(
-                email=from_email or "noreply@example.com",
-                name=from_name or "No Reply"
+                email=from_email or "noreply@example.com", name=from_name or "No Reply"
             )
             to_addr = To(email=to_email)
 
@@ -464,6 +464,7 @@ class AWSEmailProvider(EmailProvider):
         if not self._client:
             try:
                 import boto3
+
                 self._client = boto3.client(
                     "ses",
                     region_name=self.aws_region,
@@ -642,7 +643,8 @@ class ConsoleEmailProvider(EmailProvider):
         print("HTML CONTENT (Preview):")
         # Strip HTML tags for console preview
         import re
-        text_preview = re.sub('<[^<]+?>', '', html_content)
+
+        text_preview = re.sub("<[^<]+?>", "", html_content)
         print(text_preview[:500] + ("..." if len(text_preview) > 500 else ""))
         print("=" * 80 + "\n")
 
@@ -751,7 +753,9 @@ def get_email_provider(
 
     if provider_type == "smtp":
         if not all([smtp_host, smtp_port, smtp_username, smtp_password]):
-            raise ValueError("SMTP provider requires host, port, username, and password")
+            raise ValueError(
+                "SMTP provider requires host, port, username, and password"
+            )
         # Type narrowing: after the check above, these are guaranteed to be non-None
         assert smtp_host is not None and smtp_port is not None
         assert smtp_username is not None and smtp_password is not None

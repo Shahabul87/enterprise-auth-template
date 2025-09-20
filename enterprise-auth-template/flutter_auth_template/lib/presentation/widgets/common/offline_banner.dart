@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/services/offline_service.dart';
-import '../../../providers/offline_provider.dart';
+import 'package:flutter_auth_template/core/services/offline_service.dart';
+import 'package:flutter_auth_template/presentation/providers/offline_provider.dart';
 
 class OfflineBanner extends ConsumerWidget {
   final Widget child;

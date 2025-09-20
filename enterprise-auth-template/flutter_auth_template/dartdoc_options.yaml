@@ -1,0 +1,70 @@
+# Dartdoc Configuration
+# This file configures automatic documentation generation for the Flutter app
+
+dartdoc:
+  # Categories for organizing API documentation
+  categories:
+    "Core":
+      markdown: docs/categories/core.md
+      order: 1
+    "Domain":
+      markdown: docs/categories/domain.md
+      order: 2
+    "Data":
+      markdown: docs/categories/data.md
+      order: 3
+    "Infrastructure":
+      markdown: docs/categories/infrastructure.md
+      order: 4
+    "Presentation":
+      markdown: docs/categories/presentation.md
+      order: 5
+    "Widgets":
+      markdown: docs/categories/widgets.md
+      order: 6
+
+  # Customize the documentation output
+  showUndocumentedCategories: true
+
+  # Include/Exclude patterns
+  include:
+    - "lib/**"
+  exclude:
+    - "lib/**/*.g.dart"
+    - "lib/**/*.freezed.dart"
+    - "lib/**/*.mocks.dart"
+    - "lib/generated/**"
+
+  # Documentation footer
+  footer:
+    - "Enterprise Authentication Template"
+    - "© 2024 - Built with Clean Architecture"
+
+  # Additional resources
+  examplePathPrefix: "examples"
+
+  # Link to source code
+  linkToSource:
+    root: "."
+    uriTemplate: "https://github.com/YOUR_ORG/YOUR_REPO/blob/main/%f%#L%l%"
+
+  # Custom templates (optional)
+  # templates:
+  #   - path: "doc/templates"
+
+  # Warnings configuration
+  errors:
+    - unresolved-doc-reference
+    - ambiguous-doc-reference
+    - missing-code-block-language
+  warnings:
+    - tool-error
+  ignore:
+    - unresolved-export
+
+  # Package documentation
+  packageOrder:
+    - flutter_auth_template
+
+  # Show source code in documentation
+  showSourceCode: true

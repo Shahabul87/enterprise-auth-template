@@ -20,15 +20,19 @@ class ErrorResponse(BaseModel):
 
     Matches Flutter app expectations for error handling.
     """
+
     code: str = Field(..., description="Error code identifier")
     message: str = Field(..., description="Human-readable error message")
-    details: Optional[Dict[str, Any]] = Field(None, description="Additional error details")
+    details: Optional[Dict[str, Any]] = Field(
+        None, description="Additional error details"
+    )
 
 
 class ResponseMetadata(BaseModel):
     """
     Response metadata for tracking and debugging.
     """
+
     timestamp: datetime = Field(default_factory=datetime.utcnow)
     request_id: Optional[str] = Field(None, description="Request tracking ID")
     version: str = Field(default="1.0.0", description="API version")
@@ -56,9 +60,12 @@ class StandardResponse(BaseModel, Generic[T]):
     }
     ```
     """
+
     success: bool = Field(..., description="Operation success status")
     data: Optional[T] = Field(None, description="Response data when successful")
-    error: Optional[ErrorResponse] = Field(None, description="Error information when failed")
+    error: Optional[ErrorResponse] = Field(
+        None, description="Error information when failed"
+    )
     metadata: Optional[ResponseMetadata] = Field(default_factory=ResponseMetadata)
 
     class Config:
@@ -70,6 +77,7 @@ class SuccessResponse(StandardResponse[T]):
     """
     Convenience class for successful responses.
     """
+
     success: Literal[True] = Field(default=True)
 
     def __init__(self, data: T, **kwargs):
@@ -80,10 +88,17 @@ class ErrorResponseModel(StandardResponse[None]):
     """
     Convenience class for error responses.
     """
+
     success: Literal[False] = Field(default=False)
     data: None = Field(default=None)
 
-    def __init__(self, error_code: str, error_message: str, details: Optional[Dict[str, Any]] = None, **kwargs):
+    def __init__(
+        self,
+        error_code: str,
+        error_message: str,
+        details: Optional[Dict[str, Any]] = None,
+        **kwargs,
+    ):
         error = ErrorResponse(code=error_code, message=error_message, details=details)
         super().__init__(success=False, data=None, error=error, **kwargs)
 
@@ -96,6 +111,7 @@ class ErrorCodes:
     These correspond to ApiErrors class in Flutter:
     lib/core/constants/api_constants.dart:114
     """
+
     NETWORK_ERROR = "NETWORK_ERROR"
     TIMEOUT_ERROR = "TIMEOUT_ERROR"
     INVALID_CREDENTIALS = "INVALID_CREDENTIALS"
@@ -118,6 +134,7 @@ class PaginationMeta(BaseModel):
     """
     Pagination metadata for list responses.
     """
+
     page: int = Field(..., ge=1, description="Current page number")
     per_page: int = Field(..., ge=1, le=100, description="Items per page")
     total: int = Field(..., ge=0, description="Total number of items")
@@ -130,6 +147,7 @@ class PaginatedResponse(BaseModel, Generic[T]):
     """
     Paginated response wrapper.
     """
+
     items: List[T] = Field(..., description="List of items")
     pagination: PaginationMeta = Field(..., description="Pagination metadata")
 
@@ -139,6 +157,7 @@ class TokenData(BaseModel):
     """
     Token response data structure.
     """
+
     access_token: str = Field(..., description="JWT access token")
     refresh_token: Optional[str] = Field(None, description="JWT refresh token")
     token_type: str = Field(default="bearer", description="Token type")
@@ -149,6 +168,7 @@ class LoginResponseData(BaseModel):
     """
     Login response data structure that matches Flutter expectations.
     """
+
     user: Dict[str, Any] = Field(..., description="User information")
     access_token: str = Field(..., description="JWT access token")
     refresh_token: Optional[str] = Field(None, description="JWT refresh token")
@@ -159,30 +179,37 @@ class LoginResponseData(BaseModel):
 # Type aliases for common response types
 class LoginResponse(StandardResponse[LoginResponseData]):
     """Login response type."""
+
     pass
 
 
 class TokenRefreshResponse(StandardResponse[TokenData]):
     """Token refresh response type."""
+
     pass
 
 
 class MessageResponse(StandardResponse[Dict[str, str]]):
     """Simple message response type."""
+
     pass
 
 
 class UserResponse(StandardResponse[Dict[str, Any]]):
     """User data response type."""
+
     pass
 
 
 class PermissionsResponse(StandardResponse[List[str]]):
     """Permissions response type."""
+
     pass
 
 
-def create_success_response(data: T, request_id: Optional[str] = None) -> StandardResponse[T]:
+def create_success_response(
+    data: T, request_id: Optional[str] = None
+) -> StandardResponse[T]:
     """
     Helper function to create standardized success responses.
 
@@ -193,7 +220,9 @@ def create_success_response(data: T, request_id: Optional[str] = None) -> Standa
     Returns:
         StandardResponse: Standardized success response
     """
-    metadata = ResponseMetadata(request_id=request_id) if request_id else ResponseMetadata()
+    metadata = (
+        ResponseMetadata(request_id=request_id) if request_id else ResponseMetadata()
+    )
     return StandardResponse(success=True, data=data, metadata=metadata)
 
 
@@ -201,7 +230,7 @@ def create_error_response(
     code: str,
     message: str,
     details: Optional[Dict[str, Any]] = None,
-    request_id: Optional[str] = None
+    request_id: Optional[str] = None,
 ) -> StandardResponse[None]:
     """
     Helper function to create standardized error responses.
@@ -216,5 +245,7 @@ def create_error_response(
         StandardResponse: Standardized error response
     """
     error = ErrorResponse(code=code, message=message, details=details)
-    metadata = ResponseMetadata(request_id=request_id) if request_id else ResponseMetadata()
+    metadata = (
+        ResponseMetadata(request_id=request_id) if request_id else ResponseMetadata()
+    )
     return StandardResponse(success=False, data=None, error=error, metadata=metadata)

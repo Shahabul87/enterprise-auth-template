@@ -36,10 +36,7 @@ logger = structlog.get_logger(__name__)
 router = APIRouter()
 
 
-@router.get(
-    "/me",
-    response_model=StandardResponse[dict]
-)
+@router.get("/me", response_model=StandardResponse[dict])
 async def get_current_user_profile(
     current_user: CurrentUser = Depends(get_current_user),
     db: AsyncSession = Depends(get_db_session),
@@ -65,6 +62,7 @@ async def get_current_user_profile(
     if not user:
         # Fallback to CurrentUser data if not found
         from types import SimpleNamespace
+
         user = SimpleNamespace(
             id=current_user.id,
             email=current_user.email,
@@ -132,9 +130,15 @@ async def update_current_user(
         is_active=updated_user.is_active,
         is_verified=updated_user.is_verified,
         roles=[role.name for role in updated_user.roles] if updated_user.roles else [],
-        created_at=updated_user.created_at.isoformat() if updated_user.created_at else None,
-        updated_at=updated_user.updated_at.isoformat() if updated_user.updated_at else None,
-        last_login=updated_user.last_login.isoformat() if updated_user.last_login else None,
+        created_at=(
+            updated_user.created_at.isoformat() if updated_user.created_at else None
+        ),
+        updated_at=(
+            updated_user.updated_at.isoformat() if updated_user.updated_at else None
+        ),
+        last_login=(
+            updated_user.last_login.isoformat() if updated_user.last_login else None
+        ),
     )
 
 
@@ -186,10 +190,10 @@ async def list_users(
     if search:
         search_filter = f"%{search}%"
         query = query.where(
-            (User.email.ilike(search_filter)) |
-            (User.full_name.ilike(search_filter)) |
-            (User.first_name.ilike(search_filter)) |
-            (User.last_name.ilike(search_filter))
+            (User.email.ilike(search_filter))
+            | (User.full_name.ilike(search_filter))
+            | (User.first_name.ilike(search_filter))
+            | (User.last_name.ilike(search_filter))
         )
 
     if is_active is not None:
@@ -225,16 +229,14 @@ async def list_users(
         for user in users_db
     ]
 
-    return UserListResponse(
-        users=users, total=total, skip=skip, limit=limit
-    )
+    return UserListResponse(users=users, total=total, skip=skip, limit=limit)
 
 
 @router.get("/{user_id}", response_model=UserResponse)
 async def get_user(
     user_id: str,
     current_user: CurrentUser = Depends(require_permissions(["users:read"])),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ) -> UserResponse:
     """
     Get user by ID (Admin only).
@@ -325,9 +327,15 @@ async def update_user(
         is_active=updated_user.is_active,
         is_verified=updated_user.is_verified,
         roles=[role.name for role in updated_user.roles] if updated_user.roles else [],
-        created_at=updated_user.created_at.isoformat() if updated_user.created_at else None,
-        updated_at=updated_user.updated_at.isoformat() if updated_user.updated_at else None,
-        last_login=updated_user.last_login.isoformat() if updated_user.last_login else None,
+        created_at=(
+            updated_user.created_at.isoformat() if updated_user.created_at else None
+        ),
+        updated_at=(
+            updated_user.updated_at.isoformat() if updated_user.updated_at else None
+        ),
+        last_login=(
+            updated_user.last_login.isoformat() if updated_user.last_login else None
+        ),
     )
 
 
@@ -335,7 +343,7 @@ async def update_user(
 async def delete_user(
     user_id: str,
     current_user: CurrentUser = Depends(require_permissions(["users:delete"])),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ) -> dict:
     """
     Delete user by ID (Admin only).
@@ -378,7 +386,7 @@ async def delete_user(
 async def activate_user(
     user_id: str,
     current_user: CurrentUser = Depends(require_permissions(["users:write"])),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ) -> dict:
     """
     Activate user account (Admin only).
@@ -418,7 +426,7 @@ async def activate_user(
 async def deactivate_user(
     user_id: str,
     current_user: CurrentUser = Depends(require_permissions(["users:write"])),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ) -> dict:
     """
     Deactivate user account (Admin only).
@@ -462,7 +470,7 @@ async def update_user_roles(
     user_id: str,
     roles: List[str],
     current_user: CurrentUser = Depends(require_permissions(["roles:manage"])),
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
 ) -> UserResponse:
     """
     Update user roles (Admin only).
@@ -512,7 +520,13 @@ async def update_user_roles(
         is_active=updated_user.is_active,
         is_verified=updated_user.is_verified,
         roles=[role.name for role in updated_user.roles] if updated_user.roles else [],
-        created_at=updated_user.created_at.isoformat() if updated_user.created_at else None,
-        updated_at=updated_user.updated_at.isoformat() if updated_user.updated_at else None,
-        last_login=updated_user.last_login.isoformat() if updated_user.last_login else None,
+        created_at=(
+            updated_user.created_at.isoformat() if updated_user.created_at else None
+        ),
+        updated_at=(
+            updated_user.updated_at.isoformat() if updated_user.updated_at else None
+        ),
+        last_login=(
+            updated_user.last_login.isoformat() if updated_user.last_login else None
+        ),
     )

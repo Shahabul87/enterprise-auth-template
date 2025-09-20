@@ -25,7 +25,7 @@ import {
   Building2,
 } from 'lucide-react';
 
-export function ModernRegisterForm(): JSX.Element {
+export function ModernRegisterForm(): React.ReactElement {
   const router = useRouter();
   const [step, setStep] = useState<'info' | 'credentials' | 'complete'>('info');
   const [formData, setFormData] = useState({
@@ -376,7 +376,7 @@ export function ModernRegisterForm(): JSX.Element {
                   </p>
                 )}
 
-                {errors.submit && (
+                {errors['submit'] && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -384,7 +384,7 @@ export function ModernRegisterForm(): JSX.Element {
                   >
                     <AlertCircle className='w-4 h-4 text-red-600 dark:text-red-400 mt-0.5 mr-2 flex-shrink-0' />
                     <p className='text-sm text-red-600 dark:text-red-400'>
-                      {errors.submit}
+                      {errors['submit']}
                     </p>
                   </motion.div>
                 )}

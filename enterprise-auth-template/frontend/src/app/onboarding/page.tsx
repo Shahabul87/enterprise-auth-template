@@ -105,15 +105,15 @@ const EXPERIENCE_LEVELS = [
   'Expert',
 ];
 
-export default function OnboardingPage(): JSX.Element {
+export default function OnboardingPage(): React.ReactElement {
   const router = useRouter();
   const { user } = useRequireAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   
   const [formData, setFormData] = useState<OnboardingData>({
-    firstName: user?.first_name || '',
-    lastName: user?.last_name || '',
+    firstName: user?.full_name?.split(' ')[0] || '',
+    lastName: user?.full_name?.split(' ').slice(1).join(' ') || '',
     jobTitle: '',
     department: '',
     companyName: '',

@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:crypto/crypto.dart';
-import '../errors/app_exception.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
 
 final webAuthnServiceProvider = Provider<WebAuthnService>((ref) {
   return WebAuthnService();

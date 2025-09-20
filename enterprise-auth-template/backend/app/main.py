@@ -17,27 +17,20 @@ from app.core.config import get_settings
 from app.core.database import close_db, init_db
 from app.core.log_config import setup_logging
 from app.middleware.rate_limiter import RateLimitMiddleware
-from app.middleware.performance_middleware import (
-    PerformanceMiddleware,
-    get_metrics
-)
+from app.middleware.performance_middleware import PerformanceMiddleware, get_metrics
 from app.middleware.response_standardization import ResponseStandardizationMiddleware
 from app.core.database_monitoring import setup_database_monitoring
 from app.core.logging_config import (
     setup_logging as setup_json_logging,
     set_request_id,
-    clear_context
+    clear_context,
 )
 
 # Initialize structured logging
 setup_logging()
 # Also setup JSON logging for production
 if get_settings().ENVIRONMENT == "production":
-    setup_json_logging(
-        log_level="INFO",
-        enable_json=True,
-        enable_security_filter=True
-    )
+    setup_json_logging(log_level="INFO", enable_json=True, enable_security_filter=True)
 logger = structlog.get_logger(__name__)
 
 settings = get_settings()
@@ -106,14 +99,21 @@ def create_application() -> FastAPI:
     # Add response standardization middleware (first for proper request tracking)
     app.add_middleware(
         ResponseStandardizationMiddleware,
-        exclude_paths=["/docs", "/redoc", "/openapi.json", "/health", "/metrics", "/favicon.ico"]
+        exclude_paths=[
+            "/docs",
+            "/redoc",
+            "/openapi.json",
+            "/health",
+            "/metrics",
+            "/favicon.ico",
+        ],
     )
     logger.info("Response standardization middleware enabled")
 
     # Add performance monitoring middleware
     app.add_middleware(
         PerformanceMiddleware,
-        slow_request_threshold=1.0  # Log requests slower than 1 second
+        slow_request_threshold=1.0,  # Log requests slower than 1 second
     )
     logger.info("Performance monitoring enabled")
 
@@ -153,10 +153,10 @@ def create_application() -> FastAPI:
         Returns metrics in Prometheus text format.
         """
         from fastapi.responses import PlainTextResponse
+
         metrics_data = await get_metrics()
         return PlainTextResponse(
-            content=metrics_data,
-            media_type="text/plain; charset=utf-8"
+            content=metrics_data, media_type="text/plain; charset=utf-8"
         )
 
     # Root endpoint

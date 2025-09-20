@@ -88,7 +88,9 @@ class CacheService:
                         return pickle.loads(value)
                     except (pickle.PickleError, TypeError):
                         # Return as string if all else fails
-                        return value.decode('utf-8') if isinstance(value, bytes) else value
+                        return (
+                            value.decode("utf-8") if isinstance(value, bytes) else value
+                        )
             return None
         except Exception as e:
             logger.error("Failed to get cache value", key=key, error=str(e))
@@ -170,7 +172,9 @@ class CacheService:
                 return deleted
             return 0
         except Exception as e:
-            logger.error("Failed to delete cache pattern", pattern=pattern, error=str(e))
+            logger.error(
+                "Failed to delete cache pattern", pattern=pattern, error=str(e)
+            )
             return 0
 
     async def flush_all(self) -> bool:

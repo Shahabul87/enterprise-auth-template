@@ -107,6 +107,11 @@ _$NotificationTemplateImpl _$$NotificationTemplateImplFromJson(
   type: $enumDecode(_$NotificationTypeEnumMap, json['type']),
   titleTemplate: json['titleTemplate'] as String,
   contentTemplate: json['contentTemplate'] as String,
+  subject: json['subject'] as String?,
+  content: json['content'] as String?,
+  variables: (json['variables'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
   defaultPriority: $enumDecodeNullable(
     _$NotificationPriorityEnumMap,
     json['defaultPriority'],
@@ -114,7 +119,7 @@ _$NotificationTemplateImpl _$$NotificationTemplateImplFromJson(
   defaultActions: (json['defaultActions'] as List<dynamic>?)
       ?.map((e) => NotificationAction.fromJson(e as Map<String, dynamic>))
       .toList(),
-  variables: (json['variables'] as Map<String, dynamic>?)?.map(
+  variableMap: (json['variableMap'] as Map<String, dynamic>?)?.map(
     (k, e) => MapEntry(k, e as String),
   ),
   channelSettings: json['channelSettings'] == null
@@ -140,12 +145,15 @@ Map<String, dynamic> _$$NotificationTemplateImplToJson(
   'type': _$NotificationTypeEnumMap[instance.type]!,
   'titleTemplate': instance.titleTemplate,
   'contentTemplate': instance.contentTemplate,
+  if (instance.subject case final value?) 'subject': value,
+  if (instance.content case final value?) 'content': value,
+  if (instance.variables case final value?) 'variables': value,
   if (_$NotificationPriorityEnumMap[instance.defaultPriority] case final value?)
     'defaultPriority': value,
   if (instance.defaultActions?.map((e) => e.toJson()).toList()
       case final value?)
     'defaultActions': value,
-  if (instance.variables case final value?) 'variables': value,
+  if (instance.variableMap case final value?) 'variableMap': value,
   if (instance.channelSettings?.toJson() case final value?)
     'channelSettings': value,
   if (instance.isActive case final value?) 'isActive': value,
@@ -186,8 +194,15 @@ Map<String, dynamic> _$$NotificationChannelSettingsImplToJson(
 _$NotificationPreferencesImpl _$$NotificationPreferencesImplFromJson(
   Map<String, dynamic> json,
 ) => _$NotificationPreferencesImpl(
-  userId: json['userId'] as String,
+  userId: json['userId'] as String?,
   globalEnabled: json['globalEnabled'] as bool? ?? true,
+  email: json['email'] as bool? ?? true,
+  push: json['push'] as bool? ?? true,
+  sms: json['sms'] as bool? ?? false,
+  inApp: json['inApp'] as bool? ?? true,
+  categories: (json['categories'] as Map<String, dynamic>?)?.map(
+    (k, e) => MapEntry(k, e as bool),
+  ),
   typeSettings: (json['typeSettings'] as Map<String, dynamic>?)?.map(
     (k, e) => MapEntry(
       $enumDecode(_$NotificationTypeEnumMap, k),
@@ -213,8 +228,13 @@ _$NotificationPreferencesImpl _$$NotificationPreferencesImplFromJson(
 Map<String, dynamic> _$$NotificationPreferencesImplToJson(
   _$NotificationPreferencesImpl instance,
 ) => <String, dynamic>{
-  'userId': instance.userId,
+  if (instance.userId case final value?) 'userId': value,
   'globalEnabled': instance.globalEnabled,
+  'email': instance.email,
+  'push': instance.push,
+  'sms': instance.sms,
+  'inApp': instance.inApp,
+  if (instance.categories case final value?) 'categories': value,
   if (instance.typeSettings?.map(
         (k, e) => MapEntry(_$NotificationTypeEnumMap[k]!, e.toJson()),
       )
@@ -257,6 +277,7 @@ _$NotificationBatchImpl _$$NotificationBatchImplFromJson(
   totalCount: (json['totalCount'] as num?)?.toInt() ?? 0,
   successCount: (json['successCount'] as num?)?.toInt() ?? 0,
   failureCount: (json['failureCount'] as num?)?.toInt() ?? 0,
+  recipientCount: (json['recipientCount'] as num?)?.toInt() ?? 0,
   results: (json['results'] as List<dynamic>?)
       ?.map(
         (e) => NotificationDeliveryResult.fromJson(e as Map<String, dynamic>),
@@ -282,6 +303,7 @@ Map<String, dynamic> _$$NotificationBatchImplToJson(
   'totalCount': instance.totalCount,
   'successCount': instance.successCount,
   'failureCount': instance.failureCount,
+  'recipientCount': instance.recipientCount,
   if (instance.results?.map((e) => e.toJson()).toList() case final value?)
     'results': value,
   if (instance.errorMessage case final value?) 'errorMessage': value,
@@ -415,6 +437,8 @@ _$NotificationAnalyticsImpl _$$NotificationAnalyticsImplFromJson(
   engagement: NotificationEngagementMetrics.fromJson(
     json['engagement'] as Map<String, dynamic>,
   ),
+  totalSent: (json['totalSent'] as num?)?.toInt() ?? 0,
+  deliveryRate: (json['deliveryRate'] as num?)?.toDouble() ?? 0.0,
 );
 
 Map<String, dynamic> _$$NotificationAnalyticsImplToJson(
@@ -424,6 +448,8 @@ Map<String, dynamic> _$$NotificationAnalyticsImplToJson(
   'typeMetrics': instance.typeMetrics.map((e) => e.toJson()).toList(),
   'channelMetrics': instance.channelMetrics.map((e) => e.toJson()).toList(),
   'engagement': instance.engagement.toJson(),
+  'totalSent': instance.totalSent,
+  'deliveryRate': instance.deliveryRate,
 };
 
 _$NotificationDeliveryStatsImpl _$$NotificationDeliveryStatsImplFromJson(

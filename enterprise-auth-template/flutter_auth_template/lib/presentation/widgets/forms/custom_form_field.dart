@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../app/theme.dart';
+import 'package:flutter_auth_template/app/theme.dart';
 
 class CustomFormField extends StatefulWidget {
   final TextEditingController? controller;

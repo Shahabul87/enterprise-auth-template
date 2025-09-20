@@ -38,7 +38,7 @@ export default function UserCreateDialog({
   open,
   onClose,
   onSuccess,
-}: UserCreateDialogProps): JSX.Element {
+}: UserCreateDialogProps): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [roles, setRoles] = useState<Role[]>([]);

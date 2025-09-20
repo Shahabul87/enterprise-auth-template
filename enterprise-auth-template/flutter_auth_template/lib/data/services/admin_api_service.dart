@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../services/api/api_client.dart';
-import '../../core/constants/api_constants.dart';
-import '../models/admin_models.dart';
-import '../../core/errors/app_exception.dart';
+import 'package:flutter_auth_template/core/network/api_client.dart';
+import 'package:flutter_auth_template/core/constants/api_constants.dart';
+import 'package:flutter_auth_template/data/models/admin_models.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
 
 // Admin API Service Provider
 final adminApiServiceProvider = Provider<AdminApiService>((ref) {

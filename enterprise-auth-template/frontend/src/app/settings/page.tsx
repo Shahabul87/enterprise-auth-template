@@ -24,7 +24,7 @@ interface ProfileFormData {
   location?: string;
 }
 
-export default function SettingsPage(): JSX.Element {
+export default function SettingsPage(): React.ReactElement {
   const { user } = useRequireAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<ProfileFormData>({

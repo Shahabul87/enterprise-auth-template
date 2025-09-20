@@ -101,7 +101,7 @@ const API_KEY_SCOPES: Record<string, { label: string; description: string }> = {
   'notifications:send': { label: 'Notifications', description: 'Send notifications' },
 };
 
-export default function APIKeysPage(): JSX.Element {
+export default function APIKeysPage(): React.ReactElement {
   const { user } = useRequireAuth();
   const [apiKeys, setApiKeys] = useState<APIKeyResponse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -327,7 +327,7 @@ export default function APIKeysPage(): JSX.Element {
     return `${Math.floor(diffInSeconds / 86400)}d ago`;
   };
 
-  const getExpiryStatus = (key: APIKeyResponse): { color: string; text: string; icon: JSX.Element } => {
+  const getExpiryStatus = (key: APIKeyResponse): { color: string; text: string; icon: React.ReactElement } => {
     if (!key.expires_at) {
       return {
         color: 'text-gray-500',

@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores/auth.store';
 import { TwoFactorSetup } from '@/components/auth/two-factor-setup';
 import { useRouter } from 'next/navigation';
 
-export default function TwoFactorSetupPage(): JSX.Element {
+export default function TwoFactorSetupPage(): React.ReactElement {
   const { isLoading, isAuthenticated } = useAuthStore();
   // Use isAuthenticated if needed
   isAuthenticated;

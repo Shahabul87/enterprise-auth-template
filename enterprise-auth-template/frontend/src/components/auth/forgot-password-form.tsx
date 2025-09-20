@@ -27,7 +27,7 @@ interface ForgotPasswordFormProps {
   onSuccess?: () => void;
 }
 
-export function ForgotPasswordForm({ onSuccess }: ForgotPasswordFormProps): JSX.Element {
+export function ForgotPasswordForm({ onSuccess }: ForgotPasswordFormProps): React.ReactElement {
   const router = useRouter();
   const [isComplete, setIsComplete] = React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>('');

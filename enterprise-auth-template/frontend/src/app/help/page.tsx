@@ -152,7 +152,7 @@ const resources = [
   },
 ];
 
-export default function HelpPage(): JSX.Element {
+export default function HelpPage(): React.ReactElement {
   const completedSteps = quickStartSteps.filter(step => step.completed).length;
   const progressPercentage = (completedSteps / quickStartSteps.length) * 100;
 

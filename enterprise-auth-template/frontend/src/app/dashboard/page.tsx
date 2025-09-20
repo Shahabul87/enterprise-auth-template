@@ -35,7 +35,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 
-export default function DashboardPage(): JSX.Element {
+export default function DashboardPage(): React.ReactElement {
   const { user, logout, permissions, hasPermission, hasRole } = useRequireAuth();
 
   if (!user) {
@@ -119,7 +119,7 @@ export default function DashboardPage(): JSX.Element {
                 Dashboard
               </h1>
               <p className='text-sm text-gray-600 dark:text-gray-400'>
-                Welcome back, {user.first_name}!
+                Welcome back, {user.full_name.split(' ')[0]}!
               </p>
             </div>
             <div className='flex items-center gap-3'>
@@ -208,7 +208,7 @@ export default function DashboardPage(): JSX.Element {
                 </div>
                 <div className='text-center'>
                   <h3 className='text-lg font-semibold'>
-                    {user.first_name} {user.last_name}
+                    {user.full_name}
                   </h3>
                   <p className='text-sm text-gray-600 dark:text-gray-400'>{user.email}</p>
 

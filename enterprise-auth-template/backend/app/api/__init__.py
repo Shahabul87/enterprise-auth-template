@@ -32,12 +32,14 @@ from app.api.v1.websocket import router as websocket_router
 # New routers for enhanced features
 try:
     from app.api.v1.sms_auth import router as sms_auth_router
+
     SMS_AUTH_AVAILABLE = True
 except ImportError:
     SMS_AUTH_AVAILABLE = False
 
 try:
     from app.api.v1.monitoring import router as monitoring_router
+
     MONITORING_AVAILABLE = True
 except ImportError:
     MONITORING_AVAILABLE = False
@@ -60,16 +62,24 @@ api_router.include_router(sessions_router, tags=["Sessions"])
 api_router.include_router(audit_router, tags=["Audit"])
 api_router.include_router(profile_router, prefix="/profile", tags=["Profile"])
 api_router.include_router(metrics_router, prefix="/metrics", tags=["Metrics"])
-api_router.include_router(notifications_router, prefix="/notifications", tags=["Notifications"])
+api_router.include_router(
+    notifications_router, prefix="/notifications", tags=["Notifications"]
+)
 api_router.include_router(webhooks_router, prefix="/webhooks", tags=["Webhooks"])
 api_router.include_router(api_keys_router, prefix="/api-keys", tags=["API Keys"])
-api_router.include_router(organizations_router, prefix="/organizations", tags=["Organizations"])
-api_router.include_router(device_management_router, prefix="/devices", tags=["Device Management"])
+api_router.include_router(
+    organizations_router, prefix="/organizations", tags=["Organizations"]
+)
+api_router.include_router(
+    device_management_router, prefix="/devices", tags=["Device Management"]
+)
 api_router.include_router(websocket_router, tags=["WebSocket"])
 
 # Include new feature routers if available
 if SMS_AUTH_AVAILABLE:
-    api_router.include_router(sms_auth_router, prefix="/auth", tags=["SMS Authentication"])
+    api_router.include_router(
+        sms_auth_router, prefix="/auth", tags=["SMS Authentication"]
+    )
 
 if MONITORING_AVAILABLE:
     api_router.include_router(monitoring_router, tags=["Monitoring"])

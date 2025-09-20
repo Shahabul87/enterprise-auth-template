@@ -68,9 +68,9 @@ export function useDebounce<T>(
 ): T {
   const { leading = false, trailing = true, maxWait } = options || {};
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
-  const timeoutRef = useRef<NodeJS.Timeout>();
-  const maxTimeoutRef = useRef<NodeJS.Timeout>();
-  const lastCallTimeRef = useRef<number>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const maxTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const lastCallTimeRef = useRef<number | undefined>(undefined);
   const lastInvokeTimeRef = useRef<number>(0);
 
   const invokeFunc = useCallback(() => {
@@ -108,7 +108,7 @@ export function useDebounce<T>(
   }, [delay, maxWait]);
 
   // We'll use useRef to break the circular dependency
-  const timerExpiredRef = useRef<() => void>();
+  const timerExpiredRef = useRef<(() => void) | undefined>(undefined);
   
   const trailingEdgeFunc = useCallback(() => {
     timeoutRef.current = undefined;
@@ -207,7 +207,7 @@ export function useAdvancedDebounce<T>(
 ): DebouncedState<T> {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
   const [isPending, setIsPending] = useState<boolean>(false);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   const flush = useCallback(() => {
     if (timeoutRef.current) {
@@ -281,11 +281,11 @@ export function useDebouncedCallback<TArgs extends unknown[], TReturn>(
 } {
   const { leading = false, trailing = true, maxWait } = options || {};
   const [isPending, setIsPending] = useState<boolean>(false);
-  
-  const timeoutRef = useRef<NodeJS.Timeout>();
-  const maxTimeoutRef = useRef<NodeJS.Timeout>();
-  const argsRef = useRef<TArgs>();
-  const lastCallTimeRef = useRef<number>();
+
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const maxTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const argsRef = useRef<TArgs | undefined>(undefined);
+  const lastCallTimeRef = useRef<number | undefined>(undefined);
   const lastInvokeTimeRef = useRef<number>(0);
 
   const invokeFunc = useCallback(() => {

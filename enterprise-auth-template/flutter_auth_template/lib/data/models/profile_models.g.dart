@@ -51,6 +51,7 @@ _$ProfileUpdateRequestImpl _$$ProfileUpdateRequestImplFromJson(
 ) => _$ProfileUpdateRequestImpl(
   firstName: json['firstName'] as String?,
   lastName: json['lastName'] as String?,
+  name: json['name'] as String?,
   phoneNumber: json['phoneNumber'] as String?,
   bio: json['bio'] as String?,
   timezone: json['timezone'] as String?,
@@ -62,6 +63,7 @@ Map<String, dynamic> _$$ProfileUpdateRequestImplToJson(
 ) => <String, dynamic>{
   if (instance.firstName case final value?) 'firstName': value,
   if (instance.lastName case final value?) 'lastName': value,
+  if (instance.name case final value?) 'name': value,
   if (instance.phoneNumber case final value?) 'phoneNumber': value,
   if (instance.bio case final value?) 'bio': value,
   if (instance.timezone case final value?) 'timezone': value,

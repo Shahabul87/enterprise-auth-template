@@ -20,86 +20,83 @@ REGISTRY = CollectorRegistry()
 
 # Define Prometheus metrics
 REQUEST_DURATION = Histogram(
-    'http_request_duration_seconds',
-    'HTTP request duration in seconds',
-    ['method', 'endpoint', 'status_code'],
+    "http_request_duration_seconds",
+    "HTTP request duration in seconds",
+    ["method", "endpoint", "status_code"],
     registry=REGISTRY,
-    buckets=(0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0)
+    buckets=(0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0),
 )
 
 REQUEST_COUNT = Counter(
-    'http_requests_total',
-    'Total HTTP requests',
-    ['method', 'endpoint', 'status_code'],
-    registry=REGISTRY
+    "http_requests_total",
+    "Total HTTP requests",
+    ["method", "endpoint", "status_code"],
+    registry=REGISTRY,
 )
 
 ACTIVE_REQUESTS = Gauge(
-    'http_requests_active',
-    'Active HTTP requests',
-    ['method', 'endpoint'],
-    registry=REGISTRY
+    "http_requests_active",
+    "Active HTTP requests",
+    ["method", "endpoint"],
+    registry=REGISTRY,
 )
 
 ERROR_COUNT = Counter(
-    'http_errors_total',
-    'Total HTTP errors',
-    ['method', 'endpoint', 'error_type'],
-    registry=REGISTRY
+    "http_errors_total",
+    "Total HTTP errors",
+    ["method", "endpoint", "error_type"],
+    registry=REGISTRY,
 )
 
 RESPONSE_SIZE = Histogram(
-    'http_response_size_bytes',
-    'HTTP response size in bytes',
-    ['method', 'endpoint', 'status_code'],
+    "http_response_size_bytes",
+    "HTTP response size in bytes",
+    ["method", "endpoint", "status_code"],
     registry=REGISTRY,
-    buckets=(100, 1000, 10000, 100000, 1000000, 10000000)
+    buckets=(100, 1000, 10000, 100000, 1000000, 10000000),
 )
 
 # Database metrics
 DB_QUERY_DURATION = Histogram(
-    'database_query_duration_seconds',
-    'Database query duration in seconds',
-    ['operation', 'table'],
+    "database_query_duration_seconds",
+    "Database query duration in seconds",
+    ["operation", "table"],
     registry=REGISTRY,
-    buckets=(0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5)
+    buckets=(0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5),
 )
 
 DB_CONNECTION_POOL = Gauge(
-    'database_connection_pool_size',
-    'Database connection pool metrics',
-    ['pool_type'],
-    registry=REGISTRY
+    "database_connection_pool_size",
+    "Database connection pool metrics",
+    ["pool_type"],
+    registry=REGISTRY,
 )
 
 # Cache metrics
 CACHE_HIT_RATE = Counter(
-    'cache_hits_total',
-    'Cache hit count',
-    ['cache_type', 'operation'],
-    registry=REGISTRY
+    "cache_hits_total",
+    "Cache hit count",
+    ["cache_type", "operation"],
+    registry=REGISTRY,
 )
 
 CACHE_MISS_RATE = Counter(
-    'cache_misses_total',
-    'Cache miss count',
-    ['cache_type', 'operation'],
-    registry=REGISTRY
+    "cache_misses_total",
+    "Cache miss count",
+    ["cache_type", "operation"],
+    registry=REGISTRY,
 )
 
 # Business metrics
 USER_LOGIN_ATTEMPTS = Counter(
-    'user_login_attempts_total',
-    'User login attempts',
-    ['status', 'method'],
-    registry=REGISTRY
+    "user_login_attempts_total",
+    "User login attempts",
+    ["status", "method"],
+    registry=REGISTRY,
 )
 
 USER_REGISTRATIONS = Counter(
-    'user_registrations_total',
-    'User registrations',
-    ['status'],
-    registry=REGISTRY
+    "user_registrations_total", "User registrations", ["status"], registry=REGISTRY
 )
 
 # Configure logging
@@ -145,22 +142,16 @@ class PerformanceMiddleware(BaseHTTPMiddleware):
             # Record metrics
             status_code = str(response.status_code)
             REQUEST_DURATION.labels(
-                method=method,
-                endpoint=endpoint,
-                status_code=status_code
+                method=method, endpoint=endpoint, status_code=status_code
             ).observe(duration)
 
             REQUEST_COUNT.labels(
-                method=method,
-                endpoint=endpoint,
-                status_code=status_code
+                method=method, endpoint=endpoint, status_code=status_code
             ).inc()
 
             if response_size:
                 RESPONSE_SIZE.labels(
-                    method=method,
-                    endpoint=endpoint,
-                    status_code=status_code
+                    method=method, endpoint=endpoint, status_code=status_code
                 ).observe(response_size)
 
             # Log slow requests
@@ -173,8 +164,8 @@ class PerformanceMiddleware(BaseHTTPMiddleware):
                         "duration": f"{duration:.3f}s",
                         "status_code": status_code,
                         "client_ip": self._get_client_ip(request),
-                        "user_agent": request.headers.get("user-agent", "unknown")
-                    }
+                        "user_agent": request.headers.get("user-agent", "unknown"),
+                    },
                 )
 
             # Track business metrics for specific endpoints
@@ -188,9 +179,7 @@ class PerformanceMiddleware(BaseHTTPMiddleware):
             error_type = type(e).__name__
 
             ERROR_COUNT.labels(
-                method=method,
-                endpoint=endpoint,
-                error_type=error_type
+                method=method, endpoint=endpoint, error_type=error_type
             ).inc()
 
             logger.error(
@@ -201,9 +190,9 @@ class PerformanceMiddleware(BaseHTTPMiddleware):
                     "duration": f"{duration:.3f}s",
                     "error": str(e),
                     "error_type": error_type,
-                    "client_ip": self._get_client_ip(request)
+                    "client_ip": self._get_client_ip(request),
                 },
-                exc_info=True
+                exc_info=True,
             )
 
             raise
@@ -222,26 +211,26 @@ class PerformanceMiddleware(BaseHTTPMiddleware):
 
         # Replace UUIDs
         path = re.sub(
-            r'/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
-            '/{id}',
+            r"/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+            "/{id}",
             path,
-            flags=re.IGNORECASE
+            flags=re.IGNORECASE,
         )
 
         # Replace numeric IDs
-        path = re.sub(r'/\d+', '/{id}', path)
+        path = re.sub(r"/\d+", "/{id}", path)
 
         # Replace email-like patterns
-        path = re.sub(r'/[^/]+@[^/]+', '/{email}', path)
+        path = re.sub(r"/[^/]+@[^/]+", "/{email}", path)
 
         # Group common endpoints
-        if path.startswith('/api/v1/users/'):
-            if path.endswith('/permissions'):
-                return '/api/v1/users/{id}/permissions'
-            elif path.endswith('/roles'):
-                return '/api/v1/users/{id}/roles'
-            elif path != '/api/v1/users/':
-                return '/api/v1/users/{id}'
+        if path.startswith("/api/v1/users/"):
+            if path.endswith("/permissions"):
+                return "/api/v1/users/{id}/permissions"
+            elif path.endswith("/roles"):
+                return "/api/v1/users/{id}/roles"
+            elif path != "/api/v1/users/":
+                return "/api/v1/users/{id}"
 
         return path
 
@@ -249,8 +238,8 @@ class PerformanceMiddleware(BaseHTTPMiddleware):
         """
         Get response size from headers if available.
         """
-        if hasattr(response, 'headers'):
-            content_length = response.headers.get('content-length')
+        if hasattr(response, "headers"):
+            content_length = response.headers.get("content-length")
             if content_length:
                 try:
                     return int(content_length)
@@ -317,13 +306,16 @@ def track_db_query(operation: str, table: str):
     """
     Decorator to track database query performance.
     """
+
     def decorator(func: Callable):
         async def wrapper(*args, **kwargs):
             start_time = time.time()
             try:
                 result = await func(*args, **kwargs)
                 duration = time.time() - start_time
-                DB_QUERY_DURATION.labels(operation=operation, table=table).observe(duration)
+                DB_QUERY_DURATION.labels(operation=operation, table=table).observe(
+                    duration
+                )
 
                 if duration > 0.1:  # Log slow queries
                     logger.warning(
@@ -331,8 +323,8 @@ def track_db_query(operation: str, table: str):
                         extra={
                             "operation": operation,
                             "table": table,
-                            "duration": f"{duration:.3f}s"
-                        }
+                            "duration": f"{duration:.3f}s",
+                        },
                     )
 
                 return result
@@ -344,12 +336,13 @@ def track_db_query(operation: str, table: str):
                         "operation": operation,
                         "table": table,
                         "duration": f"{duration:.3f}s",
-                        "error": str(e)
-                    }
+                        "error": str(e),
+                    },
                 )
                 raise
 
         return wrapper
+
     return decorator
 
 
@@ -357,6 +350,7 @@ def track_cache_operation(cache_type: str, operation: str):
     """
     Decorator to track cache hit/miss rates.
     """
+
     def decorator(func: Callable):
         async def wrapper(*args, **kwargs):
             result = await func(*args, **kwargs)
@@ -370,6 +364,7 @@ def track_cache_operation(cache_type: str, operation: str):
             return result
 
         return wrapper
+
     return decorator
 
 
@@ -386,22 +381,22 @@ async def get_metrics() -> str:
     """
     Generate Prometheus metrics in text format.
     """
-    return generate_latest(REGISTRY).decode('utf-8')
+    return generate_latest(REGISTRY).decode("utf-8")
 
 
 # Export metrics for use in other modules
 __all__ = [
-    'PerformanceMiddleware',
-    'MetricsRoute',
-    'track_db_query',
-    'track_cache_operation',
-    'update_connection_pool_metrics',
-    'get_metrics',
-    'REQUEST_DURATION',
-    'REQUEST_COUNT',
-    'DB_QUERY_DURATION',
-    'CACHE_HIT_RATE',
-    'CACHE_MISS_RATE',
-    'USER_LOGIN_ATTEMPTS',
-    'USER_REGISTRATIONS'
+    "PerformanceMiddleware",
+    "MetricsRoute",
+    "track_db_query",
+    "track_cache_operation",
+    "update_connection_pool_metrics",
+    "get_metrics",
+    "REQUEST_DURATION",
+    "REQUEST_COUNT",
+    "DB_QUERY_DURATION",
+    "CACHE_HIT_RATE",
+    "CACHE_MISS_RATE",
+    "USER_LOGIN_ATTEMPTS",
+    "USER_REGISTRATIONS",
 ]

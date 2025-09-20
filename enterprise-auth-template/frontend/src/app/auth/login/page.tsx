@@ -3,7 +3,7 @@
 import { useGuestOnly } from '@/stores/auth.store';
 import { ModernLoginForm } from '@/components/auth/modern-login-form';
 
-export default function LoginPage(): JSX.Element {
+export default function LoginPage(): React.ReactElement {
   const { isLoading } = useGuestOnly('/dashboard');
 
   if (isLoading) {

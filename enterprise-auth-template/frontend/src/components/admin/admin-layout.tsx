@@ -99,7 +99,7 @@ interface SidebarProps {
   onItemClick?: () => void;
 }
 
-function Sidebar({ className, onItemClick }: SidebarProps): JSX.Element {
+function Sidebar({ className, onItemClick }: SidebarProps): React.ReactElement {
   const pathname = usePathname();
   const { hasPermission } = useAuth();
 
@@ -163,7 +163,7 @@ interface HeaderProps {
   onMenuClick: () => void;
 }
 
-function Header({ onMenuClick }: HeaderProps): JSX.Element {
+function Header({ onMenuClick }: HeaderProps): React.ReactElement {
   const { user, logout } = useAuth();
   const router = useRouter();
 
@@ -254,7 +254,7 @@ function Header({ onMenuClick }: HeaderProps): JSX.Element {
   );
 }
 
-export default function AdminLayout({ children }: AdminLayoutProps): JSX.Element {
+export default function AdminLayout({ children }: AdminLayoutProps): React.ReactElement {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
   const handleMenuClick = (): void => {

@@ -1,0 +1,149 @@
+00:00 +0: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/screens/auth/login_screen_test.dart
+test/screens/auth/login_screen_test.dart:25:42: Error: The argument type 'MockAuthNotifier Function()' can't be assigned to the parameter type 'AuthNotifier Function(StateNotifierProviderRef<AuthNotifier, AuthState>)'.
+ - 'MockAuthNotifier' is from 'test/screens/auth/login_screen_test.mocks.dart'.
+ - 'AuthNotifier' is from 'package:flutter_auth_template/presentation/providers/auth_provider.dart' ('lib/presentation/providers/auth_provider.dart').
+ - 'StateNotifierProviderRef' is from 'package:riverpod/src/state_notifier_provider.dart' ('../../../.pub-cache/hosted/pub.dev/riverpod-2.6.1/lib/src/state_notifier_provider.dart').
+ - 'AuthState' is from 'package:flutter_auth_template/domain/entities/auth_state.dart' ('lib/domain/entities/auth_state.dart').
+          authStateProvider.overrideWith(() => mockAuthNotifier),
+                                         ^
+test/screens/auth/login_screen_test.dart:168:29: Error: The getter 'obscureText' isn't defined for the type 'TextFormField'.
+ - 'TextFormField' is from 'package:flutter/src/material/text_form_field.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/material/text_form_field.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'obscureText'.
+      expect(passwordWidget.obscureText, isTrue);
+                            ^^^^^^^^^^^
+test/screens/auth/login_screen_test.dart:176:29: Error: The getter 'obscureText' isn't defined for the type 'TextFormField'.
+ - 'TextFormField' is from 'package:flutter/src/material/text_form_field.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/material/text_form_field.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'obscureText'.
+      expect(passwordWidget.obscureText, isFalse);
+                            ^^^^^^^^^^^
+lib/presentation/pages/auth/login_screen.dart:118:35: Error: The method 'when' isn't defined for the type 'GoogleSignInAccount?'.
+ - 'GoogleSignInAccount' is from 'package:google_sign_in/google_sign_in.dart' ('../../../.pub-cache/hosted/pub.dev/google_sign_in-7.1.1/lib/google_sign_in.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'when'.
+      final result = googleResult.when(
+                                  ^^^^
+lib/infrastructure/services/session_service.dart:135:9: Error: No named parameter with the name 'name'.
+        name: name,
+        ^^^^
+lib/data/models/auth_request.dart:19:17: Context: Found this candidate, but the arguments don't match.
+  const factory RegisterRequest({
+                ^
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/screens/auth/login_screen_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/screens/auth/login_screen_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/screens/auth/login_screen_test.dart: test/screens/auth/login_screen_test.dart:25:42: Error: The argument type 'MockAuthNotifier Function()' can't be assigned to the parameter type 'AuthNotifier Function(StateNotifierProviderRef<AuthNotifier, AuthState>)'.
+   - 'MockAuthNotifier' is from 'test/screens/auth/login_screen_test.mocks.dart'.
+   - 'AuthNotifier' is from 'package:flutter_auth_template/presentation/providers/auth_provider.dart' ('lib/presentation/providers/auth_provider.dart').
+   - 'StateNotifierProviderRef' is from 'package:riverpod/src/state_notifier_provider.dart' ('../../../.pub-cache/hosted/pub.dev/riverpod-2.6.1/lib/src/state_notifier_provider.dart').
+   - 'AuthState' is from 'package:flutter_auth_template/domain/entities/auth_state.dart' ('lib/domain/entities/auth_state.dart').
+            authStateProvider.overrideWith(() => mockAuthNotifier),
+                                           ^
+  test/screens/auth/login_screen_test.dart:168:29: Error: The getter 'obscureText' isn't defined for the type 'TextFormField'.
+   - 'TextFormField' is from 'package:flutter/src/material/text_form_field.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/material/text_form_field.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'obscureText'.
+        expect(passwordWidget.obscureText, isTrue);
+                              ^^^^^^^^^^^
+  test/screens/auth/login_screen_test.dart:176:29: Error: The getter 'obscureText' isn't defined for the type 'TextFormField'.
+   - 'TextFormField' is from 'package:flutter/src/material/text_form_field.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/material/text_form_field.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'obscureText'.
+        expect(passwordWidget.obscureText, isFalse);
+                              ^^^^^^^^^^^
+  lib/presentation/pages/auth/login_screen.dart:118:35: Error: The method 'when' isn't defined for the type 'GoogleSignInAccount?'.
+   - 'GoogleSignInAccount' is from 'package:google_sign_in/google_sign_in.dart' ('../../../.pub-cache/hosted/pub.dev/google_sign_in-7.1.1/lib/google_sign_in.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'when'.
+        final result = googleResult.when(
+                                    ^^^^
+  lib/infrastructure/services/session_service.dart:135:9: Error: No named parameter with the name 'name'.
+          name: name,
+          ^^^^
+  lib/data/models/auth_request.dart:19:17: Context: Found this candidate, but the arguments don't match.
+    const factory RegisterRequest({
+                  ^
+  .
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/screens/auth/register_screen_test.dart
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/screens/auth/login_screen_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 910:11    DefaultResidentCompiler._compile.<fn>
+  dart:async/zone.dart 1538:47                     _rootRunUnary
+  dart:async/zone.dart 1429:19                     _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone.dart 1525:13                     _rootRun
+  dart:async/zone.dart 1422:19                     _CustomZone.run
+  dart:async/zone.dart 1321:7                      _CustomZone.runGuarded
+  dart:async/zone.dart 1362:23                     _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 194:5      _RawReceivePort._handleMessage
+  
+test/screens/auth/register_screen_test.dart:191:63: Error: Couldn't find constructor 'AuthState.loading'.
+      when(mockAuthNotifier.state).thenReturn(const AuthState.loading());
+                                                              ^^^^^^^
+test/screens/auth/register_screen_test.dart:292:63: Error: Couldn't find constructor 'AuthState.loading'.
+      when(mockAuthNotifier.state).thenReturn(const AuthState.loading());
+                                                              ^^^^^^^
+test/screens/auth/register_screen_test.dart:159:37: Error: Too few positional arguments: 3 required, 1 given.
+      when(mockAuthNotifier.register(any)).thenAnswer((_) async {});
+                                    ^
+test/screens/auth/register_screen_test.dart:186:39: Error: Too few positional arguments: 3 required, 1 given.
+      verify(mockAuthNotifier.register(any)).called(1);
+                                      ^
+test/screens/auth/register_screen_test.dart:245:29: Error: The getter 'obscureText' isn't defined for the type 'TextFormField'.
+ - 'TextFormField' is from 'package:flutter/src/material/text_form_field.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/material/text_form_field.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'obscureText'.
+      expect(passwordWidget.obscureText, isTrue);
+                            ^^^^^^^^^^^
+test/screens/auth/register_screen_test.dart:253:29: Error: The getter 'obscureText' isn't defined for the type 'TextFormField'.
+ - 'TextFormField' is from 'package:flutter/src/material/text_form_field.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/material/text_form_field.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'obscureText'.
+      expect(passwordWidget.obscureText, isFalse);
+                            ^^^^^^^^^^^
+test/screens/auth/register_screen_test.dart:264:36: Error: The getter 'obscureText' isn't defined for the type 'TextFormField'.
+ - 'TextFormField' is from 'package:flutter/src/material/text_form_field.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/material/text_form_field.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'obscureText'.
+      expect(confirmPasswordWidget.obscureText, isTrue);
+                                   ^^^^^^^^^^^
+test/screens/auth/register_screen_test.dart:272:36: Error: The getter 'obscureText' isn't defined for the type 'TextFormField'.
+ - 'TextFormField' is from 'package:flutter/src/material/text_form_field.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/material/text_form_field.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'obscureText'.
+      expect(confirmPasswordWidget.obscureText, isFalse);
+                                   ^^^^^^^^^^^
+00:00 +0 -2: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/screens/auth/register_screen_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/screens/auth/register_screen_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/screens/auth/register_screen_test.dart: test/screens/auth/register_screen_test.dart:191:63: Error: Couldn't find constructor 'AuthState.loading'.
+        when(mockAuthNotifier.state).thenReturn(const AuthState.loading());
+                                                                ^^^^^^^
+  test/screens/auth/register_screen_test.dart:292:63: Error: Couldn't find constructor 'AuthState.loading'.
+        when(mockAuthNotifier.state).thenReturn(const AuthState.loading());
+                                                                ^^^^^^^
+  test/screens/auth/register_screen_test.dart:159:37: Error: Too few positional arguments: 3 required, 1 given.
+        when(mockAuthNotifier.register(any)).thenAnswer((_) async {});
+                                      ^
+  test/screens/auth/register_screen_test.dart:186:39: Error: Too few positional arguments: 3 required, 1 given.
+        verify(mockAuthNotifier.register(any)).called(1);
+                                        ^
+  test/screens/auth/register_screen_test.dart:245:29: Error: The getter 'obscureText' isn't defined for the type 'TextFormField'.
+   - 'TextFormField' is from 'package:flutter/src/material/text_form_field.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/material/text_form_field.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'obscureText'.
+        expect(passwordWidget.obscureText, isTrue);
+                              ^^^^^^^^^^^
+  test/screens/auth/register_screen_test.dart:253:29: Error: The getter 'obscureText' isn't defined for the type 'TextFormField'.
+   - 'TextFormField' is from 'package:flutter/src/material/text_form_field.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/material/text_form_field.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'obscureText'.
+        expect(passwordWidget.obscureText, isFalse);
+                              ^^^^^^^^^^^
+  test/screens/auth/register_screen_test.dart:264:36: Error: The getter 'obscureText' isn't defined for the type 'TextFormField'.
+   - 'TextFormField' is from 'package:flutter/src/material/text_form_field.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/material/text_form_field.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'obscureText'.
+        expect(confirmPasswordWidget.obscureText, isTrue);
+                                     ^^^^^^^^^^^
+  test/screens/auth/register_screen_test.dart:272:36: Error: The getter 'obscureText' isn't defined for the type 'TextFormField'.
+   - 'TextFormField' is from 'package:flutter/src/material/text_form_field.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/material/text_form_field.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'obscureText'.
+        expect(confirmPasswordWidget.obscureText, isFalse);
+                                     ^^^^^^^^^^^
+  .
+00:00 +0 -2: Some tests failed.

@@ -31,22 +31,37 @@ class WebhookCreateRequest(BaseModel):
 
     name: str = Field(..., min_length=1, max_length=100, description="Webhook name")
     url: HttpUrl = Field(..., description="Webhook endpoint URL")
-    description: Optional[str] = Field(None, max_length=500, description="Webhook description")
-    events: List[WebhookEventType] = Field(..., min_length=1, description="List of events to subscribe to")
-    secret: Optional[str] = Field(None, min_length=16, max_length=100, description="Secret for HMAC signing")
-    headers: Optional[Dict[str, str]] = Field(None, description="Custom headers to send")
+    description: Optional[str] = Field(
+        None, max_length=500, description="Webhook description"
+    )
+    events: List[WebhookEventType] = Field(
+        ..., min_length=1, description="List of events to subscribe to"
+    )
+    secret: Optional[str] = Field(
+        None, min_length=16, max_length=100, description="Secret for HMAC signing"
+    )
+    headers: Optional[Dict[str, str]] = Field(
+        None, description="Custom headers to send"
+    )
     timeout: int = Field(30, ge=5, le=120, description="Request timeout in seconds")
     retry_count: int = Field(3, ge=0, le=10, description="Number of retry attempts")
     is_active: bool = Field(True, description="Whether webhook is active")
 
-    @field_validator('headers')
+    @field_validator("headers")
     @classmethod
     def validate_headers(cls, v):
         if v is not None:
             # Prevent override of critical headers
-            forbidden_headers = {'authorization', 'content-type', 'content-length', 'host'}
+            forbidden_headers = {
+                "authorization",
+                "content-type",
+                "content-length",
+                "host",
+            }
             if any(header.lower() in forbidden_headers for header in v.keys()):
-                raise ValueError(f"Headers cannot include: {', '.join(forbidden_headers)}")
+                raise ValueError(
+                    f"Headers cannot include: {', '.join(forbidden_headers)}"
+                )
         return v
 
     model_config = ConfigDict(
@@ -60,7 +75,7 @@ class WebhookCreateRequest(BaseModel):
                 "headers": {"X-Source": "enterprise-auth"},
                 "timeout": 30,
                 "retry_count": 3,
-                "is_active": True
+                "is_active": True,
             }
         }
     )
@@ -69,14 +84,28 @@ class WebhookCreateRequest(BaseModel):
 class WebhookUpdateRequest(BaseModel):
     """Request model for updating webhooks."""
 
-    name: Optional[str] = Field(None, min_length=1, max_length=100, description="Webhook name")
+    name: Optional[str] = Field(
+        None, min_length=1, max_length=100, description="Webhook name"
+    )
     url: Optional[HttpUrl] = Field(None, description="Webhook endpoint URL")
-    description: Optional[str] = Field(None, max_length=500, description="Webhook description")
-    events: Optional[List[WebhookEventType]] = Field(None, description="List of events to subscribe to")
-    secret: Optional[str] = Field(None, min_length=16, max_length=100, description="Secret for HMAC signing")
-    headers: Optional[Dict[str, str]] = Field(None, description="Custom headers to send")
-    timeout: Optional[int] = Field(None, ge=5, le=120, description="Request timeout in seconds")
-    retry_count: Optional[int] = Field(None, ge=0, le=10, description="Number of retry attempts")
+    description: Optional[str] = Field(
+        None, max_length=500, description="Webhook description"
+    )
+    events: Optional[List[WebhookEventType]] = Field(
+        None, description="List of events to subscribe to"
+    )
+    secret: Optional[str] = Field(
+        None, min_length=16, max_length=100, description="Secret for HMAC signing"
+    )
+    headers: Optional[Dict[str, str]] = Field(
+        None, description="Custom headers to send"
+    )
+    timeout: Optional[int] = Field(
+        None, ge=5, le=120, description="Request timeout in seconds"
+    )
+    retry_count: Optional[int] = Field(
+        None, ge=0, le=10, description="Number of retry attempts"
+    )
     is_active: Optional[bool] = Field(None, description="Whether webhook is active")
 
 
@@ -128,7 +157,9 @@ class WebhookDeliveryResponse(BaseModel):
 class WebhookDeliveryListResponse(BaseModel):
     """Response model for webhook delivery lists."""
 
-    deliveries: List[WebhookDeliveryResponse] = Field(..., description="List of deliveries")
+    deliveries: List[WebhookDeliveryResponse] = Field(
+        ..., description="List of deliveries"
+    )
     total: int = Field(..., description="Total number of deliveries")
     has_more: bool = Field(..., description="Whether more deliveries exist")
 
@@ -150,7 +181,9 @@ class WebhookStatsResponse(BaseModel):
     failed_deliveries: int = Field(..., description="Failed deliveries")
     average_success_rate: float = Field(..., description="Average success rate")
     event_breakdown: Dict[str, int] = Field(..., description="Deliveries by event type")
-    recent_activity: List[Dict[str, Any]] = Field(..., description="Recent webhook activity")
+    recent_activity: List[Dict[str, Any]] = Field(
+        ..., description="Recent webhook activity"
+    )
 
 
 class MessageResponse(BaseModel):
@@ -179,7 +212,9 @@ async def create_webhook(
     Returns:
         WebhookResponse: Created webhook information
     """
-    logger.info("Webhook creation requested", user_id=current_user.id, name=webhook_request.name)
+    logger.info(
+        "Webhook creation requested", user_id=current_user.id, name=webhook_request.name
+    )
 
     try:
         webhook_service = WebhookService(db)
@@ -188,14 +223,22 @@ async def create_webhook(
         webhook = await webhook_service.create_webhook(
             name=webhook_request.name,
             url=str(webhook_request.url),
-            events=[event.value if hasattr(event, 'value') else event for event in webhook_request.events],
+            events=[
+                event.value if hasattr(event, "value") else event
+                for event in webhook_request.events
+            ],
             created_by=str(current_user.id),
             description=webhook_request.description,
             secret=webhook_request.secret,
             headers=webhook_request.headers or {},
             retry_count=webhook_request.retry_count,
             timeout_seconds=webhook_request.timeout,
-            organization_id=str(current_user.organization_id) if hasattr(current_user, 'organization_id') and current_user.organization_id else None
+            organization_id=(
+                str(current_user.organization_id)
+                if hasattr(current_user, "organization_id")
+                and current_user.organization_id
+                else None
+            ),
         )
 
         # Get delivery statistics
@@ -216,21 +259,18 @@ async def create_webhook(
             is_active=webhook.is_active,
             created_at=webhook.created_at.isoformat(),
             updated_at=webhook.updated_at.isoformat(),
-            last_delivery=stats.get('last_delivery'),
-            delivery_success_rate=stats.get('success_rate', 0.0),
-            total_deliveries=stats.get('total_deliveries', 0)
+            last_delivery=stats.get("last_delivery"),
+            delivery_success_rate=stats.get("success_rate", 0.0),
+            total_deliveries=stats.get("total_deliveries", 0),
         )
 
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         logger.error("Failed to create webhook", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to create webhook"
+            detail="Failed to create webhook",
         )
 
 
@@ -257,17 +297,16 @@ async def list_webhooks(
     Returns:
         WebhookListResponse: Paginated webhook list
     """
-    logger.debug("Webhooks list requested", user_id=current_user.id, limit=limit, offset=offset)
+    logger.debug(
+        "Webhooks list requested", user_id=current_user.id, limit=limit, offset=offset
+    )
 
     try:
         webhook_service = WebhookService(db)
 
         # Get webhooks
         webhooks, total_count = await webhook_service.get_user_webhooks(
-            user_id=current_user.id,
-            limit=limit,
-            offset=offset,
-            is_active=is_active
+            user_id=current_user.id, limit=limit, offset=offset, is_active=is_active
         )
 
         # Convert to response format
@@ -275,35 +314,37 @@ async def list_webhooks(
         for webhook in webhooks:
             stats = await webhook_service.get_webhook_statistics(webhook.id)
 
-            webhook_responses.append(WebhookResponse(
-                id=webhook.id,
-                name=webhook.name,
-                url=webhook.url,
-                description=webhook.description,
-                events=[event.value for event in webhook.events],
-                status=webhook.status.value,
-                headers=webhook.headers,
-                timeout=webhook.timeout,
-                retry_count=webhook.retry_count,
-                is_active=webhook.is_active,
-                created_at=webhook.created_at.isoformat(),
-                updated_at=webhook.updated_at.isoformat(),
-                last_delivery=stats.get('last_delivery'),
-                delivery_success_rate=stats.get('success_rate', 0.0),
-                total_deliveries=stats.get('total_deliveries', 0)
-            ))
+            webhook_responses.append(
+                WebhookResponse(
+                    id=webhook.id,
+                    name=webhook.name,
+                    url=webhook.url,
+                    description=webhook.description,
+                    events=[event.value for event in webhook.events],
+                    status=webhook.status.value,
+                    headers=webhook.headers,
+                    timeout=webhook.timeout,
+                    retry_count=webhook.retry_count,
+                    is_active=webhook.is_active,
+                    created_at=webhook.created_at.isoformat(),
+                    updated_at=webhook.updated_at.isoformat(),
+                    last_delivery=stats.get("last_delivery"),
+                    delivery_success_rate=stats.get("success_rate", 0.0),
+                    total_deliveries=stats.get("total_deliveries", 0),
+                )
+            )
 
         return WebhookListResponse(
             webhooks=webhook_responses,
             total=total_count,
-            has_more=(offset + limit) < total_count
+            has_more=(offset + limit) < total_count,
         )
 
     except Exception as e:
         logger.error("Failed to list webhooks", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve webhooks"
+            detail="Failed to retrieve webhooks",
         )
 
 
@@ -326,21 +367,21 @@ async def get_webhook(
     Returns:
         WebhookResponse: Webhook information
     """
-    logger.debug("Webhook details requested", user_id=current_user.id, webhook_id=webhook_id)
+    logger.debug(
+        "Webhook details requested", user_id=current_user.id, webhook_id=webhook_id
+    )
 
     try:
         webhook_service = WebhookService(db)
 
         # Get webhook
         webhook = await webhook_service.get_webhook(
-            webhook_id=webhook_id,
-            user_id=current_user.id
+            webhook_id=webhook_id, user_id=current_user.id
         )
 
         if not webhook:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Webhook not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="Webhook not found"
             )
 
         # Get delivery statistics
@@ -359,9 +400,9 @@ async def get_webhook(
             is_active=webhook.is_active,
             created_at=webhook.created_at.isoformat(),
             updated_at=webhook.updated_at.isoformat(),
-            last_delivery=stats.get('last_delivery'),
-            delivery_success_rate=stats.get('success_rate', 0.0),
-            total_deliveries=stats.get('total_deliveries', 0)
+            last_delivery=stats.get("last_delivery"),
+            delivery_success_rate=stats.get("success_rate", 0.0),
+            total_deliveries=stats.get("total_deliveries", 0),
         )
 
     except HTTPException:
@@ -370,7 +411,7 @@ async def get_webhook(
         logger.error("Failed to get webhook", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve webhook"
+            detail="Failed to retrieve webhook",
         )
 
 
@@ -395,7 +436,9 @@ async def update_webhook(
     Returns:
         WebhookResponse: Updated webhook information
     """
-    logger.info("Webhook update requested", user_id=current_user.id, webhook_id=webhook_id)
+    logger.info(
+        "Webhook update requested", user_id=current_user.id, webhook_id=webhook_id
+    )
 
     try:
         webhook_service = WebhookService(db)
@@ -404,13 +447,12 @@ async def update_webhook(
         webhook = await webhook_service.update_webhook(
             webhook_id=webhook_id,
             user_id=current_user.id,
-            update_data=webhook_update.dict(exclude_unset=True)
+            update_data=webhook_update.dict(exclude_unset=True),
         )
 
         if not webhook:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Webhook not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="Webhook not found"
             )
 
         # Get delivery statistics
@@ -431,23 +473,20 @@ async def update_webhook(
             is_active=webhook.is_active,
             created_at=webhook.created_at.isoformat(),
             updated_at=webhook.updated_at.isoformat(),
-            last_delivery=stats.get('last_delivery'),
-            delivery_success_rate=stats.get('success_rate', 0.0),
-            total_deliveries=stats.get('total_deliveries', 0)
+            last_delivery=stats.get("last_delivery"),
+            delivery_success_rate=stats.get("success_rate", 0.0),
+            total_deliveries=stats.get("total_deliveries", 0),
         )
 
     except HTTPException:
         raise
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         logger.error("Failed to update webhook", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to update webhook"
+            detail="Failed to update webhook",
         )
 
 
@@ -470,23 +509,25 @@ async def delete_webhook(
     Returns:
         MessageResponse: Success message
     """
-    logger.warning("Webhook deletion requested", user_id=current_user.id, webhook_id=webhook_id)
+    logger.warning(
+        "Webhook deletion requested", user_id=current_user.id, webhook_id=webhook_id
+    )
 
     try:
         webhook_service = WebhookService(db)
 
         success = await webhook_service.delete_webhook(
-            webhook_id=webhook_id,
-            user_id=current_user.id
+            webhook_id=webhook_id, user_id=current_user.id
         )
 
         if not success:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Webhook not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="Webhook not found"
             )
 
-        logger.warning("Webhook deleted", webhook_id=webhook_id, user_id=current_user.id)
+        logger.warning(
+            "Webhook deleted", webhook_id=webhook_id, user_id=current_user.id
+        )
 
         return MessageResponse(message="Webhook deleted successfully")
 
@@ -496,7 +537,7 @@ async def delete_webhook(
         logger.error("Failed to delete webhook", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to delete webhook"
+            detail="Failed to delete webhook",
         )
 
 
@@ -521,7 +562,9 @@ async def test_webhook(
     Returns:
         MessageResponse: Test result message
     """
-    logger.info("Webhook test requested", user_id=current_user.id, webhook_id=webhook_id)
+    logger.info(
+        "Webhook test requested", user_id=current_user.id, webhook_id=webhook_id
+    )
 
     try:
         webhook_service = WebhookService(db)
@@ -532,7 +575,7 @@ async def test_webhook(
             "test": True,
             "timestamp": datetime.utcnow().isoformat(),
             "user_id": current_user.id,
-            "data": {"message": "This is a test webhook event"}
+            "data": {"message": "This is a test webhook event"},
         }
 
         # Send test event
@@ -540,7 +583,7 @@ async def test_webhook(
             webhook_id=webhook_id,
             event_type=test_request.event_type,
             payload=test_payload,
-            user_id=current_user.id
+            user_id=current_user.id,
         )
 
         if delivery and delivery.status == "success":
@@ -555,7 +598,7 @@ async def test_webhook(
         logger.error("Failed to test webhook", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to test webhook"
+            detail="Failed to test webhook",
         )
 
 
@@ -584,7 +627,9 @@ async def get_webhook_deliveries(
     Returns:
         WebhookDeliveryListResponse: Paginated delivery list
     """
-    logger.debug("Webhook deliveries requested", user_id=current_user.id, webhook_id=webhook_id)
+    logger.debug(
+        "Webhook deliveries requested", user_id=current_user.id, webhook_id=webhook_id
+    )
 
     try:
         webhook_service = WebhookService(db)
@@ -595,42 +640,54 @@ async def get_webhook_deliveries(
             user_id=current_user.id,
             limit=limit,
             offset=offset,
-            status=status
+            status=status,
         )
 
         # Convert to response format
         delivery_responses = []
         for delivery in deliveries:
-            delivery_responses.append(WebhookDeliveryResponse(
-                id=delivery.id,
-                webhook_id=delivery.webhook_id,
-                event_type=delivery.event_type.value,
-                payload=delivery.payload,
-                status=delivery.status.value,
-                http_status=delivery.http_status,
-                response_body=delivery.response_body,
-                error_message=delivery.error_message,
-                attempt_count=delivery.attempt_count,
-                created_at=delivery.created_at.isoformat(),
-                delivered_at=delivery.delivered_at.isoformat() if delivery.delivered_at else None,
-                next_retry_at=delivery.next_retry_at.isoformat() if delivery.next_retry_at else None
-            ))
+            delivery_responses.append(
+                WebhookDeliveryResponse(
+                    id=delivery.id,
+                    webhook_id=delivery.webhook_id,
+                    event_type=delivery.event_type.value,
+                    payload=delivery.payload,
+                    status=delivery.status.value,
+                    http_status=delivery.http_status,
+                    response_body=delivery.response_body,
+                    error_message=delivery.error_message,
+                    attempt_count=delivery.attempt_count,
+                    created_at=delivery.created_at.isoformat(),
+                    delivered_at=(
+                        delivery.delivered_at.isoformat()
+                        if delivery.delivered_at
+                        else None
+                    ),
+                    next_retry_at=(
+                        delivery.next_retry_at.isoformat()
+                        if delivery.next_retry_at
+                        else None
+                    ),
+                )
+            )
 
         return WebhookDeliveryListResponse(
             deliveries=delivery_responses,
             total=total_count,
-            has_more=(offset + limit) < total_count
+            has_more=(offset + limit) < total_count,
         )
 
     except Exception as e:
         logger.error("Failed to get webhook deliveries", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve webhook deliveries"
+            detail="Failed to retrieve webhook deliveries",
         )
 
 
-@router.post("/{webhook_id}/deliveries/{delivery_id}/retry", response_model=MessageResponse)
+@router.post(
+    "/{webhook_id}/deliveries/{delivery_id}/retry", response_model=MessageResponse
+)
 async def retry_webhook_delivery(
     webhook_id: str,
     delivery_id: str,
@@ -655,22 +712,20 @@ async def retry_webhook_delivery(
         "Webhook delivery retry requested",
         user_id=current_user.id,
         webhook_id=webhook_id,
-        delivery_id=delivery_id
+        delivery_id=delivery_id,
     )
 
     try:
         webhook_service = WebhookService(db)
 
         success = await webhook_service.retry_delivery(
-            delivery_id=delivery_id,
-            webhook_id=webhook_id,
-            user_id=current_user.id
+            delivery_id=delivery_id, webhook_id=webhook_id, user_id=current_user.id
         )
 
         if not success:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="Delivery not found or cannot be retried"
+                detail="Delivery not found or cannot be retried",
             )
 
         return MessageResponse(message="Webhook delivery retry initiated")
@@ -681,7 +736,7 @@ async def retry_webhook_delivery(
         logger.error("Failed to retry webhook delivery", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retry webhook delivery"
+            detail="Failed to retry webhook delivery",
         )
 
 
@@ -710,26 +765,25 @@ async def get_webhook_statistics(
         webhook_service = WebhookService(db)
 
         stats = await webhook_service.get_system_webhook_statistics(
-            user_id=current_user.id,
-            days=days
+            user_id=current_user.id, days=days
         )
 
         return WebhookStatsResponse(
-            total_webhooks=stats.get('total_webhooks', 0),
-            active_webhooks=stats.get('active_webhooks', 0),
-            total_deliveries=stats.get('total_deliveries', 0),
-            successful_deliveries=stats.get('successful_deliveries', 0),
-            failed_deliveries=stats.get('failed_deliveries', 0),
-            average_success_rate=stats.get('average_success_rate', 0.0),
-            event_breakdown=stats.get('event_breakdown', {}),
-            recent_activity=stats.get('recent_activity', [])
+            total_webhooks=stats.get("total_webhooks", 0),
+            active_webhooks=stats.get("active_webhooks", 0),
+            total_deliveries=stats.get("total_deliveries", 0),
+            successful_deliveries=stats.get("successful_deliveries", 0),
+            failed_deliveries=stats.get("failed_deliveries", 0),
+            average_success_rate=stats.get("average_success_rate", 0.0),
+            event_breakdown=stats.get("event_breakdown", {}),
+            recent_activity=stats.get("recent_activity", []),
         )
 
     except Exception as e:
         logger.error("Failed to get webhook statistics", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve webhook statistics"
+            detail="Failed to retrieve webhook statistics",
         )
 
 
@@ -752,27 +806,31 @@ async def regenerate_webhook_secret(
     Returns:
         Dict: New secret information
     """
-    logger.info("Webhook secret regeneration requested", user_id=current_user.id, webhook_id=webhook_id)
+    logger.info(
+        "Webhook secret regeneration requested",
+        user_id=current_user.id,
+        webhook_id=webhook_id,
+    )
 
     try:
         webhook_service = WebhookService(db)
 
         new_secret = await webhook_service.regenerate_webhook_secret(
-            webhook_id=webhook_id,
-            user_id=current_user.id
+            webhook_id=webhook_id, user_id=current_user.id
         )
 
         if not new_secret:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Webhook not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="Webhook not found"
             )
 
-        logger.info("Webhook secret regenerated", webhook_id=webhook_id, user_id=current_user.id)
+        logger.info(
+            "Webhook secret regenerated", webhook_id=webhook_id, user_id=current_user.id
+        )
 
         return {
             "secret": new_secret,
-            "message": "Webhook secret regenerated successfully"
+            "message": "Webhook secret regenerated successfully",
         }
 
     except HTTPException:
@@ -781,5 +839,5 @@ async def regenerate_webhook_secret(
         logger.error("Failed to regenerate webhook secret", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to regenerate webhook secret"
+            detail="Failed to regenerate webhook secret",
         )

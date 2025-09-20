@@ -22,7 +22,7 @@ interface ErrorPageProps {
  *
  * @see https://nextjs.org/docs/app/building-your-application/routing/error-handling
  */
-export default function ErrorPage({ error, reset }: ErrorPageProps): JSX.Element {
+export default function ErrorPage({ error, reset }: ErrorPageProps): React.ReactElement {
   const router = useRouter();
   const isDevelopment = process.env.NODE_ENV === 'development';
 

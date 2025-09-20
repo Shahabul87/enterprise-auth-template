@@ -31,7 +31,7 @@ export default function RolePermissionsDialog({
   open,
   onClose,
   onSuccess,
-}: RolePermissionsDialogProps): JSX.Element {
+}: RolePermissionsDialogProps): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [availablePermissions, setAvailablePermissions] = useState<Permission[]>([]);
@@ -313,7 +313,7 @@ function Label({
   children: React.ReactNode;
   htmlFor?: string;
   className?: string;
-}): JSX.Element {
+}): React.ReactElement {
   return (
     <label htmlFor={htmlFor} className={className}>
       {children}

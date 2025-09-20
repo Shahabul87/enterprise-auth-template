@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:go_router/go_router.dart';
 
-import '../storage/secure_storage_service.dart';
+import 'package:flutter_auth_template/core/storage/secure_storage_service.dart';
 import 'deep_link_service.dart';
 
 // Push Notification Service Provider

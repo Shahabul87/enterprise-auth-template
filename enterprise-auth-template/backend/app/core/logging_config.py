@@ -14,9 +14,11 @@ import traceback
 from contextvars import ContextVar
 
 # Context variables for request tracking
-request_id_var: ContextVar[Optional[str]] = ContextVar('request_id', default=None)
-user_id_var: ContextVar[Optional[str]] = ContextVar('user_id', default=None)
-correlation_id_var: ContextVar[Optional[str]] = ContextVar('correlation_id', default=None)
+request_id_var: ContextVar[Optional[str]] = ContextVar("request_id", default=None)
+user_id_var: ContextVar[Optional[str]] = ContextVar("user_id", default=None)
+correlation_id_var: ContextVar[Optional[str]] = ContextVar(
+    "correlation_id", default=None
+)
 
 
 class JSONFormatter(logging.Formatter):
@@ -62,30 +64,51 @@ class JSONFormatter(logging.Formatter):
             "file": record.pathname,
             "line": record.lineno,
             "function": record.funcName,
-            "module": record.module
+            "module": record.module,
         }
 
         # Add exception information if present
         if record.exc_info:
             log_entry["exception"] = {
-                "type": record.exc_info[0].__name__ if record.exc_info[0] else "Unknown",
+                "type": (
+                    record.exc_info[0].__name__ if record.exc_info[0] else "Unknown"
+                ),
                 "message": str(record.exc_info[1]),
-                "traceback": traceback.format_exception(*record.exc_info)
+                "traceback": traceback.format_exception(*record.exc_info),
             }
 
         # Add extra fields
-        if hasattr(record, '__dict__'):
+        if hasattr(record, "__dict__"):
             extras = {}
             for key, value in record.__dict__.items():
                 if key not in [
-                    'name', 'msg', 'args', 'created', 'filename', 'funcName',
-                    'levelname', 'levelno', 'lineno', 'module', 'msecs',
-                    'message', 'pathname', 'process', 'processName', 'relativeCreated',
-                    'thread', 'threadName', 'exc_info', 'exc_text', 'stack_info'
+                    "name",
+                    "msg",
+                    "args",
+                    "created",
+                    "filename",
+                    "funcName",
+                    "levelname",
+                    "levelno",
+                    "lineno",
+                    "module",
+                    "msecs",
+                    "message",
+                    "pathname",
+                    "process",
+                    "processName",
+                    "relativeCreated",
+                    "thread",
+                    "threadName",
+                    "exc_info",
+                    "exc_text",
+                    "stack_info",
                 ]:
                     # Serialize complex objects
                     try:
-                        if isinstance(value, (dict, list, str, int, float, bool, type(None))):
+                        if isinstance(
+                            value, (dict, list, str, int, float, bool, type(None))
+                        ):
                             extras[key] = value
                         else:
                             extras[key] = str(value)
@@ -96,18 +119,16 @@ class JSONFormatter(logging.Formatter):
                 log_entry["extra"] = extras
 
         # Add performance metrics if available
-        if hasattr(record, 'duration'):
-            log_entry["performance"] = {
-                "duration": record.duration
-            }
+        if hasattr(record, "duration"):
+            log_entry["performance"] = {"duration": record.duration}
 
         # Add security context if available
-        if hasattr(record, 'client_ip'):
+        if hasattr(record, "client_ip"):
             if "security" not in log_entry:
                 log_entry["security"] = {}
             log_entry["security"]["client_ip"] = record.client_ip
 
-        if hasattr(record, 'user_agent'):
+        if hasattr(record, "user_agent"):
             if "security" not in log_entry:
                 log_entry["security"] = {}
             log_entry["security"]["user_agent"] = record.user_agent
@@ -117,6 +138,7 @@ class JSONFormatter(logging.Formatter):
     def _get_hostname(self) -> str:
         """Get system hostname."""
         import socket
+
         try:
             return socket.gethostname()
         except Exception:
@@ -125,6 +147,7 @@ class JSONFormatter(logging.Formatter):
     def _get_environment(self) -> str:
         """Get environment name from settings."""
         import os
+
         return os.getenv("ENVIRONMENT", "development")
 
 
@@ -159,9 +182,19 @@ class SecurityFilter(logging.Filter):
     """
 
     SENSITIVE_FIELDS = {
-        'password', 'secret', 'token', 'api_key', 'access_token',
-        'refresh_token', 'authorization', 'cookie', 'session',
-        'credit_card', 'ssn', 'pin', 'cvv'
+        "password",
+        "secret",
+        "token",
+        "api_key",
+        "access_token",
+        "refresh_token",
+        "authorization",
+        "cookie",
+        "session",
+        "credit_card",
+        "ssn",
+        "pin",
+        "cvv",
     }
 
     def filter(self, record: logging.LogRecord) -> bool:
@@ -173,13 +206,11 @@ class SecurityFilter(logging.Filter):
 
         # Redact arguments
         if record.args:
-            record.args = tuple(
-                self._redact_sensitive(str(arg)) for arg in record.args
-            )
+            record.args = tuple(self._redact_sensitive(str(arg)) for arg in record.args)
 
         # Redact extra fields
         for field in dir(record):
-            if not field.startswith('_'):
+            if not field.startswith("_"):
                 value = getattr(record, field)
                 if isinstance(value, (str, dict)):
                     setattr(record, field, self._redact_sensitive(value))
@@ -196,23 +227,23 @@ class SecurityFilter(logging.Filter):
 
             # Redact email addresses partially
             data = re.sub(
-                r'([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})',
+                r"([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})",
                 lambda m: f"{m.group(1)[:3]}***@{m.group(2)}",
-                data
+                data,
             )
 
             # Redact JWT tokens
             data = re.sub(
-                r'eyJ[a-zA-Z0-9_-]+\.eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+',
-                '[REDACTED_JWT]',
-                data
+                r"eyJ[a-zA-Z0-9_-]+\.eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+",
+                "[REDACTED_JWT]",
+                data,
             )
 
             # Redact API keys (common patterns)
             data = re.sub(
                 r'(?i)(api[_-]?key|access[_-]?token|secret[_-]?key)(["\']?\s*[:=]\s*["\']?)([^"\'\s]+)',
-                r'\1\2[REDACTED]',
-                data
+                r"\1\2[REDACTED]",
+                data,
             )
 
         elif isinstance(data, dict):
@@ -220,7 +251,7 @@ class SecurityFilter(logging.Filter):
             redacted = {}
             for key, value in data.items():
                 if any(sensitive in key.lower() for sensitive in self.SENSITIVE_FIELDS):
-                    redacted[key] = '[REDACTED]'
+                    redacted[key] = "[REDACTED]"
                 elif isinstance(value, (dict, str)):
                     redacted[key] = self._redact_sensitive(value)
                 else:
@@ -234,7 +265,7 @@ def setup_logging(
     log_level: str = "INFO",
     log_file: Optional[str] = None,
     enable_json: bool = True,
-    enable_security_filter: bool = True
+    enable_security_filter: bool = True,
 ) -> None:
     """
     Set up structured logging for the application.
@@ -256,72 +287,53 @@ def setup_logging(
         "version": 1,
         "disable_existing_loggers": False,
         "formatters": {
-            "json": {
-                "()": JSONFormatter
-            },
+            "json": {"()": JSONFormatter},
             "standard": {
                 "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-            }
+            },
         },
-        "filters": {
-            "context": {
-                "()": RequestContextFilter
-            }
-        },
+        "filters": {"context": {"()": RequestContextFilter}},
         "handlers": {
             "console": {
                 "class": "logging.StreamHandler",
                 "level": log_level,
                 "formatter": "json" if enable_json else "standard",
                 "filters": ["context"],
-                "stream": "ext://sys.stdout"
+                "stream": "ext://sys.stdout",
             }
         },
-        "root": {
-            "level": log_level,
-            "handlers": ["console"]
-        },
+        "root": {"level": log_level, "handlers": ["console"]},
         "loggers": {
             # Application loggers
-            "app": {
-                "level": log_level,
-                "handlers": ["console"],
-                "propagate": False
-            },
+            "app": {"level": log_level, "handlers": ["console"], "propagate": False},
             "uvicorn": {
                 "level": log_level,
                 "handlers": ["console"],
-                "propagate": False
+                "propagate": False,
             },
             "uvicorn.access": {
                 "level": "INFO",
                 "handlers": ["console"],
-                "propagate": False
+                "propagate": False,
             },
             # Reduce noise from libraries
             "sqlalchemy.engine": {
                 "level": "WARNING",
                 "handlers": ["console"],
-                "propagate": False
+                "propagate": False,
             },
-            "httpx": {
-                "level": "WARNING",
-                "handlers": ["console"],
-                "propagate": False
-            },
+            "httpx": {"level": "WARNING", "handlers": ["console"], "propagate": False},
             "httpcore": {
                 "level": "WARNING",
                 "handlers": ["console"],
-                "propagate": False
-            }
-        }
+                "propagate": False,
+            },
+        },
     }
 
     # Add security filter if enabled
     if enable_security_filter:
-        config["filters"]["security"] = {
-            "()": SecurityFilter
-        }
+        config["filters"]["security"] = {"()": SecurityFilter}
         for handler in config["handlers"].values():
             if "filters" in handler:
                 handler["filters"].append("security")
@@ -338,7 +350,7 @@ def setup_logging(
             "filename": log_file,
             "maxBytes": 10485760,  # 10MB
             "backupCount": 5,
-            "encoding": "utf-8"
+            "encoding": "utf-8",
         }
 
         if enable_security_filter:
@@ -361,8 +373,8 @@ def setup_logging(
             "log_level": log_level,
             "json_enabled": enable_json,
             "security_filter": enable_security_filter,
-            "log_file": log_file
-        }
+            "log_file": log_file,
+        },
     )
 
 
@@ -374,7 +386,7 @@ class LoggerMixin:
     @property
     def logger(self) -> logging.Logger:
         """Get logger for the class."""
-        if not hasattr(self, '_logger'):
+        if not hasattr(self, "_logger"):
             self._logger = logging.getLogger(
                 f"{self.__class__.__module__}.{self.__class__.__name__}"
             )
@@ -442,14 +454,14 @@ def clear_context():
 
 # Export public API
 __all__ = [
-    'setup_logging',
-    'get_logger',
-    'LoggerMixin',
-    'JSONFormatter',
-    'RequestContextFilter',
-    'SecurityFilter',
-    'set_request_id',
-    'set_user_id',
-    'set_correlation_id',
-    'clear_context'
+    "setup_logging",
+    "get_logger",
+    "LoggerMixin",
+    "JSONFormatter",
+    "RequestContextFilter",
+    "SecurityFilter",
+    "set_request_id",
+    "set_user_id",
+    "set_correlation_id",
+    "clear_context",
 ]

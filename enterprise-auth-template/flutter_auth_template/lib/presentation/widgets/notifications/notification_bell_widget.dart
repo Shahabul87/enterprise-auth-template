@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
-import '../../../data/models/notification_models.dart';
-import '../../../data/services/notification_api_service.dart';
-import '../../../providers/websocket_provider.dart';
+import 'package:flutter_auth_template/data/models/notification_models.dart';
+import 'package:flutter_auth_template/data/services/notification_api_service.dart';
+import 'package:flutter_auth_template/presentation/providers/websocket_provider.dart';
 
 final notificationBellProvider = StateNotifierProvider<NotificationBellNotifier, NotificationBellState>((ref) {
   final apiService = NotificationApiService();

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'admin_models.freezed.dart';
 part 'admin_models.g.dart';
@@ -300,4 +301,182 @@ extension HealthStatusExtension on HealthStatus {
         return 'Unhealthy';
     }
   }
+}
+
+/// Security event types
+enum SecurityEventType {
+  login,
+  logout,
+  failedLogin,
+  passwordReset,
+  accountLocked,
+  suspiciousActivity,
+  dataAccess,
+  configChange,
+  permissionChange,
+}
+
+/// IP block rule creation request
+@freezed
+class CreateIpBlockRuleRequest with _$CreateIpBlockRuleRequest {
+  const factory CreateIpBlockRuleRequest({
+    required String ipAddress,
+    String? description,
+    @Default(true) bool isActive,
+    DateTime? expiresAt,
+  }) = _CreateIpBlockRuleRequest;
+
+  factory CreateIpBlockRuleRequest.fromJson(Map<String, dynamic> json) =>
+      _$CreateIpBlockRuleRequestFromJson(json);
+}
+
+/// Rate limit rule creation request
+@freezed
+class CreateRateLimitRuleRequest with _$CreateRateLimitRuleRequest {
+  const factory CreateRateLimitRuleRequest({
+    required String endpoint,
+    required int maxRequests,
+    required int windowSeconds,
+    String? description,
+    @Default(true) bool isActive,
+  }) = _CreateRateLimitRuleRequest;
+
+  factory CreateRateLimitRuleRequest.fromJson(Map<String, dynamic> json) =>
+      _$CreateRateLimitRuleRequestFromJson(json);
+}
+
+/// Restore point data model
+@freezed
+class RestorePoint with _$RestorePoint {
+  const factory RestorePoint({
+    required String id,
+    required String name,
+    required DateTime createdAt,
+    required int size,
+    required String description,
+    required Map<String, dynamic> metadata,
+  }) = _RestorePoint;
+
+  factory RestorePoint.fromJson(Map<String, dynamic> json) =>
+      _$RestorePointFromJson(json);
+}
+
+/// Export request model
+@freezed
+class CreateExportRequest with _$CreateExportRequest {
+  const factory CreateExportRequest({
+    required String format,
+    required List<String> tables,
+    @Default(true) bool includeMetadata,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) = _CreateExportRequest;
+
+  factory CreateExportRequest.fromJson(Map<String, dynamic> json) =>
+      _$CreateExportRequestFromJson(json);
+}
+
+/// Backup creation request
+@freezed
+class CreateBackupRequest with _$CreateBackupRequest {
+  const factory CreateBackupRequest({
+    required String name,
+    required String description,
+    @Default(true) bool includeUserData,
+    @Default(true) bool includeSystemData,
+    @Default(true) bool compress,
+  }) = _CreateBackupRequest;
+
+  factory CreateBackupRequest.fromJson(Map<String, dynamic> json) =>
+      _$CreateBackupRequestFromJson(json);
+}
+
+/// Backup schedule model
+@freezed
+class BackupSchedule with _$BackupSchedule {
+  const factory BackupSchedule({
+    required String id,
+    required String name,
+    required String cronExpression,
+    @Default(true) bool isActive,
+    DateTime? lastRun,
+    DateTime? nextRun,
+  }) = _BackupSchedule;
+
+  factory BackupSchedule.fromJson(Map<String, dynamic> json) =>
+      _$BackupScheduleFromJson(json);
+}
+
+/// Retention policy model
+@freezed
+class RetentionPolicy with _$RetentionPolicy {
+  const factory RetentionPolicy({
+    required int daysToKeep,
+    required int maxBackups,
+    @Default(false) bool autoDelete,
+    @Default(true) bool notifyBeforeDelete,
+  }) = _RetentionPolicy;
+
+  factory RetentionPolicy.fromJson(Map<String, dynamic> json) =>
+      _$RetentionPolicyFromJson(json);
+}
+
+/// Session analytics model
+@freezed
+class SessionAnalytics with _$SessionAnalytics {
+  const factory SessionAnalytics({
+    required int totalSessions,
+    required int activeSessions,
+    required double averageSessionDuration,
+    required Map<String, int> sessionsByPlatform,
+    required Map<String, int> sessionsByLocation,
+  }) = _SessionAnalytics;
+
+  factory SessionAnalytics.fromJson(Map<String, dynamic> json) =>
+      _$SessionAnalyticsFromJson(json);
+}
+
+/// Session status enum
+enum SessionStatus {
+  active,
+  inactive,
+  expired,
+  terminated,
+  suspicious,
+}
+
+/// User session details model
+@freezed
+class UserSessionDetails with _$UserSessionDetails {
+  const factory UserSessionDetails({
+    required String sessionId,
+    required String userId,
+    required DateTime startTime,
+    DateTime? endTime,
+    required SessionStatus status,
+    required String ipAddress,
+    required String userAgent,
+    String? location,
+  }) = _UserSessionDetails;
+
+  factory UserSessionDetails.fromJson(Map<String, dynamic> json) =>
+      _$UserSessionDetailsFromJson(json);
+}
+
+/// Session security alert model
+@freezed
+class SessionSecurityAlert with _$SessionSecurityAlert {
+  const factory SessionSecurityAlert({
+    required String id,
+    required String sessionId,
+    required String userId,
+    required String alertType,
+    required String message,
+    required DateTime timestamp,
+    required String severity,
+    @Default(false) bool isResolved,
+  }) = _SessionSecurityAlert;
+
+  factory SessionSecurityAlert.fromJson(Map<String, dynamic> json) =>
+      _$SessionSecurityAlertFromJson(json);
 }

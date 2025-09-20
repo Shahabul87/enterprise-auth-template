@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../domain/entities/user.dart';
+import 'package:flutter_auth_template/domain/entities/user.dart';
 
 part 'auth_response.freezed.dart';
 part 'auth_response.g.dart';

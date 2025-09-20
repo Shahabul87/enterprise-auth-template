@@ -4,9 +4,13 @@ export interface User {
   id: string;
   email: string;
   full_name: string;
+  name?: string; // For backward compatibility
+  first_name?: string; // For backward compatibility
+  last_name?: string; // For backward compatibility
   username?: string;
   is_active: boolean;
-  email_verified: boolean; // Changed from is_verified to match backend
+  is_verified: boolean;
+  email_verified: boolean;
   is_superuser: boolean;
   two_factor_enabled: boolean;
   failed_login_attempts: number;

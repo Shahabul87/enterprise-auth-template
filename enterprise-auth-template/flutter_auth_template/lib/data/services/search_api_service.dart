@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../core/config/app_config.dart';
-import '../models/search_models.dart';
+import 'package:flutter_auth_template/core/config/app_config.dart';
+import 'package:flutter_auth_template/data/models/search_models.dart';
 
 class SearchApiService {
   final http.Client _client;

@@ -38,7 +38,7 @@ interface TestResult {
   timestamp: Date;
 }
 
-export default function TestAuthPage(): JSX.Element {
+export default function TestAuthPage(): React.ReactElement {
   const router = useRouter();
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [, setShowPasswordLogin] = useState(true);

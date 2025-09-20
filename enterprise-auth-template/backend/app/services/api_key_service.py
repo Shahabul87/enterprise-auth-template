@@ -40,7 +40,7 @@ class APIKeyService:
         rate_limit: int = 1000,
         allowed_ips: Optional[List[str]] = None,
         expires_in_days: Optional[int] = None,
-        organization_id: Optional[UUID] = None
+        organization_id: Optional[UUID] = None,
     ) -> tuple[APIKey, str]:
         """
         Create a new API key.
@@ -75,15 +75,24 @@ class APIKeyService:
 
             # Check organization limits if applicable
             if organization_id:
-                org_query = select(Organization).where(Organization.id == organization_id)
+                org_query = select(Organization).where(
+                    Organization.id == organization_id
+                )
                 org_result = await self.db.execute(org_query)
                 org = org_result.scalar_one_or_none()
 
                 if org:
                     # Check API key limit
-                    existing_keys = await self.get_organization_api_keys(organization_id)
-                    if len(existing_keys) >= org.max_api_keys and org.max_api_keys != -1:
-                        raise ValueError(f"Organization has reached API key limit ({org.max_api_keys})")
+                    existing_keys = await self.get_organization_api_keys(
+                        organization_id
+                    )
+                    if (
+                        len(existing_keys) >= org.max_api_keys
+                        and org.max_api_keys != -1
+                    ):
+                        raise ValueError(
+                            f"Organization has reached API key limit ({org.max_api_keys})"
+                        )
 
             # Create API key
             api_key = APIKey(
@@ -97,7 +106,7 @@ class APIKeyService:
                 expires_at=expires_at,
                 user_id=user_id,
                 organization_id=organization_id,
-                is_active=True
+                is_active=True,
             )
 
             self.db.add(api_key)
@@ -113,8 +122,8 @@ class APIKeyService:
                 details={
                     "name": name,
                     "scopes": scopes,
-                    "expires_in_days": expires_in_days
-                }
+                    "expires_in_days": expires_in_days,
+                },
             )
 
             logger.info(f"Created API key: {name} for user {user_id}")
@@ -131,7 +140,9 @@ class APIKeyService:
             logger.error(f"Error creating API key: {str(e)}")
             raise
 
-    async def verify_api_key(self, raw_key: str, ip_address: Optional[str] = None) -> Optional[APIKey]:
+    async def verify_api_key(
+        self, raw_key: str, ip_address: Optional[str] = None
+    ) -> Optional[APIKey]:
         """
         Verify an API key and return the key object if valid.
 
@@ -150,13 +161,10 @@ class APIKeyService:
             key_prefix = raw_key[:10]
 
             # Find API key by prefix
-            query = select(APIKey).options(
-                selectinload(APIKey.user)
-            ).where(
-                and_(
-                    APIKey.key_prefix == key_prefix,
-                    APIKey.is_active == True
-                )
+            query = (
+                select(APIKey)
+                .options(selectinload(APIKey.user))
+                .where(and_(APIKey.key_prefix == key_prefix, APIKey.is_active == True))
             )
 
             result = await self.db.execute(query)
@@ -190,18 +198,17 @@ class APIKeyService:
 
     async def get_api_key_by_id(self, key_id: UUID) -> Optional[APIKey]:
         """Get API key by ID."""
-        query = select(APIKey).options(
-            selectinload(APIKey.user),
-            selectinload(APIKey.organization)
-        ).where(APIKey.id == key_id)
+        query = (
+            select(APIKey)
+            .options(selectinload(APIKey.user), selectinload(APIKey.organization))
+            .where(APIKey.id == key_id)
+        )
 
         result = await self.db.execute(query)
         return result.scalar_one_or_none()
 
     async def get_user_api_keys(
-        self,
-        user_id: UUID,
-        include_inactive: bool = False
+        self, user_id: UUID, include_inactive: bool = False
     ) -> List[APIKey]:
         """Get all API keys for a user."""
         query = select(APIKey).where(APIKey.user_id == user_id)
@@ -215,9 +222,7 @@ class APIKeyService:
         return result.scalars().all()
 
     async def get_organization_api_keys(
-        self,
-        organization_id: UUID,
-        include_inactive: bool = False
+        self, organization_id: UUID, include_inactive: bool = False
     ) -> List[APIKey]:
         """Get all API keys for an organization."""
         query = select(APIKey).where(APIKey.organization_id == organization_id)
@@ -238,7 +243,7 @@ class APIKeyService:
         rate_limit: Optional[int] = None,
         allowed_ips: Optional[List[str]] = None,
         is_active: Optional[bool] = None,
-        current_user_id: Optional[UUID] = None
+        current_user_id: Optional[UUID] = None,
     ) -> APIKey:
         """
         Update API key information.
@@ -287,20 +292,20 @@ class APIKeyService:
                 action="api_key.update",
                 resource_type="api_key",
                 resource_id=str(key_id),
-                details={"changes": {
-                    "name": name,
-                    "description": description,
-                    "rate_limit": rate_limit,
-                    "is_active": is_active
-                }}
+                details={
+                    "changes": {
+                        "name": name,
+                        "description": description,
+                        "rate_limit": rate_limit,
+                        "is_active": is_active,
+                    }
+                },
             )
 
         return api_key
 
     async def rotate_api_key(
-        self,
-        key_id: UUID,
-        current_user_id: UUID
+        self, key_id: UUID, current_user_id: UUID
     ) -> tuple[APIKey, str]:
         """
         Rotate an API key (revoke old and create new).
@@ -328,7 +333,7 @@ class APIKeyService:
             scopes=old_key.scopes,
             rate_limit=old_key.rate_limit,
             allowed_ips=old_key.allowed_ips,
-            organization_id=old_key.organization_id
+            organization_id=old_key.organization_id,
         )
 
         # Revoke old key
@@ -342,10 +347,7 @@ class APIKeyService:
             action="api_key.rotate",
             resource_type="api_key",
             resource_id=str(key_id),
-            details={
-                "old_key_id": str(key_id),
-                "new_key_id": str(new_key.id)
-            }
+            details={"old_key_id": str(key_id), "new_key_id": str(new_key.id)},
         )
 
         logger.info(f"Rotated API key {key_id} to {new_key.id}")
@@ -353,10 +355,7 @@ class APIKeyService:
         return new_key, raw_key
 
     async def revoke_api_key(
-        self,
-        key_id: UUID,
-        reason: str,
-        current_user_id: UUID
+        self, key_id: UUID, reason: str, current_user_id: UUID
     ) -> bool:
         """
         Revoke an API key.
@@ -393,17 +392,13 @@ class APIKeyService:
             action="api_key.revoke",
             resource_type="api_key",
             resource_id=str(key_id),
-            details={"reason": reason}
+            details={"reason": reason},
         )
 
         logger.info(f"Revoked API key {key_id}: {reason}")
         return True
 
-    async def delete_api_key(
-        self,
-        key_id: UUID,
-        current_user_id: UUID
-    ) -> bool:
+    async def delete_api_key(self, key_id: UUID, current_user_id: UUID) -> bool:
         """
         Delete an API key.
 
@@ -431,7 +426,7 @@ class APIKeyService:
             action="api_key.delete",
             resource_type="api_key",
             resource_id=str(key_id),
-            details={"key_name": api_key.name}
+            details={"key_name": api_key.name},
         )
 
         logger.info(f"Deleted API key {key_id}")
@@ -449,7 +444,7 @@ class APIKeyService:
                 and_(
                     APIKey.expires_at != None,
                     APIKey.expires_at < datetime.utcnow(),
-                    APIKey.is_active == True
+                    APIKey.is_active == True,
                 )
             )
 
@@ -473,9 +468,7 @@ class APIKeyService:
             return 0
 
     async def get_api_key_statistics(
-        self,
-        user_id: Optional[UUID] = None,
-        organization_id: Optional[UUID] = None
+        self, user_id: Optional[UUID] = None, organization_id: Optional[UUID] = None
     ) -> Dict[str, Any]:
         """
         Get API key usage statistics.
@@ -508,6 +501,12 @@ class APIKeyService:
             "revoked_keys": len([k for k in keys if k.revoked_at]),
             "total_usage": total_usage,
             "average_usage": total_usage / len(keys) if keys else 0,
-            "most_used_key": max(keys, key=lambda k: k.usage_count).name if keys else None,
-            "last_created": max(keys, key=lambda k: k.created_at).created_at.isoformat() if keys else None
+            "most_used_key": (
+                max(keys, key=lambda k: k.usage_count).name if keys else None
+            ),
+            "last_created": (
+                max(keys, key=lambda k: k.created_at).created_at.isoformat()
+                if keys
+                else None
+            ),
         }

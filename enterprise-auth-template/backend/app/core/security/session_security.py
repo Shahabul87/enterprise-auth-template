@@ -24,6 +24,7 @@ logger = structlog.get_logger(__name__)
 
 class PrivilegeLevel(Enum):
     """User privilege levels for session security."""
+
     GUEST = 0
     USER = 1
     MODERATOR = 2
@@ -33,6 +34,7 @@ class PrivilegeLevel(Enum):
 
 class SessionSecurityEvent(Enum):
     """Security events that can occur during a session."""
+
     PRIVILEGE_ESCALATION = "privilege_escalation"
     SESSION_HIJACK_ATTEMPT = "session_hijack_attempt"
     ABNORMAL_ACTIVITY = "abnormal_activity"
@@ -49,9 +51,7 @@ class SessionSecurityManager:
     """
 
     def __init__(
-        self,
-        db_session: AsyncSession,
-        cache_service: Optional[CacheService] = None
+        self, db_session: AsyncSession, cache_service: Optional[CacheService] = None
     ):
         """
         Initialize SessionSecurityManager.
@@ -69,7 +69,7 @@ class SessionSecurityManager:
         user_id: UUID,
         ip_address: str,
         user_agent: str,
-        privilege_level: PrivilegeLevel = PrivilegeLevel.USER
+        privilege_level: PrivilegeLevel = PrivilegeLevel.USER,
     ) -> str:
         """
         Create a new secure session with proper initialization.
@@ -95,7 +95,7 @@ class SessionSecurityManager:
             user_agent=user_agent,
             is_active=True,
             last_activity=datetime.utcnow(),
-            expires_at=datetime.utcnow() + timedelta(hours=24)
+            expires_at=datetime.utcnow() + timedelta(hours=24),
         )
 
         self.db.add(session)
@@ -110,25 +110,22 @@ class SessionSecurityManager:
                     "ip_address": ip_address,
                     "user_agent": user_agent,
                     "privilege_level": privilege_level.value,
-                    "created_at": datetime.utcnow().isoformat()
+                    "created_at": datetime.utcnow().isoformat(),
                 },
-                ttl=86400  # 24 hours
+                ttl=86400,  # 24 hours
             )
 
         logger.info(
             "Secure session created",
             user_id=str(user_id),
             session_id=session_id[:8],
-            ip_address=ip_address
+            ip_address=ip_address,
         )
 
         return session_token
 
     async def validate_session(
-        self,
-        session_token: str,
-        ip_address: str,
-        user_agent: str
+        self, session_token: str, ip_address: str, user_agent: str
     ) -> tuple[bool, Optional[SessionSecurityEvent]]:
         """
         Validate a session and check for security issues.
@@ -153,8 +150,7 @@ class SessionSecurityManager:
 
         # Fallback to database
         stmt = select(UserSession).where(
-            UserSession.session_token == session_id,
-            UserSession.is_active == True
+            UserSession.session_token == session_id, UserSession.is_active == True
         )
         result = await self.db.execute(stmt)
         session = result.scalar_one_or_none()
@@ -167,7 +163,7 @@ class SessionSecurityManager:
             await self._record_security_event(
                 SessionSecurityEvent.IP_ADDRESS_CHANGE,
                 session.user_id,
-                {"old_ip": session.ip_address, "new_ip": ip_address}
+                {"old_ip": session.ip_address, "new_ip": ip_address},
             )
             return False, SessionSecurityEvent.SESSION_HIJACK_ATTEMPT
 
@@ -175,7 +171,7 @@ class SessionSecurityManager:
             await self._record_security_event(
                 SessionSecurityEvent.USER_AGENT_CHANGE,
                 session.user_id,
-                {"old_agent": session.user_agent, "new_agent": user_agent}
+                {"old_agent": session.user_agent, "new_agent": user_agent},
             )
             return False, SessionSecurityEvent.SESSION_HIJACK_ATTEMPT
 
@@ -193,7 +189,7 @@ class SessionSecurityManager:
         self,
         session_token: str,
         requested_privilege: PrivilegeLevel,
-        current_privilege: PrivilegeLevel
+        current_privilege: PrivilegeLevel,
     ) -> bool:
         """
         Detect unauthorized privilege escalation attempts.
@@ -214,7 +210,7 @@ class SessionSecurityManager:
                 "Privilege escalation detected",
                 session_id=session_id[:8],
                 current=current_privilege.name,
-                requested=requested_privilege.name
+                requested=requested_privilege.name,
             )
 
             await self._record_security_event(
@@ -223,8 +219,8 @@ class SessionSecurityManager:
                 {
                     "session_id": session_id[:8],
                     "current_privilege": current_privilege.name,
-                    "requested_privilege": requested_privilege.name
-                }
+                    "requested_privilege": requested_privilege.name,
+                },
             )
 
             return True
@@ -232,10 +228,7 @@ class SessionSecurityManager:
         return False
 
     async def rotate_session(
-        self,
-        old_session_token: str,
-        ip_address: str,
-        user_agent: str
+        self, old_session_token: str, ip_address: str, user_agent: str
     ) -> Optional[str]:
         """
         Rotate session token to prevent fixation attacks.
@@ -252,8 +245,7 @@ class SessionSecurityManager:
 
         # Get existing session
         stmt = select(UserSession).where(
-            UserSession.session_token == old_session_id,
-            UserSession.is_active == True
+            UserSession.session_token == old_session_id, UserSession.is_active == True
         )
         result = await self.db.execute(stmt)
         session = result.scalar_one_or_none()
@@ -264,8 +256,7 @@ class SessionSecurityManager:
         # Validate IP and user agent
         if session.ip_address != ip_address or session.user_agent != user_agent:
             logger.warning(
-                "Session rotation denied due to mismatch",
-                session_id=old_session_id[:8]
+                "Session rotation denied due to mismatch", session_id=old_session_id[:8]
             )
             return None
 
@@ -292,15 +283,15 @@ class SessionSecurityManager:
                     "user_id": str(session.user_id),
                     "ip_address": ip_address,
                     "user_agent": user_agent,
-                    "created_at": datetime.utcnow().isoformat()
+                    "created_at": datetime.utcnow().isoformat(),
                 },
-                ttl=86400
+                ttl=86400,
             )
 
         logger.info(
             "Session rotated",
             old_session=old_session_id[:8],
-            new_session=new_session_id[:8]
+            new_session=new_session_id[:8],
         )
 
         return new_token
@@ -318,9 +309,11 @@ class SessionSecurityManager:
         session_id = hashlib.sha256(session_token.encode()).hexdigest()
 
         # Update database
-        stmt = update(UserSession).where(
-            UserSession.session_token == session_id
-        ).values(is_active=False)
+        stmt = (
+            update(UserSession)
+            .where(UserSession.session_token == session_id)
+            .values(is_active=False)
+        )
 
         result = await self.db.execute(stmt)
         await self.db.commit()
@@ -334,9 +327,7 @@ class SessionSecurityManager:
         return result.rowcount > 0
 
     async def detect_concurrent_sessions(
-        self,
-        user_id: UUID,
-        max_sessions: int = 3
+        self, user_id: UUID, max_sessions: int = 3
     ) -> List[str]:
         """
         Detect concurrent sessions for a user.
@@ -348,10 +339,11 @@ class SessionSecurityManager:
         Returns:
             List of session IDs that should be terminated
         """
-        stmt = select(UserSession).where(
-            UserSession.user_id == user_id,
-            UserSession.is_active == True
-        ).order_by(UserSession.created_at.desc())
+        stmt = (
+            select(UserSession)
+            .where(UserSession.user_id == user_id, UserSession.is_active == True)
+            .order_by(UserSession.created_at.desc())
+        )
 
         result = await self.db.execute(stmt)
         sessions = result.scalars().all()
@@ -370,7 +362,7 @@ class SessionSecurityManager:
                 "Concurrent session limit exceeded",
                 user_id=str(user_id),
                 total_sessions=len(sessions),
-                terminated=len(sessions_to_terminate)
+                terminated=len(sessions_to_terminate),
             )
 
             await self._record_security_event(
@@ -378,17 +370,14 @@ class SessionSecurityManager:
                 user_id,
                 {
                     "total_sessions": len(sessions),
-                    "terminated": len(sessions_to_terminate)
-                }
+                    "terminated": len(sessions_to_terminate),
+                },
             )
 
         return sessions_to_terminate
 
     async def _validate_cached_session(
-        self,
-        cached_session: Dict[str, Any],
-        ip_address: str,
-        user_agent: str
+        self, cached_session: Dict[str, Any], ip_address: str, user_agent: str
     ) -> tuple[bool, Optional[SessionSecurityEvent]]:
         """
         Validate a cached session.
@@ -413,7 +402,7 @@ class SessionSecurityManager:
         self,
         event: SessionSecurityEvent,
         user_id: Optional[UUID],
-        details: Dict[str, Any]
+        details: Dict[str, Any],
     ):
         """
         Record a security event.
@@ -427,7 +416,7 @@ class SessionSecurityManager:
             "event": event.value,
             "user_id": str(user_id) if user_id else None,
             "timestamp": datetime.utcnow().isoformat(),
-            "details": details
+            "details": details,
         }
 
         self.security_events.append(event_record)
@@ -437,7 +426,7 @@ class SessionSecurityManager:
             "Security event recorded",
             event_type=event.value,
             user_id=str(user_id) if user_id else None,
-            **details
+            **details,
         )
 
         # TODO: Send to monitoring system

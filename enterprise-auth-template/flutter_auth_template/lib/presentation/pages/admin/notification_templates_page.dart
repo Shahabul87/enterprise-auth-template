@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../data/models/notification_models.dart';
-import '../../../data/services/notification_api_service.dart';
-import '../../widgets/common/loading_widget.dart';
-import '../../widgets/common/error_widget.dart';
+import 'package:flutter_auth_template/data/models/notification_models.dart';
+import 'package:flutter_auth_template/data/services/notification_api_service.dart';
+import 'package:flutter_auth_template/presentation/widgets/common/loading_widget.dart';
+import 'package:flutter_auth_template/presentation/widgets/common/error_widget.dart';
 
 final notificationApiServiceProvider = Provider((ref) => NotificationApiService());
 

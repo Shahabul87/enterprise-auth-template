@@ -106,20 +106,25 @@ class UserSession(Base):
     @property
     def duration(self) -> Optional[int]:
         """Get session duration in seconds."""
-        if self.ended_at:
-            return int((self.ended_at - self.created_at).total_seconds())
+        ended_at = getattr(self, "ended_at", None)
+        if ended_at:
+            return int((ended_at - self.created_at).total_seconds())
         return int((datetime.utcnow() - self.created_at).total_seconds())
 
     @property
     def device_info(self) -> str:
         """Get formatted device information."""
         parts = []
-        if self.operating_system:
-            parts.append(self.operating_system)
-        if self.browser:
-            parts.append(self.browser)
-        if self.device_type:
-            parts.append(self.device_type.title())
+        operating_system = getattr(self, "operating_system", None)
+        browser = getattr(self, "browser", None)
+        device_type = getattr(self, "device_type", None)
+
+        if operating_system:
+            parts.append(operating_system)
+        if browser:
+            parts.append(browser)
+        if device_type:
+            parts.append(device_type.title())
 
         return " / ".join(parts) if parts else "Unknown Device"
 
@@ -127,9 +132,12 @@ class UserSession(Base):
     def location_info(self) -> str:
         """Get formatted location information."""
         parts = []
-        if self.city:
-            parts.append(self.city)
-        if self.country:
-            parts.append(self.country)
+        city = getattr(self, "city", None)
+        country = getattr(self, "country", None)
+
+        if city:
+            parts.append(city)
+        if country:
+            parts.append(country)
 
         return ", ".join(parts) if parts else "Unknown Location"

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../data/models/device_models.dart';
-import '../../../data/services/device_api_service.dart';
-import '../../../core/errors/app_exception.dart';
-import '../../widgets/buttons/custom_buttons.dart';
-import '../../widgets/dialog_components.dart';
-import '../../widgets/loading_indicators.dart';
-import '../../widgets/empty_state.dart';
+import 'package:flutter_auth_template/data/models/device_models.dart';
+import 'package:flutter_auth_template/data/services/device_api_service.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
+import 'package:flutter_auth_template/presentation/widgets/buttons/custom_buttons.dart';
+import 'package:flutter_auth_template/presentation/widgets/dialog_components.dart';
+import 'package:flutter_auth_template/presentation/widgets/loading_indicators.dart';
+import 'package:flutter_auth_template/presentation/widgets/empty_state.dart';
 
 class DeviceManagementPage extends ConsumerStatefulWidget {
   const DeviceManagementPage({super.key});

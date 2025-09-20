@@ -20,7 +20,7 @@ export function PasswordStrengthIndicator({
   password,
   showDetails = true,
   className,
-}: PasswordStrengthIndicatorProps): JSX.Element {
+}: PasswordStrengthIndicatorProps): React.ReactElement {
   const passwordStrength = usePasswordStrength(password);
 
   if (!password) {
@@ -85,7 +85,7 @@ interface CriteriaItemProps {
   text: string;
 }
 
-function CriteriaItem({ met, text }: CriteriaItemProps): JSX.Element {
+function CriteriaItem({ met, text }: CriteriaItemProps): React.ReactElement {
   return (
     <div
       className={cn(

@@ -27,9 +27,7 @@ def generate_request_id() -> str:
 
 
 def success_response(
-    data: T,
-    request_id: Optional[str] = None,
-    message: Optional[str] = None
+    data: T, request_id: Optional[str] = None, message: Optional[str] = None
 ) -> StandardResponse[T]:
     """
     Create a standardized success response.
@@ -54,7 +52,7 @@ def error_response(
     message: str,
     details: Optional[Dict[str, Any]] = None,
     request_id: Optional[str] = None,
-    status_code: int = 400
+    status_code: int = 400,
 ) -> StandardResponse[None]:
     """
     Create a standardized error response.
@@ -72,7 +70,9 @@ def error_response(
     return create_error_response(code, message, details, request_id)
 
 
-def format_user_response(user: User, include_permissions: bool = False) -> Dict[str, Any]:
+def format_user_response(
+    user: User, include_permissions: bool = False
+) -> Dict[str, Any]:
     """
     Format a User model to match Flutter expectations using the UserResponse schema.
 
@@ -87,30 +87,45 @@ def format_user_response(user: User, include_permissions: bool = False) -> Dict[
     permissions = []
     if include_permissions:
         permissions_set = set()
-        if hasattr(user, 'roles') and user.roles:
+        if hasattr(user, "roles") and user.roles:
             for role in user.roles:
-                if hasattr(role, 'permissions'):
+                if hasattr(role, "permissions"):
                     for permission in role.permissions:
-                        permissions_set.add(f"{permission.resource}:{permission.action}")
+                        permissions_set.add(
+                            f"{permission.resource}:{permission.action}"
+                        )
 
         # Add default permissions for authenticated users
         permissions_set.update(["profile:read", "profile:write"])
 
         # Add role-based permissions
-        user_roles = [role.name for role in user.roles] if hasattr(user, 'roles') and user.roles else []
+        user_roles = (
+            [role.name for role in user.roles]
+            if hasattr(user, "roles") and user.roles
+            else []
+        )
         for role_name in user_roles:
             if role_name in ["admin", "super_admin"]:
-                permissions_set.update([
-                    "users:read", "users:write", "users:delete",
-                    "admin:access", "roles:manage"
-                ])
+                permissions_set.update(
+                    [
+                        "users:read",
+                        "users:write",
+                        "users:delete",
+                        "admin:access",
+                        "roles:manage",
+                    ]
+                )
             elif role_name == "moderator":
                 permissions_set.update(["users:read", "content:manage"])
 
         permissions = list(permissions_set)
 
     # Get roles list
-    roles = [role.name for role in user.roles] if hasattr(user, 'roles') and user.roles else []
+    roles = (
+        [role.name for role in user.roles]
+        if hasattr(user, "roles") and user.roles
+        else []
+    )
 
     # Compute display name - User model only has full_name, not first_name/last_name
     full_name = user.full_name or ""
@@ -138,9 +153,15 @@ def format_user_response(user: User, include_permissions: bool = False) -> Dict[
         "isTwoFactorEnabled": user.two_factor_enabled,  # Use alias name directly
         "roles": roles,
         "permissions": permissions,
-        "createdAt": user.created_at.isoformat() if user.created_at else "",  # Use alias name directly
-        "updatedAt": user.updated_at.isoformat() if user.updated_at else "",  # Use alias name directly
-        "lastLoginAt": user.last_login.isoformat() if user.last_login else None,  # Use alias name directly
+        "createdAt": (
+            user.created_at.isoformat() if user.created_at else ""
+        ),  # Use alias name directly
+        "updatedAt": (
+            user.updated_at.isoformat() if user.updated_at else ""
+        ),  # Use alias name directly
+        "lastLoginAt": (
+            user.last_login.isoformat() if user.last_login else None
+        ),  # Use alias name directly
         "is_active": user.is_active,
         # Backward compatibility fields
         "is_verified": user.email_verified,
@@ -150,7 +171,12 @@ def format_user_response(user: User, include_permissions: bool = False) -> Dict[
     return user_data
 
 
-def format_auth_response(user: User, access_token: str, refresh_token: Optional[str] = None, expires_in: int = 900) -> Dict[str, Any]:
+def format_auth_response(
+    user: User,
+    access_token: str,
+    refresh_token: Optional[str] = None,
+    expires_in: int = 900,
+) -> Dict[str, Any]:
     """
     Format authentication response data that matches Flutter expectations.
 
@@ -177,7 +203,7 @@ def login_success_response(
     access_token: str,
     refresh_token: Optional[str] = None,
     expires_in: int = 900,
-    request_id: Optional[str] = None
+    request_id: Optional[str] = None,
 ) -> StandardResponse[Dict[str, Any]]:
     """
     Create a standardized login success response.
@@ -200,7 +226,7 @@ def token_refresh_success_response(
     access_token: str,
     refresh_token: Optional[str] = None,
     expires_in: int = 900,
-    request_id: Optional[str] = None
+    request_id: Optional[str] = None,
 ) -> StandardResponse[Dict[str, Any]]:
     """
     Create a standardized token refresh success response.
@@ -224,8 +250,7 @@ def token_refresh_success_response(
 
 
 def user_profile_response(
-    user: User,
-    request_id: Optional[str] = None
+    user: User, request_id: Optional[str] = None
 ) -> StandardResponse[Dict[str, Any]]:
     """
     Create a standardized user profile response.
@@ -242,8 +267,7 @@ def user_profile_response(
 
 
 def message_response(
-    message: str,
-    request_id: Optional[str] = None
+    message: str, request_id: Optional[str] = None
 ) -> StandardResponse[Dict[str, str]]:
     """
     Create a standardized message response.
@@ -259,8 +283,7 @@ def message_response(
 
 
 def permissions_response(
-    permissions: List[str],
-    request_id: Optional[str] = None
+    permissions: List[str], request_id: Optional[str] = None
 ) -> StandardResponse[List[str]]:
     """
     Create a standardized permissions response.
@@ -276,22 +299,26 @@ def permissions_response(
 
 
 # Error response helpers with common error codes
-def invalid_credentials_error(request_id: Optional[str] = None) -> StandardResponse[None]:
+def invalid_credentials_error(
+    request_id: Optional[str] = None,
+) -> StandardResponse[None]:
     """Create invalid credentials error response."""
     return error_response(
         ErrorCodes.INVALID_CREDENTIALS,
         "Invalid email or password",
-        request_id=request_id
+        request_id=request_id,
     )
 
 
-def email_already_exists_error(email: str, request_id: Optional[str] = None) -> StandardResponse[None]:
+def email_already_exists_error(
+    email: str, request_id: Optional[str] = None
+) -> StandardResponse[None]:
     """Create email already exists error response."""
     return error_response(
         ErrorCodes.EMAIL_ALREADY_EXISTS,
         "An account with this email already exists",
         details={"email": email},
-        request_id=request_id
+        request_id=request_id,
     )
 
 
@@ -300,16 +327,18 @@ def account_locked_error(request_id: Optional[str] = None) -> StandardResponse[N
     return error_response(
         ErrorCodes.ACCOUNT_LOCKED,
         "Account is temporarily locked due to multiple failed login attempts",
-        request_id=request_id
+        request_id=request_id,
     )
 
 
-def email_not_verified_error(request_id: Optional[str] = None) -> StandardResponse[None]:
+def email_not_verified_error(
+    request_id: Optional[str] = None,
+) -> StandardResponse[None]:
     """Create email not verified error response."""
     return error_response(
         ErrorCodes.EMAIL_NOT_VERIFIED,
         "Email address has not been verified. Please check your email and verify your account.",
-        request_id=request_id
+        request_id=request_id,
     )
 
 
@@ -318,44 +347,39 @@ def token_expired_error(request_id: Optional[str] = None) -> StandardResponse[No
     return error_response(
         ErrorCodes.TOKEN_EXPIRED,
         "Token has expired. Please log in again.",
-        request_id=request_id
+        request_id=request_id,
     )
 
 
 def invalid_token_error(request_id: Optional[str] = None) -> StandardResponse[None]:
     """Create invalid token error response."""
     return error_response(
-        ErrorCodes.INVALID_TOKEN,
-        "Invalid token provided",
-        request_id=request_id
+        ErrorCodes.INVALID_TOKEN, "Invalid token provided", request_id=request_id
     )
 
 
-def validation_error(message: str, details: Optional[Dict[str, Any]] = None, request_id: Optional[str] = None) -> StandardResponse[None]:
+def validation_error(
+    message: str,
+    details: Optional[Dict[str, Any]] = None,
+    request_id: Optional[str] = None,
+) -> StandardResponse[None]:
     """Create validation error response."""
     return error_response(
-        ErrorCodes.VALIDATION_ERROR,
-        message,
-        details=details,
-        request_id=request_id
+        ErrorCodes.VALIDATION_ERROR, message, details=details, request_id=request_id
     )
 
 
-def server_error(message: str = "An internal server error occurred", request_id: Optional[str] = None) -> StandardResponse[None]:
+def server_error(
+    message: str = "An internal server error occurred", request_id: Optional[str] = None
+) -> StandardResponse[None]:
     """Create server error response."""
-    return error_response(
-        ErrorCodes.SERVER_ERROR,
-        message,
-        request_id=request_id
-    )
+    return error_response(ErrorCodes.SERVER_ERROR, message, request_id=request_id)
 
 
 def user_not_found_error(request_id: Optional[str] = None) -> StandardResponse[None]:
     """Create user not found error response."""
     return error_response(
-        ErrorCodes.USER_NOT_FOUND,
-        "User not found",
-        request_id=request_id
+        ErrorCodes.USER_NOT_FOUND, "User not found", request_id=request_id
     )
 
 
@@ -364,24 +388,28 @@ def permission_denied_error(request_id: Optional[str] = None) -> StandardRespons
     return error_response(
         ErrorCodes.PERMISSION_DENIED,
         "Permission denied. You don't have access to this resource.",
-        request_id=request_id
+        request_id=request_id,
     )
 
 
-def two_factor_required_error(temp_token: str, request_id: Optional[str] = None) -> StandardResponse[None]:
+def two_factor_required_error(
+    temp_token: str, request_id: Optional[str] = None
+) -> StandardResponse[None]:
     """Create two-factor authentication required error response."""
     return error_response(
         ErrorCodes.TWO_FACTOR_REQUIRED,
         "Two-factor authentication is required",
         details={"temp_token": temp_token},
-        request_id=request_id
+        request_id=request_id,
     )
 
 
-def rate_limit_exceeded_error(request_id: Optional[str] = None) -> StandardResponse[None]:
+def rate_limit_exceeded_error(
+    request_id: Optional[str] = None,
+) -> StandardResponse[None]:
     """Create rate limit exceeded error response."""
     return error_response(
         ErrorCodes.RATE_LIMIT_EXCEEDED,
         "Too many requests. Please try again later.",
-        request_id=request_id
+        request_id=request_id,
     )

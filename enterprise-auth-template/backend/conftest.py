@@ -47,6 +47,42 @@ TestSessionLocal = async_sessionmaker(
 )
 
 
+def _drop_tables_with_circular_deps(connection):
+    """Drop tables in correct order to avoid circular dependency issues."""
+    from sqlalchemy import text
+
+    # First disable foreign key checks if using PostgreSQL
+    try:
+        # Drop tables that have circular dependencies first by removing constraints
+        connection.execute(text("SET session_replication_role = replica;"))
+
+        # Use standard drop_all which should now work without FK checks
+        Base.metadata.drop_all(connection)
+
+        # Re-enable foreign key checks
+        connection.execute(text("SET session_replication_role = DEFAULT;"))
+    except Exception:
+        # Fallback: try dropping without constraint checks
+        try:
+            Base.metadata.drop_all(connection)
+        except Exception:
+            # Last resort: drop tables individually in reverse dependency order
+            table_names = [
+                'webhook_deliveries', 'webhooks', 'login_attempts',
+                'user_devices', 'notifications', 'notification_templates',
+                'api_keys', 'user_role_audit', 'role_permissions',
+                'user_roles_association', 'user_sessions', 'magic_links',
+                'email_verification_tokens', 'password_reset_tokens',
+                'refresh_tokens', 'audit_logs', 'users', 'organizations',
+                'permissions', 'roles'
+            ]
+            for table_name in table_names:
+                try:
+                    connection.execute(text(f"DROP TABLE IF EXISTS {table_name} CASCADE;"))
+                except Exception:
+                    pass  # Ignore errors for non-existent tables
+
+
 @pytest.fixture(scope="session")
 def event_loop():
     """Create an instance of the default event loop for the test session."""
@@ -66,9 +102,9 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
     async with TestSessionLocal() as session:
         yield session
 
-    # Drop tables after test
+    # Drop tables after test - handle circular dependencies
     async with test_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(_drop_tables_with_circular_deps)
 
 
 @pytest.fixture

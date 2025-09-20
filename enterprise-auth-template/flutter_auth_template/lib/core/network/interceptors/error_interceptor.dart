@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import '../../constants/api_constants.dart';
-import '../../errors/app_exception.dart';
+import 'package:flutter_auth_template/core/constants/api_constants.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
 
 class ErrorInterceptor extends Interceptor {
   @override

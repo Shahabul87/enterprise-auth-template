@@ -14,8 +14,17 @@ from enum import Enum
 
 import structlog
 from sqlalchemy import (
-    select, and_, or_, desc, asc, func, text,
-    cast, String, Integer, DateTime
+    select,
+    and_,
+    or_,
+    desc,
+    asc,
+    func,
+    text,
+    cast,
+    String,
+    Integer,
+    DateTime,
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -36,6 +45,7 @@ logger = structlog.get_logger(__name__)
 
 class SearchScope(str, Enum):
     """Available search scopes."""
+
     USERS = "users"
     AUDIT_LOGS = "audit_logs"
     SESSIONS = "sessions"
@@ -46,6 +56,7 @@ class SearchScope(str, Enum):
 
 class SearchOperator(str, Enum):
     """Search operators for query building."""
+
     EQUALS = "eq"
     NOT_EQUALS = "ne"
     GREATER_THAN = "gt"
@@ -65,17 +76,20 @@ class SearchOperator(str, Enum):
 
 class SortOrder(str, Enum):
     """Sort order options."""
+
     ASC = "asc"
     DESC = "desc"
 
 
 class SearchError(Exception):
     """Base exception for search-related errors."""
+
     pass
 
 
 class SearchValidationError(SearchError):
     """Exception raised when search validation fails."""
+
     pass
 
 
@@ -100,7 +114,7 @@ class SearchService:
         self,
         session: AsyncSession,
         cache_service: Optional[CacheService] = None,
-        event_emitter: Optional[EventEmitter] = None
+        event_emitter: Optional[EventEmitter] = None,
     ) -> None:
         """
         Initialize search service.
@@ -115,9 +129,9 @@ class SearchService:
         self.event_emitter = event_emitter or EventEmitter()
 
         # Search configuration
-        self.max_results = getattr(settings, 'MAX_SEARCH_RESULTS', 1000)
-        self.default_page_size = getattr(settings, 'DEFAULT_SEARCH_PAGE_SIZE', 20)
-        self.cache_ttl = getattr(settings, 'SEARCH_CACHE_TTL', 300)  # 5 minutes
+        self.max_results = getattr(settings, "MAX_SEARCH_RESULTS", 1000)
+        self.default_page_size = getattr(settings, "DEFAULT_SEARCH_PAGE_SIZE", 20)
+        self.cache_ttl = getattr(settings, "SEARCH_CACHE_TTL", 300)  # 5 minutes
 
         # Model mappings for search scopes
         self.scope_models = {
@@ -131,25 +145,49 @@ class SearchService:
         # Searchable fields for each scope
         self.searchable_fields = {
             SearchScope.USERS: [
-                'email', 'full_name', 'phone_number',
-                'created_at', 'last_login', 'is_active', 'is_verified'
+                "email",
+                "full_name",
+                "phone_number",
+                "created_at",
+                "last_login",
+                "is_active",
+                "is_verified",
             ],
             SearchScope.AUDIT_LOGS: [
-                'action', 'user_email', 'description', 'result',
-                'ip_address', 'user_agent', 'timestamp'
+                "action",
+                "user_email",
+                "description",
+                "result",
+                "ip_address",
+                "user_agent",
+                "timestamp",
             ],
             SearchScope.SESSIONS: [
-                'user_id', 'ip_address', 'user_agent', 'created_at',
-                'ended_at', 'is_active'
+                "user_id",
+                "ip_address",
+                "user_agent",
+                "created_at",
+                "ended_at",
+                "is_active",
             ],
             SearchScope.NOTIFICATIONS: [
-                'title', 'message', 'type', 'category', 'priority',
-                'status', 'created_at', 'read_at'
+                "title",
+                "message",
+                "type",
+                "category",
+                "priority",
+                "status",
+                "created_at",
+                "read_at",
             ],
             SearchScope.WEBHOOKS: [
-                'event_type', 'status', 'response_status', 'created_at',
-                'delivered_at', 'attempt_count'
-            ]
+                "event_type",
+                "status",
+                "response_status",
+                "created_at",
+                "delivered_at",
+                "attempt_count",
+            ],
         }
 
     async def search(
@@ -163,7 +201,7 @@ class SearchService:
         highlight: bool = True,
         facets: Optional[List[str]] = None,
         user_id: Optional[str] = None,
-        include_analytics: bool = False
+        include_analytics: bool = False,
     ) -> Dict[str, Any]:
         """
         Perform comprehensive search across specified scopes.
@@ -189,7 +227,9 @@ class SearchService:
         """
         try:
             # Validate search parameters
-            await self._validate_search_params(query, scope, filters, sort, page, page_size)
+            await self._validate_search_params(
+                query, scope, filters, sort, page, page_size
+            )
 
             # Check user permissions
             if user_id:
@@ -201,13 +241,17 @@ class SearchService:
             offset = (page - 1) * page_size
 
             # Generate cache key
-            cache_key = self._generate_cache_key(query, scope, filters, sort, page, page_size)
+            cache_key = self._generate_cache_key(
+                query, scope, filters, sort, page, page_size
+            )
 
             # Try to get cached results
             cached_results = await self.cache_service.get(cache_key)
             if cached_results and not include_analytics:
                 results = json.loads(cached_results)
-                await self._log_search_event(query, scope, user_id, len(results.get("items", [])), True)
+                await self._log_search_event(
+                    query, scope, user_id, len(results.get("items", [])), True
+                )
                 return results
 
             # Execute search
@@ -222,28 +266,31 @@ class SearchService:
                 "page": page,
                 "page_size": page_size,
                 "total_results": search_results["total_count"],
-                "total_pages": (search_results["total_count"] + page_size - 1) // page_size,
+                "total_pages": (search_results["total_count"] + page_size - 1)
+                // page_size,
                 "items": search_results["items"],
                 "facets": search_results.get("facets", {}),
                 "suggestions": search_results.get("suggestions", []),
                 "search_time_ms": search_results["search_time_ms"],
                 "cached": False,
-                "timestamp": datetime.utcnow().isoformat()
+                "timestamp": datetime.utcnow().isoformat(),
             }
 
             # Add analytics if requested
             if include_analytics:
-                response["analytics"] = await self._get_search_analytics(query, scope, user_id)
+                response["analytics"] = await self._get_search_analytics(
+                    query, scope, user_id
+                )
 
             # Cache results
             await self.cache_service.set(
-                cache_key,
-                json.dumps(response, default=str),
-                ttl=self.cache_ttl
+                cache_key, json.dumps(response, default=str), ttl=self.cache_ttl
             )
 
             # Log search event
-            await self._log_search_event(query, scope, user_id, search_results["total_count"], False)
+            await self._log_search_event(
+                query, scope, user_id, search_results["total_count"], False
+            )
 
             return response
 
@@ -255,7 +302,7 @@ class SearchService:
                 query=query,
                 scope=scope.value,
                 user_id=user_id,
-                error=str(e)
+                error=str(e),
             )
             raise SearchError(f"Search execution failed: {str(e)}")
 
@@ -265,7 +312,7 @@ class SearchService:
         scope: SearchScope,
         field: str,
         limit: int = 10,
-        user_id: Optional[str] = None
+        user_id: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
         """
         Get autocomplete suggestions for a field.
@@ -283,7 +330,9 @@ class SearchService:
         try:
             # Validate field is searchable
             if field not in self.searchable_fields.get(scope, []):
-                raise SearchValidationError(f"Field {field} is not searchable in scope {scope}")
+                raise SearchValidationError(
+                    f"Field {field} is not searchable in scope {scope}"
+                )
 
             # Check permissions
             if user_id:
@@ -303,13 +352,13 @@ class SearchService:
                 raise SearchError(f"No model found for scope {scope}")
 
             # Build autocomplete query
-            suggestions = await self._get_autocomplete_suggestions(model, field, query, limit)
+            suggestions = await self._get_autocomplete_suggestions(
+                model, field, query, limit
+            )
 
             # Cache suggestions
             await self.cache_service.set(
-                cache_key,
-                json.dumps(suggestions, default=str),
-                ttl=self.cache_ttl
+                cache_key, json.dumps(suggestions, default=str), ttl=self.cache_ttl
             )
 
             return suggestions
@@ -322,7 +371,7 @@ class SearchService:
                 query=query,
                 scope=scope.value,
                 field=field,
-                error=str(e)
+                error=str(e),
             )
             raise SearchError(f"Autocomplete failed: {str(e)}")
 
@@ -334,7 +383,7 @@ class SearchService:
         scope: SearchScope,
         filters: Optional[List[Dict[str, Any]]] = None,
         description: Optional[str] = None,
-        is_public: bool = False
+        is_public: bool = False,
     ) -> str:
         """
         Save a search for later use.
@@ -364,15 +413,13 @@ class SearchService:
                 "is_public": is_public,
                 "created_at": datetime.utcnow().isoformat(),
                 "last_used_at": None,
-                "use_count": 0
+                "use_count": 0,
             }
 
             # Store saved search
             search_key = f"saved_search:{search_id}"
             await self.cache_service.set(
-                search_key,
-                json.dumps(saved_search),
-                ttl=365 * 24 * 3600  # 1 year
+                search_key, json.dumps(saved_search), ttl=365 * 24 * 3600  # 1 year
             )
 
             # Add to user's saved searches list
@@ -386,44 +433,34 @@ class SearchService:
 
             user_search_ids.append(search_id)
             await self.cache_service.set(
-                user_searches_key,
-                json.dumps(user_search_ids),
-                ttl=365 * 24 * 3600
+                user_searches_key, json.dumps(user_search_ids), ttl=365 * 24 * 3600
             )
 
             # Emit audit event
-            await self.event_emitter.emit(Event(
-                event_type="search.saved",
-                data={
-                    "search_id": search_id,
-                    "user_id": user_id,
-                    "name": name,
-                    "scope": scope.value
-                }
-            ))
-
-            logger.info(
-                "Search saved",
-                search_id=search_id,
-                user_id=user_id,
-                name=name
+            await self.event_emitter.emit(
+                Event(
+                    event_type="search.saved",
+                    data={
+                        "search_id": search_id,
+                        "user_id": user_id,
+                        "name": name,
+                        "scope": scope.value,
+                    },
+                )
             )
+
+            logger.info("Search saved", search_id=search_id, user_id=user_id, name=name)
 
             return search_id
 
         except Exception as e:
             logger.error(
-                "Failed to save search",
-                user_id=user_id,
-                name=name,
-                error=str(e)
+                "Failed to save search", user_id=user_id, name=name, error=str(e)
             )
             raise SearchError(f"Failed to save search: {str(e)}")
 
     async def get_saved_searches(
-        self,
-        user_id: str,
-        include_public: bool = True
+        self, user_id: str, include_public: bool = True
     ) -> List[Dict[str, Any]]:
         """
         Get user's saved searches.
@@ -458,24 +495,16 @@ class SearchService:
             # Sort by last used, then by created date
             saved_searches.sort(
                 key=lambda x: (x.get("last_used_at") or "", x["created_at"]),
-                reverse=True
+                reverse=True,
             )
 
             return saved_searches
 
         except Exception as e:
-            logger.error(
-                "Failed to get saved searches",
-                user_id=user_id,
-                error=str(e)
-            )
+            logger.error("Failed to get saved searches", user_id=user_id, error=str(e))
             raise SearchError(f"Failed to get saved searches: {str(e)}")
 
-    async def delete_saved_search(
-        self,
-        search_id: str,
-        user_id: str
-    ) -> bool:
+    async def delete_saved_search(self, search_id: str, user_id: str) -> bool:
         """
         Delete a saved search.
 
@@ -498,7 +527,9 @@ class SearchService:
 
             # Check permissions
             if saved_search["user_id"] != user_id:
-                raise SearchError("Permission denied: Cannot delete another user's search")
+                raise SearchError(
+                    "Permission denied: Cannot delete another user's search"
+                )
 
             # Delete saved search
             await self.cache_service.delete(search_key)
@@ -514,14 +545,10 @@ class SearchService:
                     await self.cache_service.set(
                         user_searches_key,
                         json.dumps(user_search_ids),
-                        ttl=365 * 24 * 3600
+                        ttl=365 * 24 * 3600,
                     )
 
-            logger.info(
-                "Saved search deleted",
-                search_id=search_id,
-                user_id=user_id
-            )
+            logger.info("Saved search deleted", search_id=search_id, user_id=user_id)
 
             return True
 
@@ -532,14 +559,12 @@ class SearchService:
                 "Failed to delete saved search",
                 search_id=search_id,
                 user_id=user_id,
-                error=str(e)
+                error=str(e),
             )
             raise SearchError(f"Failed to delete saved search: {str(e)}")
 
     async def get_search_analytics(
-        self,
-        user_id: Optional[str] = None,
-        time_range: str = "7d"
+        self, user_id: Optional[str] = None, time_range: str = "7d"
     ) -> Dict[str, Any]:
         """
         Get search analytics and statistics.
@@ -573,7 +598,7 @@ class SearchService:
                 "search_trends": [],
                 "avg_results_per_search": 0,
                 "cache_hit_rate": 0.0,
-                "generated_at": datetime.utcnow().isoformat()
+                "generated_at": datetime.utcnow().isoformat(),
             }
 
             # In production, this would query actual analytics data
@@ -585,7 +610,7 @@ class SearchService:
                 "Failed to get search analytics",
                 user_id=user_id,
                 time_range=time_range,
-                error=str(e)
+                error=str(e),
             )
             return {"error": str(e)}
 
@@ -596,7 +621,7 @@ class SearchService:
         filters: Optional[List[Dict[str, Any]]],
         sort: Optional[List[Dict[str, str]]],
         page: int,
-        page_size: Optional[int]
+        page_size: Optional[int],
     ) -> None:
         """Validate search parameters."""
         if not query or len(query.strip()) < 1:
@@ -609,7 +634,9 @@ class SearchService:
             raise SearchValidationError("Page must be >= 1")
 
         if page_size and (page_size < 1 or page_size > self.max_results):
-            raise SearchValidationError(f"Page size must be between 1 and {self.max_results}")
+            raise SearchValidationError(
+                f"Page size must be between 1 and {self.max_results}"
+            )
 
         # Validate filters
         if filters:
@@ -648,9 +675,15 @@ class SearchService:
             restricted_scopes = [SearchScope.AUDIT_LOGS]
             if scope in restricted_scopes:
                 # Check if user has admin role for sensitive data
-                user_roles = [role.name.lower() for role in user.roles] if hasattr(user, 'roles') else []
-                if not any(role in user_roles for role in ['admin', 'super_admin']):
-                    raise SearchError(f"Insufficient permissions to search {scope.value}")
+                user_roles = (
+                    [role.name.lower() for role in user.roles]
+                    if hasattr(user, "roles")
+                    else []
+                )
+                if not any(role in user_roles for role in ["admin", "super_admin"]):
+                    raise SearchError(
+                        f"Insufficient permissions to search {scope.value}"
+                    )
 
         except SearchError:
             raise
@@ -659,7 +692,7 @@ class SearchService:
                 "Permission check failed",
                 user_id=user_id,
                 scope=scope.value,
-                error=str(e)
+                error=str(e),
             )
             raise SearchError("Permission validation failed")
 
@@ -672,7 +705,7 @@ class SearchService:
         offset: int,
         limit: int,
         highlight: bool,
-        facets: Optional[List[str]]
+        facets: Optional[List[str]],
     ) -> Dict[str, Any]:
         """Execute the actual search query."""
         start_time = datetime.utcnow()
@@ -680,7 +713,9 @@ class SearchService:
         try:
             if scope == SearchScope.ALL:
                 # Search across all scopes
-                results = await self._search_all_scopes(query, filters, sort, offset, limit)
+                results = await self._search_all_scopes(
+                    query, filters, sort, offset, limit
+                )
             else:
                 # Search specific scope
                 results = await self._search_single_scope(
@@ -694,10 +729,7 @@ class SearchService:
 
         except Exception as e:
             logger.error(
-                "Search execution error",
-                query=query,
-                scope=scope.value,
-                error=str(e)
+                "Search execution error", query=query, scope=scope.value, error=str(e)
             )
             raise SearchError(f"Search execution error: {str(e)}")
 
@@ -710,7 +742,7 @@ class SearchService:
         offset: int,
         limit: int,
         highlight: bool,
-        facets: Optional[List[str]]
+        facets: Optional[List[str]],
     ) -> Dict[str, Any]:
         """Search within a single scope."""
         model = self.scope_models.get(scope)
@@ -727,7 +759,9 @@ class SearchService:
 
         # Add filters
         if filters:
-            filter_conditions = await self._build_filter_conditions(model, filters, scope)
+            filter_conditions = await self._build_filter_conditions(
+                model, filters, scope
+            )
             if filter_conditions:
                 query_obj = query_obj.where(and_(*filter_conditions))
 
@@ -772,13 +806,15 @@ class SearchService:
         # Generate facets if requested
         facets_data = {}
         if facets:
-            facets_data = await self._generate_facets(model, facets, search_conditions, filters)
+            facets_data = await self._generate_facets(
+                model, facets, search_conditions, filters
+            )
 
         return {
             "items": items_data,
             "total_count": total_count,
             "facets": facets_data,
-            "suggestions": await self._generate_suggestions(query, scope)
+            "suggestions": await self._generate_suggestions(query, scope),
         }
 
     async def _search_all_scopes(
@@ -787,15 +823,20 @@ class SearchService:
         filters: Optional[List[Dict[str, Any]]],
         sort: Optional[List[Dict[str, str]]],
         offset: int,
-        limit: int
+        limit: int,
     ) -> Dict[str, Any]:
         """Search across all scopes."""
         all_results = []
         total_count = 0
 
         # Search each scope
-        for scope in [SearchScope.USERS, SearchScope.AUDIT_LOGS, SearchScope.SESSIONS,
-                     SearchScope.NOTIFICATIONS, SearchScope.WEBHOOKS]:
+        for scope in [
+            SearchScope.USERS,
+            SearchScope.AUDIT_LOGS,
+            SearchScope.SESSIONS,
+            SearchScope.NOTIFICATIONS,
+            SearchScope.WEBHOOKS,
+        ]:
             try:
                 scope_results = await self._search_single_scope(
                     query, scope, filters, sort, 0, limit, False, None
@@ -819,22 +860,19 @@ class SearchService:
             reverse = sort_direction == SortOrder.DESC
 
             try:
-                all_results.sort(
-                    key=lambda x: x.get(sort_field, ""),
-                    reverse=reverse
-                )
+                all_results.sort(key=lambda x: x.get(sort_field, ""), reverse=reverse)
             except Exception:
                 # If sorting fails, keep original order
                 pass
 
         # Apply pagination
-        paginated_results = all_results[offset:offset + limit]
+        paginated_results = all_results[offset : offset + limit]
 
         return {
             "items": paginated_results,
             "total_count": total_count,
             "facets": {},
-            "suggestions": []
+            "suggestions": [],
         }
 
     async def _build_search_conditions(self, model, query: str, scope: SearchScope):
@@ -850,13 +888,15 @@ class SearchService:
                 field = getattr(model, field_name)
 
                 # For string fields, use ILIKE for case-insensitive search
-                if hasattr(field.type, 'python_type') and field.type.python_type == str:
+                if hasattr(field.type, "python_type") and field.type.python_type == str:
                     for term in terms:
                         conditions.append(field.ilike(f"%{term}%"))
 
         return conditions
 
-    async def _build_filter_conditions(self, model, filters: List[Dict[str, Any]], scope: SearchScope):
+    async def _build_filter_conditions(
+        self, model, filters: List[Dict[str, Any]], scope: SearchScope
+    ):
         """Build filter conditions from filter specifications."""
         conditions = []
 
@@ -921,10 +961,7 @@ class SearchService:
         return result
 
     async def _generate_highlights(
-        self,
-        item_data: Dict[str, Any],
-        query: str,
-        scope: SearchScope
+        self, item_data: Dict[str, Any], query: str, scope: SearchScope
     ) -> Dict[str, str]:
         """Generate search result highlights."""
         highlights = {}
@@ -940,7 +977,9 @@ class SearchService:
                 for term in terms:
                     if len(term) > 2:  # Only highlight terms longer than 2 chars
                         pattern = re.compile(re.escape(term), re.IGNORECASE)
-                        highlighted_value = pattern.sub(f"<mark>{term}</mark>", highlighted_value)
+                        highlighted_value = pattern.sub(
+                            f"<mark>{term}</mark>", highlighted_value
+                        )
 
                 if highlighted_value != field_value:
                     highlights[field_name] = highlighted_value
@@ -952,7 +991,7 @@ class SearchService:
         model,
         facet_fields: List[str],
         search_conditions,
-        filters: Optional[List[Dict[str, Any]]]
+        filters: Optional[List[Dict[str, Any]]],
     ) -> Dict[str, Any]:
         """Generate facets for search results."""
         facets = {}
@@ -962,7 +1001,7 @@ class SearchService:
                 field = getattr(model, field_name)
 
                 # Build facet query
-                facet_query = select(field, func.count().label('count')).group_by(field)
+                facet_query = select(field, func.count().label("count")).group_by(field)
 
                 # Apply search conditions
                 if search_conditions:
@@ -985,15 +1024,16 @@ class SearchService:
                     facet_values = []
 
                     for row in result:
-                        facet_values.append({
-                            "value": row[0],
-                            "count": row[1]
-                        })
+                        facet_values.append({"value": row[0], "count": row[1]})
 
-                    facets[field_name] = sorted(facet_values, key=lambda x: x["count"], reverse=True)
+                    facets[field_name] = sorted(
+                        facet_values, key=lambda x: x["count"], reverse=True
+                    )
 
                 except Exception as e:
-                    logger.warning(f"Failed to generate facet for {field_name}: {str(e)}")
+                    logger.warning(
+                        f"Failed to generate facet for {field_name}: {str(e)}"
+                    )
                     facets[field_name] = []
 
         return facets
@@ -1013,11 +1053,7 @@ class SearchService:
         return suggestions[:5]  # Limit to 5 suggestions
 
     async def _get_autocomplete_suggestions(
-        self,
-        model,
-        field: str,
-        query: str,
-        limit: int
+        self, model, field: str, query: str, limit: int
     ) -> List[Dict[str, Any]]:
         """Get autocomplete suggestions for a field."""
         if not hasattr(model, field):
@@ -1027,7 +1063,7 @@ class SearchService:
 
         # Build autocomplete query
         autocomplete_query = (
-            select(field_obj, func.count().label('count'))
+            select(field_obj, func.count().label("count"))
             .where(field_obj.ilike(f"{query}%"))
             .group_by(field_obj)
             .order_by(desc(func.count()))
@@ -1040,10 +1076,7 @@ class SearchService:
 
             for row in result:
                 if row[0]:  # Skip null values
-                    suggestions.append({
-                        "value": row[0],
-                        "count": row[1]
-                    })
+                    suggestions.append({"value": row[0], "count": row[1]})
 
             return suggestions
 
@@ -1057,22 +1090,24 @@ class SearchService:
         scope: SearchScope,
         user_id: Optional[str],
         result_count: int,
-        from_cache: bool
+        from_cache: bool,
     ) -> None:
         """Log search event for analytics."""
         try:
             # Emit search event
-            await self.event_emitter.emit(Event(
-                event_type="search.performed",
-                data={
-                    "query": query,
-                    "scope": scope.value,
-                    "user_id": user_id,
-                    "result_count": result_count,
-                    "from_cache": from_cache,
-                    "timestamp": datetime.utcnow().isoformat()
-                }
-            ))
+            await self.event_emitter.emit(
+                Event(
+                    event_type="search.performed",
+                    data={
+                        "query": query,
+                        "scope": scope.value,
+                        "user_id": user_id,
+                        "result_count": result_count,
+                        "from_cache": from_cache,
+                        "timestamp": datetime.utcnow().isoformat(),
+                    },
+                )
+            )
 
             # Store search analytics data
             analytics_key = f"search_analytics:{datetime.utcnow().strftime('%Y%m%d%H')}"
@@ -1094,17 +1129,14 @@ class SearchService:
             await self.cache_service.set(
                 analytics_key,
                 json.dumps(analytics, default=list),
-                ttl=7 * 24 * 3600  # 7 days
+                ttl=7 * 24 * 3600,  # 7 days
             )
 
         except Exception as e:
             logger.error("Failed to log search event", error=str(e))
 
     async def _get_search_analytics(
-        self,
-        query: str,
-        scope: SearchScope,
-        user_id: Optional[str]
+        self, query: str, scope: SearchScope, user_id: Optional[str]
     ) -> Dict[str, Any]:
         """Get search-specific analytics."""
         try:
@@ -1112,7 +1144,7 @@ class SearchService:
                 "query_popularity": 0,
                 "avg_result_count": 0,
                 "last_searched": None,
-                "related_queries": []
+                "related_queries": [],
             }
         except Exception:
             return {}
@@ -1124,14 +1156,14 @@ class SearchService:
         filters: Optional[List[Dict[str, Any]]],
         sort: Optional[List[Dict[str, str]]],
         page: int,
-        page_size: int
+        page_size: int,
     ) -> str:
         """Generate cache key for search results."""
         key_parts = [
             f"search:{scope.value}",
             f"q:{query.lower()}",
             f"p:{page}",
-            f"s:{page_size}"
+            f"s:{page_size}",
         ]
 
         if filters:

@@ -1,10 +1,14 @@
 import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 /// Performance monitoring utility for tracking app performance
 class PerformanceMonitor {
   static final Map<String, Stopwatch> _operations = {};
   static final Map<String, List<int>> _metrics = {};
+  static final List<Duration> _frameTimes = [];
+  static bool _isFrameTrackingActive = false;
+  static DateTime? _frameTrackingStartTime;
 
   /// Start tracking a performance operation
   static void startOperation(String operationName) {
@@ -109,6 +113,9 @@ class PerformanceMonitor {
   static void clearMetrics() {
     _operations.clear();
     _metrics.clear();
+    _frameTimes.clear();
+    _isFrameTrackingActive = false;
+    _frameTrackingStartTime = null;
   }
 
   /// Log memory usage
@@ -169,6 +176,74 @@ class PerformanceMonitor {
     }
 
     return buffer.toString();
+  }
+
+  /// Start frame tracking for FPS monitoring
+  static void startFrameTracking() {
+    _isFrameTrackingActive = true;
+    _frameTimes.clear();
+    _frameTrackingStartTime = DateTime.now();
+    if (kDebugMode) {
+      developer.log('Started frame tracking', name: 'Performance');
+    }
+  }
+
+  /// Stop frame tracking
+  static void stopFrameTracking() {
+    _isFrameTrackingActive = false;
+    _frameTrackingStartTime = null;
+    if (kDebugMode) {
+      developer.log('Stopped frame tracking', name: 'Performance');
+    }
+  }
+
+  /// Record frame timing
+  static void onFrame(Duration frameDuration) {
+    if (!_isFrameTrackingActive) return;
+
+    _frameTimes.add(frameDuration);
+
+    // Detect jank (frames taking longer than 16.67ms for 60fps)
+    if (frameDuration.inMilliseconds > 16) {
+      if (kDebugMode) {
+        developer.log(
+          'Jank detected: ${frameDuration.inMilliseconds}ms frame',
+          name: 'Performance',
+          level: 900,
+        );
+      }
+    }
+  }
+
+  /// Calculate current FPS based on recorded frame times
+  static double calculateFPS() {
+    if (_frameTimes.isEmpty || _frameTrackingStartTime == null) return 0.0;
+
+    final now = DateTime.now();
+    final elapsedMilliseconds = now.difference(_frameTrackingStartTime!).inMilliseconds;
+
+    // If less than 1ms has passed, estimate based on frame times
+    if (elapsedMilliseconds < 1) {
+      if (_frameTimes.isEmpty) return 0.0;
+      final avgFrameTimeMs = _frameTimes.fold<int>(0, (sum, duration) => sum + duration.inMilliseconds) / _frameTimes.length;
+      return avgFrameTimeMs > 0 ? 1000.0 / avgFrameTimeMs : 0.0;
+    }
+
+    final elapsedSeconds = elapsedMilliseconds / 1000.0;
+    return _frameTimes.length / elapsedSeconds;
+  }
+
+  /// Get average frame time in milliseconds
+  static double getAverageFrameTime() {
+    if (_frameTimes.isEmpty) return 0.0;
+
+    final totalMs = _frameTimes.fold<int>(0, (sum, duration) => sum + duration.inMilliseconds);
+    return totalMs / _frameTimes.length;
+  }
+
+  /// Check if current FPS is below threshold (default 30fps)
+  static bool isPerformancePoor({double threshold = 30.0}) {
+    return calculateFPS() < threshold;
   }
 }
 

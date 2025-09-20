@@ -120,7 +120,7 @@ export interface AuthState {
   resendVerification: () => Promise<ApiResponse<MessageResponse>>;
   changePassword: (oldPassword: string, newPassword: string) => Promise<ApiResponse<MessageResponse>>;
   requestPasswordReset: (email: string) => Promise<ApiResponse<MessageResponse>>;
-  confirmPasswordReset: (token: string, newPassword: string) => Promise<ApiResponse<MessageResponse>>;
+  confirmPasswordReset: (token: string, newPassword: string, confirmPassword: string) => Promise<ApiResponse<MessageResponse>>;
   
   // 2FA actions
   setup2FA: () => Promise<ApiResponse<TwoFactorSetupResponse>>;

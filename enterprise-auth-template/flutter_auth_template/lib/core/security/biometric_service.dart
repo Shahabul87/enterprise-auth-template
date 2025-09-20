@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
-import '../errors/app_exception.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
 
 final biometricServiceProvider = Provider<BiometricService>((ref) {
   return BiometricService();
@@ -65,13 +65,15 @@ class BiometricService {
     bool stickyAuth = true,
   }) async {
     try {
-      // Check if biometric authentication is available
-      if (!await isAvailable()) {
+      // First check if device supports biometrics
+      final bool isDeviceSupported = await _localAuth.isDeviceSupported();
+      if (!isDeviceSupported) {
         throw const BiometricNotAvailableException();
       }
 
-      // Check if biometrics are enrolled
-      if (!await isBiometricEnrolled()) {
+      // Then check if biometrics are enrolled
+      final availableBiometrics = await getAvailableBiometrics();
+      if (availableBiometrics.isEmpty) {
         throw const BiometricNotEnrolledException();
       }
 
@@ -207,17 +209,28 @@ class BiometricService {
 
   /// Get biometric capability summary for UI
   Future<BiometricCapability> getBiometricCapability() async {
-    final biometricAvailable = await isAvailable();
-    if (!biometricAvailable) {
+    try {
+      // Check if device supports biometrics
+      final bool isDeviceSupported = await _localAuth.isDeviceSupported();
+      if (!isDeviceSupported) {
+        return BiometricCapability.notAvailable;
+      }
+
+      // Check if biometrics are enrolled
+      final availableBiometrics = await getAvailableBiometrics();
+      if (availableBiometrics.isEmpty) {
+        return BiometricCapability.availableButNotEnrolled;
+      }
+
+      return BiometricCapability.availableAndEnrolled;
+    } catch (e) {
+      developer.log(
+        'Error checking biometric capability: $e',
+        name: 'BiometricService',
+        level: 1000,
+      );
       return BiometricCapability.notAvailable;
     }
-
-    final isEnrolled = await isBiometricEnrolled();
-    if (!isEnrolled) {
-      return BiometricCapability.availableButNotEnrolled;
-    }
-
-    return BiometricCapability.availableAndEnrolled;
   }
 
   /// Private helper method to handle biometric errors

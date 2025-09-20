@@ -1,0 +1,1040 @@
+00:00 +0: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/notification_models_test.dart
+test/data/models/notification_models_test.dart:134:20: Error: Both Iterable and Map spread elements encountered in ambiguous literal.
+        variables: {
+                   ^
+test/data/models/notification_models_test.dart:151:34: Error: A value of type 'String' can't be assigned to a variable of type 'int'.
+      expect(template.variables?['user_name'], 'The user\'s display name');
+                                 ^
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/notification_models_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/notification_models_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/notification_models_test.dart: test/data/models/notification_models_test.dart:134:20: Error: Both Iterable and Map spread elements encountered in ambiguous literal.
+          variables: {
+                     ^
+  test/data/models/notification_models_test.dart:151:34: Error: A value of type 'String' can't be assigned to a variable of type 'int'.
+        expect(template.variables?['user_name'], 'The user\'s display name');
+                                   ^
+  .
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/notification_models_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 910:11    DefaultResidentCompiler._compile.<fn>
+  dart:async/zone.dart 1538:47                     _rootRunUnary
+  dart:async/zone.dart 1429:19                     _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone.dart 1525:13                     _rootRun
+  dart:async/zone.dart 1422:19                     _CustomZone.run
+  dart:async/zone.dart 1321:7                      _CustomZone.runGuarded
+  dart:async/zone.dart 1362:23                     _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 194:5      _RawReceivePort._handleMessage
+  
+00:00 +0 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: Device should create Device with required fields
+00:00 +1 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: Device should serialize to/from JSON
+00:00 +2 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceRegistrationRequest should create DeviceRegistrationRequest with required fields
+00:00 +3 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceRegistrationRequest should serialize to/from JSON
+00:00 +4 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceUpdateRequest should create DeviceUpdateRequest with optional fields
+00:00 +5 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceUpdateRequest should serialize to/from JSON
+00:00 +6 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceListResponse should create DeviceListResponse with devices
+00:00 +7 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceListResponse should serialize to/from JSON
+00:00 +8 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceStats should create DeviceStats with required fields
+00:00 +9 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceStats should serialize to/from JSON
+00:00 +10 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceLocationStat should create DeviceLocationStat with required fields
+00:00 +11 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceLocationStat should serialize to/from JSON
+00:00 +12 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceSecurityAlert should create DeviceSecurityAlert with required fields
+00:00 +13 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceSecurityAlert should create resolved alert
+00:00 +14 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceSecurityAlert should serialize to/from JSON
+00:00 +15 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceType should return correct display names
+00:00 +16 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DeviceType should return correct icon names
+00:00 +17 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DevicePlatform should return correct display names
+00:00 +18 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: DevicePlatform should return correct icon names
+00:00 +19 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: Edge Cases and Validation should handle device with minimal required fields
+00:00 +20 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: Edge Cases and Validation should handle empty device stats
+00:00 +21 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: Edge Cases and Validation should handle device registration with minimal fields
+00:00 +22 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: Edge Cases and Validation should handle device update with no changes
+00:00 +23 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: Complex Scenarios should handle comprehensive device with all fields
+00:00 +24 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: Complex Scenarios should handle multiple security alerts for same device
+00:00 +25 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/device_models_test.dart: Complex Scenarios should handle device stats with comprehensive data
+00:00 +26 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart
+00:00 +26 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: AnalyticsDashboard should create AnalyticsDashboard with required components
+00:00 +27 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: AnalyticsDashboard should serialize to/from JSON
+00:00 +28 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: UserAnalytics should create UserAnalytics with required fields
+00:00 +29 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: UserAnalytics should serialize to/from JSON
+00:00 +30 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: AuthenticationAnalytics should create AuthenticationAnalytics with required fields
+00:00 +31 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: AuthenticationAnalytics should serialize to/from JSON
+00:00 +32 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: SecurityAnalytics should create SecurityAnalytics with required fields
+00:00 +33 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: SecurityAnalytics should serialize to/from JSON
+00:00 +34 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: ApiUsageAnalytics should create ApiUsageAnalytics with required fields
+00:00 +35 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: ApiUsageAnalytics should serialize to/from JSON
+00:00 +36 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: SystemPerformance should create SystemPerformance with required fields
+00:00 +37 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: SystemPerformance should serialize to/from JSON
+00:00 +38 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: SecurityIncident should create SecurityIncident with required fields
+00:00 +39 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: SecurityIncident should serialize to/from JSON
+00:00 +40 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: SystemHealthStatus should return correct display names
+00:00 +41 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: SystemHealthStatus should return correct color names
+00:00 +42 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: AnalyticsTimeRangeType should return correct display names
+00:00 +43 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: SecurityConfiguration should create SecurityConfiguration with required fields
+00:00 +44 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: SecurityConfiguration should serialize to/from JSON
+00:00 +45 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: IpBlockRule should create IpBlockRule with required fields
+00:00 +46 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: IpBlockRule should serialize to/from JSON
+00:00 +47 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: RateLimitRule should create RateLimitRule with required fields
+00:00 +48 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: RateLimitRule should serialize to/from JSON
+00:00 +49 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: SecurityEvent should create SecurityEvent with required fields
+00:00 +50 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: SecurityEvent should serialize to/from JSON
+00:00 +51 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: Custom Analytics Models should create AnalyticsTimeRange
+00:00 +52 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: Custom Analytics Models should create CustomAnalyticsQuery
+00:00 +53 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/analytics_models_test.dart: Custom Analytics Models should create AnalyticsFilter
+00:00 +54 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/search_models_test.dart
+00:00 +54 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/search_models_test.dart: SearchQuery should create SearchQuery with required fields
+00:00 +55 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/search_models_test.dart: SearchQuery should create SearchQuery with default values
+00:00 +56 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/search_models_test.dart: SearchQuery should serialize to/from JSON
+00:00 +57 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/search_models_test.dart: SearchResultItem should create SearchResultItem with required fields
+00:00 +58 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/search_models_test.dart: SearchResultItem should serialize to/from JSON
+00:00 +59 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/search_models_test.dart: SearchResult should create SearchResult with comprehensive data
+00:00 +60 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/search_models_test.dart: SearchResult should serialize to/from JSON
+00:00 +61 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/search_models_test.dart: Edge Cases should handle empty search results
+00:00 +62 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/search_models_test.dart: Edge Cases should handle search query with special characters
+00:00 +63 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart
+00:01 +63 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SystemStats should create SystemStats with required fields
+00:01 +64 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SystemStats should serialize to/from JSON
+00:01 +65 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: UserManagementRequest should create UserManagementRequest with optional fields
+00:01 +66 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: UserManagementRequest should serialize to/from JSON
+00:01 +67 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: UserManagementResponse should create UserManagementResponse with required fields
+00:01 +68 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: UserManagementResponse should serialize to/from JSON
+00:01 +69 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: BulkUserOperation should create BulkUserOperation with required fields
+00:01 +70 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: BulkUserOperation should serialize to/from JSON
+00:01 +71 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SystemConfigUpdate should create SystemConfigUpdate with optional fields
+00:01 +72 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SystemConfigUpdate should serialize to/from JSON
+00:01 +73 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: AdminDashboardData should create AdminDashboardData with required fields
+00:01 +74 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: AdminDashboardData should serialize to/from JSON
+00:01 +75 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: UserActivityReport should create UserActivityReport with required fields
+00:01 +76 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: UserActivityReport should serialize to/from JSON
+00:01 +77 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SecurityReport should create SecurityReport with required fields
+00:01 +78 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SecurityReport should serialize to/from JSON
+00:01 +79 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SystemHealthCheck should create SystemHealthCheck with required fields
+00:01 +80 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SystemHealthCheck should serialize to/from JSON
+00:01 +81 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SessionData should create SessionData with required fields
+00:01 +82 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SessionData should serialize to/from JSON
+00:01 +83 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: AuditLogEntry should create AuditLogEntry with required fields
+00:01 +84 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: AuditLogEntry should serialize to/from JSON
+00:01 +85 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: BulkOperationResult should create BulkOperationResult with required fields
+00:01 +86 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: BulkOperationResult should serialize to/from JSON
+00:01 +87 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: AdminAction should return correct values for each action
+00:01 +88 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: AdminAction should return correct display names
+00:01 +89 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: AdminAction should return correct descriptions
+00:01 +90 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: HealthStatus should return correct values for each status
+00:01 +91 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: HealthStatus should return correct display names
+00:01 +92 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: CreateIpBlockRuleRequest should create request with default values
+00:01 +93 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: CreateIpBlockRuleRequest should serialize to/from JSON
+00:01 +94 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: CreateRateLimitRuleRequest should create request with default values
+00:01 +95 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: CreateRateLimitRuleRequest should serialize to/from JSON
+00:01 +96 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: RestorePoint should create RestorePoint with required fields
+00:01 +97 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: RestorePoint should serialize to/from JSON
+00:01 +98 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: CreateExportRequest should create request with default values
+00:01 +99 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: CreateExportRequest should serialize to/from JSON
+00:01 +100 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: CreateBackupRequest should create request with default values
+00:01 +101 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: CreateBackupRequest should serialize to/from JSON
+00:01 +102 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: BackupSchedule should create BackupSchedule with required fields
+00:01 +103 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: BackupSchedule should serialize to/from JSON
+00:01 +104 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: RetentionPolicy should create RetentionPolicy with default values
+00:01 +105 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: RetentionPolicy should serialize to/from JSON
+00:01 +106 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SessionAnalytics should create SessionAnalytics with required fields
+00:01 +107 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SessionAnalytics should serialize to/from JSON
+00:01 +108 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: UserSessionDetails should create UserSessionDetails with required fields
+00:01 +109 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: UserSessionDetails should serialize to/from JSON
+00:01 +110 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SessionSecurityAlert should create SessionSecurityAlert with required fields
+00:01 +111 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/admin_models_test.dart: SessionSecurityAlert should serialize to/from JSON
+00:01 +112 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/auth_response_test.dart
+test/data/models/auth_response_test.dart:131:11: Error: No named parameter with the name 'emailVerified'.
+          emailVerified: true,
+          ^^^^^^^^^^^^^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:139:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'access_123',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:164:26: Error: Required named parameter 'name' must be provided.
+        final user = User(
+                         ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:171:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'token',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:189:26: Error: Required named parameter 'name' must be provided.
+        final user = User(
+                         ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:197:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'token',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:220:21: Error: Required named parameter 'isEmailVerified' must be provided.
+          user: User(
+                    ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:216:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'original_access',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:249:21: Error: Required named parameter 'name' must be provided.
+          user: User(
+                    ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:245:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'token',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:271:27: Error: Required named parameter 'name' must be provided.
+        final user1 = User(
+                          ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:277:27: Error: Required named parameter 'name' must be provided.
+        final user2 = User(
+                          ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:284:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'token',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:290:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'token',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:302:26: Error: Required named parameter 'name' must be provided.
+        final user = User(
+                         ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:309:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'token1',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:314:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'token2',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:340:26: Error: Required named parameter 'name' must be provided.
+        final user = User(
+                         ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:376:21: Error: Required named parameter 'name' must be provided.
+          user: User(
+                    ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:374:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'token',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:399:21: Error: Required named parameter 'name' must be provided.
+          user: User(
+                    ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:397:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'token',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:409:21: Error: Required named parameter 'name' must be provided.
+          user: User(
+                    ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:407:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'token',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:425:26: Error: Required named parameter 'name' must be provided.
+        final user = User(
+                         ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:433:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'token',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:444:26: Error: Required named parameter 'name' must be provided.
+        final user = User(
+                         ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:452:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'token',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:463:26: Error: Required named parameter 'name' must be provided.
+        final user = User(
+                         ^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/data/models/auth_response_test.dart:471:11: Error: No named parameter with the name 'accessToken'.
+          accessToken: 'token',
+          ^^^^^^^^^^^
+lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+  const factory AuthResponse({
+                ^
+test/data/models/auth_response_test.dart:31:29: Error: The getter 'accessToken' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'accessToken'.
+        expect(authResponse.accessToken, equals('access_123'));
+                            ^^^^^^^^^^^
+test/data/models/auth_response_test.dart:32:29: Error: The getter 'refreshToken' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'refreshToken'.
+        expect(authResponse.refreshToken, equals('refresh_456'));
+                            ^^^^^^^^^^^^
+test/data/models/auth_response_test.dart:33:29: Error: The getter 'tokenType' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'tokenType'.
+        expect(authResponse.tokenType, equals('Bearer'));
+                            ^^^^^^^^^
+test/data/models/auth_response_test.dart:34:29: Error: The getter 'expiresIn' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'expiresIn'.
+        expect(authResponse.expiresIn, equals(3600));
+                            ^^^^^^^^^
+test/data/models/auth_response_test.dart:35:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.id, equals('1'));
+                            ^^^^
+test/data/models/auth_response_test.dart:36:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.email, equals('test@example.com'));
+                            ^^^^
+test/data/models/auth_response_test.dart:37:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.name, equals('Test User'));
+                            ^^^^
+test/data/models/auth_response_test.dart:38:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.emailVerified, isTrue);
+                            ^^^^
+test/data/models/auth_response_test.dart:39:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.roles, contains('admin'));
+                            ^^^^
+test/data/models/auth_response_test.dart:40:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.permissions, contains('write'));
+                            ^^^^
+test/data/models/auth_response_test.dart:58:29: Error: The getter 'accessToken' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'accessToken'.
+        expect(authResponse.accessToken, equals('token'));
+                            ^^^^^^^^^^^
+test/data/models/auth_response_test.dart:59:29: Error: The getter 'refreshToken' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'refreshToken'.
+        expect(authResponse.refreshToken, isNull);
+                            ^^^^^^^^^^^^
+test/data/models/auth_response_test.dart:60:29: Error: The getter 'tokenType' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'tokenType'.
+        expect(authResponse.tokenType, equals('Bearer')); // Default value
+                            ^^^^^^^^^
+test/data/models/auth_response_test.dart:61:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.id, equals('1'));
+                            ^^^^
+test/data/models/auth_response_test.dart:62:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.email, equals('user@example.com'));
+                            ^^^^
+test/data/models/auth_response_test.dart:63:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.name, isNull);
+                            ^^^^
+test/data/models/auth_response_test.dart:89:29: Error: The getter 'accessToken' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'accessToken'.
+        expect(authResponse.accessToken, equals('token'));
+                            ^^^^^^^^^^^
+test/data/models/auth_response_test.dart:90:29: Error: The getter 'refreshToken' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'refreshToken'.
+        expect(authResponse.refreshToken, isNull);
+                            ^^^^^^^^^^^^
+test/data/models/auth_response_test.dart:91:29: Error: The getter 'tokenType' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'tokenType'.
+        expect(authResponse.tokenType, equals('Bearer'));
+                            ^^^^^^^^^
+test/data/models/auth_response_test.dart:92:29: Error: The getter 'expiresIn' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'expiresIn'.
+        expect(authResponse.expiresIn, isNull);
+                            ^^^^^^^^^
+test/data/models/auth_response_test.dart:93:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.name, isNull);
+                            ^^^^
+test/data/models/auth_response_test.dart:94:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.emailVerified, isFalse); // Default
+                            ^^^^
+test/data/models/auth_response_test.dart:95:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.roles, isEmpty);
+                            ^^^^
+test/data/models/auth_response_test.dart:96:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.permissions, isEmpty);
+                            ^^^^
+test/data/models/auth_response_test.dart:115:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.createdAt, isA<DateTime>());
+                            ^^^^
+test/data/models/auth_response_test.dart:116:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.createdAt.year, equals(2024));
+                            ^^^^
+test/data/models/auth_response_test.dart:117:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.createdAt.month, equals(1));
+                            ^^^^
+test/data/models/auth_response_test.dart:118:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.createdAt.day, equals(1));
+                            ^^^^
+test/data/models/auth_response_test.dart:119:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.updatedAt?.month, equals(1));
+                            ^^^^
+test/data/models/auth_response_test.dart:120:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+ - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+        expect(authResponse.user.updatedAt?.day, equals(15));
+                            ^^^^
+00:01 +112 -2: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/auth_response_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/auth_response_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/auth_response_test.dart: test/data/models/auth_response_test.dart:131:11: Error: No named parameter with the name 'emailVerified'.
+            emailVerified: true,
+            ^^^^^^^^^^^^^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:139:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'access_123',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:164:26: Error: Required named parameter 'name' must be provided.
+          final user = User(
+                           ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:171:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'token',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:189:26: Error: Required named parameter 'name' must be provided.
+          final user = User(
+                           ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:197:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'token',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:220:21: Error: Required named parameter 'isEmailVerified' must be provided.
+            user: User(
+                      ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:216:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'original_access',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:249:21: Error: Required named parameter 'name' must be provided.
+            user: User(
+                      ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:245:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'token',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:271:27: Error: Required named parameter 'name' must be provided.
+          final user1 = User(
+                            ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:277:27: Error: Required named parameter 'name' must be provided.
+          final user2 = User(
+                            ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:284:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'token',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:290:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'token',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:302:26: Error: Required named parameter 'name' must be provided.
+          final user = User(
+                           ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:309:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'token1',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:314:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'token2',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:340:26: Error: Required named parameter 'name' must be provided.
+          final user = User(
+                           ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:376:21: Error: Required named parameter 'name' must be provided.
+            user: User(
+                      ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:374:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'token',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:399:21: Error: Required named parameter 'name' must be provided.
+            user: User(
+                      ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:397:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'token',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:409:21: Error: Required named parameter 'name' must be provided.
+            user: User(
+                      ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:407:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'token',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:425:26: Error: Required named parameter 'name' must be provided.
+          final user = User(
+                           ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:433:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'token',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:444:26: Error: Required named parameter 'name' must be provided.
+          final user = User(
+                           ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:452:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'token',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:463:26: Error: Required named parameter 'name' must be provided.
+          final user = User(
+                           ^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/data/models/auth_response_test.dart:471:11: Error: No named parameter with the name 'accessToken'.
+            accessToken: 'token',
+            ^^^^^^^^^^^
+  lib/data/models/auth_response.dart:9:17: Context: Found this candidate, but the arguments don't match.
+    const factory AuthResponse({
+                  ^
+  test/data/models/auth_response_test.dart:31:29: Error: The getter 'accessToken' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'accessToken'.
+          expect(authResponse.accessToken, equals('access_123'));
+                              ^^^^^^^^^^^
+  test/data/models/auth_response_test.dart:32:29: Error: The getter 'refreshToken' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'refreshToken'.
+          expect(authResponse.refreshToken, equals('refresh_456'));
+                              ^^^^^^^^^^^^
+  test/data/models/auth_response_test.dart:33:29: Error: The getter 'tokenType' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'tokenType'.
+          expect(authResponse.tokenType, equals('Bearer'));
+                              ^^^^^^^^^
+  test/data/models/auth_response_test.dart:34:29: Error: The getter 'expiresIn' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'expiresIn'.
+          expect(authResponse.expiresIn, equals(3600));
+                              ^^^^^^^^^
+  test/data/models/auth_response_test.dart:35:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.id, equals('1'));
+                              ^^^^
+  test/data/models/auth_response_test.dart:36:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.email, equals('test@example.com'));
+                              ^^^^
+  test/data/models/auth_response_test.dart:37:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.name, equals('Test User'));
+                              ^^^^
+  test/data/models/auth_response_test.dart:38:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.emailVerified, isTrue);
+                              ^^^^
+  test/data/models/auth_response_test.dart:39:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.roles, contains('admin'));
+                              ^^^^
+  test/data/models/auth_response_test.dart:40:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.permissions, contains('write'));
+                              ^^^^
+  test/data/models/auth_response_test.dart:58:29: Error: The getter 'accessToken' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'accessToken'.
+          expect(authResponse.accessToken, equals('token'));
+                              ^^^^^^^^^^^
+  test/data/models/auth_response_test.dart:59:29: Error: The getter 'refreshToken' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'refreshToken'.
+          expect(authResponse.refreshToken, isNull);
+                              ^^^^^^^^^^^^
+  test/data/models/auth_response_test.dart:60:29: Error: The getter 'tokenType' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'tokenType'.
+          expect(authResponse.tokenType, equals('Bearer')); // Default value
+                              ^^^^^^^^^
+  test/data/models/auth_response_test.dart:61:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.id, equals('1'));
+                              ^^^^
+  test/data/models/auth_response_test.dart:62:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.email, equals('user@example.com'));
+                              ^^^^
+  test/data/models/auth_response_test.dart:63:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.name, isNull);
+                              ^^^^
+  test/data/models/auth_response_test.dart:89:29: Error: The getter 'accessToken' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'accessToken'.
+          expect(authResponse.accessToken, equals('token'));
+                              ^^^^^^^^^^^
+  test/data/models/auth_response_test.dart:90:29: Error: The getter 'refreshToken' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'refreshToken'.
+          expect(authResponse.refreshToken, isNull);
+                              ^^^^^^^^^^^^
+  test/data/models/auth_response_test.dart:91:29: Error: The getter 'tokenType' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'tokenType'.
+          expect(authResponse.tokenType, equals('Bearer'));
+                              ^^^^^^^^^
+  test/data/models/auth_response_test.dart:92:29: Error: The getter 'expiresIn' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'expiresIn'.
+          expect(authResponse.expiresIn, isNull);
+                              ^^^^^^^^^
+  test/data/models/auth_response_test.dart:93:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.name, isNull);
+                              ^^^^
+  test/data/models/auth_response_test.dart:94:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.emailVerified, isFalse); // Default
+                              ^^^^
+  test/data/models/auth_response_test.dart:95:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.roles, isEmpty);
+                              ^^^^
+  test/data/models/auth_response_test.dart:96:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.permissions, isEmpty);
+                              ^^^^
+  test/data/models/auth_response_test.dart:115:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.createdAt, isA<DateTime>());
+                              ^^^^
+  test/data/models/auth_response_test.dart:116:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.createdAt.year, equals(2024));
+                              ^^^^
+  test/data/models/auth_response_test.dart:117:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.createdAt.month, equals(1));
+                              ^^^^
+  test/data/models/auth_response_test.dart:118:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.createdAt.day, equals(1));
+                              ^^^^
+  test/data/models/auth_response_test.dart:119:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.updatedAt?.month, equals(1));
+                              ^^^^
+  test/data/models/auth_response_test.dart:120:29: Error: The getter 'user' isn't defined for the type 'AuthResponse'.
+   - 'AuthResponse' is from 'package:flutter_auth_template/data/models/auth_response.dart' ('lib/data/models/auth_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'user'.
+          expect(authResponse.user.updatedAt?.day, equals(15));
+                              ^^^^
+  .
+00:01 +112 -2: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart
+00:01 +112 -2: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/notification_models_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 910:11    DefaultResidentCompiler._compile.<fn>
+  dart:async/zone.dart 1538:47                     _rootRunUnary
+  dart:async/zone.dart 1429:19                     _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone.dart 1525:13                     _rootRun
+  dart:async/zone.dart 1422:19                     _CustomZone.run
+  dart:async/zone.dart 1321:7                      _CustomZone.runGuarded
+  dart:async/zone.dart 1362:23                     _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 194:5      _RawReceivePort._handleMessage
+  
+00:02 +112 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileResponse should create ProfileResponse with required fields
+00:02 +113 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileResponse should serialize to/from JSON
+00:02 +114 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileUpdateRequest should create ProfileUpdateRequest with optional fields
+00:02 +115 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileUpdateRequest should create empty ProfileUpdateRequest
+00:02 +116 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileUpdateRequest should serialize to/from JSON
+00:02 +117 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: PasswordChangeRequest should create PasswordChangeRequest with required fields
+00:02 +118 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: PasswordChangeRequest should serialize to/from JSON
+00:02 +119 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: EmailChangeRequest should create EmailChangeRequest with required fields
+00:02 +120 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: EmailChangeRequest should serialize to/from JSON
+00:02 +121 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: NotificationPreferencesRequest should create NotificationPreferencesRequest with default values
+00:02 +122 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: NotificationPreferencesRequest should create NotificationPreferencesRequest with custom values
+00:02 +123 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: NotificationPreferencesRequest should serialize to/from JSON
+00:02 +124 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: SecuritySettingsResponse should create SecuritySettingsResponse with required fields
+00:02 +125 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: SecuritySettingsResponse should serialize to/from JSON
+00:02 +126 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: AvatarUploadResponse should create AvatarUploadResponse with required fields
+00:02 +127 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: AvatarUploadResponse should serialize to/from JSON
+00:02 +128 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileCompletionStatus should create ProfileCompletionStatus with required fields
+00:02 +129 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileCompletionStatus should serialize to/from JSON
+00:02 +130 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: PrivacySettings should create PrivacySettings with default values
+00:02 +131 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: PrivacySettings should create PrivacySettings with custom values
+00:02 +132 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: PrivacySettings should serialize to/from JSON
+00:02 +133 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: AccountSettings should create AccountSettings with required and default fields
+00:02 +134 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: AccountSettings should create AccountSettings with default values
+00:02 +135 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: AccountSettings should serialize to/from JSON
+00:02 +136 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileStatistics should create ProfileStatistics with required fields
+00:02 +137 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileStatistics should serialize to/from JSON
+00:02 +138 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: SupportedTimezones should contain common timezones
+00:02 +139 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: SupportedTimezones should return display name for timezone
+00:02 +140 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: SupportedTimezones should return offset for timezone
+00:02 +141 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: SupportedLanguages should contain common languages
+00:02 +142 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: SupportedLanguages should return display name for language code
+00:02 +143 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileValidator Phone Number Validation should validate phone numbers correctly
+00:02 +143 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileValidator Phone Number Validation should validate phone numbers correctly [E]
+  Expected: <false>
+    Actual: <true>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/data/models/profile_models_test.dart 459:9     main.<fn>.<fn>.<fn>
+  
+00:02 +143 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileValidator Phone Number Validation should validate phone number with validation method
+00:02 +144 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileValidator Timezone Validation should validate timezones correctly
+00:02 +145 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileValidator Language Validation should validate languages correctly
+00:02 +146 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileValidator Bio Validation should validate bio length
+00:02 +147 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileValidator Bio Validation should validate bio with validation method
+00:02 +148 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileValidator Name Validation should validate first name
+00:02 +149 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileValidator Name Validation should validate last name
+00:02 +150 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileValidator Profile Completion Calculation should calculate profile completion percentage
+00:02 +151 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileValidator Profile Completion Calculation should calculate partial profile completion
+00:02 +152 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileValidator Missing Fields Detection should identify missing fields
+00:02 +153 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: ProfileValidator Missing Fields Detection should return empty list for complete profile
+00:02 +154 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: Edge Cases and Complex Scenarios should handle profile with special characters
+00:02 +155 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: Edge Cases and Complex Scenarios should handle comprehensive privacy settings
+00:02 +156 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: Edge Cases and Complex Scenarios should handle detailed account settings
+00:02 +157 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/profile_models_test.dart: Edge Cases and Complex Scenarios should handle comprehensive profile statistics
+00:02 +158 -3: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart
+00:02 +158 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKey should create ApiKey with required fields
+00:02 +159 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKey should serialize to/from JSON
+00:02 +160 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyCreateRequest should create ApiKeyCreateRequest with required fields
+00:02 +161 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyCreateRequest should serialize to/from JSON
+00:02 +162 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyUpdateRequest should create ApiKeyUpdateRequest with optional fields
+00:02 +163 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyUpdateRequest should serialize to/from JSON
+00:02 +164 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyCreateResponse should create ApiKeyCreateResponse with required fields
+00:02 +165 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyCreateResponse should serialize to/from JSON
+00:02 +166 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyListResponse should create ApiKeyListResponse with required fields
+00:02 +167 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyListResponse should serialize to/from JSON
+00:02 +168 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyUsageStats should create ApiKeyUsageStats with required fields
+00:02 +169 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyUsageStats should serialize to/from JSON
+00:02 +170 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyPermission should create ApiKeyPermission with required fields
+00:02 +171 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyPermission should serialize to/from JSON
+00:02 +172 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyScope should create ApiKeyScope with required fields
+00:02 +173 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyScope should serialize to/from JSON
+00:02 +174 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyActivity should create ApiKeyActivity with required fields
+00:02 +175 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyActivity should serialize to/from JSON
+00:02 +176 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyStatus should return correct display names
+00:02 +177 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyStatus should return correct color names
+00:02 +178 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyPermissionCategory should return correct display names
+00:02 +179 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: ApiKeyPermissionCategory should return correct icon names
+00:02 +180 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: Edge Cases and Validation should handle API key with minimal required fields
+00:02 +181 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: Edge Cases and Validation should handle empty usage statistics
+00:02 +182 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: Edge Cases and Validation should handle permission without sub-permissions
+00:02 +183 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: Edge Cases and Validation should handle activity without request/response data
+00:02 +184 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: Complex Scenarios should handle multiple API keys in list response
+00:02 +185 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/api_key_models_test.dart: Complex Scenarios should handle comprehensive API key with all optional fields
+00:02 +186 -3: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/webhook_models_test.dart
+test/data/models/webhook_models_test.dart:42:29: Error: Operator '[]' cannot be called on 'Map<String, String>?' because it is potentially null.
+ - 'Map' is from 'dart:core'.
+      expect(webhook.headers['Content-Type'], 'application/json');
+                            ^
+test/data/models/webhook_models_test.dart:186:29: Error: Property 'length' cannot be accessed on 'List<String>?' because it is potentially null.
+ - 'List' is from 'dart:core'.
+Try accessing using ?. instead.
+      expect(webhook.events.length, 10);
+                            ^^^^^^
+test/data/models/webhook_models_test.dart:210:29: Error: Operator '[]' cannot be called on 'Map<String, String>?' because it is potentially null.
+ - 'Map' is from 'dart:core'.
+      expect(webhook.headers['X-HTTP-Method-Override'], 'PUT');
+                            ^
+test/data/models/webhook_models_test.dart:287:29: Error: Property 'length' cannot be accessed on 'List<String>?' because it is potentially null.
+ - 'List' is from 'dart:core'.
+Try accessing using ?. instead.
+      expect(webhook.events.length, 15);
+                            ^^^^^^
+test/data/models/webhook_models_test.dart:288:30: Error: Property 'length' cannot be accessed on 'Map<String, String>?' because it is potentially null.
+ - 'Map' is from 'dart:core'.
+Try accessing using ?. instead.
+      expect(webhook.headers.length, 6);
+                             ^^^^^^
+00:02 +186 -4: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/webhook_models_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/webhook_models_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/webhook_models_test.dart: test/data/models/webhook_models_test.dart:42:29: Error: Operator '[]' cannot be called on 'Map<String, String>?' because it is potentially null.
+   - 'Map' is from 'dart:core'.
+        expect(webhook.headers['Content-Type'], 'application/json');
+                              ^
+  test/data/models/webhook_models_test.dart:186:29: Error: Property 'length' cannot be accessed on 'List<String>?' because it is potentially null.
+   - 'List' is from 'dart:core'.
+  Try accessing using ?. instead.
+        expect(webhook.events.length, 10);
+                              ^^^^^^
+  test/data/models/webhook_models_test.dart:210:29: Error: Operator '[]' cannot be called on 'Map<String, String>?' because it is potentially null.
+   - 'Map' is from 'dart:core'.
+        expect(webhook.headers['X-HTTP-Method-Override'], 'PUT');
+                              ^
+  test/data/models/webhook_models_test.dart:287:29: Error: Property 'length' cannot be accessed on 'List<String>?' because it is potentially null.
+   - 'List' is from 'dart:core'.
+  Try accessing using ?. instead.
+        expect(webhook.events.length, 15);
+                              ^^^^^^
+  test/data/models/webhook_models_test.dart:288:30: Error: Property 'length' cannot be accessed on 'Map<String, String>?' because it is potentially null.
+   - 'Map' is from 'dart:core'.
+  Try accessing using ?. instead.
+        expect(webhook.headers.length, 6);
+                               ^^^^^^
+  .
+00:02 +186 -4: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart
+00:02 +186 -4: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/notification_models_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 910:11    DefaultResidentCompiler._compile.<fn>
+  dart:async/zone.dart 1538:47                     _rootRunUnary
+  dart:async/zone.dart 1429:19                     _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone.dart 1525:13                     _rootRun
+  dart:async/zone.dart 1422:19                     _CustomZone.run
+  dart:async/zone.dart 1321:7                      _CustomZone.runGuarded
+  dart:async/zone.dart 1362:23                     _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 194:5      _RawReceivePort._handleMessage
+  
+00:03 +186 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: ExportRequest should create ExportRequest with required fields
+00:03 +187 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: ExportRequest should serialize to/from JSON
+00:03 +188 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: ExportJob should create ExportJob with required fields
+00:03 +189 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: ExportJob should serialize to/from JSON
+00:03 +190 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: ExportOptions should create ExportOptions with default values
+00:03 +191 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: ExportOptions should create ExportOptions with custom values
+00:03 +192 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: ExportOptions should serialize to/from JSON
+00:03 +193 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: BackupRequest should create BackupRequest with required fields
+00:03 +194 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: BackupRequest should serialize to/from JSON
+00:03 +195 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: BackupJob should create BackupJob with required fields
+00:03 +196 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: BackupJob should serialize to/from JSON
+00:03 +197 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: RestoreRequest should create RestoreRequest with required fields
+00:03 +198 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: RestoreRequest should serialize to/from JSON
+00:03 +199 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: RestoreJob should create RestoreJob with required fields
+00:03 +200 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: RestoreJob should serialize to/from JSON
+00:03 +201 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: Enums and Extensions ExportType should return correct display names
+00:03 +202 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: Enums and Extensions ExportType should return correct descriptions
+00:03 +203 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: Enums and Extensions ExportFormat should return correct display names
+00:03 +204 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: Enums and Extensions ExportFormat should return correct file extensions
+00:03 +205 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: Enums and Extensions ExportFormat should return correct MIME types
+00:03 +206 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: Enums and Extensions ExportStatus should return correct display names
+00:03 +207 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: Enums and Extensions ExportStatus should return correct color names
+00:03 +208 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: Enums and Extensions BackupType should return correct display names
+00:03 +209 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: Enums and Extensions BackupType should return correct descriptions
+00:03 +210 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: Edge Cases and Complex Scenarios should handle export with comprehensive filters
+00:03 +211 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: Edge Cases and Complex Scenarios should handle backup with comprehensive options
+00:03 +212 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: Edge Cases and Complex Scenarios should handle export job with error status
+00:03 +213 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/export_models_test.dart: Edge Cases and Complex Scenarios should handle restore with validation failure
+00:03 +214 -4: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart
+00:04 +214 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: TwoFactorSetupResponse should create TwoFactorSetupResponse with required fields
+00:04 +215 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: TwoFactorSetupResponse should create TwoFactorSetupResponse with default setup key
+00:04 +216 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: TwoFactorSetupResponse should serialize to/from JSON
+00:04 +217 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: TwoFactorStatus should create TwoFactorStatus with default values
+00:04 +218 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: TwoFactorStatus should create TwoFactorStatus with custom values
+00:04 +219 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: TwoFactorStatus should serialize to/from JSON
+00:04 +220 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: TwoFactorVerifyRequest should create TwoFactorVerifyRequest with TOTP code
+00:04 +221 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: TwoFactorVerifyRequest should create TwoFactorVerifyRequest with backup code
+00:04 +222 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: TwoFactorVerifyRequest should create TwoFactorVerifyRequest with default values
+00:04 +223 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: TwoFactorVerifyRequest should serialize to/from JSON
+00:04 +224 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: Edge Cases and Validation should handle empty backup codes list
+00:04 +225 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: Edge Cases and Validation should handle status without method
+00:04 +226 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: Edge Cases and Validation should handle verification with special characters
+00:04 +227 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: Edge Cases and Validation should handle status with zero backup codes remaining
+00:04 +228 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: Complex Scenarios should handle complete 2FA setup workflow
+00:04 +229 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: Complex Scenarios should handle backup code usage workflow
+00:04 +230 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: Complex Scenarios should handle different 2FA methods
+00:04 +231 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/data/models/two_factor_models_test.dart: Complex Scenarios should handle 2FA disable scenario
+00:04 +232 -4: Some tests failed.

@@ -71,10 +71,7 @@ class RefreshToken(Base):
     def is_valid(self) -> bool:
         """Check if the refresh token is valid (not revoked and not expired)."""
         now = datetime.utcnow()
-        return (
-            self.revoked_at is None and
-            self.expires_at > now
-        )
+        return self.revoked_at is None and self.expires_at > now
 
     def __repr__(self) -> str:
         return f"<RefreshToken(id={self.id}, user_id={self.user_id}, expires_at={self.expires_at})>"
@@ -85,9 +82,9 @@ class RefreshToken(Base):
         return datetime.utcnow() > self.expires_at
 
     @property
-    def is_valid(self) -> bool:
-        """Check if the refresh token is valid (not expired and not revoked)."""
-        return not self.is_expired and not self.is_revoked
+    def is_revoked(self) -> bool:
+        """Check if the refresh token has been revoked."""
+        return self.revoked_at is not None
 
 
 class PasswordResetToken(Base):

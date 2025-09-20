@@ -1,6 +1,7 @@
 """
 Admin schemas for request/response validation
 """
+
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 from pydantic import BaseModel, Field, EmailStr, ConfigDict
@@ -8,6 +9,7 @@ from pydantic import BaseModel, Field, EmailStr, ConfigDict
 
 class SystemStats(BaseModel):
     """System-wide statistics"""
+
     users: Dict[str, int]
     sessions: Dict[str, int]
     organizations: Dict[str, int]
@@ -17,6 +19,7 @@ class SystemStats(BaseModel):
 
 class UserManagementRequest(BaseModel):
     """Request model for user management operations"""
+
     email: Optional[EmailStr] = None
     name: Optional[str] = None
     password: Optional[str] = Field(None, min_length=8)
@@ -30,6 +33,7 @@ class UserManagementRequest(BaseModel):
 
 class UserManagementResponse(BaseModel):
     """Response model for user management operations"""
+
     id: str
     email: str
     name: Optional[str]
@@ -50,6 +54,7 @@ class UserManagementResponse(BaseModel):
 
 class BulkUserOperation(BaseModel):
     """Model for bulk user operations"""
+
     user_ids: List[str]
     action: str = Field(..., pattern="^(suspend|unsuspend|activate|deactivate|delete)$")
     reason: Optional[str] = None
@@ -57,6 +62,7 @@ class BulkUserOperation(BaseModel):
 
 class SystemConfigUpdate(BaseModel):
     """Model for system configuration updates"""
+
     auth_config: Optional[Dict[str, Any]] = None
     feature_flags: Optional[Dict[str, bool]] = None
     rate_limits: Optional[Dict[str, int]] = None
@@ -66,6 +72,7 @@ class SystemConfigUpdate(BaseModel):
 
 class AdminDashboardData(BaseModel):
     """Comprehensive dashboard data model"""
+
     total_users: int
     active_users: int
     suspended_users: int
@@ -79,6 +86,7 @@ class AdminDashboardData(BaseModel):
 
 class UserActivityReport(BaseModel):
     """User activity report model"""
+
     period_days: int
     total_actions: int
     actions_by_type: Dict[str, int]
@@ -88,6 +96,7 @@ class UserActivityReport(BaseModel):
 
 class SecurityReport(BaseModel):
     """Security report model"""
+
     period_days: int
     failed_login_attempts: int
     suspicious_ips: List[Dict[str, Any]]
@@ -98,6 +107,7 @@ class SecurityReport(BaseModel):
 
 class SystemHealthCheck(BaseModel):
     """System health check model"""
+
     status: str = Field(..., pattern="^(healthy|degraded|unhealthy)$")
     components: Dict[str, Dict[str, Any]]
     uptime: str

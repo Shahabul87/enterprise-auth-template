@@ -28,54 +28,29 @@ class Role(Base):
     __tablename__ = "roles"
 
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid.uuid4,
-        index=True
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True
     )
     name: Mapped[str] = mapped_column(
-        String(50),
-        unique=True,
-        nullable=False,
-        index=True
+        String(50), unique=True, nullable=False, index=True
     )
-    display_name: Mapped[str] = mapped_column(
-        String(100),
-        nullable=False
-    )
-    description: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True
-    )
+    display_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     is_system: Mapped[bool] = mapped_column(
-        Boolean,
-        default=False,
-        nullable=False,
-        comment="System roles cannot be deleted"
+        Boolean, default=False, nullable=False, comment="System roles cannot be deleted"
     )
     is_active: Mapped[bool] = mapped_column(
-        Boolean,
-        default=True,
-        nullable=False,
-        index=True
+        Boolean, default=True, nullable=False, index=True
     )
     priority: Mapped[int] = mapped_column(
-        default=0,
-        nullable=False,
-        comment="Higher priority roles override lower ones"
+        default=0, nullable=False, comment="Higher priority roles override lower ones"
     )
 
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow,
-        nullable=False
+        DateTime, default=datetime.utcnow, nullable=False
     )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        nullable=False
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
     )
 
     # Relationships
@@ -83,14 +58,14 @@ class Role(Base):
         "Permission",
         secondary="role_permissions",
         back_populates="roles",
-        lazy="selectin"
+        lazy="selectin",
     )
 
     users: Mapped[List["User"]] = relationship(
         "User",
         secondary="user_roles_association",
         back_populates="roles",
-        lazy="dynamic"
+        lazy="dynamic",
     )
 
     def __repr__(self) -> str:
@@ -122,13 +97,14 @@ class Role(Base):
             "priority": self.priority,
             "permissions": [p.name for p in self.permissions if p.is_active],
             "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat()
+            "updated_at": self.updated_at.isoformat(),
         }
 
 
 # Predefined system roles
 class SystemRoles:
     """System role constants."""
+
     SUPER_ADMIN = "super_admin"
     ADMIN = "admin"
     MODERATOR = "moderator"

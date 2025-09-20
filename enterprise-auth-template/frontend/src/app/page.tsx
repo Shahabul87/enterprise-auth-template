@@ -20,7 +20,7 @@ import {
   Globe
 } from 'lucide-react';
 
-export default function HomePage(): JSX.Element {
+export default function HomePage(): React.ReactElement {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 

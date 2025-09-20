@@ -27,7 +27,7 @@ interface ProfileFormProps {
   onSuccess?: () => void;
 }
 
-export function ProfileForm({ onSuccess }: ProfileFormProps): JSX.Element {
+export function ProfileForm({ onSuccess }: ProfileFormProps): React.ReactElement {
   const { user, updateUser, isLoading } = useAuth();
 
   const { form, isSubmitting, error, handleSubmit } = useAuthForm<ProfileFormData>({

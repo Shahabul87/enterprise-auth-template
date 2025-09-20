@@ -34,6 +34,7 @@ logger = structlog.get_logger(__name__)
 
 class PrivilegeLevel(str, Enum):
     """User privilege levels for session security."""
+
     SUPER_ADMIN = "super_admin"
     ADMIN = "admin"
     MODERATOR = "moderator"
@@ -44,16 +45,19 @@ class PrivilegeLevel(str, Enum):
 
 class AuthenticationError(Exception):
     """Authentication-related errors."""
+
     pass
 
 
 class AccountLockedError(AuthenticationError):
     """Account is locked due to too many failed attempts."""
+
     pass
 
 
 class EmailNotVerifiedError(AuthenticationError):
     """Email address is not verified."""
+
     pass
 
 
@@ -123,7 +127,9 @@ class AuthenticationService:
                 raise AuthenticationError("Invalid email or password")
 
             if not user.hashed_password:
-                logger.warning(f"Authentication failed - User has no password set: {email}")
+                logger.warning(
+                    f"Authentication failed - User has no password set: {email}"
+                )
                 await self._handle_failed_login(email, ip_address)
                 raise AuthenticationError("Invalid email or password")
 
@@ -133,14 +139,18 @@ class AuthenticationService:
                     "Login attempt on locked account",
                     user_id=str(user.id),
                     email=email,
-                    locked_until=user.locked_until.isoformat() if user.locked_until else None,
+                    locked_until=(
+                        user.locked_until.isoformat() if user.locked_until else None
+                    ),
                     ip_address=ip_address,
                 )
                 raise AccountLockedError(f"Account is locked until {user.locked_until}")
 
             # Verify password
             password_valid = verify_password(password, user.hashed_password)
-            logger.warning(f"Password verification for {email}: valid={password_valid}, is_active={user.is_active}, email_verified={user.email_verified}")
+            logger.warning(
+                f"Password verification for {email}: valid={password_valid}, is_active={user.is_active}, email_verified={user.email_verified}"
+            )
 
             if not password_valid:
                 logger.warning(f"Authentication failed - Invalid password for: {email}")
@@ -198,7 +208,7 @@ class AuthenticationService:
                 user_last_login=user_last_login,
                 user_roles=user.roles,
                 ip_address=ip_address,
-                user_agent=user_agent
+                user_agent=user_agent,
             )
 
             # Don't commit here - let the session handler manage it
@@ -443,16 +453,17 @@ class AuthenticationService:
         )
 
         refresh_token_jwt, refresh_token_id = create_refresh_token(
-            str(user_id),
-            session_id=session_id
+            str(user_id), session_id=session_id
         )
 
         # Store refresh token
-        await self.session_repo.create_refresh_token({
-            "token_hash": refresh_token_id,
-            "user_id": user_id,
-            "expires_at": datetime.now(timezone.utc) + timedelta(days=7),
-        })
+        await self.session_repo.create_refresh_token(
+            {
+                "token_hash": refresh_token_id,
+                "user_id": user_id,
+                "expires_at": datetime.now(timezone.utc) + timedelta(days=7),
+            }
+        )
 
         # Create UserResponse from extracted data
         display_name = user_full_name or user_email.split("@")[0]
@@ -469,7 +480,7 @@ class AuthenticationService:
             createdAt=user_created_at.isoformat() if user_created_at else "",
             updatedAt=user_updated_at.isoformat() if user_updated_at else "",
             lastLoginAt=user_last_login.isoformat() if user_last_login else None,
-            is_active=user_is_active
+            is_active=user_is_active,
         )
 
         return LoginResponse(
@@ -545,16 +556,17 @@ class AuthenticationService:
         )
 
         refresh_token_jwt, refresh_token_id = create_refresh_token(
-            str(user.id),
-            session_id=session_id
+            str(user.id), session_id=session_id
         )
 
         # Store refresh token (using token_hash field to match database schema)
-        await self.session_repo.create_refresh_token({
-            "token_hash": refresh_token_id,
-            "user_id": user.id,
-            "expires_at": datetime.now(timezone.utc) + timedelta(days=7),
-        })
+        await self.session_repo.create_refresh_token(
+            {
+                "token_hash": refresh_token_id,
+                "user_id": user.id,
+                "expires_at": datetime.now(timezone.utc) + timedelta(days=7),
+            }
+        )
 
         # Create UserResponse from extracted data
         display_name = user_data["full_name"] or user_data["email"].split("@")[0]
@@ -571,7 +583,7 @@ class AuthenticationService:
             created_at=user_data["created_at"],
             updated_at=user_data["updated_at"],
             last_login_at=user_data["last_login"],
-            is_active=user_data["is_active"]
+            is_active=user_data["is_active"],
         )
 
         return LoginResponse(

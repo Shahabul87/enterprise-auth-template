@@ -336,3 +336,83 @@ extension AnalyticsTimeRangeTypeExtension on AnalyticsTimeRangeType {
     }
   }
 }
+
+// Security specific models for Advanced Security Settings
+@freezed
+class SecurityConfiguration with _$SecurityConfiguration {
+  const factory SecurityConfiguration({
+    required bool enableTwoFactor,
+    required bool enableBiometric,
+    required bool enableIpBlocking,
+    required bool enableRateLimit,
+    required int maxLoginAttempts,
+    required int sessionTimeout,
+  }) = _SecurityConfiguration;
+
+  factory SecurityConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$SecurityConfigurationFromJson(json);
+}
+
+@freezed
+class IpBlockRule with _$IpBlockRule {
+  const factory IpBlockRule({
+    required String id,
+    required String ipAddress,
+    required String cidr,
+    required IpRuleType type,
+    required String reason,
+    required DateTime createdAt,
+    DateTime? expiresAt,
+    required bool isActive,
+  }) = _IpBlockRule;
+
+  factory IpBlockRule.fromJson(Map<String, dynamic> json) =>
+      _$IpBlockRuleFromJson(json);
+}
+
+enum IpRuleType {
+  block,
+  allow,
+  monitor,
+}
+
+@freezed
+class RateLimitRule with _$RateLimitRule {
+  const factory RateLimitRule({
+    required String id,
+    required String endpoint,
+    required int maxRequests,
+    required int timeWindowSeconds,
+    required String action,
+    required DateTime createdAt,
+    required bool isActive,
+  }) = _RateLimitRule;
+
+  factory RateLimitRule.fromJson(Map<String, dynamic> json) =>
+      _$RateLimitRuleFromJson(json);
+}
+
+@freezed
+class SecurityEvent with _$SecurityEvent {
+  const factory SecurityEvent({
+    required String id,
+    required String type,
+    required SecurityEventSeverity severity,
+    required String description,
+    required String ipAddress,
+    String? userId,
+    required Map<String, dynamic> metadata,
+    required DateTime timestamp,
+    required bool resolved,
+  }) = _SecurityEvent;
+
+  factory SecurityEvent.fromJson(Map<String, dynamic> json) =>
+      _$SecurityEventFromJson(json);
+}
+
+enum SecurityEventSeverity {
+  low,
+  medium,
+  high,
+  critical,
+}

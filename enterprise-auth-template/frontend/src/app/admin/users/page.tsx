@@ -5,7 +5,7 @@ import { useRequireAuth } from '@/stores/auth.store';
 import AdminLayout from '@/components/admin/admin-layout';
 import UserTable from '@/components/admin/users/user-table';
 
-export default function AdminUsersPage(): JSX.Element {
+export default function AdminUsersPage(): React.ReactElement {
   // Require authentication
   const { user, hasPermission } = useRequireAuth();
 

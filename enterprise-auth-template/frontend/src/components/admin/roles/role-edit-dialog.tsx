@@ -33,7 +33,7 @@ export default function RoleEditDialog({
   open,
   onClose,
   onSuccess,
-}: RoleEditDialogProps): JSX.Element {
+}: RoleEditDialogProps): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 

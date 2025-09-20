@@ -1,348 +1,528 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_auth_template/core/constants/api_constants.dart';
+import 'package:flutter_auth_template/core/network/api_client.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
+import 'package:flutter_auth_template/data/models/auth_request.dart';
+import 'package:flutter_auth_template/data/models/auth_response.dart';
+import 'package:flutter_auth_template/domain/entities/user.dart';
 
-import '../core/constants/api_constants.dart';
-import '../core/errors/app_exception.dart';
-import '../core/network/api_response.dart';
-import '../core/storage/secure_storage_service.dart';
-import '../data/models/auth_response.dart';
-import '../data/models/auth_request.dart';
-import '../domain/entities/user.dart';
-import 'api/api_client.dart';
-
-// Authentication Service Provider
 final authServiceProvider = Provider<AuthService>((ref) {
-  final apiClient = ref.watch(apiClientProvider);
-  final secureStorage = ref.watch(secureStorageServiceProvider);
-  return AuthService(apiClient, secureStorage);
+  return AuthService(ref.read(apiClientProvider));
 });
 
-/// Authentication service handling all auth-related API calls
 class AuthService {
   final ApiClient _apiClient;
-  final SecureStorageService _secureStorage;
 
-  AuthService(this._apiClient, this._secureStorage);
+  AuthService(this._apiClient);
+
+  /// Register a new user with email and password
+  Future<AuthResponseData> register(RegisterRequest request) async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.registerPath,
+        data: request.toJson(),
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
+      }
+
+      return authResponse.data!;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
+  }
 
   /// Login with email and password
-  Future<ApiResponse<User>> login(LoginRequest request) async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.loginPath, data: request.toJson()),
-      (response) => _handleAuthResponse(response),
-    );
-  }
-
-  /// Register new user
-  Future<ApiResponse<User>> register(RegisterRequest request) async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.registerPath, data: request.toJson()),
-      (response) => _handleAuthResponse(response),
-    );
-  }
-
-  /// Get current user profile
-  Future<ApiResponse<User>> getCurrentUser() async {
-    return _handleRequest(
-      () => _apiClient.get(ApiConstants.userMePath),
-      (response) => _parseResponse<User>(
-        response,
-        (data) => User.fromJson(data as Map<String, dynamic>),
-      ),
-    );
-  }
-
-  /// Update user profile
-  Future<ApiResponse<User>> updateProfile(Map<String, dynamic> data) async {
-    return _handleRequest(
-      () => _apiClient.patch(ApiConstants.userMePath, data: data),
-      (response) => _parseResponse<User>(
-        response,
-        (data) => User.fromJson(data as Map<String, dynamic>),
-      ),
-    );
-  }
-
-  /// Logout user and clear tokens
-  Future<ApiResponse<String>> logout() async {
+  Future<AuthResponseData> login(LoginRequest request) async {
     try {
-      // Call logout endpoint to invalidate server-side session
-      await _apiClient.post(ApiConstants.logoutPath);
-    } catch (e) {
-      // Continue with local logout even if server call fails
-    } finally {
-      // Clear all stored tokens and user data
-      await _secureStorage.clearAll();
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.loginPath,
+        data: request.toJson(),
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
+      }
+
+      return authResponse.data!;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
     }
-    return const ApiResponse.success(data: 'Logged out successfully');
   }
 
-  /// Forgot password request
-  Future<ApiResponse<String>> forgotPassword(ForgotPasswordRequest request) async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.forgotPasswordPath, data: request.toJson()),
-      (response) => _parseMessageResponse(response),
-    );
+  /// Refresh access token
+  Future<AuthResponseData> refreshToken() async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.refreshPath,
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success || authResponse.data == null) {
+        throw const TokenExpiredException();
+      }
+
+      return authResponse.data!;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw const TokenExpiredException();
+      }
+      throw _handleDioException(e);
+    }
+  }
+
+  /// Logout current user
+  Future<void> logout() async {
+    try {
+      await _apiClient.post(ApiConstants.logoutPath);
+    } on DioException catch (e) {
+      // Ignore logout errors, clear local state anyway
+      throw _handleDioException(e);
+    }
+  }
+
+  /// Send forgot password email
+  Future<void> forgotPassword(ForgotPasswordRequest request) async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.forgotPasswordPath,
+        data: request.toJson(),
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success) {
+        throw _handleAuthError(authResponse.error);
+      }
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
   }
 
   /// Reset password with token
-  Future<ApiResponse<String>> resetPassword(ResetPasswordRequest request) async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.resetPasswordPath, data: request.toJson()),
-      (response) => _parseMessageResponse(response),
-    );
+  Future<void> resetPassword(ResetPasswordRequest request) async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.resetPasswordPath,
+        data: request.toJson(),
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success) {
+        throw _handleAuthError(authResponse.error);
+      }
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
   }
 
-  /// Change password
-  Future<ApiResponse<String>> changePassword(ChangePasswordRequest request) async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.profileChangePasswordPath, data: request.toJson()),
-      (response) => _parseMessageResponse(response),
-    );
-  }
+  /// Verify email with token
+  Future<void> verifyEmail(String token) async {
+    try {
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        ApiConstants.verifyEmailPath.replaceAll('{token}', token),
+      );
 
-  /// Verify email address
-  Future<ApiResponse<String>> verifyEmail(VerifyEmailRequest request) async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.verifyEmailPath, data: request.toJson()),
-      (response) => _parseMessageResponse(response),
-    );
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success) {
+        throw _handleAuthError(authResponse.error);
+      }
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
   }
 
   /// Resend email verification
-  Future<ApiResponse<String>> resendEmailVerification(String email) async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.resendVerificationPath, data: {'email': email}),
-      (response) => _parseMessageResponse(response),
-    );
+  Future<void> resendEmailVerification() async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.resendVerificationPath,
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success) {
+        throw _handleAuthError(authResponse.error);
+      }
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
   }
 
-  /// Setup Two-Factor Authentication
-  Future<ApiResponse<TwoFactorSetupResponse>> setup2FA() async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.twoFactorSetupPath),
-      (response) => _parseResponse<TwoFactorSetupResponse>(
-        response,
-        (data) => TwoFactorSetupResponse.fromJson(data as Map<String, dynamic>),
-      ),
-    );
+  /// Get current user permissions
+  Future<List<String>> getUserPermissions() async {
+    try {
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        ApiConstants.permissionsPath,
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
+      }
+
+      // Extract permissions from response
+      final permissions =
+          (response.data!['data']['permissions'] as List<dynamic>)
+              .cast<String>();
+      return permissions;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
   }
 
-  /// Enable Two-Factor Authentication
-  Future<ApiResponse<String>> enable2FA(String code) async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.twoFactorEnablePath, data: {'code': code}),
-      (response) => _parseMessageResponse(response),
-    );
+  /// Get current user profile
+  Future<User> getCurrentUser() async {
+    try {
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        ApiConstants.userMePath,
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
+      }
+
+      return authResponse.data!.user;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
   }
 
-  /// Verify Two-Factor Authentication code
-  Future<ApiResponse<User>> verify2FA(VerifyTwoFactorRequest request) async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.twoFactorVerifyPath, data: request.toJson()),
-      (response) => _handleAuthResponse(response),
-    );
+  /// Update current user profile
+  Future<User> updateCurrentUser(Map<String, dynamic> userData) async {
+    try {
+      final response = await _apiClient.put<Map<String, dynamic>>(
+        ApiConstants.userMePath,
+        data: userData,
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
+      }
+
+      return authResponse.data!.user;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
   }
 
-  /// Disable Two-Factor Authentication
-  Future<ApiResponse<String>> disable2FA(String password) async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.twoFactorDisablePath, data: {'password': password}),
-      (response) => _parseMessageResponse(response),
-    );
+  /// OAuth2 Methods
+
+  /// Get supported OAuth providers
+  Future<List<String>> getOAuthProviders() async {
+    try {
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        ApiConstants.oauthProvidersPath,
+      );
+
+      final providers = (response.data!['providers'] as List<dynamic>)
+          .cast<String>();
+      return providers;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
   }
 
-  /// OAuth login
-  Future<ApiResponse<User>> oauthLogin(OAuthLoginRequest request) async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.oauthCallbackPath.replaceAll('{provider}', request.provider), 
-        data: request.toJson()),
-      (response) => _handleAuthResponse(response),
-    );
+  /// Get OAuth authorization URL
+  Future<String> getOAuthAuthorizationUrl(String provider) async {
+    try {
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        ApiConstants.oauthInitPath.replaceAll('{provider}', provider),
+      );
+
+      return response.data!['authorization_url'] as String;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
   }
+
+  /// Complete OAuth login with authorization code
+  Future<AuthResponseData> completeOAuthLogin(OAuthLoginRequest request) async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.oauthCallbackPath.replaceAll(
+          '{provider}',
+          request.provider,
+        ),
+        data: request.toJson(),
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
+      }
+
+      return authResponse.data!;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
+  }
+
+  /// Magic Links Methods
 
   /// Request magic link
-  Future<ApiResponse<String>> requestMagicLink(MagicLinkRequest request) async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.magicLinkRequestPath, data: request.toJson()),
-      (response) => _parseMessageResponse(response),
-    );
-  }
-
-  /// Verify magic link
-  Future<ApiResponse<User>> verifyMagicLink(String token) async {
-    return _handleRequest(
-      () => _apiClient.post(ApiConstants.magicLinkVerifyPath.replaceAll('{token}', token), 
-        data: {'token': token}),
-      (response) => _handleAuthResponse(response),
-    );
-  }
-
-  /// Refresh authentication token
-  Future<bool> refreshToken() async {
+  Future<void> requestMagicLink(MagicLinkRequest request) async {
     try {
-      final refreshToken = await _secureStorage.getRefreshToken();
-      if (refreshToken == null) {
-        return false;
-      }
-
-      final response = await _apiClient.post(
-        ApiConstants.refreshPath,
-        data: {'refresh_token': refreshToken},
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.magicLinkRequestPath,
+        data: request.toJson(),
       );
 
-      if (response.statusCode == 200) {
-        final data = response.data;
-        if (data is Map<String, dynamic> && data['success'] == true) {
-          final tokenData = data['data'];
-          if (tokenData != null) {
-            await _secureStorage.storeAccessToken(tokenData['access_token']);
-            if (tokenData['refresh_token'] != null) {
-              await _secureStorage.storeRefreshToken(tokenData['refresh_token']);
-            }
-            return true;
-          }
-        }
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success) {
+        throw _handleAuthError(authResponse.error);
       }
-      return false;
-    } catch (e) {
-      return false;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
     }
   }
 
-  /// Check if user is authenticated
-  Future<bool> isAuthenticated() async {
+  /// Verify magic link token
+  Future<AuthResponseData> verifyMagicLink(String token) async {
     try {
-      final accessToken = await _secureStorage.getAccessToken();
-      if (accessToken == null) {
-        return false;
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        ApiConstants.magicLinkVerifyPath.replaceAll('{token}', token),
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
       }
 
-      // Optionally verify token with server
-      final response = await getCurrentUser();
-      return response.isSuccess;
-    } catch (e) {
-      return false;
+      return authResponse.data!;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
     }
   }
 
-  /// Generic request handler with error handling
-  Future<ApiResponse<T>> _handleRequest<T>(
-    Future<Response> Function() request,
-    ApiResponse<T> Function(Response response) parser,
+  /// WebAuthn Methods
+
+  /// Begin WebAuthn registration
+  Future<WebAuthnRegistrationResponse> beginWebAuthnRegistration({
+    String? email,
+  }) async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.webauthnRegisterBeginPath,
+        data: email != null ? {'email': email} : null,
+      );
+
+      return WebAuthnRegistrationResponse.fromJson(response.data!);
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
+  }
+
+  /// Complete WebAuthn registration
+  Future<void> completeWebAuthnRegistration(
+    Map<String, dynamic> credential,
   ) async {
     try {
-      final response = await request();
-      return parser(response);
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.webauthnRegisterCompletePath,
+        data: credential,
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success) {
+        throw _handleAuthError(authResponse.error);
+      }
     } on DioException catch (e) {
-      if (e.error is AppException) {
-        final appError = e.error as AppException;
-        return ApiResponse.error(
-          message: appError.message,
-          code: appError.toString(),
-          originalError: e,
-        );
-      }
-      return ApiResponse.error(
-        message: e.message ?? 'Request failed',
-        originalError: e,
+      throw _handleDioException(e);
+    }
+  }
+
+  /// Begin WebAuthn authentication
+  Future<WebAuthnAuthenticationResponse> beginWebAuthnAuthentication({
+    String? email,
+  }) async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.webauthnAuthenticateBeginPath,
+        data: email != null ? {'email': email} : null,
       );
-    } catch (e) {
-      return ApiResponse.error(
-        message: 'Request failed',
-        originalError: e,
+
+      return WebAuthnAuthenticationResponse.fromJson(response.data!);
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
+  }
+
+  /// Complete WebAuthn authentication
+  Future<AuthResponseData> completeWebAuthnAuthentication(
+    Map<String, dynamic> credential,
+  ) async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.webauthnAuthenticateCompletePath,
+        data: credential,
       );
-    }
-  }
 
-  /// Handle authentication response and store tokens
-  ApiResponse<User> _handleAuthResponse(Response response) {
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final responseData = response.data;
-      
-      if (responseData is Map<String, dynamic>) {
-        final success = responseData['success'] as bool? ?? false;
-        
-        if (success) {
-          final data = responseData['data'] as Map<String, dynamic>?;
-          if (data != null) {
-            try {
-              // Extract user and tokens
-              final user = User.fromJson(data['user'] as Map<String, dynamic>);
-              // Backend returns camelCase for tokens
-              final accessToken = data['accessToken'] as String? ?? data['access_token'] as String?;
-              final refreshToken = data['refreshToken'] as String? ?? data['refresh_token'] as String?;
+      final authResponse = AuthResponse.fromJson(response.data!);
 
-              // Store tokens asynchronously
-              if (accessToken != null) {
-                _secureStorage.storeAccessToken(accessToken);
-              }
-              if (refreshToken != null) {
-                _secureStorage.storeRefreshToken(refreshToken);
-              }
-
-              return ApiResponse.success(data: user);
-            } catch (e) {
-              return ApiResponse.error(
-                message: 'Invalid response format',
-                originalError: e,
-              );
-            }
-          }
-        }
-        
-        final error = responseData['error'] as Map<String, dynamic>?;
-        final message = error?['message'] as String? ?? 'Request failed';
-        return ApiResponse.error(message: message);
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
       }
-    }
 
-    return ApiResponse.error(
-      message: 'Request failed with status: ${response.statusCode}',
-    );
+      return authResponse.data!;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
   }
 
-  /// Generic response parser
-  ApiResponse<T> _parseResponse<T>(
-    Response response,
-    T Function(dynamic data) parser,
-  ) {
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final responseData = response.data;
-      
-      if (responseData is Map<String, dynamic>) {
-        final success = responseData['success'] as bool? ?? false;
-        
-        if (success) {
-          final data = responseData['data'];
-          if (data != null) {
-            try {
-              final parsedData = parser(data);
-              return ApiResponse.success(data: parsedData);
-            } catch (e) {
-              return ApiResponse.error(
-                message: 'Invalid response format',
-                originalError: e,
-              );
-            }
-          }
-        }
-        
-        final error = responseData['error'] as Map<String, dynamic>?;
-        final message = error?['message'] as String? ?? 'Request failed';
-        return ApiResponse.error(message: message);
+  /// Two-Factor Authentication Methods
+
+  /// Get 2FA status
+  Future<Map<String, dynamic>> getTwoFactorStatus() async {
+    try {
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        ApiConstants.twoFactorStatusPath,
+      );
+
+      return response.data!;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
+  }
+
+  /// Setup 2FA (get QR code and secret)
+  Future<TwoFactorSetupResponse> setupTwoFactor() async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.twoFactorSetupPath,
+      );
+
+      return TwoFactorSetupResponse.fromJson(response.data!);
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
+  }
+
+  /// Enable 2FA with verification code
+  Future<List<String>> enableTwoFactor(VerifyTwoFactorRequest request) async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.twoFactorEnablePath,
+        data: request.toJson(),
+      );
+
+      final backupCodes = (response.data!['backup_codes'] as List<dynamic>)
+          .cast<String>();
+      return backupCodes;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
+  }
+
+  /// Verify 2FA code
+  Future<AuthResponseData> verifyTwoFactor(
+    VerifyTwoFactorRequest request,
+  ) async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.twoFactorVerifyPath,
+        data: request.toJson(),
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success || authResponse.data == null) {
+        throw _handleAuthError(authResponse.error);
       }
-    }
 
-    return ApiResponse.error(
-      message: 'Request failed with status: ${response.statusCode}',
-    );
+      return authResponse.data!;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
   }
 
-  /// Parse message response
-  ApiResponse<String> _parseMessageResponse(Response response) {
-    return _parseResponse<String>(
-      response,
-      (data) => (data as Map<String, dynamic>)['message'] as String,
+  /// Disable 2FA
+  Future<void> disableTwoFactor() async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.twoFactorDisablePath,
+      );
+
+      final authResponse = AuthResponse.fromJson(response.data!);
+
+      if (!authResponse.success) {
+        throw _handleAuthError(authResponse.error);
+      }
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
+  }
+
+  /// Regenerate 2FA backup codes
+  Future<List<String>> regenerateBackupCodes() async {
+    try {
+      final response = await _apiClient.post<Map<String, dynamic>>(
+        ApiConstants.twoFactorBackupCodesPath,
+      );
+
+      final backupCodes = (response.data!['backup_codes'] as List<dynamic>)
+          .cast<String>();
+      return backupCodes;
+    } on DioException catch (e) {
+      throw _handleDioException(e);
+    }
+  }
+
+  /// Private helper methods
+
+  AppException _handleAuthError(AuthResponseError? error) {
+    if (error == null) {
+      return const UnknownException('Authentication failed', null);
+    }
+
+    switch (error.code) {
+      case ApiErrors.invalidCredentials:
+        return const InvalidCredentialsException();
+      case ApiErrors.emailNotVerified:
+        return const EmailNotVerifiedException();
+      case ApiErrors.twoFactorRequired:
+        return const TwoFactorRequiredException();
+      case ApiErrors.accountLocked:
+        return const AccountLockedException();
+      case ApiErrors.emailAlreadyExists:
+        return const EmailAlreadyExistsException();
+      case ApiErrors.tokenExpired:
+        return const TokenExpiredException();
+      case ApiErrors.invalidToken:
+        return const InvalidTokenException();
+      default:
+        return UnknownException(error.message, null);
+    }
+  }
+
+  AppException _handleDioException(DioException exception) {
+    // The error interceptor should have already handled this,
+    // but provide fallback handling
+    if (exception.error is AppException) {
+      return exception.error as AppException;
+    }
+
+    return NetworkException(
+      exception.message ?? 'Network error occurred',
+      exception.requestOptions.path,
     );
   }
 }

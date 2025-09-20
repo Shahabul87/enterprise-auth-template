@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../data/models/search_models.dart';
-import '../../../data/services/search_api_service.dart';
+import 'package:flutter_auth_template/data/models/search_models.dart';
+import 'package:flutter_auth_template/data/services/search_api_service.dart';
 
 final searchApiServiceProvider = Provider((ref) => SearchApiService());
 

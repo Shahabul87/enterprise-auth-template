@@ -5,7 +5,7 @@ import { useRequireAuth } from '@/stores/auth.store';
 import AdminLayout from '@/components/admin/admin-layout';
 import AuditLogViewer from '@/components/admin/audit/audit-log-viewer';
 
-export default function AdminAuditLogsPage(): JSX.Element {
+export default function AdminAuditLogsPage(): React.ReactElement {
   // Require authentication
   const { user, hasPermission } = useRequireAuth();
 

@@ -31,16 +31,19 @@ logger = structlog.get_logger(__name__)
 
 class WebhookError(Exception):
     """Base exception for webhook-related errors."""
+
     pass
 
 
 class WebhookValidationError(WebhookError):
     """Exception raised when webhook validation fails."""
+
     pass
 
 
 class WebhookDeliveryError(WebhookError):
     """Exception raised when webhook delivery fails."""
+
     pass
 
 
@@ -62,7 +65,7 @@ class WebhookService:
         self,
         session: AsyncSession,
         cache_service: Optional[CacheService] = None,
-        event_emitter: Optional[EventEmitter] = None
+        event_emitter: Optional[EventEmitter] = None,
     ) -> None:
         """
         Initialize webhook service.
@@ -83,19 +86,16 @@ class WebhookService:
         """Get HTTP session, creating it if needed."""
         if self._http_session is None:
             connector = aiohttp.TCPConnector(
-                limit=100,
-                limit_per_host=20,
-                ttl_dns_cache=300,
-                use_dns_cache=True
+                limit=100, limit_per_host=20, ttl_dns_cache=300, use_dns_cache=True
             )
             timeout = aiohttp.ClientTimeout(total=30, connect=10)
             self._http_session = aiohttp.ClientSession(
                 connector=connector,
                 timeout=timeout,
                 headers={
-                    'User-Agent': f'{settings.PROJECT_NAME}/webhook-service',
-                    'Content-Type': 'application/json'
-                }
+                    "User-Agent": f"{settings.PROJECT_NAME}/webhook-service",
+                    "Content-Type": "application/json",
+                },
             )
         return self._http_session
 
@@ -116,7 +116,7 @@ class WebhookService:
         retry_count: int = 3,
         timeout_seconds: int = 30,
         organization_id: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
     ) -> Webhook:
         """
         Create a new webhook configuration.
@@ -150,7 +150,7 @@ class WebhookService:
                 raise WebhookValidationError(f"User {created_by} not found or inactive")
 
             # Validate URL
-            if not url.startswith(('http://', 'https://')):
+            if not url.startswith(("http://", "https://")):
                 raise WebhookValidationError("Webhook URL must use HTTP or HTTPS")
 
             # Validate events
@@ -178,24 +178,26 @@ class WebhookService:
                 created_at=datetime.utcnow(),
                 updated_at=datetime.utcnow(),
                 success_count=0,
-                failure_count=0
+                failure_count=0,
             )
 
             self.session.add(webhook)
             await self.session.flush()
 
             # Emit event for audit logging
-            await self.event_emitter.emit(Event(
-                event_type="webhook.created",
-                data={
-                    "webhook_id": webhook.id,
-                    "name": name,
-                    "url": url,
-                    "events": events,
-                    "created_by": created_by,
-                    "organization_id": organization_id
-                }
-            ))
+            await self.event_emitter.emit(
+                Event(
+                    event_type="webhook.created",
+                    data={
+                        "webhook_id": webhook.id,
+                        "name": name,
+                        "url": url,
+                        "events": events,
+                        "created_by": created_by,
+                        "organization_id": organization_id,
+                    },
+                )
+            )
 
             await self.session.commit()
 
@@ -205,7 +207,7 @@ class WebhookService:
                 name=name,
                 url=url,
                 events=events,
-                created_by=created_by
+                created_by=created_by,
             )
 
             return webhook
@@ -220,7 +222,7 @@ class WebhookService:
                 name=name,
                 url=url,
                 created_by=created_by,
-                error=str(e)
+                error=str(e),
             )
             raise WebhookError(f"Failed to create webhook: {str(e)}")
 
@@ -247,7 +249,7 @@ class WebhookService:
         user_id: str,
         skip: int = 0,
         limit: int = 100,
-        filters: Optional[Dict[str, Any]] = None
+        filters: Optional[Dict[str, Any]] = None,
     ) -> Tuple[List[Webhook], int]:
         """
         Get webhooks for a specific user.
@@ -270,7 +272,9 @@ class WebhookService:
                 if "is_active" in filters:
                     query = query.where(Webhook.is_active == filters["is_active"])
                 if "event_type" in filters:
-                    query = query.where(Webhook.events.contains([filters["event_type"]]))
+                    query = query.where(
+                        Webhook.events.contains([filters["event_type"]])
+                    )
 
             # Get total count
             count_stmt = select(func.count()).select_from(query.subquery())
@@ -294,7 +298,7 @@ class WebhookService:
         payload: Dict[str, Any],
         webhook_ids: Optional[List[str]] = None,
         user_id: Optional[str] = None,
-        organization_id: Optional[str] = None
+        organization_id: Optional[str] = None,
     ) -> List[str]:
         """
         Send webhook event to matching webhooks.
@@ -312,8 +316,7 @@ class WebhookService:
         try:
             # Build query to find matching webhooks
             query = select(Webhook).where(
-                Webhook.is_active == True,
-                Webhook.events.contains([event_type])
+                Webhook.is_active == True, Webhook.events.contains([event_type])
             )
 
             if webhook_ids:
@@ -336,7 +339,7 @@ class WebhookService:
                     payload=payload,
                     status="pending",
                     attempt_count=0,
-                    created_at=datetime.utcnow()
+                    created_at=datetime.utcnow(),
                 )
                 self.session.add(delivery)
                 await self.session.flush()
@@ -349,7 +352,9 @@ class WebhookService:
             return delivery_ids
 
         except Exception as e:
-            logger.error("Failed to send webhook event", event_type=event_type, error=str(e))
+            logger.error(
+                "Failed to send webhook event", event_type=event_type, error=str(e)
+            )
             return []
 
     async def retry_delivery(self, delivery_id: str) -> bool:
@@ -383,12 +388,13 @@ class WebhookService:
             return success
 
         except Exception as e:
-            logger.error("Failed to retry delivery", delivery_id=delivery_id, error=str(e))
+            logger.error(
+                "Failed to retry delivery", delivery_id=delivery_id, error=str(e)
+            )
             return False
 
     async def get_system_webhook_statistics(
-        self,
-        time_range: str = "24h"
+        self, time_range: str = "24h"
     ) -> Dict[str, Any]:
         """
         Get system-wide webhook statistics.
@@ -411,15 +417,21 @@ class WebhookService:
             total_webhooks = total_result.scalar() or 0
 
             # Get active webhooks
-            active_stmt = select(func.count(Webhook.id)).where(Webhook.is_active == True)
+            active_stmt = select(func.count(Webhook.id)).where(
+                Webhook.is_active == True
+            )
             active_result = await self.session.execute(active_stmt)
             active_webhooks = active_result.scalar() or 0
 
             # Get delivery statistics
             deliveries_stmt = select(
                 func.count(WebhookDelivery.id).label("total"),
-                func.sum(case((WebhookDelivery.status == "success", 1), else_=0)).label("success"),
-                func.sum(case((WebhookDelivery.status == "failed", 1), else_=0)).label("failed")
+                func.sum(case((WebhookDelivery.status == "success", 1), else_=0)).label(
+                    "success"
+                ),
+                func.sum(case((WebhookDelivery.status == "failed", 1), else_=0)).label(
+                    "failed"
+                ),
             ).where(WebhookDelivery.created_at >= since)
 
             deliveries_result = await self.session.execute(deliveries_stmt)
@@ -435,9 +447,10 @@ class WebhookService:
                     "failed": delivery_stats.failed or 0,
                     "success_rate": (
                         (delivery_stats.success / delivery_stats.total * 100)
-                        if delivery_stats.total > 0 else 0
-                    )
-                }
+                        if delivery_stats.total > 0
+                        else 0
+                    ),
+                },
             }
 
         except Exception as e:
@@ -446,7 +459,12 @@ class WebhookService:
                 "total_webhooks": 0,
                 "active_webhooks": 0,
                 "time_range": time_range,
-                "deliveries": {"total": 0, "success": 0, "failed": 0, "success_rate": 0}
+                "deliveries": {
+                    "total": 0,
+                    "success": 0,
+                    "failed": 0,
+                    "success_rate": 0,
+                },
             }
 
     async def regenerate_webhook_secret(self, webhook_id: str) -> Optional[str]:
@@ -466,7 +484,9 @@ class WebhookService:
             webhook = result.scalar_one_or_none()
 
             if not webhook:
-                logger.warning("Webhook not found for secret regeneration", webhook_id=webhook_id)
+                logger.warning(
+                    "Webhook not found for secret regeneration", webhook_id=webhook_id
+                )
                 return None
 
             # Generate new secret
@@ -480,7 +500,11 @@ class WebhookService:
             return new_secret
 
         except Exception as e:
-            logger.error("Failed to regenerate webhook secret", webhook_id=webhook_id, error=str(e))
+            logger.error(
+                "Failed to regenerate webhook secret",
+                webhook_id=webhook_id,
+                error=str(e),
+            )
             await self.session.rollback()
             return None
 
@@ -495,7 +519,7 @@ class WebhookService:
         headers: Optional[Dict[str, str]] = None,
         is_active: Optional[bool] = None,
         retry_count: Optional[int] = None,
-        timeout_seconds: Optional[int] = None
+        timeout_seconds: Optional[int] = None,
     ) -> Webhook:
         """
         Update webhook configuration.
@@ -535,7 +559,7 @@ class WebhookService:
             if description is not None:
                 update_values["description"] = description
             if url is not None:
-                if not url.startswith(('http://', 'https://')):
+                if not url.startswith(("http://", "https://")):
                     raise WebhookValidationError("Webhook URL must use HTTP or HTTPS")
                 update_values["url"] = url
             if events is not None:
@@ -555,9 +579,7 @@ class WebhookService:
 
             # Apply updates
             stmt = (
-                update(Webhook)
-                .where(Webhook.id == webhook_id)
-                .values(**update_values)
+                update(Webhook).where(Webhook.id == webhook_id).values(**update_values)
             )
             await self.session.execute(stmt)
 
@@ -567,21 +589,23 @@ class WebhookService:
             updated_webhook = result.scalar_one()
 
             # Emit event for audit logging
-            await self.event_emitter.emit(Event(
-                event_type="webhook.updated",
-                data={
-                    "webhook_id": webhook_id,
-                    "changes": list(update_values.keys()),
-                    "updated_by": webhook.created_by  # In a full implementation, this would come from current user
-                }
-            ))
+            await self.event_emitter.emit(
+                Event(
+                    event_type="webhook.updated",
+                    data={
+                        "webhook_id": webhook_id,
+                        "changes": list(update_values.keys()),
+                        "updated_by": webhook.created_by,  # In a full implementation, this would come from current user
+                    },
+                )
+            )
 
             await self.session.commit()
 
             logger.info(
                 "Webhook updated",
                 webhook_id=webhook_id,
-                changes=list(update_values.keys())
+                changes=list(update_values.keys()),
             )
 
             return updated_webhook
@@ -592,9 +616,7 @@ class WebhookService:
         except Exception as e:
             await self.session.rollback()
             logger.error(
-                "Failed to update webhook",
-                webhook_id=webhook_id,
-                error=str(e)
+                "Failed to update webhook", webhook_id=webhook_id, error=str(e)
             )
             raise WebhookError(f"Failed to update webhook: {str(e)}")
 
@@ -621,22 +643,21 @@ class WebhookService:
             stmt = (
                 update(Webhook)
                 .where(Webhook.id == webhook_id)
-                .values(
-                    is_active=False,
-                    updated_at=datetime.utcnow()
-                )
+                .values(is_active=False, updated_at=datetime.utcnow())
             )
             await self.session.execute(stmt)
 
             # Emit event for audit logging
-            await self.event_emitter.emit(Event(
-                event_type="webhook.deleted",
-                data={
-                    "webhook_id": webhook_id,
-                    "name": webhook.name,
-                    "url": webhook.url
-                }
-            ))
+            await self.event_emitter.emit(
+                Event(
+                    event_type="webhook.deleted",
+                    data={
+                        "webhook_id": webhook_id,
+                        "name": webhook.name,
+                        "url": webhook.url,
+                    },
+                )
+            )
 
             await self.session.commit()
 
@@ -646,9 +667,7 @@ class WebhookService:
         except Exception as e:
             await self.session.rollback()
             logger.error(
-                "Failed to delete webhook",
-                webhook_id=webhook_id,
-                error=str(e)
+                "Failed to delete webhook", webhook_id=webhook_id, error=str(e)
             )
             raise WebhookError(f"Failed to delete webhook: {str(e)}")
 
@@ -657,7 +676,7 @@ class WebhookService:
         event_type: str,
         payload: Dict[str, Any],
         organization_id: Optional[str] = None,
-        immediate: bool = False
+        immediate: bool = False,
     ) -> List[str]:
         """
         Trigger webhooks for a specific event type.
@@ -675,14 +694,14 @@ class WebhookService:
             # Find matching active webhooks
             conditions = [
                 Webhook.is_active == True,
-                Webhook.events.op('@>')([event_type])  # PostgreSQL array contains
+                Webhook.events.op("@>")([event_type]),  # PostgreSQL array contains
             ]
 
             if organization_id:
                 conditions.append(
                     or_(
                         Webhook.organization_id == organization_id,
-                        Webhook.organization_id.is_(None)
+                        Webhook.organization_id.is_(None),
                     )
                 )
 
@@ -694,7 +713,7 @@ class WebhookService:
                 logger.debug(
                     "No webhooks found for event type",
                     event_type=event_type,
-                    organization_id=organization_id
+                    organization_id=organization_id,
                 )
                 return []
 
@@ -707,7 +726,7 @@ class WebhookService:
                     logger.warning(
                         "Webhook circuit breaker is open, skipping delivery",
                         webhook_id=webhook.id,
-                        event_type=event_type
+                        event_type=event_type,
                     )
                     continue
 
@@ -719,7 +738,7 @@ class WebhookService:
                     payload=payload,
                     status="pending",
                     attempt_count=0,
-                    created_at=datetime.utcnow()
+                    created_at=datetime.utcnow(),
                 )
 
                 self.session.add(delivery)
@@ -738,7 +757,7 @@ class WebhookService:
                 event_type=event_type,
                 webhook_count=len(webhooks),
                 delivery_count=len(delivery_ids),
-                organization_id=organization_id
+                organization_id=organization_id,
             )
 
             return delivery_ids
@@ -749,7 +768,7 @@ class WebhookService:
                 "Failed to trigger webhooks",
                 event_type=event_type,
                 organization_id=organization_id,
-                error=str(e)
+                error=str(e),
             )
             raise WebhookError(f"Failed to trigger webhooks: {str(e)}")
 
@@ -781,9 +800,11 @@ class WebhookService:
                 logger.warning(
                     "Webhook is inactive, cancelling delivery",
                     delivery_id=delivery_id,
-                    webhook_id=webhook.id if webhook else None
+                    webhook_id=webhook.id if webhook else None,
                 )
-                await self._update_delivery_status(delivery_id, "failed", "Webhook inactive")
+                await self._update_delivery_status(
+                    delivery_id, "failed", "Webhook inactive"
+                )
                 return False
 
             # Prepare payload and headers
@@ -791,14 +812,16 @@ class WebhookService:
                 "id": delivery.id,
                 "event_type": delivery.event_type,
                 "timestamp": delivery.created_at.isoformat(),
-                "data": delivery.payload
+                "data": delivery.payload,
             }
 
             headers = dict(webhook.headers) if webhook.headers else {}
 
             # Add signature if secret is configured
             if webhook.secret:
-                signature = self._generate_signature(webhook.secret, json.dumps(payload_data))
+                signature = self._generate_signature(
+                    webhook.secret, json.dumps(payload_data)
+                )
                 headers["X-Webhook-Signature"] = signature
 
             # Attempt delivery
@@ -809,7 +832,7 @@ class WebhookService:
                     webhook.url,
                     json=payload_data,
                     headers=headers,
-                    timeout=aiohttp.ClientTimeout(total=webhook.timeout_seconds)
+                    timeout=aiohttp.ClientTimeout(total=webhook.timeout_seconds),
                 ) as response:
                     response_body = await response.text()
 
@@ -819,7 +842,7 @@ class WebhookService:
                         "success" if response.status < 400 else "failed",
                         response_body,
                         response.status,
-                        delivery.attempt_count + 1
+                        delivery.attempt_count + 1,
                     )
 
                     # Update webhook statistics
@@ -831,7 +854,7 @@ class WebhookService:
                             "Webhook delivered successfully",
                             delivery_id=delivery_id,
                             webhook_id=webhook.id,
-                            status_code=response.status
+                            status_code=response.status,
                         )
                         return True
                     else:
@@ -843,12 +866,14 @@ class WebhookService:
                             delivery_id=delivery_id,
                             webhook_id=webhook.id,
                             status_code=response.status,
-                            response=response_body[:500]  # Limit response logging
+                            response=response_body[:500],  # Limit response logging
                         )
 
                         # Schedule retry if attempts remaining
                         if delivery.attempt_count < webhook.retry_count:
-                            await self._schedule_webhook_retry(delivery_id, delivery.attempt_count + 1)
+                            await self._schedule_webhook_retry(
+                                delivery_id, delivery.attempt_count + 1
+                            )
 
                         return False
 
@@ -865,9 +890,7 @@ class WebhookService:
             raise
         except Exception as e:
             logger.error(
-                "Webhook delivery failed",
-                delivery_id=delivery_id,
-                error=str(e)
+                "Webhook delivery failed", delivery_id=delivery_id, error=str(e)
             )
             raise WebhookError(f"Webhook delivery failed: {str(e)}")
 
@@ -877,7 +900,7 @@ class WebhookService:
         event_type: Optional[str] = None,
         status: Optional[str] = None,
         limit: int = 50,
-        offset: int = 0
+        offset: int = 0,
     ) -> Tuple[List[WebhookDelivery], int]:
         """
         Get webhook deliveries with filtering.
@@ -912,13 +935,14 @@ class WebhookService:
             total_count = count_result.scalar()
 
             # Get deliveries
-            stmt = select(WebhookDelivery).options(selectinload(WebhookDelivery.webhook))
+            stmt = select(WebhookDelivery).options(
+                selectinload(WebhookDelivery.webhook)
+            )
             if conditions:
                 stmt = stmt.where(and_(*conditions))
 
             stmt = (
-                stmt
-                .order_by(desc(WebhookDelivery.created_at))
+                stmt.order_by(desc(WebhookDelivery.created_at))
                 .limit(limit)
                 .offset(offset)
             )
@@ -933,14 +957,12 @@ class WebhookService:
                 "Failed to get webhook deliveries",
                 webhook_id=webhook_id,
                 event_type=event_type,
-                error=str(e)
+                error=str(e),
             )
             raise WebhookError(f"Failed to get webhook deliveries: {str(e)}")
 
     async def get_webhook_statistics(
-        self,
-        webhook_id: str,
-        days: int = 30
+        self, webhook_id: str, days: int = 30
     ) -> Dict[str, Any]:
         """
         Get webhook delivery statistics.
@@ -959,12 +981,12 @@ class WebhookService:
             status_stmt = (
                 select(
                     WebhookDelivery.status,
-                    func.count(WebhookDelivery.id).label('count')
+                    func.count(WebhookDelivery.id).label("count"),
                 )
                 .where(
                     and_(
                         WebhookDelivery.webhook_id == webhook_id,
-                        WebhookDelivery.created_at >= since_date
+                        WebhookDelivery.created_at >= since_date,
                     )
                 )
                 .group_by(WebhookDelivery.status)
@@ -977,12 +999,12 @@ class WebhookService:
             event_stmt = (
                 select(
                     WebhookDelivery.event_type,
-                    func.count(WebhookDelivery.id).label('count')
+                    func.count(WebhookDelivery.id).label("count"),
                 )
                 .where(
                     and_(
                         WebhookDelivery.webhook_id == webhook_id,
-                        WebhookDelivery.created_at >= since_date
+                        WebhookDelivery.created_at >= since_date,
                     )
                 )
                 .group_by(WebhookDelivery.event_type)
@@ -1008,31 +1030,32 @@ class WebhookService:
                 "total_success": webhook.success_count,
                 "total_failures": webhook.failure_count,
                 "is_active": webhook.is_active,
-                "last_triggered": webhook.last_triggered_at.isoformat() if webhook.last_triggered_at else None,
-                "generated_at": datetime.utcnow().isoformat()
+                "last_triggered": (
+                    webhook.last_triggered_at.isoformat()
+                    if webhook.last_triggered_at
+                    else None
+                ),
+                "generated_at": datetime.utcnow().isoformat(),
             }
 
         except WebhookError:
             raise
         except Exception as e:
             logger.error(
-                "Failed to get webhook statistics",
-                webhook_id=webhook_id,
-                error=str(e)
+                "Failed to get webhook statistics", webhook_id=webhook_id, error=str(e)
             )
             raise WebhookError(f"Failed to get webhook statistics: {str(e)}")
 
     def _generate_webhook_secret(self) -> str:
         """Generate a secure webhook secret."""
         import secrets
+
         return secrets.token_urlsafe(32)
 
     def _generate_signature(self, secret: str, payload: str) -> str:
         """Generate HMAC signature for webhook payload."""
         signature = hmac.new(
-            secret.encode('utf-8'),
-            payload.encode('utf-8'),
-            hashlib.sha256
+            secret.encode("utf-8"), payload.encode("utf-8"), hashlib.sha256
         ).hexdigest()
         return f"sha256={signature}"
 
@@ -1050,9 +1073,7 @@ class WebhookService:
             await self.deliver_webhook(delivery_id)
         except Exception as e:
             logger.error(
-                "Async webhook delivery failed",
-                delivery_id=delivery_id,
-                error=str(e)
+                "Async webhook delivery failed", delivery_id=delivery_id, error=str(e)
             )
 
     async def _update_delivery_status(
@@ -1061,7 +1082,7 @@ class WebhookService:
         status: str,
         response_body: Optional[str] = None,
         status_code: Optional[int] = None,
-        attempt_count: Optional[int] = None
+        attempt_count: Optional[int] = None,
     ) -> None:
         """Update webhook delivery status."""
         update_values = {
@@ -1091,26 +1112,17 @@ class WebhookService:
         if success:
             update_values = {
                 "success_count": Webhook.success_count + 1,
-                "last_triggered_at": datetime.utcnow()
+                "last_triggered_at": datetime.utcnow(),
             }
         else:
-            update_values = {
-                "failure_count": Webhook.failure_count + 1
-            }
+            update_values = {"failure_count": Webhook.failure_count + 1}
 
-        stmt = (
-            update(Webhook)
-            .where(Webhook.id == webhook_id)
-            .values(**update_values)
-        )
+        stmt = update(Webhook).where(Webhook.id == webhook_id).values(**update_values)
         await self.session.execute(stmt)
         await self.session.commit()
 
     async def _handle_delivery_error(
-        self,
-        delivery_id: str,
-        webhook_id: str,
-        error_message: str
+        self, delivery_id: str, webhook_id: str, error_message: str
     ) -> None:
         """Handle webhook delivery error."""
         await self._update_delivery_status(delivery_id, "failed", error_message)
@@ -1118,40 +1130,35 @@ class WebhookService:
         await self._increment_circuit_breaker(webhook_id)
 
     async def _schedule_webhook_retry(
-        self,
-        delivery_id: str,
-        attempt_count: int
+        self, delivery_id: str, attempt_count: int
     ) -> None:
         """Schedule webhook retry with exponential backoff."""
         # Exponential backoff: 2^attempt minutes (2, 4, 8 minutes)
-        delay_minutes = min(2 ** attempt_count, 60)  # Cap at 1 hour
+        delay_minutes = min(2**attempt_count, 60)  # Cap at 1 hour
         retry_at = datetime.utcnow() + timedelta(minutes=delay_minutes)
 
         stmt = (
             update(WebhookDelivery)
             .where(WebhookDelivery.id == delivery_id)
-            .values(
-                next_retry_at=retry_at,
-                attempt_count=attempt_count
-            )
+            .values(next_retry_at=retry_at, attempt_count=attempt_count)
         )
         await self.session.execute(stmt)
         await self.session.commit()
 
         # Schedule the retry
-        asyncio.create_task(self._retry_webhook_after_delay(delivery_id, delay_minutes * 60))
+        asyncio.create_task(
+            self._retry_webhook_after_delay(delivery_id, delay_minutes * 60)
+        )
 
-    async def _retry_webhook_after_delay(self, delivery_id: str, delay_seconds: int) -> None:
+    async def _retry_webhook_after_delay(
+        self, delivery_id: str, delay_seconds: int
+    ) -> None:
         """Retry webhook delivery after delay."""
         await asyncio.sleep(delay_seconds)
         try:
             await self.deliver_webhook(delivery_id)
         except Exception as e:
-            logger.error(
-                "Webhook retry failed",
-                delivery_id=delivery_id,
-                error=str(e)
-            )
+            logger.error("Webhook retry failed", delivery_id=delivery_id, error=str(e))
 
     async def _is_circuit_breaker_open(self, webhook_id: str) -> bool:
         """Check if circuit breaker is open for webhook."""

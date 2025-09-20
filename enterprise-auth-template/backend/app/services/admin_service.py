@@ -1,6 +1,7 @@
 """
 Admin service for system administration operations
 """
+
 import os
 import csv
 import json
@@ -36,10 +37,11 @@ from app.schemas.admin import (
     AdminDashboardData,
     UserActivityReport,
     SecurityReport,
-    SystemHealthCheck
+    SystemHealthCheck,
 )
 
 settings = get_settings()
+
 
 class AdminService:
     def __init__(self, db: Union[Session, AsyncSession]):
@@ -51,7 +53,9 @@ class AdminService:
         if self.is_async:
             self.export_service = ExportService(db, self.cache_service)
 
-    async def _count_records(self, model: Any, filter_condition: Optional[Any] = None) -> int:
+    async def _count_records(
+        self, model: Any, filter_condition: Optional[Any] = None
+    ) -> int:
         """Helper method to count records for both sync and async sessions"""
         if self.is_async:
             stmt = select(func.count(model.id))
@@ -74,7 +78,9 @@ class AdminService:
         suspended_users = await self._count_records(User, User.is_active == False)
 
         # Get session statistics
-        active_sessions = await self._count_records(UserSession, UserSession.is_active == True)
+        active_sessions = await self._count_records(
+            UserSession, UserSession.is_active == True
+        )
 
         # Get recent activity
         recent_registrations = await self._count_records(
@@ -86,8 +92,8 @@ class AdminService:
             LoginAttempt,
             and_(
                 LoginAttempt.success == False,
-                LoginAttempt.created_at >= datetime.utcnow() - timedelta(hours=24)
-            )
+                LoginAttempt.created_at >= datetime.utcnow() - timedelta(hours=24),
+            ),
         )
 
         # Get role distribution
@@ -101,10 +107,12 @@ class AdminService:
             role_distribution = result.all()
         else:
             db = cast(Session, self.db)
-            role_distribution = db.query(
-                Role.name,
-                func.count(User.id)
-            ).join(User.roles).group_by(Role.name).all()
+            role_distribution = (
+                db.query(Role.name, func.count(User.id))
+                .join(User.roles)
+                .group_by(Role.name)
+                .all()
+            )
 
         # Get recent audit logs
         if self.is_async:
@@ -113,9 +121,14 @@ class AdminService:
             recent_logs = result.scalars().all()
         else:
             db = cast(Session, self.db)
-            recent_logs = db.query(AuditLog).order_by(
-                AuditLog.timestamp.desc()  # Use timestamp instead of created_at
-            ).limit(10).all()
+            recent_logs = (
+                db.query(AuditLog)
+                .order_by(
+                    AuditLog.timestamp.desc()  # Use timestamp instead of created_at
+                )
+                .limit(10)
+                .all()
+            )
 
         return AdminDashboardData(
             total_users=total_users,
@@ -126,7 +139,11 @@ class AdminService:
             failed_login_attempts=failed_logins,
             role_distribution={role: count for role, count in role_distribution},
             recent_audit_logs=[self._format_audit_log(log) for log in recent_logs],
-            system_health=await self.check_system_health() if hasattr(self, 'check_system_health') else {}
+            system_health=(
+                await self.check_system_health()
+                if hasattr(self, "check_system_health")
+                else {}
+            ),
         )
 
     async def get_system_stats(self) -> SystemStats:
@@ -137,31 +154,93 @@ class AdminService:
 
             stats = {
                 "users": {
-                    "total": (await self.db.execute(select(func.count(User.id)))).scalar() or 0,
-                    "active": (await self.db.execute(select(func.count(User.id)).where(User.is_active == True))).scalar() or 0,
-                    "verified": (await self.db.execute(select(func.count(User.id)).where(User.email_verified == True))).scalar() or 0,
-                    "with_2fa": (await self.db.execute(select(func.count(User.id)).where(User.two_factor_enabled == True))).scalar() or 0,
+                    "total": (
+                        await self.db.execute(select(func.count(User.id)))
+                    ).scalar()
+                    or 0,
+                    "active": (
+                        await self.db.execute(
+                            select(func.count(User.id)).where(User.is_active == True)
+                        )
+                    ).scalar()
+                    or 0,
+                    "verified": (
+                        await self.db.execute(
+                            select(func.count(User.id)).where(
+                                User.email_verified == True
+                            )
+                        )
+                    ).scalar()
+                    or 0,
+                    "with_2fa": (
+                        await self.db.execute(
+                            select(func.count(User.id)).where(
+                                User.two_factor_enabled == True
+                            )
+                        )
+                    ).scalar()
+                    or 0,
                 },
                 "sessions": {
-                    "active": (await self.db.execute(select(func.count(UserSession.id)).where(UserSession.is_active == True))).scalar() or 0,
-                    "total_today": (await self.db.execute(select(func.count(UserSession.id)).where(
-                        UserSession.created_at >= today_start
-                    ))).scalar() or 0
+                    "active": (
+                        await self.db.execute(
+                            select(func.count(UserSession.id)).where(
+                                UserSession.is_active == True
+                            )
+                        )
+                    ).scalar()
+                    or 0,
+                    "total_today": (
+                        await self.db.execute(
+                            select(func.count(UserSession.id)).where(
+                                UserSession.created_at >= today_start
+                            )
+                        )
+                    ).scalar()
+                    or 0,
                 },
                 "organizations": {
-                    "total": (await self.db.execute(select(func.count(Organization.id)))).scalar() or 0,
-                    "active": (await self.db.execute(select(func.count(Organization.id)).where(Organization.is_active == True))).scalar() or 0
+                    "total": (
+                        await self.db.execute(select(func.count(Organization.id)))
+                    ).scalar()
+                    or 0,
+                    "active": (
+                        await self.db.execute(
+                            select(func.count(Organization.id)).where(
+                                Organization.is_active == True
+                            )
+                        )
+                    ).scalar()
+                    or 0,
                 },
                 "api_keys": {
-                    "total": (await self.db.execute(select(func.count(APIKey.id)))).scalar() or 0,
-                    "active": (await self.db.execute(select(func.count(APIKey.id)).where(APIKey.is_active == True))).scalar() or 0
+                    "total": (
+                        await self.db.execute(select(func.count(APIKey.id)))
+                    ).scalar()
+                    or 0,
+                    "active": (
+                        await self.db.execute(
+                            select(func.count(APIKey.id)).where(
+                                APIKey.is_active == True
+                            )
+                        )
+                    ).scalar()
+                    or 0,
                 },
                 "audit_logs": {
-                    "total": (await self.db.execute(select(func.count(AuditLog.id)))).scalar() or 0,
-                    "today": (await self.db.execute(select(func.count(AuditLog.id)).where(
-                        AuditLog.created_at >= today_start
-                    ))).scalar() or 0
-                }
+                    "total": (
+                        await self.db.execute(select(func.count(AuditLog.id)))
+                    ).scalar()
+                    or 0,
+                    "today": (
+                        await self.db.execute(
+                            select(func.count(AuditLog.id)).where(
+                                AuditLog.created_at >= today_start
+                            )
+                        )
+                    ).scalar()
+                    or 0,
+                },
             }
         else:
             # Sync queries for Session (backwards compatibility)
@@ -170,38 +249,55 @@ class AdminService:
             stats = {
                 "users": {
                     "total": db.query(func.count(User.id)).scalar() or 0,
-                    "active": db.query(func.count(User.id)).filter(User.is_active == True).scalar() or 0,
-                    "verified": db.query(func.count(User.id)).filter(User.email_verified == True).scalar() or 0,
-                    "with_2fa": db.query(func.count(User.id)).filter(User.two_factor_enabled == True).scalar() or 0,
+                    "active": db.query(func.count(User.id))
+                    .filter(User.is_active == True)
+                    .scalar()
+                    or 0,
+                    "verified": db.query(func.count(User.id))
+                    .filter(User.email_verified == True)
+                    .scalar()
+                    or 0,
+                    "with_2fa": db.query(func.count(User.id))
+                    .filter(User.two_factor_enabled == True)
+                    .scalar()
+                    or 0,
                 },
                 "sessions": {
-                    "active": db.query(func.count(UserSession.id)).filter(UserSession.is_active == True).scalar() or 0,
-                    "total_today": db.query(func.count(UserSession.id)).filter(
-                        UserSession.created_at >= today_start
-                    ).scalar() or 0
+                    "active": db.query(func.count(UserSession.id))
+                    .filter(UserSession.is_active == True)
+                    .scalar()
+                    or 0,
+                    "total_today": db.query(func.count(UserSession.id))
+                    .filter(UserSession.created_at >= today_start)
+                    .scalar()
+                    or 0,
                 },
                 "organizations": {
                     "total": db.query(func.count(Organization.id)).scalar() or 0,
-                    "active": db.query(func.count(Organization.id)).filter(Organization.is_active == True).scalar() or 0
+                    "active": db.query(func.count(Organization.id))
+                    .filter(Organization.is_active == True)
+                    .scalar()
+                    or 0,
                 },
                 "api_keys": {
                     "total": db.query(func.count(APIKey.id)).scalar() or 0,
-                    "active": db.query(func.count(APIKey.id)).filter(APIKey.is_active == True).scalar() or 0
+                    "active": db.query(func.count(APIKey.id))
+                    .filter(APIKey.is_active == True)
+                    .scalar()
+                    or 0,
                 },
                 "audit_logs": {
                     "total": db.query(func.count(AuditLog.id)).scalar() or 0,
-                    "today": db.query(func.count(AuditLog.id)).filter(
-                        AuditLog.created_at >= today_start
-                    ).scalar() or 0
-                }
+                    "today": db.query(func.count(AuditLog.id))
+                    .filter(AuditLog.created_at >= today_start)
+                    .scalar()
+                    or 0,
+                },
             }
         return SystemStats(**stats)
 
     async def get_users(
-        self,
-        skip: int = 0,
-        limit: int = 100,
-        filters: Optional[Dict[str, Any]] = None
+        self, skip: int = 0, limit: int = 100, filters: Optional[Dict[str, Any]] = None
     ) -> List[UserManagementResponse]:
         """Get users with filtering and pagination"""
         if self.is_async:
@@ -214,7 +310,11 @@ class AdminService:
                     stmt = stmt.where(
                         or_(
                             User.email.ilike(search_term),
-                            User.full_name.ilike(search_term) if hasattr(User, 'full_name') else User.email.ilike(search_term)
+                            (
+                                User.full_name.ilike(search_term)
+                                if hasattr(User, "full_name")
+                                else User.email.ilike(search_term)
+                            ),
                         )
                     )
                 if "role_id" in filters:
@@ -222,7 +322,9 @@ class AdminService:
                 if "is_active" in filters:
                     stmt = stmt.where(User.is_active == filters["is_active"])
                 if "organization_id" in filters:
-                    stmt = stmt.where(User.organization_id == filters["organization_id"])
+                    stmt = stmt.where(
+                        User.organization_id == filters["organization_id"]
+                    )
 
             stmt = stmt.offset(skip).limit(limit)
             result = await self.db.execute(stmt)
@@ -238,7 +340,11 @@ class AdminService:
                     query = query.filter(
                         or_(
                             User.email.ilike(search_term),
-                            User.full_name.ilike(search_term) if hasattr(User, 'full_name') else User.email.ilike(search_term)
+                            (
+                                User.full_name.ilike(search_term)
+                                if hasattr(User, "full_name")
+                                else User.email.ilike(search_term)
+                            ),
                         )
                     )
                 if "role_id" in filters:
@@ -246,7 +352,9 @@ class AdminService:
                 if "is_active" in filters:
                     query = query.filter(User.is_active == filters["is_active"])
                 if "organization_id" in filters:
-                    query = query.filter(User.organization_id == filters["organization_id"])
+                    query = query.filter(
+                        User.organization_id == filters["organization_id"]
+                    )
 
             users = query.offset(skip).limit(limit).all()
 
@@ -266,7 +374,9 @@ class AdminService:
             return None
         return self._format_user_response(user)
 
-    async def update_user(self, user_id: str, request: UserManagementRequest) -> UserManagementResponse:
+    async def update_user(
+        self, user_id: str, request: UserManagementRequest
+    ) -> UserManagementResponse:
         """Update user information"""
         if self.is_async:
             stmt = select(User).where(User.id == user_id)
@@ -297,7 +407,7 @@ class AdminService:
         self.db.refresh(user)
 
         # Clear user cache
-        if hasattr(self.cache_service, 'delete'):
+        if hasattr(self.cache_service, "delete"):
             await self.cache_service.delete(f"user:{user_id}")
 
         return self._format_user_response(user)
@@ -307,7 +417,7 @@ class AdminService:
         user_id: str,
         reason: str,
         suspended_until: Optional[datetime] = None,
-        suspended_by: str = None
+        suspended_by: str = None,
     ) -> Dict[str, Any]:
         """Suspend a user account"""
         user = self.db.query(User).filter(User.id == user_id).first()
@@ -322,23 +432,20 @@ class AdminService:
 
         # Terminate all active sessions
         self.db.query(UserSession).filter(
-            and_(
-                UserSession.user_id == user_id,
-                UserSession.is_active == True
-            )
+            and_(UserSession.user_id == user_id, UserSession.is_active == True)
         ).update({"is_active": False, "ended_at": datetime.utcnow()})
 
         self.db.commit()
 
         # Clear user cache
-        if hasattr(self.cache_service, 'delete'):
+        if hasattr(self.cache_service, "delete"):
             await self.cache_service.delete(f"user:{user_id}")
 
         return {
             "user_id": user_id,
             "suspended": True,
             "reason": reason,
-            "suspended_until": suspended_until.isoformat() if suspended_until else None
+            "suspended_until": suspended_until.isoformat() if suspended_until else None,
         }
 
     async def unsuspend_user(self, user_id: str) -> Dict[str, Any]:
@@ -356,13 +463,13 @@ class AdminService:
         self.db.commit()
 
         # Clear user cache
-        if hasattr(self.cache_service, 'delete'):
+        if hasattr(self.cache_service, "delete"):
             await self.cache_service.delete(f"user:{user_id}")
 
         return {
             "user_id": user_id,
             "suspended": False,
-            "message": "User account unsuspended successfully"
+            "message": "User account unsuspended successfully",
         }
 
     async def soft_delete_user(self, user_id: str) -> None:
@@ -376,14 +483,14 @@ class AdminService:
         user.is_active = False
 
         # Terminate all sessions
-        self.db.query(UserSession).filter(
-            UserSession.user_id == user_id
-        ).update({"is_active": False})
+        self.db.query(UserSession).filter(UserSession.user_id == user_id).update(
+            {"is_active": False}
+        )
 
         self.db.commit()
 
         # Clear user cache
-        if hasattr(self.cache_service, 'delete'):
+        if hasattr(self.cache_service, "delete"):
             await self.cache_service.delete(f"user:{user_id}")
 
     async def hard_delete_user(self, user_id: str) -> None:
@@ -403,7 +510,7 @@ class AdminService:
         self.db.commit()
 
         # Clear user cache
-        if hasattr(self.cache_service, 'delete'):
+        if hasattr(self.cache_service, "delete"):
             await self.cache_service.delete(f"user:{user_id}")
 
     async def bulk_user_operation(self, operation: BulkUserOperation) -> Dict[str, Any]:
@@ -414,7 +521,9 @@ class AdminService:
         for user_id in operation.user_ids:
             try:
                 if operation.action == "suspend":
-                    await self.suspend_user(user_id, operation.reason or "Bulk suspension")
+                    await self.suspend_user(
+                        user_id, operation.reason or "Bulk suspension"
+                    )
                 elif operation.action == "unsuspend":
                     await self.unsuspend_user(user_id)
                 elif operation.action == "activate":
@@ -440,10 +549,12 @@ class AdminService:
             "successful": len(affected_users),
             "failed": len(failed_users),
             "affected_users": affected_users,
-            "failed_users": failed_users
+            "failed_users": failed_users,
         }
 
-    async def get_active_sessions(self, user_id: Optional[str] = None) -> List[Dict[str, Any]]:
+    async def get_active_sessions(
+        self, user_id: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
         """Get active user sessions"""
         query = self.db.query(UserSession).filter(UserSession.is_active == True)
 
@@ -455,7 +566,9 @@ class AdminService:
 
     async def terminate_session(self, session_id: str) -> Dict[str, str]:
         """Terminate a specific session"""
-        session = self.db.query(UserSession).filter(UserSession.id == session_id).first()
+        session = (
+            self.db.query(UserSession).filter(UserSession.id == session_id).first()
+        )
         if not session:
             raise ValueError("Session not found")
 
@@ -470,12 +583,11 @@ class AdminService:
 
     async def terminate_all_user_sessions(self, user_id: str) -> Dict[str, Any]:
         """Terminate all sessions for a user"""
-        result = self.db.query(UserSession).filter(
-            and_(
-                UserSession.user_id == user_id,
-                UserSession.is_active == True
-            )
-        ).update({"is_active": False, "ended_at": datetime.utcnow()})
+        result = (
+            self.db.query(UserSession)
+            .filter(and_(UserSession.user_id == user_id, UserSession.is_active == True))
+            .update({"is_active": False, "ended_at": datetime.utcnow()})
+        )
 
         self.db.commit()
 
@@ -485,14 +597,11 @@ class AdminService:
         return {
             "user_id": user_id,
             "terminated_count": result,
-            "message": f"Terminated {result} sessions"
+            "message": f"Terminated {result} sessions",
         }
 
     async def get_audit_logs(
-        self,
-        skip: int = 0,
-        limit: int = 100,
-        filters: Optional[Dict[str, Any]] = None
+        self, skip: int = 0, limit: int = 100, filters: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
         """Get audit logs with filtering"""
         query = self.db.query(AuditLog)
@@ -509,10 +618,14 @@ class AdminService:
             if "end_date" in filters:
                 query = query.filter(AuditLog.created_at <= filters["end_date"])
 
-        logs = query.order_by(AuditLog.created_at.desc()).offset(skip).limit(limit).all()
+        logs = (
+            query.order_by(AuditLog.created_at.desc()).offset(skip).limit(limit).all()
+        )
         return [self._format_audit_log(log) for log in logs]
 
-    async def generate_activity_report(self, user_id: Optional[str] = None, days: int = 30) -> UserActivityReport:
+    async def generate_activity_report(
+        self, user_id: Optional[str] = None, days: int = 30
+    ) -> UserActivityReport:
         """Generate user activity report"""
         start_date = datetime.utcnow() - timedelta(days=days)
 
@@ -521,38 +634,48 @@ class AdminService:
             query_filter.append(AuditLog.user_id == user_id)
 
         # Get activity summary
-        total_actions = self.db.query(func.count(AuditLog.id)).filter(*query_filter).scalar()
+        total_actions = (
+            self.db.query(func.count(AuditLog.id)).filter(*query_filter).scalar()
+        )
 
         # Get actions by type
-        actions_by_type = self.db.query(
-            AuditLog.action,
-            func.count(AuditLog.id)
-        ).filter(*query_filter).group_by(AuditLog.action).all()
+        actions_by_type = (
+            self.db.query(AuditLog.action, func.count(AuditLog.id))
+            .filter(*query_filter)
+            .group_by(AuditLog.action)
+            .all()
+        )
 
         # Get daily activity
-        daily_activity = self.db.query(
-            func.date(AuditLog.created_at),
-            func.count(AuditLog.id)
-        ).filter(*query_filter).group_by(
-            func.date(AuditLog.created_at)
-        ).order_by(func.date(AuditLog.created_at)).all()
+        daily_activity = (
+            self.db.query(func.date(AuditLog.created_at), func.count(AuditLog.id))
+            .filter(*query_filter)
+            .group_by(func.date(AuditLog.created_at))
+            .order_by(func.date(AuditLog.created_at))
+            .all()
+        )
 
         # Get most active users
-        most_active_users = self.db.query(
-            User.email,
-            func.count(AuditLog.id).label("action_count")
-        ).join(AuditLog, User.id == AuditLog.user_id).filter(
-            AuditLog.created_at >= start_date
-        ).group_by(User.email).order_by(
-            func.count(AuditLog.id).desc()
-        ).limit(10).all()
+        most_active_users = (
+            self.db.query(User.email, func.count(AuditLog.id).label("action_count"))
+            .join(AuditLog, User.id == AuditLog.user_id)
+            .filter(AuditLog.created_at >= start_date)
+            .group_by(User.email)
+            .order_by(func.count(AuditLog.id).desc())
+            .limit(10)
+            .all()
+        )
 
         return UserActivityReport(
             period_days=days,
             total_actions=total_actions,
             actions_by_type={action: count for action, count in actions_by_type},
-            daily_activity=[{"date": str(date), "count": count} for date, count in daily_activity],
-            most_active_users=[{"email": email, "actions": count} for email, count in most_active_users]
+            daily_activity=[
+                {"date": str(date), "count": count} for date, count in daily_activity
+            ],
+            most_active_users=[
+                {"email": email, "actions": count} for email, count in most_active_users
+            ],
         )
 
     async def generate_security_report(self, days: int = 30) -> SecurityReport:
@@ -560,47 +683,59 @@ class AdminService:
         start_date = datetime.utcnow() - timedelta(days=days)
 
         # Failed login attempts
-        failed_logins = self.db.query(func.count(LoginAttempt.id)).filter(
-            and_(
-                LoginAttempt.success == False,
-                LoginAttempt.created_at >= start_date
+        failed_logins = (
+            self.db.query(func.count(LoginAttempt.id))
+            .filter(
+                and_(
+                    LoginAttempt.success == False, LoginAttempt.created_at >= start_date
+                )
             )
-        ).scalar() if hasattr(self, 'LoginAttempt') else 0
+            .scalar()
+            if hasattr(self, "LoginAttempt")
+            else 0
+        )
 
         # Suspicious activities (multiple failed logins from same IP)
         suspicious_ips = []
-        if hasattr(self, 'LoginAttempt'):
-            suspicious_ips = self.db.query(
-                LoginAttempt.ip_address,
-                func.count(LoginAttempt.id)
-            ).filter(
-                and_(
-                    LoginAttempt.success == False,
-                    LoginAttempt.created_at >= start_date
+        if hasattr(self, "LoginAttempt"):
+            suspicious_ips = (
+                self.db.query(LoginAttempt.ip_address, func.count(LoginAttempt.id))
+                .filter(
+                    and_(
+                        LoginAttempt.success == False,
+                        LoginAttempt.created_at >= start_date,
+                    )
                 )
-            ).group_by(LoginAttempt.ip_address).having(
-                func.count(LoginAttempt.id) > 5
-            ).all()
+                .group_by(LoginAttempt.ip_address)
+                .having(func.count(LoginAttempt.id) > 5)
+                .all()
+            )
 
         # Account lockouts
-        locked_accounts = self.db.query(func.count(User.id)).filter(
-            User.is_suspended == True
-        ).scalar()
+        locked_accounts = (
+            self.db.query(func.count(User.id))
+            .filter(User.is_suspended == True)
+            .scalar()
+        )
 
         # 2FA adoption rate
         total_users = self.db.query(func.count(User.id)).scalar()
-        users_with_2fa = self.db.query(func.count(User.id)).filter(
-            User.two_factor_enabled == True
-        ).scalar()
+        users_with_2fa = (
+            self.db.query(func.count(User.id))
+            .filter(User.two_factor_enabled == True)
+            .scalar()
+        )
         two_fa_adoption = (users_with_2fa / total_users * 100) if total_users > 0 else 0
 
         return SecurityReport(
             period_days=days,
             failed_login_attempts=failed_logins,
-            suspicious_ips=[{"ip": ip, "attempts": count} for ip, count in suspicious_ips],
+            suspicious_ips=[
+                {"ip": ip, "attempts": count} for ip, count in suspicious_ips
+            ],
             locked_accounts=locked_accounts,
             two_fa_adoption_rate=two_fa_adoption,
-            recent_security_events=await self._get_recent_security_events(start_date)
+            recent_security_events=await self._get_recent_security_events(start_date),
         )
 
     async def get_system_config(self) -> Dict[str, Any]:
@@ -611,27 +746,29 @@ class AdminService:
                 "refresh_expiry": settings.REFRESH_TOKEN_EXPIRE_DAYS,
                 "password_min_length": settings.PASSWORD_MIN_LENGTH,
                 "max_login_attempts": settings.MAX_LOGIN_ATTEMPTS,
-                "lockout_duration": settings.LOCKOUT_DURATION_MINUTES
+                "lockout_duration": settings.LOCKOUT_DURATION_MINUTES,
             },
             "features": {
                 "oauth_enabled": settings.OAUTH_ENABLED,
                 "two_factor_enabled": settings.TWO_FACTOR_ENABLED,
                 "magic_links_enabled": settings.MAGIC_LINKS_ENABLED,
-                "webauthn_enabled": settings.WEBAUTHN_ENABLED
+                "webauthn_enabled": settings.WEBAUTHN_ENABLED,
             },
             "limits": {
                 "rate_limit_per_minute": settings.RATE_LIMIT_PER_MINUTE,
                 "max_sessions_per_user": settings.MAX_SESSIONS_PER_USER,
-                "api_key_max_age_days": settings.API_KEY_MAX_AGE_DAYS
+                "api_key_max_age_days": settings.API_KEY_MAX_AGE_DAYS,
             },
             "maintenance": {
                 "mode": getattr(settings, "MAINTENANCE_MODE", False),
-                "message": getattr(settings, "MAINTENANCE_MESSAGE", None)
-            }
+                "message": getattr(settings, "MAINTENANCE_MESSAGE", None),
+            },
         }
         return config
 
-    async def update_system_config(self, config_update: SystemConfigUpdate) -> Dict[str, Any]:
+    async def update_system_config(
+        self, config_update: SystemConfigUpdate
+    ) -> Dict[str, Any]:
         """Update system configuration"""
         # This would typically update configuration in database or config file
         # For now, we'll just return the proposed changes
@@ -643,7 +780,7 @@ class AdminService:
         return {
             "updated": True,
             "changes": updated_fields,
-            "message": "Configuration updated successfully"
+            "message": "Configuration updated successfully",
         }
 
     async def check_system_health(self) -> SystemHealthCheck:
@@ -654,22 +791,26 @@ class AdminService:
                 "database": await self._check_database_health(),
                 "cache": await self._check_cache_health(),
                 "storage": await self._check_storage_health(),
-                "email": await self._check_email_health()
+                "email": await self._check_email_health(),
             },
             "uptime": self._get_uptime(),
             "version": settings.APP_VERSION,
-            "last_check": datetime.utcnow().isoformat()
+            "last_check": datetime.utcnow().isoformat(),
         }
 
         # Determine overall status
         if any(comp["status"] == "unhealthy" for comp in health["components"].values()):
             health["status"] = "unhealthy"
-        elif any(comp["status"] == "degraded" for comp in health["components"].values()):
+        elif any(
+            comp["status"] == "degraded" for comp in health["components"].values()
+        ):
             health["status"] = "degraded"
 
         return SystemHealthCheck(**health)
 
-    async def toggle_maintenance_mode(self, enable: bool, message: Optional[str] = None) -> Dict[str, Any]:
+    async def toggle_maintenance_mode(
+        self, enable: bool, message: Optional[str] = None
+    ) -> Dict[str, Any]:
         """Toggle maintenance mode"""
         # In production, this would update a persistent configuration
         settings.MAINTENANCE_MODE = enable
@@ -679,7 +820,7 @@ class AdminService:
         return {
             "maintenance_mode": enable,
             "message": message or "System is under maintenance",
-            "updated_at": datetime.utcnow().isoformat()
+            "updated_at": datetime.utcnow().isoformat(),
         }
 
     async def clear_cache(self, cache_type: Optional[str] = None) -> Dict[str, str]:
@@ -700,15 +841,19 @@ class AdminService:
         self,
         format: str = "csv",
         start_date: Optional[datetime] = None,
-        end_date: Optional[datetime] = None
+        end_date: Optional[datetime] = None,
     ) -> str:
         """Export audit logs"""
         query = self.db.query(AuditLog)
 
         if start_date:
-            query = query.filter(AuditLog.timestamp >= start_date)  # Use timestamp instead of created_at
+            query = query.filter(
+                AuditLog.timestamp >= start_date
+            )  # Use timestamp instead of created_at
         if end_date:
-            query = query.filter(AuditLog.timestamp <= end_date)  # Use timestamp instead of created_at
+            query = query.filter(
+                AuditLog.timestamp <= end_date
+            )  # Use timestamp instead of created_at
 
         logs = query.all()
         if self.export_service:
@@ -728,13 +873,27 @@ class AdminService:
             is_verified=user.email_verified,
             is_superuser=user.is_superuser,
             is_suspended=not user.is_active,  # Use is_active as proxy for suspension
-            two_factor_enabled=getattr(user, 'two_factor_enabled', False),  # Safe attribute access
-            roles=[{"id": str(role.id), "name": role.name} for role in user.roles] if hasattr(user, 'roles') else [],
-            organization_id=str(user.organization_id) if hasattr(user, 'organization_id') and user.organization_id else None,
+            two_factor_enabled=getattr(
+                user, "two_factor_enabled", False
+            ),  # Safe attribute access
+            roles=(
+                [{"id": str(role.id), "name": role.name} for role in user.roles]
+                if hasattr(user, "roles")
+                else []
+            ),
+            organization_id=(
+                str(user.organization_id)
+                if hasattr(user, "organization_id") and user.organization_id
+                else None
+            ),
             created_at=user.created_at,
-            last_login=getattr(user, 'last_login', None),  # Safe attribute access
-            suspension_reason=getattr(user, 'suspension_reason', None),  # Safe attribute access
-            suspended_until=getattr(user, 'suspended_until', None)  # Safe attribute access
+            last_login=getattr(user, "last_login", None),  # Safe attribute access
+            suspension_reason=getattr(
+                user, "suspension_reason", None
+            ),  # Safe attribute access
+            suspended_until=getattr(
+                user, "suspended_until", None
+            ),  # Safe attribute access
         )
 
     def _format_session(self, session: UserSession) -> Dict[str, Any]:
@@ -745,8 +904,10 @@ class AdminService:
             "ip_address": session.ip_address,
             "user_agent": session.user_agent,
             "created_at": session.created_at.isoformat(),
-            "last_activity": session.last_activity.isoformat() if session.last_activity else None,
-            "is_active": session.is_active
+            "last_activity": (
+                session.last_activity.isoformat() if session.last_activity else None
+            ),
+            "is_active": session.is_active,
         }
 
     def _format_audit_log(self, log: AuditLog) -> Dict[str, Any]:
@@ -755,27 +916,44 @@ class AdminService:
             "id": log.id,
             "user_id": log.user_id,
             "action": log.action,
-            "resource_type": log.resource if hasattr(log, 'resource') else None,  # Use resource instead of resource_type
+            "resource_type": (
+                log.resource if hasattr(log, "resource") else None
+            ),  # Use resource instead of resource_type
             "resource_id": log.resource_id,
             "details": log.details,
             "ip_address": log.ip_address,
             "user_agent": log.user_agent,
-            "created_at": log.timestamp.isoformat() if hasattr(log, 'timestamp') else None  # Use timestamp instead of created_at
+            "created_at": (
+                log.timestamp.isoformat() if hasattr(log, "timestamp") else None
+            ),  # Use timestamp instead of created_at
         }
 
-    async def _get_recent_security_events(self, start_date: datetime) -> List[Dict[str, Any]]:
+    async def _get_recent_security_events(
+        self, start_date: datetime
+    ) -> List[Dict[str, Any]]:
         """Get recent security-related events"""
         security_actions = [
-            "LOGIN_FAILED", "ACCOUNT_LOCKED", "SUSPICIOUS_ACTIVITY",
-            "PASSWORD_RESET", "TWO_FACTOR_DISABLED", "API_KEY_COMPROMISED"
+            "LOGIN_FAILED",
+            "ACCOUNT_LOCKED",
+            "SUSPICIOUS_ACTIVITY",
+            "PASSWORD_RESET",
+            "TWO_FACTOR_DISABLED",
+            "API_KEY_COMPROMISED",
         ]
 
-        events = self.db.query(AuditLog).filter(
-            and_(
-                AuditLog.action.in_(security_actions),
-                AuditLog.timestamp >= start_date  # Use timestamp instead of created_at
+        events = (
+            self.db.query(AuditLog)
+            .filter(
+                and_(
+                    AuditLog.action.in_(security_actions),
+                    AuditLog.timestamp
+                    >= start_date,  # Use timestamp instead of created_at
+                )
             )
-        ).order_by(AuditLog.timestamp.desc()).limit(50).all()  # Use timestamp instead of created_at
+            .order_by(AuditLog.timestamp.desc())
+            .limit(50)
+            .all()
+        )  # Use timestamp instead of created_at
 
         return [self._format_audit_log(event) for event in events]
 
@@ -783,6 +961,7 @@ class AdminService:
         """Check database health"""
         try:
             from sqlalchemy import text
+
             self.db.execute(text("SELECT 1"))  # Use text() for raw SQL
             return {"status": "healthy", "message": "Database connection OK"}
         except Exception as e:
@@ -791,7 +970,9 @@ class AdminService:
     async def _check_cache_health(self) -> Dict[str, Any]:
         """Check cache health"""
         try:
-            if hasattr(self.cache_service, 'set') and hasattr(self.cache_service, 'get'):
+            if hasattr(self.cache_service, "set") and hasattr(
+                self.cache_service, "get"
+            ):
                 await self.cache_service.set("health_check", "ok", ttl=10)
                 value = await self.cache_service.get("health_check")
             else:
@@ -808,14 +989,24 @@ class AdminService:
         try:
             # Check disk space
             import shutil
+
             total, used, free = shutil.disk_usage("/")
             free_percentage = (free / total) * 100
 
             if free_percentage < 5:
-                return {"status": "unhealthy", "message": f"Low disk space: {free_percentage:.1f}% free"}
+                return {
+                    "status": "unhealthy",
+                    "message": f"Low disk space: {free_percentage:.1f}% free",
+                }
             elif free_percentage < 20:
-                return {"status": "degraded", "message": f"Disk space warning: {free_percentage:.1f}% free"}
-            return {"status": "healthy", "message": f"Disk space OK: {free_percentage:.1f}% free"}
+                return {
+                    "status": "degraded",
+                    "message": f"Disk space warning: {free_percentage:.1f}% free",
+                }
+            return {
+                "status": "healthy",
+                "message": f"Disk space OK: {free_percentage:.1f}% free",
+            }
         except Exception as e:
             return {"status": "unknown", "message": str(e)}
 
@@ -837,7 +1028,7 @@ class AdminService:
             output = io.StringIO()
             if data:
                 # Get headers from first item
-                if hasattr(data[0], '__dict__'):
+                if hasattr(data[0], "__dict__"):
                     headers = list(data[0].__dict__.keys())
                     writer = csv.DictWriter(output, fieldnames=headers)
                     writer.writeheader()

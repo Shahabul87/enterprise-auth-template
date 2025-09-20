@@ -104,11 +104,11 @@ export function usePermission(config: PermissionConfig = {}): UsePermissionRetur
 
   const hasPermissions = useCallback(
     (requiredPermissions: string[], shouldRequireAll?: boolean): boolean => {
-      if (!permissions || permissions.length === 0) return false;
       if (requiredPermissions.length === 0) return true;
+      if (!permissions || permissions.length === 0) return false;
 
       const checkAll = shouldRequireAll ?? requireAll;
-      
+
       if (checkAll) {
         return requiredPermissions.every(permission => permissions.includes(permission));
       } else {
@@ -128,11 +128,11 @@ export function usePermission(config: PermissionConfig = {}): UsePermissionRetur
 
   const hasRoles = useCallback(
     (requiredRoles: string[], shouldRequireAll?: boolean): boolean => {
-      if (!roles || roles.length === 0) return false;
       if (requiredRoles.length === 0) return true;
+      if (!roles || roles.length === 0) return false;
 
       const checkAll = shouldRequireAll ?? requireAll;
-      
+
       if (checkAll) {
         return requiredRoles.every(role => roles.includes(role));
       } else {
@@ -180,11 +180,11 @@ export function usePermission(config: PermissionConfig = {}): UsePermissionRetur
         return true;
       }
 
-      const hasRequiredPermissions = reqPermissions.length > 0 
+      const hasRequiredPermissions = reqPermissions.length > 0
         ? hasPermissions(reqPermissions, checkAll)
         : true;
 
-      const hasRequiredRoles = reqRoles.length > 0 
+      const hasRequiredRoles = reqRoles.length > 0
         ? hasRoles(reqRoles, checkAll)
         : true;
 
@@ -193,8 +193,18 @@ export function usePermission(config: PermissionConfig = {}): UsePermissionRetur
         return hasRequiredPermissions && hasRequiredRoles;
       }
 
-      // Otherwise, user needs either permissions OR roles
-      return hasRequiredPermissions || hasRequiredRoles;
+      // If only permissions specified, check only permissions
+      if (reqPermissions.length > 0 && reqRoles.length === 0) {
+        return hasRequiredPermissions;
+      }
+
+      // If only roles specified, check only roles
+      if (reqRoles.length > 0 && reqPermissions.length === 0) {
+        return hasRequiredRoles;
+      }
+
+      // If neither specified, allow access (should not reach here due to earlier check)
+      return true;
     },
     [hasPermissions, hasRoles, requireAll]
   );

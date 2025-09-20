@@ -57,10 +57,7 @@ class UserRepository(IUserRepository):
     async def update(self, user_id: UUID, user_data: Dict[str, Any]) -> Optional[User]:
         """Update an existing user."""
         stmt = (
-            update(User)
-            .where(User.id == user_id)
-            .values(**user_data)
-            .returning(User)
+            update(User).where(User.id == user_id).values(**user_data).returning(User)
         )
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
@@ -83,7 +80,9 @@ class UserRepository(IUserRepository):
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def find_by_oauth_provider(self, provider: str, provider_id: str) -> Optional[User]:
+    async def find_by_oauth_provider(
+        self, provider: str, provider_id: str
+    ) -> Optional[User]:
         """Find a user by OAuth provider and provider ID."""
         conditions = []
 
@@ -117,11 +116,7 @@ class UserRepository(IUserRepository):
 
     async def update_last_login(self, user_id: UUID, login_time: datetime) -> bool:
         """Update user's last login timestamp."""
-        stmt = (
-            update(User)
-            .where(User.id == user_id)
-            .values(last_login=login_time)
-        )
+        stmt = update(User).where(User.id == user_id).values(last_login=login_time)
         result = await self.session.execute(stmt)
         return result.rowcount > 0
 
@@ -130,10 +125,7 @@ class UserRepository(IUserRepository):
         stmt = (
             update(User)
             .where(User.id == user_id)
-            .values(
-                hashed_password=hashed_password,
-                updated_at=datetime.utcnow()
-            )
+            .values(hashed_password=hashed_password, updated_at=datetime.utcnow())
         )
         result = await self.session.execute(stmt)
         return result.rowcount > 0
@@ -160,41 +152,26 @@ class UserRepository(IUserRepository):
         stmt = (
             update(User)
             .where(User.id == user_id)
-            .values(
-                failed_login_attempts=0,
-                locked_until=None
-            )
+            .values(failed_login_attempts=0, locked_until=None)
         )
         result = await self.session.execute(stmt)
         return result.rowcount > 0
 
     async def lock_account(self, user_id: UUID, until: datetime) -> bool:
         """Lock user account until specified time."""
-        stmt = (
-            update(User)
-            .where(User.id == user_id)
-            .values(locked_until=until)
-        )
+        stmt = update(User).where(User.id == user_id).values(locked_until=until)
         result = await self.session.execute(stmt)
         return result.rowcount > 0
 
     async def find_with_roles(self, user_id: UUID) -> Optional[User]:
         """Find a user with their roles loaded."""
-        stmt = (
-            select(User)
-            .options(selectinload(User.roles))
-            .where(User.id == user_id)
-        )
+        stmt = select(User).options(selectinload(User.roles)).where(User.id == user_id)
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
     async def find_by_email_with_roles(self, email: str) -> Optional[User]:
         """Find a user by email with their roles loaded."""
-        stmt = (
-            select(User)
-            .options(selectinload(User.roles))
-            .where(User.email == email)
-        )
+        stmt = select(User).options(selectinload(User.roles)).where(User.email == email)
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
@@ -207,7 +184,7 @@ class UserRepository(IUserRepository):
                 email_verified=True,  # Primary field for email verification
                 # Don't modify is_active - it's for account suspension, not verification
                 email_verified_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
+                updated_at=datetime.utcnow(),
             )
         )
         result = await self.session.execute(stmt)
@@ -218,10 +195,7 @@ class UserRepository(IUserRepository):
         stmt = (
             update(User)
             .where(User.id == user_id)
-            .values(
-                is_active=True,
-                updated_at=datetime.utcnow()
-            )
+            .values(is_active=True, updated_at=datetime.utcnow())
         )
         result = await self.session.execute(stmt)
         return result.rowcount > 0
@@ -231,10 +205,7 @@ class UserRepository(IUserRepository):
         stmt = (
             update(User)
             .where(User.id == user_id)
-            .values(
-                is_active=False,
-                updated_at=datetime.utcnow()
-            )
+            .values(is_active=False, updated_at=datetime.utcnow())
         )
         result = await self.session.execute(stmt)
         return result.rowcount > 0

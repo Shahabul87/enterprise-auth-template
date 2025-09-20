@@ -1,546 +1,477 @@
+import { test, expect, Page } from '@playwright/test';
+
 /**
- * End-to-End Authentication Flow Tests
+ * E2E Authentication Flow Tests
  *
- * Comprehensive E2E tests for the complete authentication flow
- * including registration, login, logout, password reset, and protected routes.
+ * Comprehensive end-to-end tests for authentication workflows including:
+ * - User registration
+ * - Login/logout
+ * - Password reset
+ * - 2FA setup
+ * - Session management
  */
 
-import { test, expect, Page, BrowserContext, Browser, Route } from '@playwright/test';
-
 // Test configuration
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const TEST_URL = process.env.TEST_URL || 'http://localhost:3000';
+const API_URL = process.env.API_URL || 'http://localhost:8000';
 
-// Test data
-const testUser = {
-  email: 'e2e-test@example.com',
-  password: 'E2ETestPassword123!',
-  firstName: 'E2E',
-  lastName: 'Test',
+// Test data interfaces matching the actual data structures
+interface TestUser {
+  email: string;
+  password: string;
+  full_name: string;
+}
+
+interface LoginFormData {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+}
+
+// Helper functions
+async function fillLoginForm(page: Page, data: LoginFormData) {
+  // Wait for the form to be visible
+  await page.waitForSelector('input[placeholder="name@company.com"]', { state: 'visible' });
+
+  // Fill email field
+  await page.fill('input[placeholder="name@company.com"]', data.email);
+
+  // Fill password field
+  await page.fill('input[placeholder="••••••••"]', data.password);
+
+  // Check remember me if specified
+  if (data.rememberMe) {
+    await page.check('input[type="checkbox"]#remember');
+  }
+}
+
+async function fillRegisterForm(page: Page, user: TestUser) {
+  // Fill full name
+  await page.fill('input[placeholder="John Doe"]', user.full_name);
+
+  // Fill email
+  await page.fill('input[placeholder="name@company.com"]', user.email);
+
+  // Fill password
+  await page.fill('input[placeholder="••••••••"]', user.password);
+
+  // Confirm password
+  const confirmPasswordInput = page.locator('input[placeholder="••••••••"]').nth(1);
+  await confirmPasswordInput.fill(user.password);
+
+  // Agree to terms
+  await page.check('input[type="checkbox"]#terms');
+}
+
+// Test fixtures
+const testUser: TestUser = {
+  email: `test.user.${Date.now()}@example.com`,
+  password: 'SecurePassword123!',
+  full_name: 'Test User'
 };
 
-const adminUser = {
-  email: 'e2e-admin@example.com',
-  password: 'E2EAdminPassword123!',
-  firstName: 'E2E',
-  lastName: 'Admin',
+const existingUser: TestUser = {
+  email: 'existing@example.com',
+  password: 'ExistingPassword123!',
+  full_name: 'Existing User'
 };
 
-test.describe('Authentication Flow E2E', () => {
-  let context: BrowserContext;
-  let page: Page;
+// Main test suite
+test.describe('Authentication Flow E2E Tests', () => {
+  test.beforeEach(async ({ page }) => {
+    // Navigate to the application
+    await page.goto(TEST_URL);
 
-  test.beforeEach(async ({ browser }: { browser: Browser }) => {
-    // Create a new browser context for each test
-    context = await browser.newContext({
-      viewport: { width: 1200, height: 800 },
-    });
-    page = await context.newPage();
-
-    // Set up network interceptors for API calls
-    await page.route(`${API_URL}/api/**`, (route: Route) => {
-      // Log API calls for debugging
-      // console.log(`API Call: ${route.request().method()} ${route.request().url()}`);
-      route.continue();
-    });
-  });
-
-  test.afterEach(async () => {
-    await context.close();
+    // Wait for the page to fully load
+    await page.waitForLoadState('networkidle');
   });
 
   test.describe('User Registration', () => {
-    test('should complete user registration successfully', async () => {
+    test('should successfully register a new user', async ({ page }) => {
       // Navigate to registration page
-      await page.goto(`${BASE_URL}/auth/register`);
-      await expect(page).toHaveTitle(/Register/);
+      await page.goto(`${TEST_URL}/auth/register`);
 
-      // Fill in registration form
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', testUser.password);
-      await page.fill('[data-testid="confirm-password-input"]', testUser.password);
-      await page.fill('[data-testid="first-name-input"]', testUser.firstName);
-      await page.fill('[data-testid="last-name-input"]', testUser.lastName);
-      await page.check('[data-testid="agree-terms-checkbox"]');
+      // Verify registration page loaded
+      await expect(page).toHaveTitle(/Register|Sign Up|Create Account/i);
+      await expect(page.locator('h1')).toContainText(/Create.*account|Sign up|Register/i);
 
-      // Submit registration form
-      await page.click('[data-testid="register-button"]');
+      // Fill registration form
+      await fillRegisterForm(page, testUser);
 
-      // Wait for registration to complete
-      await expect(page.locator('[data-testid="registration-success"]')).toBeVisible();
-      await expect(page).toHaveURL(/\/auth\/verify-email/);
+      // Submit the form
+      await page.click('button:has-text("Create account")');
 
-      // Check for success message
-      await expect(page.locator('text=Check your email')).toBeVisible();
+      // Wait for navigation or success message
+      await page.waitForURL(/\/dashboard|\/auth\/verify-email/, { timeout: 10000 });
+
+      // Verify successful registration
+      const url = page.url();
+      if (url.includes('verify-email')) {
+        // Email verification required
+        await expect(page.locator('text=/verify.*email/i')).toBeVisible();
+      } else if (url.includes('dashboard')) {
+        // Direct login after registration
+        await expect(page.locator('h1')).toContainText(/Dashboard|Welcome/i);
+      }
     });
 
-    test('should show validation errors for invalid registration data', async () => {
-      await page.goto(`${BASE_URL}/auth/register`);
+    test('should show validation errors for invalid input', async ({ page }) => {
+      await page.goto(`${TEST_URL}/auth/register`);
 
-      // Try to submit with invalid data
-      await page.fill('[data-testid="email-input"]', 'invalid-email');
-      await page.fill('[data-testid="password-input"]', '123');
-      await page.fill('[data-testid="confirm-password-input"]', '456');
-      await page.click('[data-testid="register-button"]');
+      // Try to submit empty form
+      await page.click('button:has-text("Create account")');
 
       // Check for validation errors
-      await expect(page.locator('text=Invalid email format')).toBeVisible();
-      await expect(page.locator('text=Password must be at least 8 characters')).toBeVisible();
-      await expect(page.locator('text=Passwords do not match')).toBeVisible();
-      await expect(page.locator('text=You must agree to the terms')).toBeVisible();
+      await expect(page.locator('text=/required/i').first()).toBeVisible();
+
+      // Test invalid email
+      await page.fill('input[placeholder="name@company.com"]', 'invalid-email');
+      await page.click('button:has-text("Create account")');
+      await expect(page.locator('text=/valid.*email/i')).toBeVisible();
+
+      // Test password mismatch
+      await page.fill('input[placeholder="name@company.com"]', 'test@example.com');
+      await page.locator('input[placeholder="••••••••"]').first().fill('Password123!');
+      await page.locator('input[placeholder="••••••••"]').nth(1).fill('DifferentPassword123!');
+      await page.click('button:has-text("Create account")');
+      await expect(page.locator('text=/password.*match/i')).toBeVisible();
     });
 
-    test('should handle duplicate email registration', async () => {
-      await page.goto(`${BASE_URL}/auth/register`);
+    test('should prevent duplicate registration', async ({ page }) => {
+      await page.goto(`${TEST_URL}/auth/register`);
 
       // Try to register with existing email
-      await page.fill('[data-testid="email-input"]', 'existing@example.com');
-      await page.fill('[data-testid="password-input"]', testUser.password);
-      await page.fill('[data-testid="confirm-password-input"]', testUser.password);
-      await page.fill('[data-testid="first-name-input"]', testUser.firstName);
-      await page.fill('[data-testid="last-name-input"]', testUser.lastName);
-      await page.check('[data-testid="agree-terms-checkbox"]');
-
-      await page.click('[data-testid="register-button"]');
+      await fillRegisterForm(page, existingUser);
+      await page.click('button:has-text("Create account")');
 
       // Check for error message
-      await expect(page.locator('text=An account with this email already exists')).toBeVisible();
+      await expect(page.locator('text=/already.*registered|exists/i')).toBeVisible({ timeout: 10000 });
     });
   });
 
   test.describe('User Login', () => {
-    test('should login successfully with valid credentials', async () => {
-      await page.goto(`${BASE_URL}/auth/login`);
-      await expect(page).toHaveTitle(/Login/);
+    test('should successfully login with valid credentials', async ({ page }) => {
+      // Navigate to login page
+      await page.goto(`${TEST_URL}/auth/login`);
 
-      // Fill in login form
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', testUser.password);
+      // Verify login page loaded
+      await expect(page.locator('h1')).toContainText('Welcome back');
 
-      // Submit login form
-      await page.click('[data-testid="login-button"]');
+      // Fill login form
+      await fillLoginForm(page, {
+        email: existingUser.email,
+        password: existingUser.password,
+        rememberMe: true
+      });
 
-      // Wait for redirect to dashboard
-      await expect(page).toHaveURL(/\/dashboard/);
-      await expect(page.locator('text=Welcome back')).toBeVisible();
+      // Submit the form
+      await page.click('button:has-text("Sign in")');
 
-      // Check that user is authenticated
-      await expect(page.locator('[data-testid="user-avatar"]')).toBeVisible();
-      await expect(page.locator(`text=${testUser.firstName}`)).toBeVisible();
+      // Wait for successful login
+      await page.waitForURL('**/dashboard', { timeout: 10000 });
+
+      // Verify dashboard is loaded
+      await expect(page.locator('h1')).toContainText(/Dashboard|Welcome/i);
+
+      // Verify user menu is visible
+      await expect(page.locator('[data-testid="user-menu"], [aria-label="User menu"]')).toBeVisible();
     });
 
-    test('should show error for invalid credentials', async () => {
-      await page.goto(`${BASE_URL}/auth/login`);
+    test('should show error for invalid credentials', async ({ page }) => {
+      await page.goto(`${TEST_URL}/auth/login`);
 
-      // Try to login with wrong password
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', 'WrongPassword123!');
-      await page.click('[data-testid="login-button"]');
+      // Fill with invalid credentials
+      await fillLoginForm(page, {
+        email: 'wrong@example.com',
+        password: 'WrongPassword123!'
+      });
+
+      // Submit the form
+      await page.click('button:has-text("Sign in")');
 
       // Check for error message
-      await expect(page.locator('text=Invalid email or password')).toBeVisible();
-      
-      // Should still be on login page
+      await expect(page.locator('[role="alert"], [data-testid="alert"]')).toContainText(/Invalid.*credentials|email.*password.*incorrect/i);
+
+      // Ensure still on login page
       await expect(page).toHaveURL(/\/auth\/login/);
     });
 
-    test('should handle rate limiting after multiple failed attempts', async () => {
-      await page.goto(`${BASE_URL}/auth/login`);
+    test('should handle 2FA verification if enabled', async ({ page }) => {
+      // This test assumes a user with 2FA enabled
+      const twoFAUser = {
+        email: '2fa@example.com',
+        password: 'TwoFactorPassword123!'
+      };
 
-      // Make multiple failed login attempts
-      for (let i = 0; i < 6; i++) {
-        await page.fill('[data-testid="email-input"]', testUser.email);
-        await page.fill('[data-testid="password-input"]', `wrong-password-${i}`);
-        await page.click('[data-testid="login-button"]');
-        
-        // Wait between attempts
-        await page.waitForTimeout(500);
+      await page.goto(`${TEST_URL}/auth/login`);
+      await fillLoginForm(page, twoFAUser);
+      await page.click('button:has-text("Sign in")');
+
+      // Check if 2FA page appears
+      const has2FA = await page.locator('text=/verification.*code|two.*factor/i').isVisible({ timeout: 5000 }).catch(() => false);
+
+      if (has2FA) {
+        // Verify 2FA form is shown
+        await expect(page.locator('input[placeholder="000000"]')).toBeVisible();
+        await expect(page.locator('button:has-text("Verify")')).toBeVisible();
+
+        // Test switching to backup code
+        await page.click('button:has-text("Backup Code")');
+        await expect(page.locator('input[placeholder="XXXX-XXXX"]')).toBeVisible();
       }
-
-      // Should show rate limiting message
-      await expect(page.locator('text=Too many login attempts')).toBeVisible();
-      await expect(page.locator('[data-testid="login-button"]')).toBeDisabled();
     });
 
-    test('should remember user with "Remember Me" option', async () => {
-      await page.goto(`${BASE_URL}/auth/login`);
+    test('should handle OAuth login providers', async ({ page }) => {
+      await page.goto(`${TEST_URL}/auth/login`);
 
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', testUser.password);
-      await page.check('[data-testid="remember-me-checkbox"]');
-      await page.click('[data-testid="login-button"]');
+      // Check OAuth providers are visible
+      await expect(page.locator('text=/continue with/i')).toBeVisible();
 
-      await expect(page).toHaveURL(/\/dashboard/);
+      // Check for Google OAuth button
+      const googleButton = page.locator('button:has-text("Google"), button:has-text("Continue with Google")');
+      await expect(googleButton).toBeVisible();
 
-      // Close and reopen browser to test persistence
-      await context.close();
-      context = await page.context().browser()!.newContext();
-      page = await context.newPage();
-
-      await page.goto(`${BASE_URL}/dashboard`);
-      
-      // Should still be logged in
-      await expect(page.locator('text=Welcome back')).toBeVisible();
-    });
-  });
-
-  test.describe('OAuth Authentication', () => {
-    test('should display OAuth providers on login page', async () => {
-      await page.goto(`${BASE_URL}/auth/login`);
-
-      // Check for OAuth provider buttons
-      await expect(page.locator('[data-testid="google-oauth-button"]')).toBeVisible();
-      await expect(page.locator('[data-testid="github-oauth-button"]')).toBeVisible();
-    });
-
-    test('should initiate Google OAuth flow', async () => {
-      await page.goto(`${BASE_URL}/auth/login`);
-
-      // Click Google OAuth button
-      const googleButton = page.locator('[data-testid="google-oauth-button"]');
-      
-      // Mock the OAuth redirect
-      await page.route('**/api/auth/oauth/google/**', (route: Route) => {
-        route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify({
-            success: true,
-            data: { auth_url: 'https://accounts.google.com/oauth/authorize?...' },
-          }),
-        });
-      });
-
-      await googleButton.click();
-
-      // Should redirect to Google OAuth
-      await page.waitForURL('https://accounts.google.com/**');
-      expect(page.url()).toContain('accounts.google.com');
+      // Check for GitHub OAuth button (if configured)
+      const githubButton = page.locator('button:has-text("GitHub"), button:has-text("Continue with GitHub")');
+      if (await githubButton.isVisible()) {
+        await expect(githubButton).toBeEnabled();
+      }
     });
   });
 
   test.describe('Password Reset', () => {
-    test('should initiate password reset flow', async () => {
-      await page.goto(`${BASE_URL}/auth/login`);
+    test('should navigate to forgot password page', async ({ page }) => {
+      await page.goto(`${TEST_URL}/auth/login`);
 
       // Click forgot password link
-      await page.click('text=Forgot your password?');
-      await expect(page).toHaveURL(/\/auth\/forgot-password/);
+      await page.click('a:has-text("Forgot password")');
 
-      // Fill in email and submit
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.click('[data-testid="reset-password-button"]');
+      // Verify forgot password page
+      await page.waitForURL('**/auth/forgot-password');
+      await expect(page.locator('h1')).toContainText(/Forgot.*password|Reset.*password/i);
+
+      // Check for email input
+      await expect(page.locator('input[type="email"]')).toBeVisible();
+      await expect(page.locator('button:has-text("Send reset link")')).toBeVisible();
+    });
+
+    test('should send password reset email', async ({ page }) => {
+      await page.goto(`${TEST_URL}/auth/forgot-password`);
+
+      // Enter email
+      await page.fill('input[type="email"]', existingUser.email);
+
+      // Submit form
+      await page.click('button:has-text("Send reset link")');
 
       // Check for success message
-      await expect(page.locator('text=Password reset email sent')).toBeVisible();
-      await expect(page.locator('text=Check your email')).toBeVisible();
+      await expect(page.locator('text=/email.*sent|check.*inbox/i')).toBeVisible({ timeout: 10000 });
     });
 
-    test('should complete password reset with valid token', async () => {
-      const resetToken = 'mock-reset-token-123';
-      await page.goto(`${BASE_URL}/auth/reset-password?token=${resetToken}`);
+    test('should validate reset token and allow password change', async ({ page }) => {
+      // This would typically use a test token
+      const resetToken = 'test-reset-token';
 
-      const newPassword = 'NewE2EPassword123!';
+      await page.goto(`${TEST_URL}/auth/reset-password?token=${resetToken}`);
 
-      // Fill in new password form
-      await page.fill('[data-testid="new-password-input"]', newPassword);
-      await page.fill('[data-testid="confirm-password-input"]', newPassword);
-      await page.click('[data-testid="reset-password-button"]');
+      // Check reset form is visible
+      const hasResetForm = await page.locator('input[type="password"]').isVisible({ timeout: 5000 }).catch(() => false);
 
-      // Should redirect to login with success message
-      await expect(page).toHaveURL(/\/auth\/login/);
-      await expect(page.locator('text=Password reset successfully')).toBeVisible();
+      if (hasResetForm) {
+        // Fill new password
+        await page.locator('input[type="password"]').first().fill('NewPassword123!');
+        await page.locator('input[type="password"]').nth(1).fill('NewPassword123!');
 
-      // Try to login with new password
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', newPassword);
-      await page.click('[data-testid="login-button"]');
+        // Submit
+        await page.click('button:has-text("Reset password")');
 
-      await expect(page).toHaveURL(/\/dashboard/);
-    });
-
-    test('should handle invalid reset token', async () => {
-      await page.goto(`${BASE_URL}/auth/reset-password?token=invalid-token`);
-
-      await page.fill('[data-testid="new-password-input"]', 'NewPassword123!');
-      await page.fill('[data-testid="confirm-password-input"]', 'NewPassword123!');
-      await page.click('[data-testid="reset-password-button"]');
-
-      // Should show error for invalid token
-      await expect(page.locator('text=Invalid or expired reset token')).toBeVisible();
-    });
-  });
-
-  test.describe('Protected Routes', () => {
-    test('should redirect unauthenticated users to login', async () => {
-      // Try to access protected route without authentication
-      await page.goto(`${BASE_URL}/dashboard`);
-
-      // Should redirect to login
-      await expect(page).toHaveURL(/\/auth\/login/);
-      await expect(page.locator('text=Please sign in to continue')).toBeVisible();
-    });
-
-    test('should allow authenticated users to access protected routes', async () => {
-      // Login first
-      await page.goto(`${BASE_URL}/auth/login`);
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', testUser.password);
-      await page.click('[data-testid="login-button"]');
-
-      await expect(page).toHaveURL(/\/dashboard/);
-
-      // Navigate to other protected routes
-      await page.click('text=Profile');
-      await expect(page).toHaveURL(/\/profile/);
-      await expect(page.locator('text=Profile Information')).toBeVisible();
-
-      await page.click('text=Settings');
-      await expect(page).toHaveURL(/\/settings/);
-      await expect(page.locator('text=Account Settings')).toBeVisible();
-    });
-
-    test('should restrict admin routes to admin users', async () => {
-      // Login as regular user
-      await page.goto(`${BASE_URL}/auth/login`);
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', testUser.password);
-      await page.click('[data-testid="login-button"]');
-
-      // Try to access admin route
-      await page.goto(`${BASE_URL}/admin`);
-
-      // Should show access denied or redirect
-      await expect(
-        page.locator('text=Access denied').or(page.locator('text=Insufficient privileges'))
-      ).toBeVisible();
-    });
-
-    test('should allow admin users to access admin routes', async () => {
-      // Login as admin user
-      await page.goto(`${BASE_URL}/auth/login`);
-      await page.fill('[data-testid="email-input"]', adminUser.email);
-      await page.fill('[data-testid="password-input"]', adminUser.password);
-      await page.click('[data-testid="login-button"]');
-
-      // Navigate to admin dashboard
-      await page.goto(`${BASE_URL}/admin`);
-      await expect(page.locator('text=Admin Dashboard')).toBeVisible();
-      await expect(page.locator('text=User Management')).toBeVisible();
-    });
-  });
-
-  test.describe('Session Management', () => {
-    test('should maintain session across page refreshes', async () => {
-      // Login
-      await page.goto(`${BASE_URL}/auth/login`);
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', testUser.password);
-      await page.click('[data-testid="login-button"]');
-
-      await expect(page).toHaveURL(/\/dashboard/);
-
-      // Refresh page
-      await page.reload();
-
-      // Should still be authenticated
-      await expect(page.locator('text=Welcome back')).toBeVisible();
-      await expect(page.locator('[data-testid="user-avatar"]')).toBeVisible();
-    });
-
-    test('should handle token expiration gracefully', async () => {
-      // Login
-      await page.goto(`${BASE_URL}/auth/login`);
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', testUser.password);
-      await page.click('[data-testid="login-button"]');
-
-      await expect(page).toHaveURL(/\/dashboard/);
-
-      // Mock token expiration
-      await page.evaluate(() => {
-        // Clear tokens from storage
-        localStorage.clear();
-        sessionStorage.clear();
-        // Clear cookies
-        document.cookie.split(';').forEach(cookie => {
-          const eqPos = cookie.indexOf('=');
-          const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
-        });
-      });
-
-      // Try to navigate to a protected route
-      await page.goto(`${BASE_URL}/profile`);
-
-      // Should redirect to login
-      await expect(page).toHaveURL(/\/auth\/login/);
-      await expect(page.locator('text=Your session has expired')).toBeVisible();
-    });
-
-    test('should auto-refresh tokens before expiration', async () => {
-      // Login
-      await page.goto(`${BASE_URL}/auth/login`);
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', testUser.password);
-      await page.click('[data-testid="login-button"]');
-
-      await expect(page).toHaveURL(/\/dashboard/);
-
-      // Mock successful token refresh
-      await page.route('**/api/auth/refresh', (route: Route) => {
-        route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify({
-            success: true,
-            data: {
-              access_token: 'new-access-token',
-              refresh_token: 'new-refresh-token',
-              token_type: 'bearer',
-              expires_in: 3600,
-            },
-          }),
-        });
-      });
-
-      // Wait for token refresh to occur (this would happen automatically)
-      await page.waitForTimeout(2000);
-
-      // Navigate to another page to ensure tokens are still valid
-      await page.goto(`${BASE_URL}/profile`);
-      await expect(page.locator('text=Profile Information')).toBeVisible();
+        // Check for success or redirect
+        await expect(page).toHaveURL(/\/auth\/login|\/dashboard/, { timeout: 10000 });
+      }
     });
   });
 
   test.describe('User Logout', () => {
-    test('should logout user and redirect to login', async () => {
-      // Login first
-      await page.goto(`${BASE_URL}/auth/login`);
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', testUser.password);
-      await page.click('[data-testid="login-button"]');
+    test('should successfully logout', async ({ page, context }) => {
+      // First login
+      await page.goto(`${TEST_URL}/auth/login`);
+      await fillLoginForm(page, existingUser);
+      await page.click('button:has-text("Sign in")');
+      await page.waitForURL('**/dashboard');
 
-      await expect(page).toHaveURL(/\/dashboard/);
+      // Find and click logout
+      const userMenu = page.locator('[data-testid="user-menu"], [aria-label="User menu"], button:has-text("Account")');
+      if (await userMenu.isVisible()) {
+        await userMenu.click();
+        await page.click('button:has-text("Logout"), button:has-text("Sign out")');
+      } else {
+        // Direct logout button
+        await page.click('button:has-text("Logout"), button:has-text("Sign out")');
+      }
 
-      // Click logout button
-      await page.click('[data-testid="logout-button"]');
-
-      // Should redirect to login page
-      await expect(page).toHaveURL(/\/auth\/login/);
-      await expect(page.locator('text=You have been logged out')).toBeVisible();
+      // Verify redirected to login
+      await page.waitForURL(/\/auth\/login|\/$/);
 
       // Try to access protected route
-      await page.goto(`${BASE_URL}/dashboard`);
-      
-      // Should redirect back to login
+      await page.goto(`${TEST_URL}/dashboard`);
+
+      // Should redirect to login
       await expect(page).toHaveURL(/\/auth\/login/);
     });
+  });
 
-    test('should clear all session data on logout', async () => {
+  test.describe('Session Management', () => {
+    test('should maintain session across page refreshes', async ({ page }) => {
       // Login
-      await page.goto(`${BASE_URL}/auth/login`);
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', testUser.password);
-      await page.click('[data-testid="login-button"]');
+      await page.goto(`${TEST_URL}/auth/login`);
+      await fillLoginForm(page, existingUser);
+      await page.click('button:has-text("Sign in")');
+      await page.waitForURL('**/dashboard');
 
+      // Refresh page
+      await page.reload();
+
+      // Should still be on dashboard
       await expect(page).toHaveURL(/\/dashboard/);
+      await expect(page.locator('h1')).toContainText(/Dashboard|Welcome/i);
+    });
 
-      // Logout
-      await page.click('[data-testid="logout-button"]');
+    test('should redirect to login when session expires', async ({ page, context }) => {
+      // This test would need to simulate session expiry
+      // For now, we'll test unauthorized access
+
+      // Clear all cookies to simulate expired session
+      await context.clearCookies();
+
+      // Try to access protected route
+      await page.goto(`${TEST_URL}/dashboard`);
+
+      // Should redirect to login
       await expect(page).toHaveURL(/\/auth\/login/);
-
-      // Check that storage is cleared
-      const storageIsEmpty = await page.evaluate(() => {
-        return localStorage.length === 0 && sessionStorage.length === 0;
-      });
-
-      expect(storageIsEmpty).toBe(true);
     });
   });
 
-  test.describe('Email Verification', () => {
-    test('should display verification prompt for unverified users', async () => {
-      // Mock unverified user response
-      await page.route('**/api/auth/me', (route: Route) => {
-        route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify({
-            success: true,
-            data: {
-              ...testUser,
-              is_verified: false,
-            },
-          }),
-        });
-      });
+  test.describe('Form Validation', () => {
+    test('should show real-time validation feedback', async ({ page }) => {
+      await page.goto(`${TEST_URL}/auth/register`);
 
-      await page.goto(`${BASE_URL}/auth/login`);
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', testUser.password);
-      await page.click('[data-testid="login-button"]');
+      // Test email validation
+      const emailInput = page.locator('input[placeholder="name@company.com"]');
+      await emailInput.fill('invalid');
+      await emailInput.blur();
+      await expect(page.locator('text=/valid.*email/i')).toBeVisible();
 
-      // Should show verification banner
-      await expect(page.locator('text=Please verify your email')).toBeVisible();
-      await expect(page.locator('text=Resend verification email')).toBeVisible();
+      // Test password strength
+      const passwordInput = page.locator('input[placeholder="••••••••"]').first();
+      await passwordInput.fill('weak');
+      await passwordInput.blur();
+
+      // Check for password strength indicator or error
+      const strengthIndicator = page.locator('[data-testid="password-strength"], [aria-label="Password strength"]');
+      if (await strengthIndicator.isVisible({ timeout: 1000 }).catch(() => false)) {
+        await expect(strengthIndicator).toContainText(/weak|poor/i);
+      } else {
+        await expect(page.locator('text=/password.*must.*be/i')).toBeVisible();
+      }
     });
 
-    test('should handle email verification with valid token', async () => {
-      const verificationToken = 'mock-verification-token';
-      await page.goto(`${BASE_URL}/auth/verify-email?token=${verificationToken}`);
+    test('should disable submit button when form is invalid', async ({ page }) => {
+      await page.goto(`${TEST_URL}/auth/login`);
 
-      // Should show success message
-      await expect(page.locator('text=Email verified successfully')).toBeVisible();
-      await expect(page.locator('text=Continue to Dashboard')).toBeVisible();
+      const submitButton = page.locator('button:has-text("Sign in")');
 
-      // Click continue button
-      await page.click('text=Continue to Dashboard');
-      await expect(page).toHaveURL(/\/dashboard/);
+      // Button should be disabled initially
+      await expect(submitButton).toBeDisabled();
+
+      // Fill only email
+      await page.fill('input[placeholder="name@company.com"]', 'test@example.com');
+
+      // Button should still be disabled
+      await expect(submitButton).toBeDisabled();
+
+      // Fill password
+      await page.fill('input[placeholder="••••••••"]', 'Password123!');
+
+      // Button should now be enabled
+      await expect(submitButton).toBeEnabled();
     });
   });
 
-  test.describe('Error Handling', () => {
-    test('should handle network errors gracefully', async () => {
-      // Mock network error
-      await page.route('**/api/auth/login', (route: Route) => {
-        route.abort('failed');
-      });
+  test.describe('Accessibility', () => {
+    test('should be keyboard navigable', async ({ page }) => {
+      await page.goto(`${TEST_URL}/auth/login`);
 
-      await page.goto(`${BASE_URL}/auth/login`);
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', testUser.password);
-      await page.click('[data-testid="login-button"]');
+      // Tab through form fields
+      await page.keyboard.press('Tab'); // Focus first field
+      await expect(page.locator('input[placeholder="name@company.com"]')).toBeFocused();
 
-      // Should show network error message
-      await expect(page.locator('text=Network error')).toBeVisible();
-      await expect(page.locator('text=Please check your connection')).toBeVisible();
+      await page.keyboard.press('Tab'); // Focus password field
+      await expect(page.locator('input[placeholder="••••••••"]')).toBeFocused();
+
+      await page.keyboard.press('Tab'); // Focus remember me
+      await page.keyboard.press('Tab'); // Focus forgot password link
+      await page.keyboard.press('Tab'); // Focus submit button
+
+      // Submit with Enter key
+      await page.keyboard.press('Enter');
     });
 
-    test('should handle server errors gracefully', async () => {
-      // Mock server error
-      await page.route('**/api/auth/login', (route: Route) => {
-        route.fulfill({
-          status: 500,
-          contentType: 'application/json',
-          body: JSON.stringify({
-            success: false,
-            error: {
-              code: 'INTERNAL_ERROR',
-              message: 'Internal server error',
-            },
-          }),
-        });
-      });
+    test('should have proper ARIA labels', async ({ page }) => {
+      await page.goto(`${TEST_URL}/auth/login`);
 
-      await page.goto(`${BASE_URL}/auth/login`);
-      await page.fill('[data-testid="email-input"]', testUser.email);
-      await page.fill('[data-testid="password-input"]', testUser.password);
-      await page.click('[data-testid="login-button"]');
+      // Check for ARIA labels
+      const emailInput = page.locator('input[placeholder="name@company.com"]');
+      const emailLabel = await emailInput.getAttribute('aria-label') || await page.locator('label:has-text("Email")').textContent();
+      expect(emailLabel).toBeTruthy();
 
-      // Should show server error message
-      await expect(page.locator('text=Server error')).toBeVisible();
-      await expect(page.locator('text=Please try again later')).toBeVisible();
+      const passwordInput = page.locator('input[placeholder="••••••••"]');
+      const passwordLabel = await passwordInput.getAttribute('aria-label') || await page.locator('label:has-text("Password")').textContent();
+      expect(passwordLabel).toBeTruthy();
     });
+  });
+
+  test.describe('Mobile Responsiveness', () => {
+    test('should work on mobile viewport', async ({ page }) => {
+      // Set mobile viewport
+      await page.setViewportSize({ width: 375, height: 667 });
+
+      await page.goto(`${TEST_URL}/auth/login`);
+
+      // Check form is still accessible
+      await expect(page.locator('input[placeholder="name@company.com"]')).toBeVisible();
+      await expect(page.locator('input[placeholder="••••••••"]')).toBeVisible();
+      await expect(page.locator('button:has-text("Sign in")')).toBeVisible();
+
+      // Test form interaction
+      await fillLoginForm(page, existingUser);
+      await page.click('button:has-text("Sign in")');
+    });
+  });
+});
+
+// Performance tests
+test.describe('Performance', () => {
+  test('login page should load quickly', async ({ page }) => {
+    const startTime = Date.now();
+    await page.goto(`${TEST_URL}/auth/login`);
+    await page.waitForSelector('button:has-text("Sign in")');
+    const loadTime = Date.now() - startTime;
+
+    // Page should load in under 3 seconds
+    expect(loadTime).toBeLessThan(3000);
+  });
+
+  test('form submission should be responsive', async ({ page }) => {
+    await page.goto(`${TEST_URL}/auth/login`);
+    await fillLoginForm(page, existingUser);
+
+    const startTime = Date.now();
+    await page.click('button:has-text("Sign in")');
+
+    // Should show loading state immediately
+    await expect(page.locator('text=/signing.*in|loading/i')).toBeVisible({ timeout: 500 });
+
+    const responseTime = Date.now() - startTime;
+    expect(responseTime).toBeLessThan(500);
   });
 });

@@ -44,7 +44,7 @@ const providers: OAuthProvider[] = [
   },
 ];
 
-export default function OAuthProviders({ className }: OAuthProvidersProps): JSX.Element {
+export default function OAuthProviders({ className }: OAuthProvidersProps): React.ReactElement {
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 

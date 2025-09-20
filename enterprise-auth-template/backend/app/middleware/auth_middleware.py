@@ -66,7 +66,9 @@ ROLE_PROTECTED_ENDPOINTS: Dict[str, List[str]] = {
 class AuthenticationError(Exception):
     """Custom authentication error."""
 
-    def __init__(self, message: str, error_code: str = "AUTH_FAILED", status_code: int = 401):
+    def __init__(
+        self, message: str, error_code: str = "AUTH_FAILED", status_code: int = 401
+    ):
         self.message = message
         self.error_code = error_code
         self.status_code = status_code
@@ -110,53 +112,42 @@ class JWTTokenManager:
                     "verify_iat": True,
                     "verify_nbf": True,
                     "require": ["sub", "exp", "iat", "type"],
-                }
+                },
             )
 
             # Verify token type
             if payload.get("type") != "access":
                 raise AuthenticationError(
-                    "Invalid token type",
-                    error_code="INVALID_TOKEN_TYPE"
+                    "Invalid token type", error_code="INVALID_TOKEN_TYPE"
                 )
 
             # Check if token is blacklisted
             if await self._is_token_blacklisted(token):
                 raise AuthenticationError(
-                    "Token has been revoked",
-                    error_code="TOKEN_REVOKED"
+                    "Token has been revoked", error_code="TOKEN_REVOKED"
                 )
 
             # Verify user session if Redis is available
             if self.redis_client and payload.get("session_id"):
                 is_session_valid = await self._validate_user_session(
-                    payload["sub"],
-                    payload["session_id"]
+                    payload["sub"], payload["session_id"]
                 )
                 if not is_session_valid:
                     raise AuthenticationError(
-                        "Session expired or invalid",
-                        error_code="SESSION_INVALID"
+                        "Session expired or invalid", error_code="SESSION_INVALID"
                     )
 
             return payload, True
 
         except jwt.ExpiredSignatureError:
-            raise AuthenticationError(
-                "Token has expired",
-                error_code="TOKEN_EXPIRED"
-            )
+            raise AuthenticationError("Token has expired", error_code="TOKEN_EXPIRED")
         except jwt.InvalidTokenError as e:
             raise AuthenticationError(
-                f"Invalid token: {str(e)}",
-                error_code="INVALID_TOKEN"
+                f"Invalid token: {str(e)}", error_code="INVALID_TOKEN"
             )
         except Exception as e:
             logger.error("Token validation error", error=str(e))
-            raise AuthenticationError(
-                "Authentication failed",
-                error_code="AUTH_ERROR"
-            )
+            raise AuthenticationError("Authentication failed", error_code="AUTH_ERROR")
 
     async def _is_token_blacklisted(self, token: str) -> bool:
         """Check if token is blacklisted in Redis."""
@@ -211,14 +202,10 @@ class JWTTokenManager:
             await self.redis_client.setex(
                 blacklist_key,
                 ACCESS_TOKEN_EXPIRE_MINUTES * 60,
-                json.dumps(blacklist_data)
+                json.dumps(blacklist_data),
             )
 
-            logger.info(
-                "Token blacklisted",
-                reason=reason,
-                token_hash=token_hash[:16]
-            )
+            logger.info("Token blacklisted", reason=reason, token_hash=token_hash[:16])
             return True
 
         except Exception as e:
@@ -239,7 +226,9 @@ class DeviceFingerprinter:
             "accept_encoding": request.headers.get("accept-encoding", "")[:50],
             "connection": request.headers.get("connection", ""),
             "dnt": request.headers.get("dnt", ""),
-            "upgrade_insecure_requests": request.headers.get("upgrade-insecure-requests", ""),
+            "upgrade_insecure_requests": request.headers.get(
+                "upgrade-insecure-requests", ""
+            ),
         }
 
         fingerprint_str = "|".join(
@@ -251,7 +240,7 @@ class DeviceFingerprinter:
         self,
         user_id: str,
         current_fingerprint: str,
-        redis_client: Optional[redis.Redis] = None
+        redis_client: Optional[redis.Redis] = None,
     ) -> bool:
         """Detect device fingerprint anomalies."""
         if not redis_client:
@@ -275,7 +264,7 @@ class DeviceFingerprinter:
                     "New device fingerprint detected",
                     user_id=user_id,
                     fingerprint=current_fingerprint[:12],
-                    known_count=len(known_fingerprints)
+                    known_count=len(known_fingerprints),
                 )
                 return True
 
@@ -333,19 +322,20 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 logger.info("Authentication middleware initialized with Redis")
             except Exception as e:
                 logger.warning(
-                    "Failed to initialize Redis for auth middleware",
-                    error=str(e)
+                    "Failed to initialize Redis for auth middleware", error=str(e)
                 )
 
         # Initialize components
         self.token_manager = JWTTokenManager(self.redis_client)
-        self.device_fingerprinter = DeviceFingerprinter() if enable_device_tracking else None
+        self.device_fingerprinter = (
+            DeviceFingerprinter() if enable_device_tracking else None
+        )
 
         # Configure endpoints
         self.public_endpoints = PUBLIC_ENDPOINTS.union(public_endpoints or set())
         self.role_protected_endpoints = {
             **ROLE_PROTECTED_ENDPOINTS,
-            **(role_protected_endpoints or {})
+            **(role_protected_endpoints or {}),
         }
 
     async def dispatch(self, request: Request, call_next):
@@ -359,17 +349,17 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
             token = self._extract_token(request)
             if not token:
                 return self._create_auth_error_response(
-                    "Authentication token required",
-                    "TOKEN_REQUIRED"
+                    "Authentication token required", "TOKEN_REQUIRED"
                 )
 
             # Validate token and get user info
             try:
-                payload, is_valid = await self.token_manager.validate_access_token(token)
+                payload, is_valid = await self.token_manager.validate_access_token(
+                    token
+                )
                 if not is_valid:
                     return self._create_auth_error_response(
-                        "Invalid authentication token",
-                        "INVALID_TOKEN"
+                        "Invalid authentication token", "INVALID_TOKEN"
                     )
             except AuthenticationError as e:
                 return self._create_auth_error_response(e.message, e.error_code)
@@ -390,18 +380,18 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 return self._create_auth_error_response(
                     "Insufficient permissions",
                     "INSUFFICIENT_PERMISSIONS",
-                    status_code=403
+                    status_code=403,
                 )
 
             # Device fingerprinting and anomaly detection
             if self.device_fingerprinter and self.redis_client:
-                device_fingerprint = self.device_fingerprinter.generate_device_fingerprint(request)
+                device_fingerprint = (
+                    self.device_fingerprinter.generate_device_fingerprint(request)
+                )
                 request.state.device_fingerprint = device_fingerprint
 
                 is_anomaly = await self.device_fingerprinter.detect_device_anomaly(
-                    user_id,
-                    device_fingerprint,
-                    self.redis_client
+                    user_id, device_fingerprint, self.redis_client
                 )
 
                 if is_anomaly:
@@ -419,7 +409,9 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
             response.headers["X-Authenticated"] = "true"
             response.headers["X-User-ID"] = user_id
             if session_id:
-                response.headers["X-Session-ID"] = session_id[:16]  # Partial for security
+                response.headers["X-Session-ID"] = session_id[
+                    :16
+                ]  # Partial for security
 
             return response
 
@@ -428,7 +420,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
             return self._create_auth_error_response(
                 "Authentication service unavailable",
                 "AUTH_SERVICE_ERROR",
-                status_code=503
+                status_code=503,
             )
 
     def _is_public_endpoint(self, path: str) -> bool:
@@ -466,10 +458,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         return True
 
     def _create_auth_error_response(
-        self,
-        message: str,
-        error_code: str,
-        status_code: int = 401
+        self, message: str, error_code: str, status_code: int = 401
     ) -> JSONResponse:
         """Create standardized authentication error response."""
         return JSONResponse(
@@ -490,10 +479,12 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 "WWW-Authenticate": 'Bearer realm="API"',
                 "Cache-Control": "no-store",
                 "Pragma": "no-cache",
-            }
+            },
         )
 
-    async def _log_successful_auth(self, request: Request, user_id: str, roles: List[str]):
+    async def _log_successful_auth(
+        self, request: Request, user_id: str, roles: List[str]
+    ):
         """Log successful authentication."""
         logger.info(
             "User authenticated successfully",
@@ -505,7 +496,9 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
             roles=roles,
         )
 
-    async def _log_authorization_failure(self, request: Request, user_id: str, roles: List[str]):
+    async def _log_authorization_failure(
+        self, request: Request, user_id: str, roles: List[str]
+    ):
         """Log authorization failure."""
         logger.warning(
             "Authorization failed - insufficient permissions",
@@ -513,15 +506,23 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
             endpoint=request.url.path,
             method=request.method,
             required_roles=self.role_protected_endpoints.get(
-                next((p for p in self.role_protected_endpoints.keys()
-                     if request.url.path.startswith(p)), ""),
-                []
+                next(
+                    (
+                        p
+                        for p in self.role_protected_endpoints.keys()
+                        if request.url.path.startswith(p)
+                    ),
+                    "",
+                ),
+                [],
             ),
             user_roles=roles,
             client_ip=getattr(request.state, "client_ip", "unknown"),
         )
 
-    async def _log_device_anomaly(self, request: Request, user_id: str, fingerprint: str):
+    async def _log_device_anomaly(
+        self, request: Request, user_id: str, fingerprint: str
+    ):
         """Log device fingerprint anomaly."""
         logger.warning(
             "Device fingerprint anomaly detected",
@@ -534,9 +535,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
 
 def create_auth_middleware(
-    app,
-    redis_url: Optional[str] = None,
-    **kwargs
+    app, redis_url: Optional[str] = None, **kwargs
 ) -> AuthenticationMiddleware:
     """
     Factory function to create authentication middleware.
@@ -552,8 +551,4 @@ def create_auth_middleware(
     if not redis_url:
         redis_url = str(settings.REDIS_URL) if settings.REDIS_URL else None
 
-    return AuthenticationMiddleware(
-        app,
-        redis_url=redis_url,
-        **kwargs
-    )
+    return AuthenticationMiddleware(app, redis_url=redis_url, **kwargs)

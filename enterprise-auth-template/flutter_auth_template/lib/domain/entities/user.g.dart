@@ -17,8 +17,10 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
   profilePicture: json['profilePicture'] as String?,
   profileImageUrl: json['profileImageUrl'] as String?,
   isEmailVerified: json['isEmailVerified'] as bool,
+  isActive: json['isActive'] as bool? ?? true,
   isTwoFactorEnabled: json['isTwoFactorEnabled'] as bool,
   roles: (json['roles'] as List<dynamic>).map((e) => e as String).toList(),
+  role: json['role'] as String?,
   permissions: (json['permissions'] as List<dynamic>)
       .map((e) => e as String)
       .toList(),
@@ -41,8 +43,10 @@ Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
       if (instance.profilePicture case final value?) 'profilePicture': value,
       if (instance.profileImageUrl case final value?) 'profileImageUrl': value,
       'isEmailVerified': instance.isEmailVerified,
+      if (instance.isActive case final value?) 'isActive': value,
       'isTwoFactorEnabled': instance.isTwoFactorEnabled,
       'roles': instance.roles,
+      if (instance.role case final value?) 'role': value,
       'permissions': instance.permissions,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),

@@ -307,3 +307,234 @@ Map<String, dynamic> _$$BulkOperationResultImplToJson(
   'errors': instance.errors,
   'message': instance.message,
 };
+
+_$CreateIpBlockRuleRequestImpl _$$CreateIpBlockRuleRequestImplFromJson(
+  Map<String, dynamic> json,
+) => _$CreateIpBlockRuleRequestImpl(
+  ipAddress: json['ipAddress'] as String,
+  description: json['description'] as String?,
+  isActive: json['isActive'] as bool? ?? true,
+  expiresAt: json['expiresAt'] == null
+      ? null
+      : DateTime.parse(json['expiresAt'] as String),
+);
+
+Map<String, dynamic> _$$CreateIpBlockRuleRequestImplToJson(
+  _$CreateIpBlockRuleRequestImpl instance,
+) => <String, dynamic>{
+  'ipAddress': instance.ipAddress,
+  if (instance.description case final value?) 'description': value,
+  'isActive': instance.isActive,
+  if (instance.expiresAt?.toIso8601String() case final value?)
+    'expiresAt': value,
+};
+
+_$CreateRateLimitRuleRequestImpl _$$CreateRateLimitRuleRequestImplFromJson(
+  Map<String, dynamic> json,
+) => _$CreateRateLimitRuleRequestImpl(
+  endpoint: json['endpoint'] as String,
+  maxRequests: (json['maxRequests'] as num).toInt(),
+  windowSeconds: (json['windowSeconds'] as num).toInt(),
+  description: json['description'] as String?,
+  isActive: json['isActive'] as bool? ?? true,
+);
+
+Map<String, dynamic> _$$CreateRateLimitRuleRequestImplToJson(
+  _$CreateRateLimitRuleRequestImpl instance,
+) => <String, dynamic>{
+  'endpoint': instance.endpoint,
+  'maxRequests': instance.maxRequests,
+  'windowSeconds': instance.windowSeconds,
+  if (instance.description case final value?) 'description': value,
+  'isActive': instance.isActive,
+};
+
+_$RestorePointImpl _$$RestorePointImplFromJson(Map<String, dynamic> json) =>
+    _$RestorePointImpl(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      size: (json['size'] as num).toInt(),
+      description: json['description'] as String,
+      metadata: json['metadata'] as Map<String, dynamic>,
+    );
+
+Map<String, dynamic> _$$RestorePointImplToJson(_$RestorePointImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'size': instance.size,
+      'description': instance.description,
+      'metadata': instance.metadata,
+    };
+
+_$CreateExportRequestImpl _$$CreateExportRequestImplFromJson(
+  Map<String, dynamic> json,
+) => _$CreateExportRequestImpl(
+  format: json['format'] as String,
+  tables: (json['tables'] as List<dynamic>).map((e) => e as String).toList(),
+  includeMetadata: json['includeMetadata'] as bool? ?? true,
+  startDate: json['startDate'] == null
+      ? null
+      : DateTime.parse(json['startDate'] as String),
+  endDate: json['endDate'] == null
+      ? null
+      : DateTime.parse(json['endDate'] as String),
+);
+
+Map<String, dynamic> _$$CreateExportRequestImplToJson(
+  _$CreateExportRequestImpl instance,
+) => <String, dynamic>{
+  'format': instance.format,
+  'tables': instance.tables,
+  'includeMetadata': instance.includeMetadata,
+  if (instance.startDate?.toIso8601String() case final value?)
+    'startDate': value,
+  if (instance.endDate?.toIso8601String() case final value?) 'endDate': value,
+};
+
+_$CreateBackupRequestImpl _$$CreateBackupRequestImplFromJson(
+  Map<String, dynamic> json,
+) => _$CreateBackupRequestImpl(
+  name: json['name'] as String,
+  description: json['description'] as String,
+  includeUserData: json['includeUserData'] as bool? ?? true,
+  includeSystemData: json['includeSystemData'] as bool? ?? true,
+  compress: json['compress'] as bool? ?? true,
+);
+
+Map<String, dynamic> _$$CreateBackupRequestImplToJson(
+  _$CreateBackupRequestImpl instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'description': instance.description,
+  'includeUserData': instance.includeUserData,
+  'includeSystemData': instance.includeSystemData,
+  'compress': instance.compress,
+};
+
+_$BackupScheduleImpl _$$BackupScheduleImplFromJson(Map<String, dynamic> json) =>
+    _$BackupScheduleImpl(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      cronExpression: json['cronExpression'] as String,
+      isActive: json['isActive'] as bool? ?? true,
+      lastRun: json['lastRun'] == null
+          ? null
+          : DateTime.parse(json['lastRun'] as String),
+      nextRun: json['nextRun'] == null
+          ? null
+          : DateTime.parse(json['nextRun'] as String),
+    );
+
+Map<String, dynamic> _$$BackupScheduleImplToJson(
+  _$BackupScheduleImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'cronExpression': instance.cronExpression,
+  'isActive': instance.isActive,
+  if (instance.lastRun?.toIso8601String() case final value?) 'lastRun': value,
+  if (instance.nextRun?.toIso8601String() case final value?) 'nextRun': value,
+};
+
+_$RetentionPolicyImpl _$$RetentionPolicyImplFromJson(
+  Map<String, dynamic> json,
+) => _$RetentionPolicyImpl(
+  daysToKeep: (json['daysToKeep'] as num).toInt(),
+  maxBackups: (json['maxBackups'] as num).toInt(),
+  autoDelete: json['autoDelete'] as bool? ?? false,
+  notifyBeforeDelete: json['notifyBeforeDelete'] as bool? ?? true,
+);
+
+Map<String, dynamic> _$$RetentionPolicyImplToJson(
+  _$RetentionPolicyImpl instance,
+) => <String, dynamic>{
+  'daysToKeep': instance.daysToKeep,
+  'maxBackups': instance.maxBackups,
+  'autoDelete': instance.autoDelete,
+  'notifyBeforeDelete': instance.notifyBeforeDelete,
+};
+
+_$SessionAnalyticsImpl _$$SessionAnalyticsImplFromJson(
+  Map<String, dynamic> json,
+) => _$SessionAnalyticsImpl(
+  totalSessions: (json['totalSessions'] as num).toInt(),
+  activeSessions: (json['activeSessions'] as num).toInt(),
+  averageSessionDuration: (json['averageSessionDuration'] as num).toDouble(),
+  sessionsByPlatform: Map<String, int>.from(json['sessionsByPlatform'] as Map),
+  sessionsByLocation: Map<String, int>.from(json['sessionsByLocation'] as Map),
+);
+
+Map<String, dynamic> _$$SessionAnalyticsImplToJson(
+  _$SessionAnalyticsImpl instance,
+) => <String, dynamic>{
+  'totalSessions': instance.totalSessions,
+  'activeSessions': instance.activeSessions,
+  'averageSessionDuration': instance.averageSessionDuration,
+  'sessionsByPlatform': instance.sessionsByPlatform,
+  'sessionsByLocation': instance.sessionsByLocation,
+};
+
+_$UserSessionDetailsImpl _$$UserSessionDetailsImplFromJson(
+  Map<String, dynamic> json,
+) => _$UserSessionDetailsImpl(
+  sessionId: json['sessionId'] as String,
+  userId: json['userId'] as String,
+  startTime: DateTime.parse(json['startTime'] as String),
+  endTime: json['endTime'] == null
+      ? null
+      : DateTime.parse(json['endTime'] as String),
+  status: $enumDecode(_$SessionStatusEnumMap, json['status']),
+  ipAddress: json['ipAddress'] as String,
+  userAgent: json['userAgent'] as String,
+  location: json['location'] as String?,
+);
+
+Map<String, dynamic> _$$UserSessionDetailsImplToJson(
+  _$UserSessionDetailsImpl instance,
+) => <String, dynamic>{
+  'sessionId': instance.sessionId,
+  'userId': instance.userId,
+  'startTime': instance.startTime.toIso8601String(),
+  if (instance.endTime?.toIso8601String() case final value?) 'endTime': value,
+  'status': _$SessionStatusEnumMap[instance.status]!,
+  'ipAddress': instance.ipAddress,
+  'userAgent': instance.userAgent,
+  if (instance.location case final value?) 'location': value,
+};
+
+const _$SessionStatusEnumMap = {
+  SessionStatus.active: 'active',
+  SessionStatus.inactive: 'inactive',
+  SessionStatus.expired: 'expired',
+  SessionStatus.terminated: 'terminated',
+  SessionStatus.suspicious: 'suspicious',
+};
+
+_$SessionSecurityAlertImpl _$$SessionSecurityAlertImplFromJson(
+  Map<String, dynamic> json,
+) => _$SessionSecurityAlertImpl(
+  id: json['id'] as String,
+  sessionId: json['sessionId'] as String,
+  userId: json['userId'] as String,
+  alertType: json['alertType'] as String,
+  message: json['message'] as String,
+  timestamp: DateTime.parse(json['timestamp'] as String),
+  severity: json['severity'] as String,
+  isResolved: json['isResolved'] as bool? ?? false,
+);
+
+Map<String, dynamic> _$$SessionSecurityAlertImplToJson(
+  _$SessionSecurityAlertImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'sessionId': instance.sessionId,
+  'userId': instance.userId,
+  'alertType': instance.alertType,
+  'message': instance.message,
+  'timestamp': instance.timestamp.toIso8601String(),
+  'severity': instance.severity,
+  'isResolved': instance.isResolved,
+};

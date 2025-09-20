@@ -25,6 +25,7 @@ router = APIRouter()
 
 class APIKeyScopeType(str, Enum):
     """Available API key scopes."""
+
     READ = "read"
     WRITE = "write"
     DELETE = "delete"
@@ -40,18 +41,29 @@ class APIKeyCreateRequest(BaseModel):
     """Request model for creating API keys."""
 
     name: str = Field(..., min_length=1, max_length=100, description="API key name")
-    description: Optional[str] = Field(None, max_length=500, description="API key description")
-    scopes: List[APIKeyScopeType] = Field(..., min_length=1, description="List of scopes for the API key")
-    rate_limit: int = Field(1000, ge=100, le=10000, description="Requests per hour limit")
-    allowed_ips: Optional[List[str]] = Field(None, description="List of allowed IP addresses (CIDR notation)")
-    expires_in_days: Optional[int] = Field(None, ge=1, le=365, description="Days until expiration")
+    description: Optional[str] = Field(
+        None, max_length=500, description="API key description"
+    )
+    scopes: List[APIKeyScopeType] = Field(
+        ..., min_length=1, description="List of scopes for the API key"
+    )
+    rate_limit: int = Field(
+        1000, ge=100, le=10000, description="Requests per hour limit"
+    )
+    allowed_ips: Optional[List[str]] = Field(
+        None, description="List of allowed IP addresses (CIDR notation)"
+    )
+    expires_in_days: Optional[int] = Field(
+        None, ge=1, le=365, description="Days until expiration"
+    )
 
-    @field_validator('allowed_ips')
+    @field_validator("allowed_ips")
     @classmethod
     def validate_ips(cls, v):
         if v is not None:
             # Basic IP/CIDR validation
             import ipaddress
+
             for ip in v:
                 try:
                     ipaddress.ip_network(ip, strict=False)
@@ -67,7 +79,7 @@ class APIKeyCreateRequest(BaseModel):
                 "scopes": ["metrics:read", "users:read"],
                 "rate_limit": 5000,
                 "allowed_ips": ["192.168.1.0/24", "10.0.0.1"],
-                "expires_in_days": 90
+                "expires_in_days": 90,
             }
         }
     )
@@ -76,18 +88,29 @@ class APIKeyCreateRequest(BaseModel):
 class APIKeyUpdateRequest(BaseModel):
     """Request model for updating API keys."""
 
-    name: Optional[str] = Field(None, min_length=1, max_length=100, description="API key name")
-    description: Optional[str] = Field(None, max_length=500, description="API key description")
-    scopes: Optional[List[APIKeyScopeType]] = Field(None, description="List of scopes for the API key")
-    rate_limit: Optional[int] = Field(None, ge=100, le=10000, description="Requests per hour limit")
-    allowed_ips: Optional[List[str]] = Field(None, description="List of allowed IP addresses")
+    name: Optional[str] = Field(
+        None, min_length=1, max_length=100, description="API key name"
+    )
+    description: Optional[str] = Field(
+        None, max_length=500, description="API key description"
+    )
+    scopes: Optional[List[APIKeyScopeType]] = Field(
+        None, description="List of scopes for the API key"
+    )
+    rate_limit: Optional[int] = Field(
+        None, ge=100, le=10000, description="Requests per hour limit"
+    )
+    allowed_ips: Optional[List[str]] = Field(
+        None, description="List of allowed IP addresses"
+    )
     is_active: Optional[bool] = Field(None, description="Whether API key is active")
 
-    @field_validator('allowed_ips')
+    @field_validator("allowed_ips")
     @classmethod
     def validate_ips(cls, v):
         if v is not None:
             import ipaddress
+
             for ip in v:
                 try:
                     ipaddress.ip_network(ip, strict=False)
@@ -141,7 +164,9 @@ class APIKeyUsageResponse(BaseModel):
     failed_requests: int = Field(..., description="Failed requests")
     rate_limit_hits: int = Field(..., description="Rate limit violations")
     unique_ips: int = Field(..., description="Number of unique IP addresses")
-    most_used_endpoints: List[Dict[str, Any]] = Field(..., description="Most used API endpoints")
+    most_used_endpoints: List[Dict[str, Any]] = Field(
+        ..., description="Most used API endpoints"
+    )
     daily_usage: List[Dict[str, Any]] = Field(..., description="Daily usage breakdown")
     error_breakdown: Dict[str, int] = Field(..., description="Errors by type")
 
@@ -155,9 +180,13 @@ class APIKeyStatsResponse(BaseModel):
     keys_expiring_soon: int = Field(..., description="Keys expiring within 30 days")
     total_requests_today: int = Field(..., description="Total requests today")
     total_requests_month: int = Field(..., description="Total requests this month")
-    top_keys_by_usage: List[Dict[str, Any]] = Field(..., description="Top API keys by usage")
+    top_keys_by_usage: List[Dict[str, Any]] = Field(
+        ..., description="Top API keys by usage"
+    )
     scope_distribution: Dict[str, int] = Field(..., description="API keys by scope")
-    recent_activity: List[Dict[str, Any]] = Field(..., description="Recent API key activity")
+    recent_activity: List[Dict[str, Any]] = Field(
+        ..., description="Recent API key activity"
+    )
 
 
 class MessageResponse(BaseModel):
@@ -186,7 +215,9 @@ async def create_api_key(
     Returns:
         APIKeyCreateResponse: Created API key information including the key value
     """
-    logger.info("API key creation requested", user_id=current_user.id, name=api_key_request.name)
+    logger.info(
+        "API key creation requested", user_id=current_user.id, name=api_key_request.name
+    )
 
     try:
         api_key_service = APIKeyService(db)
@@ -202,7 +233,7 @@ async def create_api_key(
             scopes=scopes,
             rate_limit=api_key_request.rate_limit,
             allowed_ips=api_key_request.allowed_ips,
-            expires_in_days=api_key_request.expires_in_days
+            expires_in_days=api_key_request.expires_in_days,
         )
 
         # Calculate days until expiry
@@ -226,23 +257,22 @@ async def create_api_key(
                 last_used_at=None,
                 created_at=api_key.created_at.isoformat(),
                 updated_at=api_key.updated_at.isoformat(),
-                expires_at=api_key.expires_at.isoformat() if api_key.expires_at else None,
-                days_until_expiry=days_until_expiry
+                expires_at=(
+                    api_key.expires_at.isoformat() if api_key.expires_at else None
+                ),
+                days_until_expiry=days_until_expiry,
             ),
             key=raw_key,
-            warning="Store this API key securely. It will not be shown again."
+            warning="Store this API key securely. It will not be shown again.",
         )
 
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         logger.error("Failed to create API key", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to create API key"
+            detail="Failed to create API key",
         )
 
 
@@ -251,7 +281,9 @@ async def list_api_keys(
     limit: int = Query(50, ge=1, le=100, description="Number of API keys to return"),
     offset: int = Query(0, ge=0, description="Number of API keys to skip"),
     is_active: Optional[bool] = Query(None, description="Filter by active status"),
-    expires_soon: bool = Query(False, description="Show only keys expiring within 30 days"),
+    expires_soon: bool = Query(
+        False, description="Show only keys expiring within 30 days"
+    ),
     current_user: CurrentUser = Depends(require_permissions(["api_keys:read"])),
     db: AsyncSession = Depends(get_db_session),
 ) -> APIKeyListResponse:
@@ -271,7 +303,9 @@ async def list_api_keys(
     Returns:
         APIKeyListResponse: Paginated API key list
     """
-    logger.debug("API keys list requested", user_id=current_user.id, limit=limit, offset=offset)
+    logger.debug(
+        "API keys list requested", user_id=current_user.id, limit=limit, offset=offset
+    )
 
     try:
         api_key_service = APIKeyService(db)
@@ -282,7 +316,7 @@ async def list_api_keys(
             limit=limit,
             offset=offset,
             is_active=is_active,
-            expires_soon=expires_soon
+            expires_soon=expires_soon,
         )
 
         # Convert to response format
@@ -296,34 +330,38 @@ async def list_api_keys(
             # Get usage statistics
             usage_stats = await api_key_service.get_api_key_usage(api_key.id, days=1)
 
-            api_key_responses.append(APIKeyResponse(
-                id=api_key.id,
-                name=api_key.name,
-                description=api_key.description,
-                key_prefix=api_key.key_prefix,
-                scopes=api_key.scopes,
-                rate_limit=api_key.rate_limit,
-                allowed_ips=api_key.allowed_ips or [],
-                is_active=api_key.is_active,
-                usage_count=usage_stats.get('total_requests', 0),
-                last_used_at=usage_stats.get('last_used_at'),
-                created_at=api_key.created_at.isoformat(),
-                updated_at=api_key.updated_at.isoformat(),
-                expires_at=api_key.expires_at.isoformat() if api_key.expires_at else None,
-                days_until_expiry=days_until_expiry
-            ))
+            api_key_responses.append(
+                APIKeyResponse(
+                    id=api_key.id,
+                    name=api_key.name,
+                    description=api_key.description,
+                    key_prefix=api_key.key_prefix,
+                    scopes=api_key.scopes,
+                    rate_limit=api_key.rate_limit,
+                    allowed_ips=api_key.allowed_ips or [],
+                    is_active=api_key.is_active,
+                    usage_count=usage_stats.get("total_requests", 0),
+                    last_used_at=usage_stats.get("last_used_at"),
+                    created_at=api_key.created_at.isoformat(),
+                    updated_at=api_key.updated_at.isoformat(),
+                    expires_at=(
+                        api_key.expires_at.isoformat() if api_key.expires_at else None
+                    ),
+                    days_until_expiry=days_until_expiry,
+                )
+            )
 
         return APIKeyListResponse(
             api_keys=api_key_responses,
             total=total_count,
-            has_more=(offset + limit) < total_count
+            has_more=(offset + limit) < total_count,
         )
 
     except Exception as e:
         logger.error("Failed to list API keys", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve API keys"
+            detail="Failed to retrieve API keys",
         )
 
 
@@ -346,21 +384,21 @@ async def get_api_key(
     Returns:
         APIKeyResponse: API key information
     """
-    logger.debug("API key details requested", user_id=current_user.id, api_key_id=api_key_id)
+    logger.debug(
+        "API key details requested", user_id=current_user.id, api_key_id=api_key_id
+    )
 
     try:
         api_key_service = APIKeyService(db)
 
         # Get API key
         api_key = await api_key_service.get_api_key(
-            api_key_id=api_key_id,
-            user_id=current_user.id
+            api_key_id=api_key_id, user_id=current_user.id
         )
 
         if not api_key:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="API key not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
             )
 
         # Calculate days until expiry
@@ -380,12 +418,12 @@ async def get_api_key(
             rate_limit=api_key.rate_limit,
             allowed_ips=api_key.allowed_ips or [],
             is_active=api_key.is_active,
-            usage_count=usage_stats.get('total_requests', 0),
-            last_used_at=usage_stats.get('last_used_at'),
+            usage_count=usage_stats.get("total_requests", 0),
+            last_used_at=usage_stats.get("last_used_at"),
             created_at=api_key.created_at.isoformat(),
             updated_at=api_key.updated_at.isoformat(),
             expires_at=api_key.expires_at.isoformat() if api_key.expires_at else None,
-            days_until_expiry=days_until_expiry
+            days_until_expiry=days_until_expiry,
         )
 
     except HTTPException:
@@ -394,7 +432,7 @@ async def get_api_key(
         logger.error("Failed to get API key", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve API key"
+            detail="Failed to retrieve API key",
         )
 
 
@@ -419,27 +457,26 @@ async def update_api_key(
     Returns:
         APIKeyResponse: Updated API key information
     """
-    logger.info("API key update requested", user_id=current_user.id, api_key_id=api_key_id)
+    logger.info(
+        "API key update requested", user_id=current_user.id, api_key_id=api_key_id
+    )
 
     try:
         api_key_service = APIKeyService(db)
 
         # Convert enum scopes to strings if provided
         update_data = api_key_update.dict(exclude_unset=True)
-        if 'scopes' in update_data:
-            update_data['scopes'] = [scope.value for scope in api_key_update.scopes]
+        if "scopes" in update_data:
+            update_data["scopes"] = [scope.value for scope in api_key_update.scopes]
 
         # Update API key
         api_key = await api_key_service.update_api_key(
-            api_key_id=api_key_id,
-            user_id=current_user.id,
-            update_data=update_data
+            api_key_id=api_key_id, user_id=current_user.id, update_data=update_data
         )
 
         if not api_key:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="API key not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
             )
 
         # Calculate days until expiry
@@ -461,26 +498,23 @@ async def update_api_key(
             rate_limit=api_key.rate_limit,
             allowed_ips=api_key.allowed_ips or [],
             is_active=api_key.is_active,
-            usage_count=usage_stats.get('total_requests', 0),
-            last_used_at=usage_stats.get('last_used_at'),
+            usage_count=usage_stats.get("total_requests", 0),
+            last_used_at=usage_stats.get("last_used_at"),
             created_at=api_key.created_at.isoformat(),
             updated_at=api_key.updated_at.isoformat(),
             expires_at=api_key.expires_at.isoformat() if api_key.expires_at else None,
-            days_until_expiry=days_until_expiry
+            days_until_expiry=days_until_expiry,
         )
 
     except HTTPException:
         raise
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         logger.error("Failed to update API key", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to update API key"
+            detail="Failed to update API key",
         )
 
 
@@ -503,23 +537,25 @@ async def delete_api_key(
     Returns:
         MessageResponse: Success message
     """
-    logger.warning("API key deletion requested", user_id=current_user.id, api_key_id=api_key_id)
+    logger.warning(
+        "API key deletion requested", user_id=current_user.id, api_key_id=api_key_id
+    )
 
     try:
         api_key_service = APIKeyService(db)
 
         success = await api_key_service.delete_api_key(
-            api_key_id=api_key_id,
-            user_id=current_user.id
+            api_key_id=api_key_id, user_id=current_user.id
         )
 
         if not success:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="API key not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
             )
 
-        logger.warning("API key deleted", api_key_id=api_key_id, user_id=current_user.id)
+        logger.warning(
+            "API key deleted", api_key_id=api_key_id, user_id=current_user.id
+        )
 
         return MessageResponse(message="API key deleted successfully")
 
@@ -529,7 +565,7 @@ async def delete_api_key(
         logger.error("Failed to delete API key", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to delete API key"
+            detail="Failed to delete API key",
         )
 
 
@@ -553,28 +589,30 @@ async def rotate_api_key(
     Returns:
         Dict: New API key value
     """
-    logger.warning("API key rotation requested", user_id=current_user.id, api_key_id=api_key_id)
+    logger.warning(
+        "API key rotation requested", user_id=current_user.id, api_key_id=api_key_id
+    )
 
     try:
         api_key_service = APIKeyService(db)
 
         new_key = await api_key_service.rotate_api_key(
-            api_key_id=api_key_id,
-            user_id=current_user.id
+            api_key_id=api_key_id, user_id=current_user.id
         )
 
         if not new_key:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="API key not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
             )
 
-        logger.warning("API key rotated", api_key_id=api_key_id, user_id=current_user.id)
+        logger.warning(
+            "API key rotated", api_key_id=api_key_id, user_id=current_user.id
+        )
 
         return {
             "key": new_key,
             "message": "API key rotated successfully. Update your applications immediately.",
-            "warning": "The old key has been invalidated and will no longer work."
+            "warning": "The old key has been invalidated and will no longer work.",
         }
 
     except HTTPException:
@@ -583,14 +621,16 @@ async def rotate_api_key(
         logger.error("Failed to rotate API key", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to rotate API key"
+            detail="Failed to rotate API key",
         )
 
 
 @router.get("/{api_key_id}/usage", response_model=APIKeyUsageResponse)
 async def get_api_key_usage(
     api_key_id: str,
-    days: int = Query(30, ge=1, le=365, description="Number of days for usage statistics"),
+    days: int = Query(
+        30, ge=1, le=365, description="Number of days for usage statistics"
+    ),
     current_user: CurrentUser = Depends(require_permissions(["api_keys:read"])),
     db: AsyncSession = Depends(get_db_session),
 ) -> APIKeyUsageResponse:
@@ -608,7 +648,12 @@ async def get_api_key_usage(
     Returns:
         APIKeyUsageResponse: Usage statistics
     """
-    logger.debug("API key usage requested", user_id=current_user.id, api_key_id=api_key_id, days=days)
+    logger.debug(
+        "API key usage requested",
+        user_id=current_user.id,
+        api_key_id=api_key_id,
+        days=days,
+    )
 
     try:
         api_key_service = APIKeyService(db)
@@ -617,8 +662,7 @@ async def get_api_key_usage(
         api_key = await api_key_service.get_api_key(api_key_id, current_user.id)
         if not api_key:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="API key not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
             )
 
         # Get usage statistics
@@ -627,14 +671,14 @@ async def get_api_key_usage(
         return APIKeyUsageResponse(
             api_key_id=api_key_id,
             period=f"{days} days",
-            total_requests=usage_stats.get('total_requests', 0),
-            successful_requests=usage_stats.get('successful_requests', 0),
-            failed_requests=usage_stats.get('failed_requests', 0),
-            rate_limit_hits=usage_stats.get('rate_limit_hits', 0),
-            unique_ips=usage_stats.get('unique_ips', 0),
-            most_used_endpoints=usage_stats.get('most_used_endpoints', []),
-            daily_usage=usage_stats.get('daily_usage', []),
-            error_breakdown=usage_stats.get('error_breakdown', {})
+            total_requests=usage_stats.get("total_requests", 0),
+            successful_requests=usage_stats.get("successful_requests", 0),
+            failed_requests=usage_stats.get("failed_requests", 0),
+            rate_limit_hits=usage_stats.get("rate_limit_hits", 0),
+            unique_ips=usage_stats.get("unique_ips", 0),
+            most_used_endpoints=usage_stats.get("most_used_endpoints", []),
+            daily_usage=usage_stats.get("daily_usage", []),
+            error_breakdown=usage_stats.get("error_breakdown", {}),
         )
 
     except HTTPException:
@@ -643,7 +687,7 @@ async def get_api_key_usage(
         logger.error("Failed to get API key usage", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve API key usage statistics"
+            detail="Failed to retrieve API key usage statistics",
         )
 
 
@@ -673,22 +717,22 @@ async def get_api_key_statistics(
         stats = await api_key_service.get_system_api_key_statistics(current_user.id)
 
         return APIKeyStatsResponse(
-            total_keys=stats.get('total_keys', 0),
-            active_keys=stats.get('active_keys', 0),
-            expired_keys=stats.get('expired_keys', 0),
-            keys_expiring_soon=stats.get('keys_expiring_soon', 0),
-            total_requests_today=stats.get('total_requests_today', 0),
-            total_requests_month=stats.get('total_requests_month', 0),
-            top_keys_by_usage=stats.get('top_keys_by_usage', []),
-            scope_distribution=stats.get('scope_distribution', {}),
-            recent_activity=stats.get('recent_activity', [])
+            total_keys=stats.get("total_keys", 0),
+            active_keys=stats.get("active_keys", 0),
+            expired_keys=stats.get("expired_keys", 0),
+            keys_expiring_soon=stats.get("keys_expiring_soon", 0),
+            total_requests_today=stats.get("total_requests_today", 0),
+            total_requests_month=stats.get("total_requests_month", 0),
+            top_keys_by_usage=stats.get("top_keys_by_usage", []),
+            scope_distribution=stats.get("scope_distribution", {}),
+            recent_activity=stats.get("recent_activity", []),
         )
 
     except Exception as e:
         logger.error("Failed to get API key statistics", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve API key statistics"
+            detail="Failed to retrieve API key statistics",
         )
 
 
@@ -712,7 +756,9 @@ async def validate_api_key(
     Returns:
         Dict: Validation results
     """
-    logger.debug("API key validation requested", user_id=current_user.id, api_key_id=api_key_id)
+    logger.debug(
+        "API key validation requested", user_id=current_user.id, api_key_id=api_key_id
+    )
 
     try:
         api_key_service = APIKeyService(db)
@@ -721,26 +767,29 @@ async def validate_api_key(
         api_key = await api_key_service.get_api_key(api_key_id, current_user.id)
         if not api_key:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="API key not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
             )
 
         # Perform validation
-        validation_result = await api_key_service.validate_api_key_comprehensive(api_key_id)
+        validation_result = await api_key_service.validate_api_key_comprehensive(
+            api_key_id
+        )
 
         return {
             "api_key_id": api_key_id,
-            "is_valid": validation_result.get('is_valid', False),
+            "is_valid": validation_result.get("is_valid", False),
             "checks": {
-                "is_active": validation_result.get('is_active', False),
-                "not_expired": validation_result.get('not_expired', False),
-                "rate_limit_ok": validation_result.get('rate_limit_ok', False),
-                "ip_allowed": validation_result.get('ip_allowed', True)
+                "is_active": validation_result.get("is_active", False),
+                "not_expired": validation_result.get("not_expired", False),
+                "rate_limit_ok": validation_result.get("rate_limit_ok", False),
+                "ip_allowed": validation_result.get("ip_allowed", True),
             },
-            "issues": validation_result.get('issues', []),
-            "expires_at": api_key.expires_at.isoformat() if api_key.expires_at else None,
-            "days_until_expiry": validation_result.get('days_until_expiry'),
-            "current_rate_usage": validation_result.get('current_rate_usage', 0)
+            "issues": validation_result.get("issues", []),
+            "expires_at": (
+                api_key.expires_at.isoformat() if api_key.expires_at else None
+            ),
+            "days_until_expiry": validation_result.get("days_until_expiry"),
+            "current_rate_usage": validation_result.get("current_rate_usage", 0),
         }
 
     except HTTPException:
@@ -749,5 +798,5 @@ async def validate_api_key(
         logger.error("Failed to validate API key", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to validate API key"
+            detail="Failed to validate API key",
         )

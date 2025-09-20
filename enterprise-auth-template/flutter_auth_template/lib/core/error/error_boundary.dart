@@ -1,6 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../monitoring/crash_reporting.dart';
+import 'package:flutter_auth_template/core/monitoring/crash_reporting.dart';
 
 /// Error boundary widget to catch and handle errors in widget tree
 class ErrorBoundary extends ConsumerStatefulWidget {

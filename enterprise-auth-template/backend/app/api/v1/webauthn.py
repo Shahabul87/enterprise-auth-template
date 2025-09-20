@@ -35,31 +35,49 @@ router = APIRouter(prefix="/webauthn", tags=["WebAuthn/Passkeys"])
 
 # Request/Response Models
 
+
 class WebAuthnRegistrationOptionsRequest(BaseModel):
     """Request model for WebAuthn registration options."""
-    device_name: Optional[str] = Field(None, description="Optional device name for identification")
+
+    device_name: Optional[str] = Field(
+        None, description="Optional device name for identification"
+    )
 
 
 class WebAuthnRegistrationRequest(BaseModel):
     """Request model for WebAuthn registration verification."""
-    credential: Dict[str, Any] = Field(..., description="WebAuthn registration credential response")
-    challenge: str = Field(..., description="Expected challenge from registration options")
+
+    credential: Dict[str, Any] = Field(
+        ..., description="WebAuthn registration credential response"
+    )
+    challenge: str = Field(
+        ..., description="Expected challenge from registration options"
+    )
     device_name: Optional[str] = Field(None, description="Optional device name")
 
 
 class WebAuthnAuthenticationOptionsRequest(BaseModel):
     """Request model for WebAuthn authentication options."""
-    email: Optional[str] = Field(None, description="User email (optional for discoverable credentials)")
+
+    email: Optional[str] = Field(
+        None, description="User email (optional for discoverable credentials)"
+    )
 
 
 class WebAuthnAuthenticationRequest(BaseModel):
     """Request model for WebAuthn authentication verification."""
-    credential: Dict[str, Any] = Field(..., description="WebAuthn authentication credential response")
-    challenge: str = Field(..., description="Expected challenge from authentication options")
+
+    credential: Dict[str, Any] = Field(
+        ..., description="WebAuthn authentication credential response"
+    )
+    challenge: str = Field(
+        ..., description="Expected challenge from authentication options"
+    )
 
 
 class WebAuthnCredentialResponse(BaseModel):
     """Response model for WebAuthn credential information."""
+
     id: str = Field(..., description="Internal credential ID")
     device_name: str = Field(..., description="Device name")
     created_at: str = Field(..., description="Creation timestamp")
@@ -71,10 +89,12 @@ class WebAuthnCredentialResponse(BaseModel):
 
 class WebAuthnDeleteCredentialRequest(BaseModel):
     """Request model for deleting WebAuthn credential."""
+
     credential_id: str = Field(..., description="Internal credential ID to delete")
 
 
 # Registration Endpoints
+
 
 @router.post("/register/options")
 async def get_registration_options(
@@ -247,6 +267,7 @@ async def verify_registration(
 
 # Authentication Endpoints
 
+
 @router.post("/authenticate/options")
 async def get_authentication_options(
     request: WebAuthnAuthenticationOptionsRequest,
@@ -275,7 +296,7 @@ async def get_authentication_options(
             from sqlalchemy import select
             from app.core.database import get_db_session
 
-            async with get_session() as session:
+            async with get_db_session() as session:
                 result = await session.execute(
                     select(User).where(User.email == request.email)
                 )
@@ -409,7 +430,7 @@ async def verify_authentication(
         from sqlalchemy import update
         from app.core.database import get_db_session
 
-        async with get_session() as session:
+        async with get_db_session() as session:
             await session.execute(
                 update(User)
                 .where(User.id == user.id)
@@ -464,6 +485,7 @@ async def verify_authentication(
 
 
 # Credential Management Endpoints
+
 
 @router.get("/credentials")
 async def get_user_credentials(
@@ -623,6 +645,7 @@ async def delete_credential(
 
 
 # Health and Status Endpoints
+
 
 @router.get("/status")
 async def webauthn_status() -> Dict[str, Any]:

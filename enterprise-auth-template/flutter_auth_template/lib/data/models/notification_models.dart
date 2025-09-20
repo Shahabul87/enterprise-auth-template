@@ -50,9 +50,12 @@ class NotificationTemplate with _$NotificationTemplate {
     required NotificationType type,
     required String titleTemplate,
     required String contentTemplate,
+    String? subject,
+    String? content,
+    List<String>? variables,
     NotificationPriority? defaultPriority,
     List<NotificationAction>? defaultActions,
-    Map<String, String>? variables,
+    Map<String, String>? variableMap,
     NotificationChannelSettings? channelSettings,
     bool? isActive,
     DateTime? createdAt,
@@ -84,8 +87,13 @@ class NotificationChannelSettings with _$NotificationChannelSettings {
 @freezed
 class NotificationPreferences with _$NotificationPreferences {
   const factory NotificationPreferences({
-    required String userId,
+    String? userId,
     @Default(true) bool globalEnabled,
+    @Default(true) bool email,
+    @Default(true) bool push,
+    @Default(false) bool sms,
+    @Default(true) bool inApp,
+    Map<String, bool>? categories,
     Map<NotificationType, NotificationChannelSettings>? typeSettings,
     Map<NotificationPriority, bool>? prioritySettings,
     List<String>? mutedCategories,
@@ -115,6 +123,7 @@ class NotificationBatch with _$NotificationBatch {
     @Default(0) int totalCount,
     @Default(0) int successCount,
     @Default(0) int failureCount,
+    @Default(0) int recipientCount,
     List<NotificationDeliveryResult>? results,
     String? errorMessage,
   }) = _NotificationBatch;
@@ -176,6 +185,8 @@ class NotificationAnalytics with _$NotificationAnalytics {
     required List<NotificationTypeMetric> typeMetrics,
     required List<NotificationChannelMetric> channelMetrics,
     required NotificationEngagementMetrics engagement,
+    @Default(0) int totalSent,
+    @Default(0.0) double deliveryRate,
   }) = _NotificationAnalytics;
 
   factory NotificationAnalytics.fromJson(Map<String, dynamic> json) =>

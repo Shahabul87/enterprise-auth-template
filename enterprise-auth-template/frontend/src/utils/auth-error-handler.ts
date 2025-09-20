@@ -13,13 +13,13 @@ export interface AuthErrorDetails {
   userMessage: string;
   category: 'validation' | 'security' | 'network' | 'server' | 'unknown';
   retryable: boolean;
-  actionRequired?: string;
-  field?: string;
+  actionRequired?: string | undefined;
+  field?: string | undefined;
 }
 
 export interface EmailVerificationError extends AuthErrorDetails {
   resendAvailable: boolean;
-  resendCooldown?: number;
+  resendCooldown?: number | undefined;
 }
 
 /**
@@ -282,7 +282,7 @@ export class AuthErrorHandler {
   /**
    * Handle network errors
    */
-  private static handleNetworkError(error: unknown): AuthErrorDetails {
+  private static handleNetworkError(_error: unknown): AuthErrorDetails {
     return {
       code: 'NETWORK_ERROR',
       message: 'Network connection failed',

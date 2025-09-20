@@ -2,17 +2,9 @@ import apiClient from '@/lib/api-client';
 import { ApiResponse } from '@/types';
 
 // Magic Link Types
-interface MagicLinkRequestData {
-  email: string;
-}
-
 interface MagicLinkResponse {
   success: boolean;
   message: string;
-}
-
-interface MagicLinkVerifyData {
-  token: string;
 }
 
 interface MagicLinkVerifyResponse {
@@ -163,13 +155,14 @@ export const webAuthnService = {
     const options = optionsResponse.data;
 
     // Step 2: Convert challenge and user ID to ArrayBuffer
-    const publicKeyOptions = {
+    const publicKeyOptions: PublicKeyCredentialCreationOptions = {
       ...options.publicKey,
       challenge: base64ToArrayBuffer(options.publicKey.challenge),
       user: {
         ...options.publicKey.user,
         id: base64ToArrayBuffer(options.publicKey.user.id),
       },
+      attestation: (options.publicKey.attestation as AttestationConveyancePreference) || 'direct',
     };
 
     // Step 3: Request credential from browser
@@ -205,8 +198,12 @@ export const webAuthnService = {
     }
 
     // Step 6: Get updated credentials list
-    const credentials = await webAuthnService.getUserCredentials();
+    const credentialsResponse = await webAuthnService.getUserCredentials();
+    const credentials = credentialsResponse.data || [];
     // Return the newly created credential (should be the last one)
+    if (credentials.length === 0) {
+      throw new Error('No credentials found after registration');
+    }
     return credentials[credentials.length - 1];
   }
 };
@@ -216,7 +213,7 @@ export function base64ToArrayBuffer(base64: string): ArrayBuffer {
   const binaryString = window.atob(base64);
   const bytes = new Uint8Array(binaryString.length);
   for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
+    bytes[i] = binaryString.charCodeAt(i) || 0;
   }
   return bytes.buffer;
 }

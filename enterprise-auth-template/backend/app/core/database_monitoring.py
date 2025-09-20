@@ -17,10 +17,11 @@ from datetime import datetime
 from ..middleware.performance_middleware import (
     DB_QUERY_DURATION,
     DB_CONNECTION_POOL,
-    update_connection_pool_metrics
+    update_connection_pool_metrics,
 )
 
 logger = logging.getLogger(__name__)
+
 
 # Store query context for tracking
 class QueryContext:
@@ -42,15 +43,10 @@ def setup_database_monitoring(engine: Engine):
 
     @event.listens_for(engine, "before_cursor_execute")
     def receive_before_cursor_execute(
-        conn: Connection,
-        cursor,
-        statement: str,
-        parameters,
-        context,
-        executemany
+        conn: Connection, cursor, statement: str, parameters, context, executemany
     ):
         """Track query start time."""
-        if not hasattr(context, '_query_context'):
+        if not hasattr(context, "_query_context"):
             context._query_context = QueryContext()
 
         context._query_context.start_time = time.time()
@@ -59,25 +55,17 @@ def setup_database_monitoring(engine: Engine):
 
     @event.listens_for(engine, "after_cursor_execute")
     def receive_after_cursor_execute(
-        conn: Connection,
-        cursor,
-        statement: str,
-        parameters,
-        context,
-        executemany
+        conn: Connection, cursor, statement: str, parameters, context, executemany
     ):
         """Track query execution time and log slow queries."""
-        if hasattr(context, '_query_context') and context._query_context.start_time:
+        if hasattr(context, "_query_context") and context._query_context.start_time:
             duration = time.time() - context._query_context.start_time
 
             # Extract operation and table from SQL statement
             operation, table = _parse_sql_statement(statement)
 
             # Record metrics
-            DB_QUERY_DURATION.labels(
-                operation=operation,
-                table=table
-            ).observe(duration)
+            DB_QUERY_DURATION.labels(operation=operation, table=table).observe(duration)
 
             # Log slow queries (> 100ms)
             if duration > 0.1:
@@ -88,8 +76,8 @@ def setup_database_monitoring(engine: Engine):
                         "operation": operation,
                         "table": table,
                         "statement": statement[:500],  # Truncate long statements
-                        "parameters": str(parameters)[:200] if parameters else None
-                    }
+                        "parameters": str(parameters)[:200] if parameters else None,
+                    },
                 )
 
             # Log extremely slow queries (> 1s) as errors
@@ -102,8 +90,8 @@ def setup_database_monitoring(engine: Engine):
                         "table": table,
                         "statement": statement[:1000],
                         "parameters": str(parameters)[:500] if parameters else None,
-                        "timestamp": datetime.utcnow().isoformat()
-                    }
+                        "timestamp": datetime.utcnow().isoformat(),
+                    },
                 )
 
     @event.listens_for(engine, "handle_error")
@@ -113,16 +101,19 @@ def setup_database_monitoring(engine: Engine):
             "Database error occurred",
             extra={
                 "statement": str(exception_context.statement)[:500],
-                "parameters": str(exception_context.parameters)[:200]
-                    if exception_context.parameters else None,
+                "parameters": (
+                    str(exception_context.parameters)[:200]
+                    if exception_context.parameters
+                    else None
+                ),
                 "error": str(exception_context.original_exception),
-                "timestamp": datetime.utcnow().isoformat()
+                "timestamp": datetime.utcnow().isoformat(),
             },
-            exc_info=exception_context.original_exception
+            exc_info=exception_context.original_exception,
         )
 
     # Monitor connection pool if available
-    if hasattr(engine, 'pool'):
+    if hasattr(engine, "pool"):
         setup_pool_monitoring(engine.pool)
 
 
@@ -143,8 +134,8 @@ def setup_pool_monitoring(pool: Pool):
                 "pool_size": pool.size(),
                 "overflow": pool.overflow(),
                 "total": pool.size() + pool.overflow(),
-                "timestamp": datetime.utcnow().isoformat()
-            }
+                "timestamp": datetime.utcnow().isoformat(),
+            },
         )
         _update_pool_metrics(pool)
 
@@ -162,8 +153,8 @@ def setup_pool_monitoring(pool: Pool):
                     "available": available,
                     "checked_out": pool.checkedout(),
                     "total": pool.size(),
-                    "timestamp": datetime.utcnow().isoformat()
-                }
+                    "timestamp": datetime.utcnow().isoformat(),
+                },
             )
 
     @event.listens_for(pool, "checkin")
@@ -176,9 +167,7 @@ def setup_pool_monitoring(pool: Pool):
         """Track connection reset."""
         logger.debug(
             "Database connection reset",
-            extra={
-                "timestamp": datetime.utcnow().isoformat()
-            }
+            extra={"timestamp": datetime.utcnow().isoformat()},
         )
 
     @event.listens_for(pool, "invalidate")
@@ -188,8 +177,8 @@ def setup_pool_monitoring(pool: Pool):
             "Database connection invalidated",
             extra={
                 "exception": str(exception) if exception else None,
-                "timestamp": datetime.utcnow().isoformat()
-            }
+                "timestamp": datetime.utcnow().isoformat(),
+            },
         )
         _update_pool_metrics(pool)
 
@@ -207,67 +196,67 @@ def _parse_sql_statement(statement: str) -> tuple[str, str]:
     statement_upper = statement.upper().strip()
 
     # Determine operation
-    if statement_upper.startswith('SELECT'):
-        operation = 'SELECT'
-    elif statement_upper.startswith('INSERT'):
-        operation = 'INSERT'
-    elif statement_upper.startswith('UPDATE'):
-        operation = 'UPDATE'
-    elif statement_upper.startswith('DELETE'):
-        operation = 'DELETE'
-    elif statement_upper.startswith('CREATE'):
-        operation = 'CREATE'
-    elif statement_upper.startswith('DROP'):
-        operation = 'DROP'
-    elif statement_upper.startswith('ALTER'):
-        operation = 'ALTER'
-    elif statement_upper.startswith('BEGIN'):
-        operation = 'TRANSACTION'
-    elif statement_upper.startswith('COMMIT'):
-        operation = 'COMMIT'
-    elif statement_upper.startswith('ROLLBACK'):
-        operation = 'ROLLBACK'
+    if statement_upper.startswith("SELECT"):
+        operation = "SELECT"
+    elif statement_upper.startswith("INSERT"):
+        operation = "INSERT"
+    elif statement_upper.startswith("UPDATE"):
+        operation = "UPDATE"
+    elif statement_upper.startswith("DELETE"):
+        operation = "DELETE"
+    elif statement_upper.startswith("CREATE"):
+        operation = "CREATE"
+    elif statement_upper.startswith("DROP"):
+        operation = "DROP"
+    elif statement_upper.startswith("ALTER"):
+        operation = "ALTER"
+    elif statement_upper.startswith("BEGIN"):
+        operation = "TRANSACTION"
+    elif statement_upper.startswith("COMMIT"):
+        operation = "COMMIT"
+    elif statement_upper.startswith("ROLLBACK"):
+        operation = "ROLLBACK"
     else:
-        operation = 'OTHER'
+        operation = "OTHER"
 
     # Try to extract table name
-    table = 'unknown'
+    table = "unknown"
 
     try:
-        if operation in ['SELECT', 'DELETE']:
+        if operation in ["SELECT", "DELETE"]:
             # Look for FROM clause
-            from_index = statement_upper.find('FROM')
+            from_index = statement_upper.find("FROM")
             if from_index != -1:
-                rest = statement_upper[from_index + 4:].strip()
+                rest = statement_upper[from_index + 4 :].strip()
                 # Get first word after FROM
-                table = rest.split()[0].strip('()"\'`[]')
+                table = rest.split()[0].strip("()\"'`[]")
 
-        elif operation == 'INSERT':
+        elif operation == "INSERT":
             # Look for INTO clause
-            into_index = statement_upper.find('INTO')
+            into_index = statement_upper.find("INTO")
             if into_index != -1:
-                rest = statement_upper[into_index + 4:].strip()
+                rest = statement_upper[into_index + 4 :].strip()
                 # Get first word after INTO
-                table = rest.split()[0].strip('()"\'`[]')
+                table = rest.split()[0].strip("()\"'`[]")
 
-        elif operation == 'UPDATE':
+        elif operation == "UPDATE":
             # Table name typically follows UPDATE
             parts = statement_upper.split()
             if len(parts) > 1:
-                table = parts[1].strip('()"\'`[]')
+                table = parts[1].strip("()\"'`[]")
 
-        elif operation in ['CREATE', 'DROP', 'ALTER']:
+        elif operation in ["CREATE", "DROP", "ALTER"]:
             # Look for TABLE keyword
-            table_index = statement_upper.find('TABLE')
+            table_index = statement_upper.find("TABLE")
             if table_index != -1:
-                rest = statement_upper[table_index + 5:].strip()
+                rest = statement_upper[table_index + 5 :].strip()
                 # Get first word after TABLE
                 if rest:
-                    table = rest.split()[0].strip('()"\'`[]')
+                    table = rest.split()[0].strip("()\"'`[]")
 
         # Clean up table name (remove schema prefix if present)
-        if '.' in table:
-            table = table.split('.')[-1]
+        if "." in table:
+            table = table.split(".")[-1]
 
         # Normalize common table names
         table = table.lower()
@@ -287,16 +276,14 @@ def _update_pool_metrics(pool: Pool):
         pool: SQLAlchemy connection pool
     """
     try:
-        checked_out = pool.checkedout() if hasattr(pool, 'checkedout') else 0
-        total = pool.size() if hasattr(pool, 'size') else 0
-        overflow = pool.overflow() if hasattr(pool, 'overflow') else 0
+        checked_out = pool.checkedout() if hasattr(pool, "checkedout") else 0
+        total = pool.size() if hasattr(pool, "size") else 0
+        overflow = pool.overflow() if hasattr(pool, "overflow") else 0
 
         idle = total - checked_out
 
         update_connection_pool_metrics(
-            active=checked_out,
-            idle=idle,
-            total=total + overflow
+            active=checked_out, idle=idle, total=total + overflow
         )
     except Exception as e:
         logger.error(f"Failed to update pool metrics: {e}")
@@ -322,8 +309,7 @@ class DatabaseMonitor:
 
             # Record metrics
             DB_QUERY_DURATION.labels(
-                operation=self.operation,
-                table=self.table
+                operation=self.operation, table=self.table
             ).observe(duration)
 
             # Log if there was an error
@@ -335,8 +321,8 @@ class DatabaseMonitor:
                         "table": self.table,
                         "duration": f"{duration:.3f}s",
                         "error": str(exc_val),
-                        "error_type": exc_type.__name__
-                    }
+                        "error_type": exc_type.__name__,
+                    },
                 )
             # Log slow operations
             elif duration > 0.1:
@@ -345,8 +331,8 @@ class DatabaseMonitor:
                     extra={
                         "operation": self.operation,
                         "table": self.table,
-                        "duration": f"{duration:.3f}s"
-                    }
+                        "duration": f"{duration:.3f}s",
+                    },
                 )
 
 
@@ -389,10 +375,7 @@ async def monitor_async_db_operation(operation: str, table: str, func, *args, **
         duration = time.time() - start_time
 
         # Record metrics
-        DB_QUERY_DURATION.labels(
-            operation=operation,
-            table=table
-        ).observe(duration)
+        DB_QUERY_DURATION.labels(operation=operation, table=table).observe(duration)
 
         # Log slow operations
         if duration > 0.1:
@@ -401,8 +384,8 @@ async def monitor_async_db_operation(operation: str, table: str, func, *args, **
                 extra={
                     "operation": operation,
                     "table": table,
-                    "duration": f"{duration:.3f}s"
-                }
+                    "duration": f"{duration:.3f}s",
+                },
             )
 
         return result
@@ -417,17 +400,17 @@ async def monitor_async_db_operation(operation: str, table: str, func, *args, **
                 "table": table,
                 "duration": f"{duration:.3f}s",
                 "error": str(e),
-                "error_type": type(e).__name__
-            }
+                "error_type": type(e).__name__,
+            },
         )
         raise
 
 
 # Export monitoring functions
 __all__ = [
-    'setup_database_monitoring',
-    'setup_pool_monitoring',
-    'DatabaseMonitor',
-    'monitor_db_operation',
-    'monitor_async_db_operation'
+    "setup_database_monitoring",
+    "setup_pool_monitoring",
+    "DatabaseMonitor",
+    "monitor_db_operation",
+    "monitor_async_db_operation",
 ]

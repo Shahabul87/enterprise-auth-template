@@ -216,12 +216,15 @@ export function Header({ className, onMenuToggle, showMenuToggle = true }: Heade
             {/* User Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                <Button
+                  variant="ghost"
+                  className="relative h-10 w-10 rounded-full"
+                  aria-label="Open user menu"
+                >
                   <Avatar className="h-9 w-9">
-                    <AvatarImage src={undefined} alt={user.first_name || 'User'} />
+                    <AvatarImage src={undefined} alt={user.full_name || 'User'} />
                     <AvatarFallback>
-                      {user.first_name?.charAt(0)?.toUpperCase()}
-                      {user.last_name?.charAt(0)?.toUpperCase()}
+                      {user.full_name?.split(' ').map(n => n.charAt(0).toUpperCase()).join('').slice(0, 2)}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -230,7 +233,7 @@ export function Header({ className, onMenuToggle, showMenuToggle = true }: Heade
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">
-                      {user.first_name} {user.last_name}
+                      {user.full_name}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
                     {user.is_superuser && (

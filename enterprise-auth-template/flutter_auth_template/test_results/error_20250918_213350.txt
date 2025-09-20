@@ -1,0 +1,155 @@
+00:00 +0: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/error/error_boundary_test.dart
+test/core/error/error_boundary_test.dart:68:15: Error: No named parameter with the name 'errorWidget'.
+              errorWidget: (error, stack) => const Text('Custom Error'),
+              ^^^^^^^^^^^
+lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+  const ErrorBoundary({
+        ^^^^^^^^^^^^^
+test/core/error/error_boundary_test.dart:139:15: Error: No named parameter with the name 'showRetry'.
+              showRetry: true,
+              ^^^^^^^^^
+lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+  const ErrorBoundary({
+        ^^^^^^^^^^^^^
+test/core/error/error_boundary_test.dart:157:31: Error: 'ErrorBoundaryState' isn't a type.
+        final key = GlobalKey<ErrorBoundaryState>();
+                              ^^^^^^^^^^^^^^^^^^
+test/core/error/error_boundary_test.dart:232:15: Error: No named parameter with the name 'logger'.
+              logger: (message) => loggedErrors.add(message),
+              ^^^^^^
+lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+  const ErrorBoundary({
+        ^^^^^^^^^^^^^
+test/core/error/error_boundary_test.dart:255:15: Error: No named parameter with the name 'errorContext'.
+              errorContext: {'user': 'test_user', 'screen': 'test_screen'},
+              ^^^^^^^^^^^^
+lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+  const ErrorBoundary({
+        ^^^^^^^^^^^^^
+test/core/error/error_boundary_test.dart:346:15: Error: No named parameter with the name 'showErrorDetails'.
+              showErrorDetails: isDebug,
+              ^^^^^^^^^^^^^^^^
+lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+  const ErrorBoundary({
+        ^^^^^^^^^^^^^
+test/core/error/error_boundary_test.dart:368:15: Error: No named parameter with the name 'showErrorDetails'.
+              showErrorDetails: false,
+              ^^^^^^^^^^^^^^^^
+lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+  const ErrorBoundary({
+        ^^^^^^^^^^^^^
+test/core/error/error_boundary_test.dart:421:17: Error: No named parameter with the name 'propagateError'.
+                propagateError: true,
+                ^^^^^^^^^^^^^^
+lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+  const ErrorBoundary({
+        ^^^^^^^^^^^^^
+test/core/error/error_boundary_test.dart:447:15: Error: No named parameter with the name 'errorFilter'.
+              errorFilter: (error) {
+              ^^^^^^^^^^^
+lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+  const ErrorBoundary({
+        ^^^^^^^^^^^^^
+test/core/error/error_boundary_test.dart:473:15: Error: No named parameter with the name 'errorFilter'.
+              errorFilter: (error) => !(error is IgnorableException),
+              ^^^^^^^^^^^
+lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+  const ErrorBoundary({
+        ^^^^^^^^^^^^^
+test/core/error/error_boundary_test.dart:499:15: Error: No named parameter with the name 'onMetric'.
+              onMetric: (metric) => errorMetrics.add(metric),
+              ^^^^^^^^
+lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+  const ErrorBoundary({
+        ^^^^^^^^^^^^^
+test/core/error/error_boundary_test.dart:19:38: Error: A value of type 'void Function(FlutterErrorDetails)?' can't be assigned to a variable of type 'dynamic Function(Object, StackTrace?)?'.
+ - 'FlutterErrorDetails' is from 'package:flutter/src/foundation/assertions.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/foundation/assertions.dart').
+ - 'Object' is from 'dart:core'.
+ - 'StackTrace' is from 'dart:core'.
+      originalOnError = FlutterError.onError;
+                                     ^
+test/core/error/error_boundary_test.dart:30:30: Error: A value of type 'dynamic Function(Object, StackTrace?)?' can't be assigned to a variable of type 'void Function(FlutterErrorDetails)?'.
+ - 'Object' is from 'dart:core'.
+ - 'StackTrace' is from 'dart:core'.
+ - 'FlutterErrorDetails' is from 'package:flutter/src/foundation/assertions.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/foundation/assertions.dart').
+      FlutterError.onError = originalOnError;
+                             ^
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/error/error_boundary_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/error/error_boundary_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/error/error_boundary_test.dart: test/core/error/error_boundary_test.dart:68:15: Error: No named parameter with the name 'errorWidget'.
+                errorWidget: (error, stack) => const Text('Custom Error'),
+                ^^^^^^^^^^^
+  lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+    const ErrorBoundary({
+          ^^^^^^^^^^^^^
+  test/core/error/error_boundary_test.dart:139:15: Error: No named parameter with the name 'showRetry'.
+                showRetry: true,
+                ^^^^^^^^^
+  lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+    const ErrorBoundary({
+          ^^^^^^^^^^^^^
+  test/core/error/error_boundary_test.dart:157:31: Error: 'ErrorBoundaryState' isn't a type.
+          final key = GlobalKey<ErrorBoundaryState>();
+                                ^^^^^^^^^^^^^^^^^^
+  test/core/error/error_boundary_test.dart:232:15: Error: No named parameter with the name 'logger'.
+                logger: (message) => loggedErrors.add(message),
+                ^^^^^^
+  lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+    const ErrorBoundary({
+          ^^^^^^^^^^^^^
+  test/core/error/error_boundary_test.dart:255:15: Error: No named parameter with the name 'errorContext'.
+                errorContext: {'user': 'test_user', 'screen': 'test_screen'},
+                ^^^^^^^^^^^^
+  lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+    const ErrorBoundary({
+          ^^^^^^^^^^^^^
+  test/core/error/error_boundary_test.dart:346:15: Error: No named parameter with the name 'showErrorDetails'.
+                showErrorDetails: isDebug,
+                ^^^^^^^^^^^^^^^^
+  lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+    const ErrorBoundary({
+          ^^^^^^^^^^^^^
+  test/core/error/error_boundary_test.dart:368:15: Error: No named parameter with the name 'showErrorDetails'.
+                showErrorDetails: false,
+                ^^^^^^^^^^^^^^^^
+  lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+    const ErrorBoundary({
+          ^^^^^^^^^^^^^
+  test/core/error/error_boundary_test.dart:421:17: Error: No named parameter with the name 'propagateError'.
+                  propagateError: true,
+                  ^^^^^^^^^^^^^^
+  lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+    const ErrorBoundary({
+          ^^^^^^^^^^^^^
+  test/core/error/error_boundary_test.dart:447:15: Error: No named parameter with the name 'errorFilter'.
+                errorFilter: (error) {
+                ^^^^^^^^^^^
+  lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+    const ErrorBoundary({
+          ^^^^^^^^^^^^^
+  test/core/error/error_boundary_test.dart:473:15: Error: No named parameter with the name 'errorFilter'.
+                errorFilter: (error) => !(error is IgnorableException),
+                ^^^^^^^^^^^
+  lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+    const ErrorBoundary({
+          ^^^^^^^^^^^^^
+  test/core/error/error_boundary_test.dart:499:15: Error: No named parameter with the name 'onMetric'.
+                onMetric: (metric) => errorMetrics.add(metric),
+                ^^^^^^^^
+  lib/core/error/error_boundary.dart:12:9: Context: Found this candidate, but the arguments don't match.
+    const ErrorBoundary({
+          ^^^^^^^^^^^^^
+  test/core/error/error_boundary_test.dart:19:38: Error: A value of type 'void Function(FlutterErrorDetails)?' can't be assigned to a variable of type 'dynamic Function(Object, StackTrace?)?'.
+   - 'FlutterErrorDetails' is from 'package:flutter/src/foundation/assertions.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/foundation/assertions.dart').
+   - 'Object' is from 'dart:core'.
+   - 'StackTrace' is from 'dart:core'.
+        originalOnError = FlutterError.onError;
+                                       ^
+  test/core/error/error_boundary_test.dart:30:30: Error: A value of type 'dynamic Function(Object, StackTrace?)?' can't be assigned to a variable of type 'void Function(FlutterErrorDetails)?'.
+   - 'Object' is from 'dart:core'.
+   - 'StackTrace' is from 'dart:core'.
+   - 'FlutterErrorDetails' is from 'package:flutter/src/foundation/assertions.dart' ('/opt/homebrew/share/flutter/packages/flutter/lib/src/foundation/assertions.dart').
+        FlutterError.onError = originalOnError;
+                               ^
+  .
+00:00 +0 -1: Some tests failed.

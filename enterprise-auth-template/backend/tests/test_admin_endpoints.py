@@ -15,7 +15,9 @@ from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.main import app
-from app.models.user import User, Role, Permission
+from app.models.user import User
+from app.models.role import Role
+from app.models.permission import Permission
 from app.core.security import get_password_hash
 
 

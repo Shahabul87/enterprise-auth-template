@@ -1,10 +1,13 @@
+
+
+import React from 'react';
+
 /**
  * Comprehensive Utils Tests
  *
  * Tests utility functions with proper TypeScript types,
  * edge cases, and full coverage.
  */
-
 import {
   cn,
   formatDate,
@@ -63,7 +66,7 @@ describe('Utils', () => {
     jest.useRealTimers();
   });
 
-  describe('cn (className merger)', () => {
+describe('cn (className merger)', () => {
     it('merges class names correctly', () => {
       const result = cn('btn', 'btn-primary', 'active');
       expect(typeof result).toBe('string');
@@ -71,12 +74,12 @@ describe('Utils', () => {
     });
 
     it('handles conditional classes', () => {
-      const isActive = true;
+      const is_active = true;
       const isDisabled = false;
 
       const result = cn(
         'btn',
-        isActive && 'active',
+        is_active && 'active',
         isDisabled && 'disabled'
       );
 
@@ -104,7 +107,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('formatDate', () => {
+describe('formatDate', () => {
     const testDate = new Date('2024-01-15T10:30:00Z');
     const testDateString = '2024-01-15T10:30:00Z';
 
@@ -132,7 +135,7 @@ describe('Utils', () => {
       expect(result).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
     });
 
-    describe('relative format', () => {
+describe('relative format', () => {
       it('shows "Just now" for very recent dates', () => {
         const now = new Date();
         const result = formatDate(now, 'relative');
@@ -183,7 +186,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('isValidEmail', () => {
+describe('isValidEmail', () => {
     it('validates correct email addresses', () => {
       const validEmails = [
         'test@example.com',
@@ -219,7 +222,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('isStrongPassword', () => {
+describe('isStrongPassword', () => {
     it('validates strong passwords', () => {
       const strongPasswords = [
         'Password123!',
@@ -257,7 +260,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('capitalizeFirst', () => {
+describe('capitalizeFirst', () => {
     it('capitalizes the first letter', () => {
       expect(capitalizeFirst('hello')).toBe('Hello');
       expect(capitalizeFirst('world')).toBe('World');
@@ -281,7 +284,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('truncate', () => {
+describe('truncate', () => {
     it('truncates long strings', () => {
       const longString = 'This is a very long string that should be truncated';
       const result = truncate(longString, 20);
@@ -313,7 +316,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('getErrorMessage', () => {
+describe('getErrorMessage', () => {
     it('extracts message from Error objects', () => {
       const error = new Error('Test error message');
       expect(getErrorMessage(error)).toBe('Test error message');
@@ -345,7 +348,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('debounce', () => {
+describe('debounce', () => {
     it('delays function execution', () => {
       const mockFn = jest.fn();
       const debouncedFn = debounce(mockFn, 100);
@@ -407,7 +410,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('localStorage utilities', () => {
+describe('localStorage utilities', () => {
     beforeEach(() => {
       global.window = mockWindow as Window & typeof globalThis;
       Object.defineProperty(global, 'localStorage', {
@@ -426,7 +429,7 @@ describe('Utils', () => {
       }
     });
 
-    describe('getLocalStorageItem', () => {
+describe('getLocalStorageItem', () => {
       it('retrieves item from localStorage', () => {
         mockLocalStorage.getItem.mockReturnValue('stored value');
 
@@ -463,7 +466,7 @@ describe('Utils', () => {
       });
     });
 
-    describe('setLocalStorageItem', () => {
+describe('setLocalStorageItem', () => {
       it('stores item in localStorage', () => {
         const success = setLocalStorageItem('test-key', 'test-value');
 
@@ -490,7 +493,7 @@ describe('Utils', () => {
       });
     });
 
-    describe('removeLocalStorageItem', () => {
+describe('removeLocalStorageItem', () => {
       it('removes item from localStorage', () => {
         const success = removeLocalStorageItem('test-key');
 
@@ -518,7 +521,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('createSearchParams', () => {
+describe('createSearchParams', () => {
     it('creates URL search params from object', () => {
       const params = {
         page: 1,
@@ -587,7 +590,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('Type Guards', () => {
+describe('Type Guards', () => {
     describe('isNotNull', () => {
       it('returns true for non-null values', () => {
         expect(isNotNull('string')).toBe(true);
@@ -621,7 +624,7 @@ describe('Utils', () => {
       });
     });
 
-    describe('isNotUndefined', () => {
+describe('isNotUndefined', () => {
       it('returns true for defined values', () => {
         expect(isNotUndefined('string')).toBe(true);
         expect(isNotUndefined(0)).toBe(true);
@@ -655,7 +658,7 @@ describe('Utils', () => {
     });
   });
 
-  describe('Edge Cases and Error Handling', () => {
+describe('Edge Cases and Error Handling', () => {
     it('handles extremely large inputs gracefully', () => {
       const largeString = 'a'.repeat(10000);
 

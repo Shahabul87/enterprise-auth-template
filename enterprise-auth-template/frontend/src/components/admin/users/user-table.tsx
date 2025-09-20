@@ -61,7 +61,7 @@ interface UserTableProps {
   className?: string;
 }
 
-export default function UserTable({ className }: UserTableProps): JSX.Element {
+export default function UserTable({ className }: UserTableProps): React.ReactElement {
   const { hasPermission, user: currentUser } = useAuth();
 
   // State management
@@ -228,7 +228,7 @@ export default function UserTable({ className }: UserTableProps): JSX.Element {
   };
 
   // Render user row
-  const renderUserRow = (user: User): JSX.Element => {
+  const renderUserRow = (user: User): React.ReactElement => {
     const isCurrentUser = currentUser?.id === user.id;
 
     return (

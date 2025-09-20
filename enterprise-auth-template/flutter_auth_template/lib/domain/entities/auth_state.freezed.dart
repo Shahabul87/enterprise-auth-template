@@ -412,10 +412,17 @@ class _$AuthenticatedImpl extends Authenticated {
     this.refreshToken,
   }) : super._();
 
+  /// The authenticated user object containing profile information.
   @override
   final User user;
+
+  /// Access token for API authentication.
+  /// Should be included in Authorization header for protected endpoints.
   @override
   final String accessToken;
+
+  /// Optional refresh token for renewing access token.
+  /// Stored securely and used when access token expires.
   @override
   final String? refreshToken;
 
@@ -537,8 +544,15 @@ abstract class Authenticated extends AuthState {
   }) = _$AuthenticatedImpl;
   const Authenticated._() : super._();
 
+  /// The authenticated user object containing profile information.
   User get user;
+
+  /// Access token for API authentication.
+  /// Should be included in Authorization header for protected endpoints.
   String get accessToken;
+
+  /// Optional refresh token for renewing access token.
+  /// Stored securely and used when access token expires.
   String? get refreshToken;
 
   /// Create a copy of AuthState

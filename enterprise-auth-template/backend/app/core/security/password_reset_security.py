@@ -32,7 +32,7 @@ class PasswordResetSecurityManager:
         cache_service: Optional[CacheService] = None,
         max_attempts: int = 3,
         cooldown_minutes: int = 30,
-        token_expiry_minutes: int = 60
+        token_expiry_minutes: int = 60,
     ):
         """
         Initialize PasswordResetSecurityManager.
@@ -63,8 +63,7 @@ class PasswordResetSecurityManager:
         if not self.cache:
             # If no cache, always allow (but log warning)
             logger.warning(
-                "Password reset rate limiting disabled - no cache service",
-                email=email
+                "Password reset rate limiting disabled - no cache service", email=email
             )
             return True, None
 
@@ -74,7 +73,10 @@ class PasswordResetSecurityManager:
 
         if attempts >= self.max_attempts:
             remaining_time = await self._get_remaining_cooldown(email)
-            return False, f"Too many reset attempts. Please try again in {remaining_time} minutes."
+            return (
+                False,
+                f"Too many reset attempts. Please try again in {remaining_time} minutes.",
+            )
 
         return True, None
 
@@ -101,36 +103,33 @@ class PasswordResetSecurityManager:
                 "created_at": datetime.utcnow().isoformat(),
                 "expires_at": (
                     datetime.utcnow() + timedelta(minutes=self.token_expiry_minutes)
-                ).isoformat()
+                ).isoformat(),
             }
 
             await self.cache.set(
                 f"password_reset:token:{token_hash}",
                 token_data,
-                ttl=self.token_expiry_minutes * 60
+                ttl=self.token_expiry_minutes * 60,
             )
 
             # Update rate limiting
             rate_limit_key = f"password_reset:attempts:{email}"
             attempts = await self.cache.get(rate_limit_key) or 0
             await self.cache.set(
-                rate_limit_key,
-                attempts + 1,
-                ttl=self.cooldown_minutes * 60
+                rate_limit_key, attempts + 1, ttl=self.cooldown_minutes * 60
             )
 
         logger.info(
             "Password reset token generated",
             user_id=str(user_id),
             email=email,
-            token_hash=token_hash[:8]
+            token_hash=token_hash[:8],
         )
 
         return token
 
     async def validate_reset_token(
-        self,
-        token: str
+        self, token: str
     ) -> tuple[bool, Optional[UUID], Optional[str]]:
         """
         Validate a password reset token.
@@ -151,10 +150,7 @@ class PasswordResetSecurityManager:
         token_data = await self.cache.get(token_key)
 
         if not token_data:
-            logger.warning(
-                "Invalid or expired reset token",
-                token_hash=token_hash[:8]
-            )
+            logger.warning("Invalid or expired reset token", token_hash=token_hash[:8])
             return False, None, None
 
         # Check expiry
@@ -163,7 +159,7 @@ class PasswordResetSecurityManager:
             logger.warning(
                 "Expired reset token",
                 token_hash=token_hash[:8],
-                expired_at=expires_at.isoformat()
+                expired_at=expires_at.isoformat(),
             )
             await self.cache.delete(token_key)
             return False, None, None
@@ -172,9 +168,7 @@ class PasswordResetSecurityManager:
         email = token_data["email"]
 
         logger.info(
-            "Reset token validated",
-            token_hash=token_hash[:8],
-            user_id=str(user_id)
+            "Reset token validated", token_hash=token_hash[:8], user_id=str(user_id)
         )
 
         return True, user_id, email
@@ -199,10 +193,7 @@ class PasswordResetSecurityManager:
         deleted = await self.cache.delete(token_key)
 
         if deleted:
-            logger.info(
-                "Reset token consumed",
-                token_hash=token_hash[:8]
-            )
+            logger.info("Reset token consumed", token_hash=token_hash[:8])
 
         return deleted
 
@@ -253,11 +244,7 @@ class PasswordResetSecurityManager:
             Statistics dictionary
         """
         if not self.cache:
-            return {
-                "attempts": 0,
-                "remaining_cooldown": 0,
-                "can_request": True
-            }
+            return {"attempts": 0, "remaining_cooldown": 0, "can_request": True}
 
         rate_limit_key = f"password_reset:attempts:{email}"
         attempts = await self.cache.get(rate_limit_key) or 0
@@ -267,5 +254,5 @@ class PasswordResetSecurityManager:
             "attempts": attempts,
             "max_attempts": self.max_attempts,
             "remaining_cooldown": remaining_cooldown,
-            "can_request": attempts < self.max_attempts
+            "can_request": attempts < self.max_attempts,
         }

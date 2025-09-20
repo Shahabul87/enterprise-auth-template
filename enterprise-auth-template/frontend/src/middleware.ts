@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Define protected routes that require authentication
-const protectedRoutes = ['/dashboard', '/profile', '/admin', '/settings', '/api/protected'];
+// Define protected routes that require authentication (non-API routes)
+const protectedRoutes = ['/dashboard', '/profile', '/admin', '/settings'];
 
 // Define guest-only routes (redirect authenticated users)
 const guestOnlyRoutes = [
@@ -108,11 +108,6 @@ export function middleware(request: NextRequest): NextResponse {
 
   // Handle API routes
   if (pathname.startsWith('/api/')) {
-    // Public API routes
-    if (matchesRoute(pathname, publicRoutes)) {
-      return NextResponse.next();
-    }
-
     // Protected API routes
     if (pathname.startsWith('/api/protected') || pathname.startsWith('/api/v1/auth/me')) {
       if (!isAuthenticated) {
@@ -128,6 +123,7 @@ export function middleware(request: NextRequest): NextResponse {
         );
       }
     }
+    // Public API routes - continue to add security headers
   }
 
   // Add security headers to all responses

@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/constants/api_constants.dart';
-import '../../core/network/api_client.dart';
-import '../../core/errors/app_exception.dart';
-import '../models/auth_request.dart';
-import '../models/auth_response.dart';
-import '../../domain/entities/user.dart';
+import 'package:flutter_auth_template/core/constants/api_constants.dart';
+import 'package:flutter_auth_template/core/network/api_client.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
+import 'package:flutter_auth_template/data/models/auth_request.dart';
+import 'package:flutter_auth_template/data/models/auth_response.dart';
+import 'package:flutter_auth_template/domain/entities/user.dart';
 
 final authServiceProvider = Provider<AuthService>((ref) {
   return AuthService(ref.read(apiClientProvider));

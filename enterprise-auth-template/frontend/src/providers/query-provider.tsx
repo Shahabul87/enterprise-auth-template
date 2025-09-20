@@ -20,7 +20,7 @@ interface QueryProviderProps {
   children: React.ReactNode;
 }
 
-export function QueryProvider({ children }: QueryProviderProps): JSX.Element {
+export function QueryProvider({ children }: QueryProviderProps): React.ReactElement {
   // Initialize performance monitoring once
   React.useEffect(() => {
     // Start performance monitoring in development

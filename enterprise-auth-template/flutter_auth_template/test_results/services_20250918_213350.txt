@@ -1,0 +1,689 @@
+00:00 +0: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_working_test.dart
+00:00 +0: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_working_test.dart: AuthService login should return AuthResponseData when login is successful
+00:00 +0 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_working_test.dart: AuthService login should return AuthResponseData when login is successful [E]
+  No matching calls. All calls: MockApiClient.post('/auth/login', {data: {email: test@example.com, password: password123}, queryParameters: null, options: null, cancelToken: null})
+  (If you called `verify(...).called(0);`, please instead use `verifyNever(...);`.)
+  package:matcher                                     fail
+  package:mockito/src/mock.dart 852:7                 _VerifyCall._checkWith
+  package:mockito/src/mock.dart 1152:18               _makeVerify.<fn>
+  test/services/auth_service_working_test.dart 67:15  main.<fn>.<fn>.<fn>
+  
+00:00 +0 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_working_test.dart: AuthService login should throw AuthException when login fails
+00:00 +0 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_working_test.dart: AuthService login should throw AuthException when login fails [E]
+  Expected: throws <Instance of 'UnauthorizedException'>
+    Actual: <Closure: () => Future<AuthResponseData>>
+     Which: threw NetworkException:<Network error occurred>
+            stack package:flutter_auth_template/services/auth_service.dart 55:7  AuthService.login
+                  test/services/auth_service_working_test.dart 93:34             main.<fn>.<fn>.<fn>.<fn>
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  test/services/auth_service_working_test.dart 93:9              main.<fn>.<fn>.<fn>
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                expect
+                  package:flutter_test/src/widget_tester.dart 473:18             expect
+                  test/services/auth_service_working_test.dart 93:9              main.<fn>.<fn>.<fn>
+                  
+            which is not an instance of 'UnauthorizedException'
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/services/auth_service_working_test.dart 93:9   main.<fn>.<fn>.<fn>
+  
+00:00 +0 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_working_test.dart: AuthService register should return AuthResponseData when registration is successful
+00:00 +0 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_working_test.dart: AuthService register should return AuthResponseData when registration is successful [E]
+  No matching calls. All calls: MockApiClient.post('/auth/register', {data: {email: newuser@example.com, password: password123, full_name: New User, confirm_password: password123, agree_to_terms: true}, queryParameters: null, options: null, cancelToken: null})
+  (If you called `verify(...).called(0);`, please instead use `verifyNever(...);`.)
+  package:matcher                                      fail
+  package:mockito/src/mock.dart 852:7                  _VerifyCall._checkWith
+  package:mockito/src/mock.dart 1152:18                _makeVerify.<fn>
+  test/services/auth_service_working_test.dart 146:15  main.<fn>.<fn>.<fn>
+  
+00:00 +0 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_working_test.dart: AuthService logout should complete without errors
+00:00 +0 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_working_test.dart: AuthService logout should complete without errors [E]
+  No matching calls. All calls: MockApiClient.post('/auth/logout', {data: null, queryParameters: null, options: null, cancelToken: null})
+  (If you called `verify(...).called(0);`, please instead use `verifyNever(...);`.)
+  package:matcher                                      fail
+  package:mockito/src/mock.dart 852:7                  _VerifyCall._checkWith
+  package:mockito/src/mock.dart 1152:18                _makeVerify.<fn>
+  test/services/auth_service_working_test.dart 162:15  main.<fn>.<fn>.<fn>
+  
+00:00 +0 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_working_test.dart: AuthService forgotPassword should complete without errors when successful
+00:00 +0 -5: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_working_test.dart: AuthService forgotPassword should complete without errors when successful [E]
+  No matching calls. All calls: MockApiClient.post('/auth/forgot-password', {data: {email: test@example.com}, queryParameters: null, options: null, cancelToken: null})
+  (If you called `verify(...).called(0);`, please instead use `verifyNever(...);`.)
+  package:matcher                                      fail
+  package:mockito/src/mock.dart 852:7                  _VerifyCall._checkWith
+  package:mockito/src/mock.dart 1152:18                _makeVerify.<fn>
+  test/services/auth_service_working_test.dart 184:15  main.<fn>.<fn>.<fn>
+  
+00:00 +0 -5: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_working_test.dart: AuthService refreshToken should return AuthResponseData when refresh is successful
+00:00 +0 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_working_test.dart: AuthService refreshToken should return AuthResponseData when refresh is successful [E]
+  No matching calls. All calls: MockApiClient.post('/auth/refresh', {data: null, queryParameters: null, options: null, cancelToken: null})
+  (If you called `verify(...).called(0);`, please instead use `verifyNever(...);`.)
+  package:matcher                                      fail
+  package:mockito/src/mock.dart 852:7                  _VerifyCall._checkWith
+  package:mockito/src/mock.dart 1152:18                _makeVerify.<fn>
+  test/services/auth_service_working_test.dart 224:15  main.<fn>.<fn>.<fn>
+  
+00:00 +0 -6: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_simple_test.dart
+test/services/auth_service_simple_test.dart:183:7: Error: The non-abstract class 'MockApiClient' is missing implementations for these members:
+ - ApiClient.addHeader
+ - ApiClient.clearAuthToken
+ - ApiClient.dio
+ - ApiClient.dispose
+ - ApiClient.removeHeader
+ - ApiClient.setAuthToken
+ - ApiClient.updateBaseUrl
+Try to either
+ - provide an implementation,
+ - inherit an implementation from a superclass or mixin,
+ - mark the class as abstract, or
+ - provide a 'noSuchMethod' implementation.
+
+class MockApiClient implements ApiClient {
+      ^^^^^^^^^^^^^
+lib/core/network/api_client.dart:174:8: Context: 'ApiClient.addHeader' is defined here.
+  void addHeader(String key, String value) {
+       ^^^^^^^^^
+lib/core/network/api_client.dart:187:8: Context: 'ApiClient.clearAuthToken' is defined here.
+  void clearAuthToken() {
+       ^^^^^^^^^^^^^^
+lib/core/network/api_client.dart:22:11: Context: 'ApiClient.dio' is defined here.
+  Dio get dio => _dio;
+          ^^^
+lib/core/network/api_client.dart:191:8: Context: 'ApiClient.dispose' is defined here.
+  void dispose() {
+       ^^^^^^^
+lib/core/network/api_client.dart:178:8: Context: 'ApiClient.removeHeader' is defined here.
+  void removeHeader(String key) {
+       ^^^^^^^^^^^^
+lib/core/network/api_client.dart:182:8: Context: 'ApiClient.setAuthToken' is defined here.
+  void setAuthToken(String token) {
+       ^^^^^^^^^^^^
+lib/core/network/api_client.dart:170:8: Context: 'ApiClient.updateBaseUrl' is defined here.
+  void updateBaseUrl(String newBaseUrl) {
+       ^^^^^^^^^^^^^
+test/services/auth_service_simple_test.dart:241:7: Error: The non-abstract class 'MockSecureStorageService' is missing implementations for these members:
+ - SecureStorageService.get
+ - SecureStorageService.getAllItems
+ - SecureStorageService.getBiometricEnabled
+ - SecureStorageService.getDeviceId
+ - SecureStorageService.getFcmToken
+ - SecureStorageService.getJsonData
+ - SecureStorageService.getLastLogin
+ - SecureStorageService.getToken
+ - SecureStorageService.getTwoFactorSecret
+ - SecureStorageService.getUserData
+ - SecureStorageService.getUserProfile
+ - SecureStorageService.isBiometricEnabled
+ - SecureStorageService.remove
+ - SecureStorageService.removeAccessToken
+ - SecureStorageService.removeRefreshToken
+ - SecureStorageService.removeTwoFactorSecret
+ - SecureStorageService.removeUserData
+ - SecureStorageService.saveUserProfile
+ - SecureStorageService.setBiometricEnabled
+ - SecureStorageService.store
+ - SecureStorageService.storeBiometricEnabled
+ - SecureStorageService.storeDeviceId
+ - SecureStorageService.storeFcmToken
+ - SecureStorageService.storeJsonData
+ - SecureStorageService.storeLastLogin
+ - SecureStorageService.storeTwoFactorSecret
+ - SecureStorageService.storeUserData
+Try to either
+ - provide an implementation,
+ - inherit an implementation from a superclass or mixin,
+ - mark the class as abstract, or
+ - provide a 'noSuchMethod' implementation.
+
+class MockSecureStorageService implements SecureStorageService {
+      ^^^^^^^^^^^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:164:19: Context: 'SecureStorageService.get' is defined here.
+  Future<String?> get(String key) async {
+                  ^^^
+lib/core/storage/secure_storage_service.dart:199:31: Context: 'SecureStorageService.getAllItems' is defined here.
+  Future<Map<String, String>> getAllItems() async {
+                              ^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:91:16: Context: 'SecureStorageService.getBiometricEnabled' is defined here.
+  Future<bool> getBiometricEnabled() async {
+               ^^^^^^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:112:19: Context: 'SecureStorageService.getDeviceId' is defined here.
+  Future<String?> getDeviceId() async {
+                  ^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:122:19: Context: 'SecureStorageService.getFcmToken' is defined here.
+  Future<String?> getFcmToken() async {
+                  ^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:210:33: Context: 'SecureStorageService.getJsonData' is defined here.
+  Future<Map<String, dynamic>?> getJsonData(String key) async {
+                                ^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:135:21: Context: 'SecureStorageService.getLastLogin' is defined here.
+  Future<DateTime?> getLastLogin() async {
+                    ^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:41:19: Context: 'SecureStorageService.getToken' is defined here.
+  Future<String?> getToken() async {
+                  ^^^^^^^^
+lib/core/storage/secure_storage_service.dart:149:19: Context: 'SecureStorageService.getTwoFactorSecret' is defined here.
+  Future<String?> getTwoFactorSecret() async {
+                  ^^^^^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:72:33: Context: 'SecureStorageService.getUserData' is defined here.
+  Future<Map<String, dynamic>?> getUserData() async {
+                                ^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:227:19: Context: 'SecureStorageService.getUserProfile' is defined here.
+  Future<dynamic> getUserProfile() async {
+                  ^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:102:16: Context: 'SecureStorageService.isBiometricEnabled' is defined here.
+  Future<bool> isBiometricEnabled() async {
+               ^^^^^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:169:16: Context: 'SecureStorageService.remove' is defined here.
+  Future<void> remove(String key) async {
+               ^^^^^^
+lib/core/storage/secure_storage_service.dart:46:16: Context: 'SecureStorageService.removeAccessToken' is defined here.
+  Future<void> removeAccessToken() async {
+               ^^^^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:61:16: Context: 'SecureStorageService.removeRefreshToken' is defined here.
+  Future<void> removeRefreshToken() async {
+               ^^^^^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:154:16: Context: 'SecureStorageService.removeTwoFactorSecret' is defined here.
+  Future<void> removeTwoFactorSecret() async {
+               ^^^^^^^^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:81:16: Context: 'SecureStorageService.removeUserData' is defined here.
+  Future<void> removeUserData() async {
+               ^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:219:16: Context: 'SecureStorageService.saveUserProfile' is defined here.
+  Future<void> saveUserProfile(dynamic profile) async {
+               ^^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:86:16: Context: 'SecureStorageService.setBiometricEnabled' is defined here.
+  Future<void> setBiometricEnabled(bool enabled) async {
+               ^^^^^^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:159:16: Context: 'SecureStorageService.store' is defined here.
+  Future<void> store(String key, String value) async {
+               ^^^^^
+lib/core/storage/secure_storage_service.dart:97:16: Context: 'SecureStorageService.storeBiometricEnabled' is defined here.
+  Future<void> storeBiometricEnabled(bool enabled) async {
+               ^^^^^^^^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:107:16: Context: 'SecureStorageService.storeDeviceId' is defined here.
+  Future<void> storeDeviceId(String deviceId) async {
+               ^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:117:16: Context: 'SecureStorageService.storeFcmToken' is defined here.
+  Future<void> storeFcmToken(String token) async {
+               ^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:204:16: Context: 'SecureStorageService.storeJsonData' is defined here.
+  Future<void> storeJsonData(String key, Map<String, dynamic> data) async {
+               ^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:127:16: Context: 'SecureStorageService.storeLastLogin' is defined here.
+  Future<void> storeLastLogin(DateTime timestamp) async {
+               ^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:144:16: Context: 'SecureStorageService.storeTwoFactorSecret' is defined here.
+  Future<void> storeTwoFactorSecret(String secret) async {
+               ^^^^^^^^^^^^^^^^^^^^
+lib/core/storage/secure_storage_service.dart:66:16: Context: 'SecureStorageService.storeUserData' is defined here.
+  Future<void> storeUserData(Map<String, dynamic> userData) async {
+               ^^^^^^^^^^^^^
+test/services/auth_service_simple_test.dart:196:23: Error: The method 'MockApiClient.get' has fewer named arguments than those of overridden method 'ApiClient.get'.
+  Future<Response<T>> get<T>(String path, {Map<String, dynamic>? queryParameters, Options? options}) async {
+                      ^
+lib/core/network/api_client.dart:71:23: Context: This is the overridden method ('get').
+  Future<Response<T>> get<T>(
+                      ^
+test/services/auth_service_simple_test.dart:196:23: Error: The method 'MockApiClient.get' doesn't have the named parameter 'cancelToken' of overridden method 'ApiClient.get'.
+  Future<Response<T>> get<T>(String path, {Map<String, dynamic>? queryParameters, Options? options}) async {
+                      ^
+lib/core/network/api_client.dart:71:23: Context: This is the overridden method ('get').
+  Future<Response<T>> get<T>(
+                      ^
+test/services/auth_service_simple_test.dart:205:23: Error: The method 'MockApiClient.post' has fewer named arguments than those of overridden method 'ApiClient.post'.
+  Future<Response<T>> post<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                      ^
+lib/core/network/api_client.dart:89:23: Context: This is the overridden method ('post').
+  Future<Response<T>> post<T>(
+                      ^
+test/services/auth_service_simple_test.dart:205:23: Error: The method 'MockApiClient.post' doesn't have the named parameter 'cancelToken' of overridden method 'ApiClient.post'.
+  Future<Response<T>> post<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                      ^
+lib/core/network/api_client.dart:89:23: Context: This is the overridden method ('post').
+  Future<Response<T>> post<T>(
+                      ^
+test/services/auth_service_simple_test.dart:214:23: Error: The method 'MockApiClient.patch' has fewer named arguments than those of overridden method 'ApiClient.patch'.
+  Future<Response<T>> patch<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                      ^
+lib/core/network/api_client.dart:129:23: Context: This is the overridden method ('patch').
+  Future<Response<T>> patch<T>(
+                      ^
+test/services/auth_service_simple_test.dart:214:23: Error: The method 'MockApiClient.patch' doesn't have the named parameter 'cancelToken' of overridden method 'ApiClient.patch'.
+  Future<Response<T>> patch<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                      ^
+lib/core/network/api_client.dart:129:23: Context: This is the overridden method ('patch').
+  Future<Response<T>> patch<T>(
+                      ^
+test/services/auth_service_simple_test.dart:223:23: Error: The method 'MockApiClient.put' has fewer named arguments than those of overridden method 'ApiClient.put'.
+  Future<Response<T>> put<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                      ^
+lib/core/network/api_client.dart:109:23: Context: This is the overridden method ('put').
+  Future<Response<T>> put<T>(
+                      ^
+test/services/auth_service_simple_test.dart:223:23: Error: The method 'MockApiClient.put' doesn't have the named parameter 'cancelToken' of overridden method 'ApiClient.put'.
+  Future<Response<T>> put<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                      ^
+lib/core/network/api_client.dart:109:23: Context: This is the overridden method ('put').
+  Future<Response<T>> put<T>(
+                      ^
+test/services/auth_service_simple_test.dart:232:23: Error: The method 'MockApiClient.delete' has fewer named arguments than those of overridden method 'ApiClient.delete'.
+  Future<Response<T>> delete<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                      ^
+lib/core/network/api_client.dart:149:23: Context: This is the overridden method ('delete').
+  Future<Response<T>> delete<T>(
+                      ^
+test/services/auth_service_simple_test.dart:232:23: Error: The method 'MockApiClient.delete' doesn't have the named parameter 'cancelToken' of overridden method 'ApiClient.delete'.
+  Future<Response<T>> delete<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                      ^
+lib/core/network/api_client.dart:149:23: Context: This is the overridden method ('delete').
+  Future<Response<T>> delete<T>(
+                      ^
+test/services/auth_service_simple_test.dart:279:19: Error: The method 'MockSecureStorageService.read' has more required arguments than those of overridden method 'SecureStorageService.read'.
+  Future<String?> read(String key) async {
+                  ^
+lib/core/storage/secure_storage_service.dart:179:19: Context: This is the overridden method ('read').
+  Future<String?> read({required String key}) async {
+                  ^
+test/services/auth_service_simple_test.dart:279:19: Error: The method 'MockSecureStorageService.read' has fewer named arguments than those of overridden method 'SecureStorageService.read'.
+  Future<String?> read(String key) async {
+                  ^
+lib/core/storage/secure_storage_service.dart:179:19: Context: This is the overridden method ('read').
+  Future<String?> read({required String key}) async {
+                  ^
+test/services/auth_service_simple_test.dart:284:16: Error: The method 'MockSecureStorageService.write' has more required arguments than those of overridden method 'SecureStorageService.write'.
+  Future<void> write(String key, String value) async {
+               ^
+lib/core/storage/secure_storage_service.dart:174:16: Context: This is the overridden method ('write').
+  Future<void> write({required String key, required String value}) async {
+               ^
+test/services/auth_service_simple_test.dart:284:16: Error: The method 'MockSecureStorageService.write' has fewer named arguments than those of overridden method 'SecureStorageService.write'.
+  Future<void> write(String key, String value) async {
+               ^
+lib/core/storage/secure_storage_service.dart:174:16: Context: This is the overridden method ('write').
+  Future<void> write({required String key, required String value}) async {
+               ^
+test/services/auth_service_simple_test.dart:289:16: Error: The method 'MockSecureStorageService.delete' has more required arguments than those of overridden method 'SecureStorageService.delete'.
+  Future<void> delete(String key) async {
+               ^
+lib/core/storage/secure_storage_service.dart:184:16: Context: This is the overridden method ('delete').
+  Future<void> delete({required String key}) async {
+               ^
+test/services/auth_service_simple_test.dart:289:16: Error: The method 'MockSecureStorageService.delete' has fewer named arguments than those of overridden method 'SecureStorageService.delete'.
+  Future<void> delete(String key) async {
+               ^
+lib/core/storage/secure_storage_service.dart:184:16: Context: This is the overridden method ('delete').
+  Future<void> delete({required String key}) async {
+               ^
+test/services/auth_service_simple_test.dart:20:32: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+      authService = AuthService(mockApiClient, mockSecureStorage);
+                               ^
+lib/services/auth_service.dart:17:3: Context: Found this candidate, but the arguments don't match.
+  AuthService(this._apiClient);
+  ^^^^^^^^^^^
+test/services/auth_service_simple_test.dart:110:11: Error: No named parameter with the name 'name'.
+          name: 'Test User',
+          ^^^^
+lib/data/models/auth_request.dart:19:17: Context: Found this candidate, but the arguments don't match.
+  const factory RegisterRequest({
+                ^
+test/services/auth_service_simple_test.dart:144:51: Error: Too many positional arguments: 0 allowed, but 2 found.
+Try removing the extra positional arguments.
+        const response = ApiResponse<String>.error(errorMessage, errorCode);
+                                                  ^
+lib/core/network/api_response.dart:14:17: Context: Found this candidate, but the arguments don't match.
+  const factory ApiResponse.error({
+                ^^^^^
+test/services/auth_service_simple_test.dart:26:57: Error: The method 'thenAnswer' isn't defined for the type 'Future<String?> Function()'.
+ - 'Future' is from 'dart:async'.
+Try correcting the name to the name of an existing method, or defining a method named 'thenAnswer'.
+        when(() => mockSecureStorage.getRefreshToken()).thenAnswer((_) async => null);
+                                                        ^^^^^^^^^^
+test/services/auth_service_simple_test.dart:37:56: Error: The method 'thenAnswer' isn't defined for the type 'Future<String?> Function()'.
+ - 'Future' is from 'dart:async'.
+Try correcting the name to the name of an existing method, or defining a method named 'thenAnswer'.
+        when(() => mockSecureStorage.getAccessToken()).thenAnswer((_) async => null);
+                                                       ^^^^^^^^^^
+test/services/auth_service_simple_test.dart:40:42: Error: The method 'isAuthenticated' isn't defined for the type 'AuthService'.
+ - 'AuthService' is from 'package:flutter_auth_template/services/auth_service.dart' ('lib/services/auth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'isAuthenticated'.
+        final result = await authService.isAuthenticated();
+                                         ^^^^^^^^^^^^^^^
+test/services/auth_service_simple_test.dart:53:16: Error: This expression has type 'void' and can't be used.
+        expect(result.isSuccess, isTrue);
+               ^
+test/services/auth_service_simple_test.dart:53:23: Error: The getter 'isSuccess' isn't defined for the type 'void'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'isSuccess'.
+        expect(result.isSuccess, isTrue);
+                      ^^^^^^^^^
+test/services/auth_service_simple_test.dart:54:9: Error: This expression has type 'void' and can't be used.
+        verify(() => mockSecureStorage.clearAll()).called(1);
+        ^
+test/services/auth_service_simple_test.dart:54:52: Error: The method 'called' isn't defined for the type 'void'.
+Try correcting the name to the name of an existing method, or defining a method named 'called'.
+        verify(() => mockSecureStorage.clearAll()).called(1);
+                                                   ^^^^^^
+test/services/auth_service_simple_test.dart:134:25: Error: The getter 'data' isn't defined for the type 'ApiResponse<String>'.
+ - 'ApiResponse' is from 'package:flutter_auth_template/core/network/api_response.dart' ('lib/core/network/api_response.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'data'.
+        expect(response.data, testData);
+                        ^^^^
+00:00 +0 -7: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_simple_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_simple_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_simple_test.dart: test/services/auth_service_simple_test.dart:183:7: Error: The non-abstract class 'MockApiClient' is missing implementations for these members:
+   - ApiClient.addHeader
+   - ApiClient.clearAuthToken
+   - ApiClient.dio
+   - ApiClient.dispose
+   - ApiClient.removeHeader
+   - ApiClient.setAuthToken
+   - ApiClient.updateBaseUrl
+  Try to either
+   - provide an implementation,
+   - inherit an implementation from a superclass or mixin,
+   - mark the class as abstract, or
+   - provide a 'noSuchMethod' implementation.
+  
+  class MockApiClient implements ApiClient {
+        ^^^^^^^^^^^^^
+  lib/core/network/api_client.dart:174:8: Context: 'ApiClient.addHeader' is defined here.
+    void addHeader(String key, String value) {
+         ^^^^^^^^^
+  lib/core/network/api_client.dart:187:8: Context: 'ApiClient.clearAuthToken' is defined here.
+    void clearAuthToken() {
+         ^^^^^^^^^^^^^^
+  lib/core/network/api_client.dart:22:11: Context: 'ApiClient.dio' is defined here.
+    Dio get dio => _dio;
+            ^^^
+  lib/core/network/api_client.dart:191:8: Context: 'ApiClient.dispose' is defined here.
+    void dispose() {
+         ^^^^^^^
+  lib/core/network/api_client.dart:178:8: Context: 'ApiClient.removeHeader' is defined here.
+    void removeHeader(String key) {
+         ^^^^^^^^^^^^
+  lib/core/network/api_client.dart:182:8: Context: 'ApiClient.setAuthToken' is defined here.
+    void setAuthToken(String token) {
+         ^^^^^^^^^^^^
+  lib/core/network/api_client.dart:170:8: Context: 'ApiClient.updateBaseUrl' is defined here.
+    void updateBaseUrl(String newBaseUrl) {
+         ^^^^^^^^^^^^^
+  test/services/auth_service_simple_test.dart:241:7: Error: The non-abstract class 'MockSecureStorageService' is missing implementations for these members:
+   - SecureStorageService.get
+   - SecureStorageService.getAllItems
+   - SecureStorageService.getBiometricEnabled
+   - SecureStorageService.getDeviceId
+   - SecureStorageService.getFcmToken
+   - SecureStorageService.getJsonData
+   - SecureStorageService.getLastLogin
+   - SecureStorageService.getToken
+   - SecureStorageService.getTwoFactorSecret
+   - SecureStorageService.getUserData
+   - SecureStorageService.getUserProfile
+   - SecureStorageService.isBiometricEnabled
+   - SecureStorageService.remove
+   - SecureStorageService.removeAccessToken
+   - SecureStorageService.removeRefreshToken
+   - SecureStorageService.removeTwoFactorSecret
+   - SecureStorageService.removeUserData
+   - SecureStorageService.saveUserProfile
+   - SecureStorageService.setBiometricEnabled
+   - SecureStorageService.store
+   - SecureStorageService.storeBiometricEnabled
+   - SecureStorageService.storeDeviceId
+   - SecureStorageService.storeFcmToken
+   - SecureStorageService.storeJsonData
+   - SecureStorageService.storeLastLogin
+   - SecureStorageService.storeTwoFactorSecret
+   - SecureStorageService.storeUserData
+  Try to either
+   - provide an implementation,
+   - inherit an implementation from a superclass or mixin,
+   - mark the class as abstract, or
+   - provide a 'noSuchMethod' implementation.
+  
+  class MockSecureStorageService implements SecureStorageService {
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:164:19: Context: 'SecureStorageService.get' is defined here.
+    Future<String?> get(String key) async {
+                    ^^^
+  lib/core/storage/secure_storage_service.dart:199:31: Context: 'SecureStorageService.getAllItems' is defined here.
+    Future<Map<String, String>> getAllItems() async {
+                                ^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:91:16: Context: 'SecureStorageService.getBiometricEnabled' is defined here.
+    Future<bool> getBiometricEnabled() async {
+                 ^^^^^^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:112:19: Context: 'SecureStorageService.getDeviceId' is defined here.
+    Future<String?> getDeviceId() async {
+                    ^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:122:19: Context: 'SecureStorageService.getFcmToken' is defined here.
+    Future<String?> getFcmToken() async {
+                    ^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:210:33: Context: 'SecureStorageService.getJsonData' is defined here.
+    Future<Map<String, dynamic>?> getJsonData(String key) async {
+                                  ^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:135:21: Context: 'SecureStorageService.getLastLogin' is defined here.
+    Future<DateTime?> getLastLogin() async {
+                      ^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:41:19: Context: 'SecureStorageService.getToken' is defined here.
+    Future<String?> getToken() async {
+                    ^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:149:19: Context: 'SecureStorageService.getTwoFactorSecret' is defined here.
+    Future<String?> getTwoFactorSecret() async {
+                    ^^^^^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:72:33: Context: 'SecureStorageService.getUserData' is defined here.
+    Future<Map<String, dynamic>?> getUserData() async {
+                                  ^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:227:19: Context: 'SecureStorageService.getUserProfile' is defined here.
+    Future<dynamic> getUserProfile() async {
+                    ^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:102:16: Context: 'SecureStorageService.isBiometricEnabled' is defined here.
+    Future<bool> isBiometricEnabled() async {
+                 ^^^^^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:169:16: Context: 'SecureStorageService.remove' is defined here.
+    Future<void> remove(String key) async {
+                 ^^^^^^
+  lib/core/storage/secure_storage_service.dart:46:16: Context: 'SecureStorageService.removeAccessToken' is defined here.
+    Future<void> removeAccessToken() async {
+                 ^^^^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:61:16: Context: 'SecureStorageService.removeRefreshToken' is defined here.
+    Future<void> removeRefreshToken() async {
+                 ^^^^^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:154:16: Context: 'SecureStorageService.removeTwoFactorSecret' is defined here.
+    Future<void> removeTwoFactorSecret() async {
+                 ^^^^^^^^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:81:16: Context: 'SecureStorageService.removeUserData' is defined here.
+    Future<void> removeUserData() async {
+                 ^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:219:16: Context: 'SecureStorageService.saveUserProfile' is defined here.
+    Future<void> saveUserProfile(dynamic profile) async {
+                 ^^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:86:16: Context: 'SecureStorageService.setBiometricEnabled' is defined here.
+    Future<void> setBiometricEnabled(bool enabled) async {
+                 ^^^^^^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:159:16: Context: 'SecureStorageService.store' is defined here.
+    Future<void> store(String key, String value) async {
+                 ^^^^^
+  lib/core/storage/secure_storage_service.dart:97:16: Context: 'SecureStorageService.storeBiometricEnabled' is defined here.
+    Future<void> storeBiometricEnabled(bool enabled) async {
+                 ^^^^^^^^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:107:16: Context: 'SecureStorageService.storeDeviceId' is defined here.
+    Future<void> storeDeviceId(String deviceId) async {
+                 ^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:117:16: Context: 'SecureStorageService.storeFcmToken' is defined here.
+    Future<void> storeFcmToken(String token) async {
+                 ^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:204:16: Context: 'SecureStorageService.storeJsonData' is defined here.
+    Future<void> storeJsonData(String key, Map<String, dynamic> data) async {
+                 ^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:127:16: Context: 'SecureStorageService.storeLastLogin' is defined here.
+    Future<void> storeLastLogin(DateTime timestamp) async {
+                 ^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:144:16: Context: 'SecureStorageService.storeTwoFactorSecret' is defined here.
+    Future<void> storeTwoFactorSecret(String secret) async {
+                 ^^^^^^^^^^^^^^^^^^^^
+  lib/core/storage/secure_storage_service.dart:66:16: Context: 'SecureStorageService.storeUserData' is defined here.
+    Future<void> storeUserData(Map<String, dynamic> userData) async {
+                 ^^^^^^^^^^^^^
+  test/services/auth_service_simple_test.dart:196:23: Error: The method 'MockApiClient.get' has fewer named arguments than those of overridden method 'ApiClient.get'.
+    Future<Response<T>> get<T>(String path, {Map<String, dynamic>? queryParameters, Options? options}) async {
+                        ^
+  lib/core/network/api_client.dart:71:23: Context: This is the overridden method ('get').
+    Future<Response<T>> get<T>(
+                        ^
+  test/services/auth_service_simple_test.dart:196:23: Error: The method 'MockApiClient.get' doesn't have the named parameter 'cancelToken' of overridden method 'ApiClient.get'.
+    Future<Response<T>> get<T>(String path, {Map<String, dynamic>? queryParameters, Options? options}) async {
+                        ^
+  lib/core/network/api_client.dart:71:23: Context: This is the overridden method ('get').
+    Future<Response<T>> get<T>(
+                        ^
+  test/services/auth_service_simple_test.dart:205:23: Error: The method 'MockApiClient.post' has fewer named arguments than those of overridden method 'ApiClient.post'.
+    Future<Response<T>> post<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                        ^
+  lib/core/network/api_client.dart:89:23: Context: This is the overridden method ('post').
+    Future<Response<T>> post<T>(
+                        ^
+  test/services/auth_service_simple_test.dart:205:23: Error: The method 'MockApiClient.post' doesn't have the named parameter 'cancelToken' of overridden method 'ApiClient.post'.
+    Future<Response<T>> post<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                        ^
+  lib/core/network/api_client.dart:89:23: Context: This is the overridden method ('post').
+    Future<Response<T>> post<T>(
+                        ^
+  test/services/auth_service_simple_test.dart:214:23: Error: The method 'MockApiClient.patch' has fewer named arguments than those of overridden method 'ApiClient.patch'.
+    Future<Response<T>> patch<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                        ^
+  lib/core/network/api_client.dart:129:23: Context: This is the overridden method ('patch').
+    Future<Response<T>> patch<T>(
+                        ^
+  test/services/auth_service_simple_test.dart:214:23: Error: The method 'MockApiClient.patch' doesn't have the named parameter 'cancelToken' of overridden method 'ApiClient.patch'.
+    Future<Response<T>> patch<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                        ^
+  lib/core/network/api_client.dart:129:23: Context: This is the overridden method ('patch').
+    Future<Response<T>> patch<T>(
+                        ^
+  test/services/auth_service_simple_test.dart:223:23: Error: The method 'MockApiClient.put' has fewer named arguments than those of overridden method 'ApiClient.put'.
+    Future<Response<T>> put<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                        ^
+  lib/core/network/api_client.dart:109:23: Context: This is the overridden method ('put').
+    Future<Response<T>> put<T>(
+                        ^
+  test/services/auth_service_simple_test.dart:223:23: Error: The method 'MockApiClient.put' doesn't have the named parameter 'cancelToken' of overridden method 'ApiClient.put'.
+    Future<Response<T>> put<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                        ^
+  lib/core/network/api_client.dart:109:23: Context: This is the overridden method ('put').
+    Future<Response<T>> put<T>(
+                        ^
+  test/services/auth_service_simple_test.dart:232:23: Error: The method 'MockApiClient.delete' has fewer named arguments than those of overridden method 'ApiClient.delete'.
+    Future<Response<T>> delete<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                        ^
+  lib/core/network/api_client.dart:149:23: Context: This is the overridden method ('delete').
+    Future<Response<T>> delete<T>(
+                        ^
+  test/services/auth_service_simple_test.dart:232:23: Error: The method 'MockApiClient.delete' doesn't have the named parameter 'cancelToken' of overridden method 'ApiClient.delete'.
+    Future<Response<T>> delete<T>(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
+                        ^
+  lib/core/network/api_client.dart:149:23: Context: This is the overridden method ('delete').
+    Future<Response<T>> delete<T>(
+                        ^
+  test/services/auth_service_simple_test.dart:279:19: Error: The method 'MockSecureStorageService.read' has more required arguments than those of overridden method 'SecureStorageService.read'.
+    Future<String?> read(String key) async {
+                    ^
+  lib/core/storage/secure_storage_service.dart:179:19: Context: This is the overridden method ('read').
+    Future<String?> read({required String key}) async {
+                    ^
+  test/services/auth_service_simple_test.dart:279:19: Error: The method 'MockSecureStorageService.read' has fewer named arguments than those of overridden method 'SecureStorageService.read'.
+    Future<String?> read(String key) async {
+                    ^
+  lib/core/storage/secure_storage_service.dart:179:19: Context: This is the overridden method ('read').
+    Future<String?> read({required String key}) async {
+                    ^
+  test/services/auth_service_simple_test.dart:284:16: Error: The method 'MockSecureStorageService.write' has more required arguments than those of overridden method 'SecureStorageService.write'.
+    Future<void> write(String key, String value) async {
+                 ^
+  lib/core/storage/secure_storage_service.dart:174:16: Context: This is the overridden method ('write').
+    Future<void> write({required String key, required String value}) async {
+                 ^
+  test/services/auth_service_simple_test.dart:284:16: Error: The method 'MockSecureStorageService.write' has fewer named arguments than those of overridden method 'SecureStorageService.write'.
+    Future<void> write(String key, String value) async {
+                 ^
+  lib/core/storage/secure_storage_service.dart:174:16: Context: This is the overridden method ('write').
+    Future<void> write({required String key, required String value}) async {
+                 ^
+  test/services/auth_service_simple_test.dart:289:16: Error: The method 'MockSecureStorageService.delete' has more required arguments than those of overridden method 'SecureStorageService.delete'.
+    Future<void> delete(String key) async {
+                 ^
+  lib/core/storage/secure_storage_service.dart:184:16: Context: This is the overridden method ('delete').
+    Future<void> delete({required String key}) async {
+                 ^
+  test/services/auth_service_simple_test.dart:289:16: Error: The method 'MockSecureStorageService.delete' has fewer named arguments than those of overridden method 'SecureStorageService.delete'.
+    Future<void> delete(String key) async {
+                 ^
+  lib/core/storage/secure_storage_service.dart:184:16: Context: This is the overridden method ('delete').
+    Future<void> delete({required String key}) async {
+                 ^
+  test/services/auth_service_simple_test.dart:20:32: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+        authService = AuthService(mockApiClient, mockSecureStorage);
+                                 ^
+  lib/services/auth_service.dart:17:3: Context: Found this candidate, but the arguments don't match.
+    AuthService(this._apiClient);
+    ^^^^^^^^^^^
+  test/services/auth_service_simple_test.dart:110:11: Error: No named parameter with the name 'name'.
+            name: 'Test User',
+            ^^^^
+  lib/data/models/auth_request.dart:19:17: Context: Found this candidate, but the arguments don't match.
+    const factory RegisterRequest({
+                  ^
+  test/services/auth_service_simple_test.dart:144:51: Error: Too many positional arguments: 0 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          const response = ApiResponse<String>.error(errorMessage, errorCode);
+                                                    ^
+  lib/core/network/api_response.dart:14:17: Context: Found this candidate, but the arguments don't match.
+    const factory ApiResponse.error({
+                  ^^^^^
+  test/services/auth_service_simple_test.dart:26:57: Error: The method 'thenAnswer' isn't defined for the type 'Future<String?> Function()'.
+   - 'Future' is from 'dart:async'.
+  Try correcting the name to the name of an existing method, or defining a method named 'thenAnswer'.
+          when(() => mockSecureStorage.getRefreshToken()).thenAnswer((_) async => null);
+                                                          ^^^^^^^^^^
+  test/services/auth_service_simple_test.dart:37:56: Error: The method 'thenAnswer' isn't defined for the type 'Future<String?> Function()'.
+   - 'Future' is from 'dart:async'.
+  Try correcting the name to the name of an existing method, or defining a method named 'thenAnswer'.
+          when(() => mockSecureStorage.getAccessToken()).thenAnswer((_) async => null);
+                                                         ^^^^^^^^^^
+  test/services/auth_service_simple_test.dart:40:42: Error: The method 'isAuthenticated' isn't defined for the type 'AuthService'.
+   - 'AuthService' is from 'package:flutter_auth_template/services/auth_service.dart' ('lib/services/auth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'isAuthenticated'.
+          final result = await authService.isAuthenticated();
+                                           ^^^^^^^^^^^^^^^
+  test/services/auth_service_simple_test.dart:53:16: Error: This expression has type 'void' and can't be used.
+          expect(result.isSuccess, isTrue);
+                 ^
+  test/services/auth_service_simple_test.dart:53:23: Error: The getter 'isSuccess' isn't defined for the type 'void'.
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'isSuccess'.
+          expect(result.isSuccess, isTrue);
+                        ^^^^^^^^^
+  test/services/auth_service_simple_test.dart:54:9: Error: This expression has type 'void' and can't be used.
+          verify(() => mockSecureStorage.clearAll()).called(1);
+          ^
+  test/services/auth_service_simple_test.dart:54:52: Error: The method 'called' isn't defined for the type 'void'.
+  Try correcting the name to the name of an existing method, or defining a method named 'called'.
+          verify(() => mockSecureStorage.clearAll()).called(1);
+                                                     ^^^^^^
+  test/services/auth_service_simple_test.dart:134:25: Error: The getter 'data' isn't defined for the type 'ApiResponse<String>'.
+   - 'ApiResponse' is from 'package:flutter_auth_template/core/network/api_response.dart' ('lib/core/network/api_response.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'data'.
+          expect(response.data, testData);
+                          ^^^^
+  .
+00:00 +0 -7: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_test.dart
+00:00 +0 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_test.dart: AuthService Fixed Tests login should return AuthResponseData when login is successful
+00:00 +1 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_test.dart: AuthService Fixed Tests login should throw exception when login fails
+00:00 +2 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_test.dart: AuthService Fixed Tests register should return AuthResponseData when registration is successful
+00:00 +3 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_test.dart: AuthService Fixed Tests logout should complete without errors
+00:00 +4 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_test.dart: AuthService Fixed Tests forgotPassword should complete without errors when successful
+00:00 +5 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_test.dart: AuthService Fixed Tests refreshToken should return AuthResponseData when refresh is successful
+00:00 +6 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_test.dart: AuthService Fixed Tests OAuth methods should return OAuth providers list
+00:00 +7 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/services/auth_service_test.dart: AuthService Fixed Tests OAuth methods should return OAuth authorization URL
+00:00 +8 -7: Some tests failed.

@@ -73,7 +73,7 @@ const sidebarNavItems = [
   },
 ];
 
-export default function SettingsLayout({ children }: SettingsLayoutProps): JSX.Element {
+export default function SettingsLayout({ children }: SettingsLayoutProps): React.ReactElement {
   const pathname = usePathname();
 
   return (

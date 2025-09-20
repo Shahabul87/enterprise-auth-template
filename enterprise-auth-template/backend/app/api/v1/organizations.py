@@ -26,6 +26,7 @@ router = APIRouter()
 
 class OrganizationRole(str, Enum):
     """Organization member roles."""
+
     OWNER = "owner"
     ADMIN = "admin"
     MEMBER = "member"
@@ -35,26 +36,34 @@ class OrganizationRole(str, Enum):
 class OrganizationCreateRequest(BaseModel):
     """Request model for creating organizations."""
 
-    name: str = Field(..., min_length=2, max_length=100, description="Organization name")
-    description: Optional[str] = Field(None, max_length=500, description="Organization description")
+    name: str = Field(
+        ..., min_length=2, max_length=100, description="Organization name"
+    )
+    description: Optional[str] = Field(
+        None, max_length=500, description="Organization description"
+    )
     website: Optional[str] = Field(None, description="Organization website URL")
     industry: Optional[str] = Field(None, max_length=100, description="Industry/sector")
     size: Optional[str] = Field(None, description="Organization size category")
-    country: Optional[str] = Field(None, max_length=2, description="Country code (ISO 3166-1 alpha-2)")
+    country: Optional[str] = Field(
+        None, max_length=2, description="Country code (ISO 3166-1 alpha-2)"
+    )
     timezone: Optional[str] = Field(None, description="Default timezone")
 
-    @field_validator('website')
+    @field_validator("website")
     @classmethod
     def validate_website(cls, v):
-        if v and not (v.startswith('http://') or v.startswith('https://')):
+        if v and not (v.startswith("http://") or v.startswith("https://")):
             v = f"https://{v}"
         return v
 
-    @field_validator('size')
+    @field_validator("size")
     @classmethod
     def validate_size(cls, v):
-        if v and v not in ['startup', 'small', 'medium', 'large', 'enterprise']:
-            raise ValueError("Size must be one of: startup, small, medium, large, enterprise")
+        if v and v not in ["startup", "small", "medium", "large", "enterprise"]:
+            raise ValueError(
+                "Size must be one of: startup, small, medium, large, enterprise"
+            )
         return v
 
     model_config = ConfigDict(
@@ -66,7 +75,7 @@ class OrganizationCreateRequest(BaseModel):
                 "industry": "Technology",
                 "size": "medium",
                 "country": "US",
-                "timezone": "America/New_York"
+                "timezone": "America/New_York",
             }
         }
     )
@@ -75,8 +84,12 @@ class OrganizationCreateRequest(BaseModel):
 class OrganizationUpdateRequest(BaseModel):
     """Request model for updating organizations."""
 
-    name: Optional[str] = Field(None, min_length=2, max_length=100, description="Organization name")
-    description: Optional[str] = Field(None, max_length=500, description="Organization description")
+    name: Optional[str] = Field(
+        None, min_length=2, max_length=100, description="Organization name"
+    )
+    description: Optional[str] = Field(
+        None, max_length=500, description="Organization description"
+    )
     website: Optional[str] = Field(None, description="Organization website URL")
     industry: Optional[str] = Field(None, max_length=100, description="Industry/sector")
     size: Optional[str] = Field(None, description="Organization size category")
@@ -84,18 +97,20 @@ class OrganizationUpdateRequest(BaseModel):
     timezone: Optional[str] = Field(None, description="Default timezone")
     is_active: Optional[bool] = Field(None, description="Organization active status")
 
-    @field_validator('website')
+    @field_validator("website")
     @classmethod
     def validate_website(cls, v):
-        if v and not (v.startswith('http://') or v.startswith('https://')):
+        if v and not (v.startswith("http://") or v.startswith("https://")):
             v = f"https://{v}"
         return v
 
-    @field_validator('size')
+    @field_validator("size")
     @classmethod
     def validate_size(cls, v):
-        if v and v not in ['startup', 'small', 'medium', 'large', 'enterprise']:
-            raise ValueError("Size must be one of: startup, small, medium, large, enterprise")
+        if v and v not in ["startup", "small", "medium", "large", "enterprise"]:
+            raise ValueError(
+                "Size must be one of: startup, small, medium, large, enterprise"
+            )
         return v
 
 
@@ -104,14 +119,16 @@ class OrganizationMemberInviteRequest(BaseModel):
 
     email: str = Field(..., description="Email address of the user to invite")
     role: OrganizationRole = Field(..., description="Role to assign to the member")
-    message: Optional[str] = Field(None, max_length=500, description="Custom invitation message")
+    message: Optional[str] = Field(
+        None, max_length=500, description="Custom invitation message"
+    )
 
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
                 "email": "user@example.com",
                 "role": "member",
-                "message": "Welcome to our organization! We're excited to have you join our team."
+                "message": "Welcome to our organization! We're excited to have you join our team.",
             }
         }
     )
@@ -138,13 +155,17 @@ class OrganizationResponse(BaseModel):
     member_count: int = Field(..., description="Number of members")
     created_at: str = Field(..., description="Creation timestamp")
     updated_at: str = Field(..., description="Last update timestamp")
-    current_user_role: Optional[str] = Field(None, description="Current user's role in organization")
+    current_user_role: Optional[str] = Field(
+        None, description="Current user's role in organization"
+    )
 
 
 class OrganizationListResponse(BaseModel):
     """Response model for organization lists."""
 
-    organizations: List[OrganizationResponse] = Field(..., description="List of organizations")
+    organizations: List[OrganizationResponse] = Field(
+        ..., description="List of organizations"
+    )
     total: int = Field(..., description="Total number of organizations")
     has_more: bool = Field(..., description="Whether more organizations exist")
 
@@ -165,7 +186,9 @@ class OrganizationMemberResponse(BaseModel):
 class OrganizationMemberListResponse(BaseModel):
     """Response model for organization member lists."""
 
-    members: List[OrganizationMemberResponse] = Field(..., description="List of members")
+    members: List[OrganizationMemberResponse] = Field(
+        ..., description="List of members"
+    )
     total: int = Field(..., description="Total number of members")
     has_more: bool = Field(..., description="Whether more members exist")
 
@@ -177,7 +200,9 @@ class OrganizationStatsResponse(BaseModel):
     active_members: int = Field(..., description="Active members in last 30 days")
     pending_invitations: int = Field(..., description="Pending invitations")
     role_distribution: Dict[str, int] = Field(..., description="Members by role")
-    recent_activity: List[Dict[str, Any]] = Field(..., description="Recent organization activity")
+    recent_activity: List[Dict[str, Any]] = Field(
+        ..., description="Recent organization activity"
+    )
     resource_usage: Dict[str, Any] = Field(..., description="Resource usage statistics")
 
 
@@ -220,7 +245,11 @@ async def create_organization(
     Returns:
         OrganizationResponse: Created organization information
     """
-    logger.info("Organization creation requested", user_id=current_user.id, name=org_request.name)
+    logger.info(
+        "Organization creation requested",
+        user_id=current_user.id,
+        name=org_request.name,
+    )
 
     try:
         # In a real implementation, you'd have an OrganizationService
@@ -237,11 +266,15 @@ async def create_organization(
             resource_id=organization_id,
             details={
                 "organization_name": org_request.name,
-                "created_by": current_user.id
-            }
+                "created_by": current_user.id,
+            },
         )
 
-        logger.info("Organization created", organization_id=organization_id, user_id=current_user.id)
+        logger.info(
+            "Organization created",
+            organization_id=organization_id,
+            user_id=current_user.id,
+        )
 
         return OrganizationResponse(
             id=organization_id,
@@ -256,20 +289,22 @@ async def create_organization(
             member_count=1,  # Just the creator
             created_at=datetime.utcnow().isoformat(),
             updated_at=datetime.utcnow().isoformat(),
-            current_user_role="owner"
+            current_user_role="owner",
         )
 
     except Exception as e:
         logger.error("Failed to create organization", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to create organization"
+            detail="Failed to create organization",
         )
 
 
 @router.get("/", response_model=OrganizationListResponse)
 async def list_organizations(
-    limit: int = Query(50, ge=1, le=100, description="Number of organizations to return"),
+    limit: int = Query(
+        50, ge=1, le=100, description="Number of organizations to return"
+    ),
     offset: int = Query(0, ge=0, description="Number of organizations to skip"),
     is_active: Optional[bool] = Query(None, description="Filter by active status"),
     current_user: CurrentUser = Depends(get_current_user),
@@ -290,7 +325,12 @@ async def list_organizations(
     Returns:
         OrganizationListResponse: Paginated organization list
     """
-    logger.debug("Organizations list requested", user_id=current_user.id, limit=limit, offset=offset)
+    logger.debug(
+        "Organizations list requested",
+        user_id=current_user.id,
+        limit=limit,
+        offset=offset,
+    )
 
     try:
         # In a real implementation, you'd query the database for user's organizations
@@ -310,7 +350,7 @@ async def list_organizations(
                 member_count=5 + i,
                 created_at=datetime.utcnow().isoformat(),
                 updated_at=datetime.utcnow().isoformat(),
-                current_user_role="member"
+                current_user_role="member",
             )
             for i in range(offset + 1, offset + min(limit, 3) + 1)
         ]
@@ -318,14 +358,14 @@ async def list_organizations(
         return OrganizationListResponse(
             organizations=organizations,
             total=10,  # Placeholder total
-            has_more=(offset + limit) < 10
+            has_more=(offset + limit) < 10,
         )
 
     except Exception as e:
         logger.error("Failed to list organizations", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve organizations"
+            detail="Failed to retrieve organizations",
         )
 
 
@@ -349,7 +389,9 @@ async def get_organization(
     Returns:
         OrganizationResponse: Organization information
     """
-    logger.debug("Organization details requested", user_id=current_user.id, org_id=org_id)
+    logger.debug(
+        "Organization details requested", user_id=current_user.id, org_id=org_id
+    )
 
     try:
         # In a real implementation, you'd verify membership and get org details
@@ -368,14 +410,14 @@ async def get_organization(
             member_count=25,
             created_at="2024-01-01T00:00:00Z",
             updated_at=datetime.utcnow().isoformat(),
-            current_user_role="admin"
+            current_user_role="admin",
         )
 
     except Exception as e:
         logger.error("Failed to get organization", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve organization"
+            detail="Failed to retrieve organization",
         )
 
 
@@ -412,8 +454,8 @@ async def update_organization(
             resource_id=org_id,
             details={
                 "updated_fields": list(org_update.dict(exclude_unset=True).keys()),
-                "updated_by": current_user.id
-            }
+                "updated_by": current_user.id,
+            },
         )
 
         logger.info("Organization updated", org_id=org_id, user_id=current_user.id)
@@ -422,24 +464,27 @@ async def update_organization(
         return OrganizationResponse(
             id=org_id,
             name=org_update.name or "Acme Corporation",
-            description=org_update.description or "Leading provider of innovative solutions",
+            description=org_update.description
+            or "Leading provider of innovative solutions",
             website=org_update.website or "https://acme.com",
             industry=org_update.industry or "Technology",
             size=org_update.size or "large",
             country=org_update.country or "US",
             timezone=org_update.timezone or "America/New_York",
-            is_active=org_update.is_active if org_update.is_active is not None else True,
+            is_active=(
+                org_update.is_active if org_update.is_active is not None else True
+            ),
             member_count=25,
             created_at="2024-01-01T00:00:00Z",
             updated_at=datetime.utcnow().isoformat(),
-            current_user_role="admin"
+            current_user_role="admin",
         )
 
     except Exception as e:
         logger.error("Failed to update organization", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to update organization"
+            detail="Failed to update organization",
         )
 
 
@@ -463,7 +508,9 @@ async def delete_organization(
     Returns:
         MessageResponse: Success message
     """
-    logger.warning("Organization deletion requested", user_id=current_user.id, org_id=org_id)
+    logger.warning(
+        "Organization deletion requested", user_id=current_user.id, org_id=org_id
+    )
 
     try:
         # Log audit event
@@ -475,8 +522,8 @@ async def delete_organization(
             resource_id=org_id,
             details={
                 "deleted_by": current_user.id,
-                "deletion_time": datetime.utcnow().isoformat()
-            }
+                "deletion_time": datetime.utcnow().isoformat(),
+            },
         )
 
         logger.warning("Organization deleted", org_id=org_id, user_id=current_user.id)
@@ -487,7 +534,7 @@ async def delete_organization(
         logger.error("Failed to delete organization", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to delete organization"
+            detail="Failed to delete organization",
         )
 
 
@@ -516,7 +563,9 @@ async def list_organization_members(
     Returns:
         OrganizationMemberListResponse: Paginated member list
     """
-    logger.debug("Organization members requested", user_id=current_user.id, org_id=org_id)
+    logger.debug(
+        "Organization members requested", user_id=current_user.id, org_id=org_id
+    )
 
     try:
         # In a real implementation, you'd query organization members
@@ -529,7 +578,7 @@ async def list_organization_members(
                 role="member" if i > 1 else "admin",
                 status="active",
                 joined_at=datetime.utcnow().isoformat(),
-                last_active=datetime.utcnow().isoformat()
+                last_active=datetime.utcnow().isoformat(),
             )
             for i in range(offset + 1, offset + min(limit, 10) + 1)
         ]
@@ -537,14 +586,14 @@ async def list_organization_members(
         return OrganizationMemberListResponse(
             members=members,
             total=25,  # Placeholder total
-            has_more=(offset + limit) < 25
+            has_more=(offset + limit) < 25,
         )
 
     except Exception as e:
         logger.error("Failed to list organization members", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve organization members"
+            detail="Failed to retrieve organization members",
         )
 
 
@@ -574,7 +623,7 @@ async def invite_organization_member(
         "Organization member invitation requested",
         user_id=current_user.id,
         org_id=org_id,
-        invitee_email=invite_request.email
+        invitee_email=invite_request.email,
     )
 
     try:
@@ -590,15 +639,15 @@ async def invite_organization_member(
             details={
                 "invitee_email": invite_request.email,
                 "role": invite_request.role.value,
-                "invited_by": current_user.id
-            }
+                "invited_by": current_user.id,
+            },
         )
 
         logger.info(
             "Organization member invited",
             invitation_id=invitation_id,
             org_id=org_id,
-            user_id=current_user.id
+            user_id=current_user.id,
         )
 
         return OrganizationInvitationResponse(
@@ -609,14 +658,14 @@ async def invite_organization_member(
             message=invite_request.message,
             invited_by=current_user.full_name,
             invited_at=datetime.utcnow().isoformat(),
-            expires_at=(datetime.utcnow() + timedelta(days=7)).isoformat()
+            expires_at=(datetime.utcnow() + timedelta(days=7)).isoformat(),
         )
 
     except Exception as e:
         logger.error("Failed to invite organization member", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to invite organization member"
+            detail="Failed to invite organization member",
         )
 
 
@@ -625,7 +674,9 @@ async def update_organization_member(
     org_id: str,
     member_id: str,
     member_update: OrganizationMemberUpdateRequest,
-    current_user: CurrentUser = Depends(require_permissions(["organizations:manage_members"])),
+    current_user: CurrentUser = Depends(
+        require_permissions(["organizations:manage_members"])
+    ),
     db: AsyncSession = Depends(get_db_session),
 ) -> OrganizationMemberResponse:
     """
@@ -648,7 +699,7 @@ async def update_organization_member(
         "Organization member update requested",
         user_id=current_user.id,
         org_id=org_id,
-        member_id=member_id
+        member_id=member_id,
     )
 
     try:
@@ -662,8 +713,8 @@ async def update_organization_member(
             details={
                 "member_id": member_id,
                 "new_role": member_update.role.value,
-                "updated_by": current_user.id
-            }
+                "updated_by": current_user.id,
+            },
         )
 
         logger.info("Organization member updated", member_id=member_id, org_id=org_id)
@@ -676,14 +727,14 @@ async def update_organization_member(
             role=member_update.role.value,
             status="active",
             joined_at="2024-01-01T00:00:00Z",
-            last_active=datetime.utcnow().isoformat()
+            last_active=datetime.utcnow().isoformat(),
         )
 
     except Exception as e:
         logger.error("Failed to update organization member", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to update organization member"
+            detail="Failed to update organization member",
         )
 
 
@@ -691,7 +742,9 @@ async def update_organization_member(
 async def remove_organization_member(
     org_id: str,
     member_id: str,
-    current_user: CurrentUser = Depends(require_permissions(["organizations:manage_members"])),
+    current_user: CurrentUser = Depends(
+        require_permissions(["organizations:manage_members"])
+    ),
     db: AsyncSession = Depends(get_db_session),
 ) -> MessageResponse:
     """
@@ -713,7 +766,7 @@ async def remove_organization_member(
         "Organization member removal requested",
         user_id=current_user.id,
         org_id=org_id,
-        member_id=member_id
+        member_id=member_id,
     )
 
     try:
@@ -724,13 +777,12 @@ async def remove_organization_member(
             action="organization.member_remove",
             resource_type="organization",
             resource_id=org_id,
-            details={
-                "member_id": member_id,
-                "removed_by": current_user.id
-            }
+            details={"member_id": member_id, "removed_by": current_user.id},
         )
 
-        logger.warning("Organization member removed", member_id=member_id, org_id=org_id)
+        logger.warning(
+            "Organization member removed", member_id=member_id, org_id=org_id
+        )
 
         return MessageResponse(message="Member removed from organization successfully")
 
@@ -738,7 +790,7 @@ async def remove_organization_member(
         logger.error("Failed to remove organization member", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to remove organization member"
+            detail="Failed to remove organization member",
         )
 
 
@@ -772,9 +824,7 @@ async def leave_organization(
             action="organization.leave",
             resource_type="organization",
             resource_id=org_id,
-            details={
-                "left_by": current_user.id
-            }
+            details={"left_by": current_user.id},
         )
 
         logger.info("User left organization", user_id=current_user.id, org_id=org_id)
@@ -785,7 +835,7 @@ async def leave_organization(
         logger.error("Failed to leave organization", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to leave organization"
+            detail="Failed to leave organization",
         )
 
 
@@ -809,42 +859,39 @@ async def get_organization_statistics(
     Returns:
         OrganizationStatsResponse: Organization statistics
     """
-    logger.info("Organization statistics requested", user_id=current_user.id, org_id=org_id)
+    logger.info(
+        "Organization statistics requested", user_id=current_user.id, org_id=org_id
+    )
 
     try:
         return OrganizationStatsResponse(
             total_members=25,
             active_members=20,
             pending_invitations=3,
-            role_distribution={
-                "owner": 1,
-                "admin": 2,
-                "member": 20,
-                "viewer": 2
-            },
+            role_distribution={"owner": 1, "admin": 2, "member": 20, "viewer": 2},
             recent_activity=[
                 {
                     "type": "member_joined",
                     "user": "john.doe@example.com",
-                    "timestamp": datetime.utcnow().isoformat()
+                    "timestamp": datetime.utcnow().isoformat(),
                 },
                 {
                     "type": "member_invited",
                     "user": "jane.smith@example.com",
-                    "timestamp": (datetime.utcnow() - timedelta(hours=2)).isoformat()
-                }
+                    "timestamp": (datetime.utcnow() - timedelta(hours=2)).isoformat(),
+                },
             ],
             resource_usage={
                 "api_keys": 15,
                 "webhooks": 8,
                 "storage_gb": 4.2,
-                "monthly_api_calls": 45000
-            }
+                "monthly_api_calls": 45000,
+            },
         )
 
     except Exception as e:
         logger.error("Failed to get organization statistics", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve organization statistics"
+            detail="Failed to retrieve organization statistics",
         )

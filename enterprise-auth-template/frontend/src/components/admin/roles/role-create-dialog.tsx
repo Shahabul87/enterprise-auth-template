@@ -33,7 +33,7 @@ export default function RoleCreateDialog({
   open,
   onClose,
   onSuccess,
-}: RoleCreateDialogProps): JSX.Element {
+}: RoleCreateDialogProps): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [permissions, setPermissions] = useState<Permission[]>([]);

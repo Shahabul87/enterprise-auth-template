@@ -37,7 +37,7 @@ interface LoginFormProps {
   onSuccess?: () => void;
 }
 
-export function LoginForm({ onSuccess }: LoginFormProps): JSX.Element {
+export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
   const { login, isLoading } = useAuthStore();
   const router = useRouter();
   const [tempToken, setTempToken] = useState<string | null>(null);

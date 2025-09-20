@@ -35,8 +35,12 @@ class ResponseStandardizationMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, exclude_paths: Optional[list] = None):
         super().__init__(app)
         self.exclude_paths = exclude_paths or [
-            "/docs", "/redoc", "/openapi.json",
-            "/health", "/metrics", "/favicon.ico"
+            "/docs",
+            "/redoc",
+            "/openapi.json",
+            "/health",
+            "/metrics",
+            "/favicon.ico",
         ]
 
     async def dispatch(self, request: Request, call_next) -> Response:
@@ -66,9 +70,10 @@ class ResponseStandardizationMiddleware(BaseHTTPMiddleware):
 
         # Detect client type for response optimization
         user_agent = request.headers.get("user-agent", "").lower()
-        is_mobile_client = any(keyword in user_agent for keyword in [
-            "flutter", "mobile", "android", "ios", "dart"
-        ])
+        is_mobile_client = any(
+            keyword in user_agent
+            for keyword in ["flutter", "mobile", "android", "ios", "dart"]
+        )
 
         # Add client info to request state
         request.state.is_mobile_client = is_mobile_client
@@ -82,7 +87,7 @@ class ResponseStandardizationMiddleware(BaseHTTPMiddleware):
             path=request.url.path,
             client_ip=request.client.host if request.client else None,
             user_agent=user_agent[:100],  # Truncate for logging
-            is_mobile=is_mobile_client
+            is_mobile=is_mobile_client,
         )
 
         try:
@@ -93,9 +98,11 @@ class ResponseStandardizationMiddleware(BaseHTTPMiddleware):
             self._add_performance_headers(response, start_time)
 
             # Standardize response if it's JSON and not already standardized
-            if (response.status_code < 400 and
-                isinstance(response, JSONResponse) and
-                request.url.path.startswith("/api/")):
+            if (
+                response.status_code < 400
+                and isinstance(response, JSONResponse)
+                and request.url.path.startswith("/api/")
+            ):
 
                 response = await self._standardize_success_response(
                     response, request_id
@@ -107,7 +114,7 @@ class ResponseStandardizationMiddleware(BaseHTTPMiddleware):
                 request_id=request_id,
                 status_code=response.status_code,
                 duration_ms=round((time.time() - start_time) * 1000, 2),
-                content_length=response.headers.get("content-length")
+                content_length=response.headers.get("content-length"),
             )
 
             return response
@@ -120,7 +127,7 @@ class ResponseStandardizationMiddleware(BaseHTTPMiddleware):
                 error=str(exc),
                 error_type=type(exc).__name__,
                 duration_ms=round((time.time() - start_time) * 1000, 2),
-                exc_info=True
+                exc_info=True,
             )
 
             # Create standardized error response
@@ -130,17 +137,13 @@ class ResponseStandardizationMiddleware(BaseHTTPMiddleware):
                 error={
                     "code": ErrorCodes.SERVER_ERROR,
                     "message": "An internal server error occurred",
-                    "details": {"error_id": request_id}
+                    "details": {"error_id": request_id},
                 },
-                metadata=ResponseMetadata(
-                    request_id=request_id,
-                    version="1.0.0"
-                )
+                metadata=ResponseMetadata(request_id=request_id, version="1.0.0"),
             )
 
             response = JSONResponse(
-                content=error_response.model_dump(mode='json'),
-                status_code=500
+                content=error_response.model_dump(mode="json"), status_code=500
             )
             self._add_performance_headers(response, start_time)
 
@@ -162,9 +165,7 @@ class ResponseStandardizationMiddleware(BaseHTTPMiddleware):
         response.headers["X-Frame-Options"] = "DENY"
 
     async def _standardize_success_response(
-        self,
-        response: JSONResponse,
-        request_id: str
+        self, response: JSONResponse, request_id: str
     ) -> JSONResponse:
         """
         Standardize a successful response to match Flutter expectations.
@@ -180,20 +181,20 @@ class ResponseStandardizationMiddleware(BaseHTTPMiddleware):
             # Parse the current response body
             response_body = response.body
             if isinstance(response_body, bytes):
-                response_body = response_body.decode('utf-8')
+                response_body = response_body.decode("utf-8")
 
             current_data = json.loads(response_body)
 
             # Check if already standardized (has 'success' field)
-            if isinstance(current_data, dict) and 'success' in current_data:
+            if isinstance(current_data, dict) and "success" in current_data:
                 # Already standardized, just add request ID if missing
-                if not current_data.get('metadata', {}).get('request_id'):
-                    current_data.setdefault('metadata', {})['request_id'] = request_id
+                if not current_data.get("metadata", {}).get("request_id"):
+                    current_data.setdefault("metadata", {})["request_id"] = request_id
 
                 return JSONResponse(
                     content=current_data,
                     status_code=response.status_code,
-                    headers=dict(response.headers)
+                    headers=dict(response.headers),
                 )
 
             # Wrap in standardized format
@@ -201,13 +202,13 @@ class ResponseStandardizationMiddleware(BaseHTTPMiddleware):
                 success=True,
                 data=current_data,
                 error=None,
-                metadata=ResponseMetadata(request_id=request_id)
+                metadata=ResponseMetadata(request_id=request_id),
             )
 
             return JSONResponse(
-                content=standardized_response.model_dump(mode='json'),
+                content=standardized_response.model_dump(mode="json"),
                 status_code=response.status_code,
-                headers=dict(response.headers)
+                headers=dict(response.headers),
             )
 
         except Exception as e:
@@ -215,7 +216,7 @@ class ResponseStandardizationMiddleware(BaseHTTPMiddleware):
                 "Failed to standardize response",
                 request_id=request_id,
                 error=str(e),
-                exc_info=True
+                exc_info=True,
             )
             # Return original response if standardization fails
             return response
@@ -231,7 +232,7 @@ def get_request_id(request: Request) -> str:
     Returns:
         str: Request ID, or generates new one if not found
     """
-    return getattr(request.state, 'request_id', str(uuid.uuid4())[:8])
+    return getattr(request.state, "request_id", str(uuid.uuid4())[:8])
 
 
 def is_mobile_client(request: Request) -> bool:
@@ -244,4 +245,4 @@ def is_mobile_client(request: Request) -> bool:
     Returns:
         bool: True if mobile client detected
     """
-    return getattr(request.state, 'is_mobile_client', False)
+    return getattr(request.state, "is_mobile_client", False)

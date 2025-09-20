@@ -52,7 +52,9 @@ class PasswordPolicy:
         if cls.REQUIRE_DIGIT and not re.search(r"\d", password):
             issues.append("Password must contain at least one digit")
 
-        if cls.REQUIRE_SPECIAL and not re.search(f"[{re.escape(cls.SPECIAL_CHARS)}]", password):
+        if cls.REQUIRE_SPECIAL and not re.search(
+            f"[{re.escape(cls.SPECIAL_CHARS)}]", password
+        ):
             issues.append("Password must contain at least one special character")
 
         return len(issues) == 0, issues
@@ -113,7 +115,7 @@ class UserDomain:
             ValueError: If email is invalid
         """
         email = email.strip().lower()
-        email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        email_regex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
         if not re.match(email_regex, email):
             raise ValueError("Invalid email format")
@@ -154,7 +156,6 @@ class UserDomain:
             raise ValueError(f"{field} contains invalid characters")
 
         return name
-
 
     @property
     def is_locked(self) -> bool:
@@ -236,7 +237,9 @@ class UserDomain:
             return True
 
         # Check wildcard permissions
-        resource, action = permission.split(':') if ':' in permission else (permission, '*')
+        resource, action = (
+            permission.split(":") if ":" in permission else (permission, "*")
+        )
 
         # Check for resource-level wildcard
         if f"{resource}:*" in self.permissions:
@@ -296,7 +299,9 @@ class UserDomain:
         """
         return any(self.has_role(role) for role in role_names)
 
-    def record_failed_login(self, max_attempts: int = 5) -> Tuple[bool, Optional[datetime]]:
+    def record_failed_login(
+        self, max_attempts: int = 5
+    ) -> Tuple[bool, Optional[datetime]]:
         """
         Record a failed login attempt.
 
@@ -402,8 +407,12 @@ class UserDomain:
             is_active=entity.is_active,
             is_verified=entity.is_verified,
             is_superuser=entity.is_superuser,
-            roles=entity.roles if hasattr(entity, 'roles') else [],
-            permissions=set(entity.get_permissions()) if hasattr(entity, 'get_permissions') else set(),
+            roles=entity.roles if hasattr(entity, "roles") else [],
+            permissions=(
+                set(entity.get_permissions())
+                if hasattr(entity, "get_permissions")
+                else set()
+            ),
             failed_login_attempts=entity.failed_login_attempts,
             locked_until=entity.locked_until,
             created_at=entity.created_at,

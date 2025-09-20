@@ -1,0 +1,351 @@
+00:00 +0: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/domain/use_cases/login_use_case_test.dart
+test/unit/domain/use_cases/login_use_case_test.dart:30:7: Error: No named parameter with the name 'emailVerified'.
+      emailVerified: true,
+      ^^^^^^^^^^^^^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/unit/domain/use_cases/login_use_case_test.dart:67:27: Error: Method not found: 'UnauthorizedException'.
+        final exception = UnauthorizedException('Invalid credentials');
+                          ^^^^^^^^^^^^^^^^^^^^^
+test/unit/domain/use_cases/login_use_case_test.dart:80:33: Error: 'UnauthorizedException' isn't a type.
+            expect(failure, isA<UnauthorizedException>());
+                                ^^^^^^^^^^^^^^^^^^^^^
+test/unit/domain/use_cases/login_use_case_test.dart:90:46: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final exception = ValidationException('Invalid email format');
+                                             ^
+lib/core/error/app_exception.freezed.dart:2249:17: Context: Found this candidate, but the arguments don't match.
+  const factory ValidationException({
+                ^
+test/unit/domain/use_cases/login_use_case_test.dart:112:43: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final exception = NetworkException('No internet connection');
+                                          ^
+lib/core/error/app_exception.freezed.dart:836:17: Context: Found this candidate, but the arguments don't match.
+  const factory NetworkException({
+                ^
+test/unit/domain/use_cases/login_use_case_test.dart:137:46: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final exception = ValidationException('Email cannot be empty');
+                                             ^
+lib/core/error/app_exception.freezed.dart:2249:17: Context: Found this candidate, but the arguments don't match.
+  const factory ValidationException({
+                ^
+test/unit/domain/use_cases/login_use_case_test.dart:156:46: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final exception = ValidationException('Password cannot be empty');
+                                             ^
+lib/core/error/app_exception.freezed.dart:2249:17: Context: Found this candidate, but the arguments don't match.
+  const factory ValidationException({
+                ^
+test/unit/domain/use_cases/login_use_case_test.dart:175:46: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final exception = ValidationException('Password must be at least 8 characters');
+                                             ^
+lib/core/error/app_exception.freezed.dart:2249:17: Context: Found this candidate, but the arguments don't match.
+  const factory ValidationException({
+                ^
+test/unit/domain/use_cases/login_use_case_test.dart:260:27: Error: Method not found: 'TooManyRequestsException'.
+        final exception = TooManyRequestsException('Too many login attempts');
+                          ^^^^^^^^^^^^^^^^^^^^^^^^
+test/unit/domain/use_cases/login_use_case_test.dart:272:33: Error: 'TooManyRequestsException' isn't a type.
+            expect(failure, isA<TooManyRequestsException>());
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+test/unit/domain/use_cases/login_use_case_test.dart:283:27: Error: Method not found: 'ForbiddenException'.
+        final exception = ForbiddenException('Account is locked');
+                          ^^^^^^^^^^^^^^^^^^
+test/unit/domain/use_cases/login_use_case_test.dart:295:33: Error: 'ForbiddenException' isn't a type.
+            expect(failure, isA<ForbiddenException>());
+                                ^^^^^^^^^^^^^^^^^^
+test/unit/domain/use_cases/login_use_case_test.dart:308:11: Error: No named parameter with the name 'emailVerified'.
+          emailVerified: false,
+          ^^^^^^^^^^^^^
+lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+  const factory User({
+                ^
+test/unit/domain/use_cases/login_use_case_test.dart:44:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        when(mockAuthRepository.login(testEmail, testPassword))
+                                     ^
+test/unit/domain/use_cases/login_use_case_test.dart:48:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final result = await loginUseCase.execute(
+                                                 ^
+test/unit/domain/use_cases/login_use_case_test.dart:62:40: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        verify(mockAuthRepository.login(testEmail, testPassword)).called(1);
+                                       ^
+test/unit/domain/use_cases/login_use_case_test.dart:68:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        when(mockAuthRepository.login(testEmail, testPassword))
+                                     ^
+test/unit/domain/use_cases/login_use_case_test.dart:72:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final result = await loginUseCase.execute(
+                                                 ^
+test/unit/domain/use_cases/login_use_case_test.dart:91:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        when(mockAuthRepository.login(invalidEmail, testPassword))
+                                     ^
+test/unit/domain/use_cases/login_use_case_test.dart:95:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final result = await loginUseCase.execute(
+                                                 ^
+test/unit/domain/use_cases/login_use_case_test.dart:113:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        when(mockAuthRepository.login(testEmail, testPassword))
+                                     ^
+test/unit/domain/use_cases/login_use_case_test.dart:117:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final result = await loginUseCase.execute(
+                                                 ^
+test/unit/domain/use_cases/login_use_case_test.dart:138:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        when(mockAuthRepository.login(emptyEmail, testPassword))
+                                     ^
+test/unit/domain/use_cases/login_use_case_test.dart:142:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final result = await loginUseCase.execute(
+                                                 ^
+test/unit/domain/use_cases/login_use_case_test.dart:157:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        when(mockAuthRepository.login(testEmail, emptyPassword))
+                                     ^
+test/unit/domain/use_cases/login_use_case_test.dart:161:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final result = await loginUseCase.execute(
+                                                 ^
+test/unit/domain/use_cases/login_use_case_test.dart:176:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        when(mockAuthRepository.login(testEmail, shortPassword))
+                                     ^
+test/unit/domain/use_cases/login_use_case_test.dart:180:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final result = await loginUseCase.execute(
+                                                 ^
+test/unit/domain/use_cases/login_use_case_test.dart:198:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        when(mockAuthRepository.login(
+                                     ^
+test/unit/domain/use_cases/login_use_case_test.dart:205:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final result = await loginUseCase.execute(
+                                                 ^
+test/unit/domain/use_cases/login_use_case_test.dart:215:40: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        verify(mockAuthRepository.login(
+                                       ^
+test/unit/domain/use_cases/login_use_case_test.dart:232:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        when(mockAuthRepository.login(
+                                     ^
+test/unit/domain/use_cases/login_use_case_test.dart:239:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final result = await loginUseCase.execute(
+                                                 ^
+test/unit/domain/use_cases/login_use_case_test.dart:249:40: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        verify(mockAuthRepository.login(
+                                       ^
+test/unit/domain/use_cases/login_use_case_test.dart:261:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        when(mockAuthRepository.login(testEmail, testPassword))
+                                     ^
+test/unit/domain/use_cases/login_use_case_test.dart:265:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final result = await loginUseCase.execute(
+                                                 ^
+test/unit/domain/use_cases/login_use_case_test.dart:284:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        when(mockAuthRepository.login(testEmail, testPassword))
+                                     ^
+test/unit/domain/use_cases/login_use_case_test.dart:288:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final result = await loginUseCase.execute(
+                                                 ^
+test/unit/domain/use_cases/login_use_case_test.dart:319:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+Try removing the extra positional arguments.
+        when(mockAuthRepository.login(testEmail, testPassword))
+                                     ^
+test/unit/domain/use_cases/login_use_case_test.dart:323:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+        final result = await loginUseCase.execute(
+                                                 ^
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/domain/use_cases/login_use_case_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/domain/use_cases/login_use_case_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/domain/use_cases/login_use_case_test.dart: test/unit/domain/use_cases/login_use_case_test.dart:30:7: Error: No named parameter with the name 'emailVerified'.
+        emailVerified: true,
+        ^^^^^^^^^^^^^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/unit/domain/use_cases/login_use_case_test.dart:67:27: Error: Method not found: 'UnauthorizedException'.
+          final exception = UnauthorizedException('Invalid credentials');
+                            ^^^^^^^^^^^^^^^^^^^^^
+  test/unit/domain/use_cases/login_use_case_test.dart:80:33: Error: 'UnauthorizedException' isn't a type.
+              expect(failure, isA<UnauthorizedException>());
+                                  ^^^^^^^^^^^^^^^^^^^^^
+  test/unit/domain/use_cases/login_use_case_test.dart:90:46: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final exception = ValidationException('Invalid email format');
+                                               ^
+  lib/core/error/app_exception.freezed.dart:2249:17: Context: Found this candidate, but the arguments don't match.
+    const factory ValidationException({
+                  ^
+  test/unit/domain/use_cases/login_use_case_test.dart:112:43: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final exception = NetworkException('No internet connection');
+                                            ^
+  lib/core/error/app_exception.freezed.dart:836:17: Context: Found this candidate, but the arguments don't match.
+    const factory NetworkException({
+                  ^
+  test/unit/domain/use_cases/login_use_case_test.dart:137:46: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final exception = ValidationException('Email cannot be empty');
+                                               ^
+  lib/core/error/app_exception.freezed.dart:2249:17: Context: Found this candidate, but the arguments don't match.
+    const factory ValidationException({
+                  ^
+  test/unit/domain/use_cases/login_use_case_test.dart:156:46: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final exception = ValidationException('Password cannot be empty');
+                                               ^
+  lib/core/error/app_exception.freezed.dart:2249:17: Context: Found this candidate, but the arguments don't match.
+    const factory ValidationException({
+                  ^
+  test/unit/domain/use_cases/login_use_case_test.dart:175:46: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final exception = ValidationException('Password must be at least 8 characters');
+                                               ^
+  lib/core/error/app_exception.freezed.dart:2249:17: Context: Found this candidate, but the arguments don't match.
+    const factory ValidationException({
+                  ^
+  test/unit/domain/use_cases/login_use_case_test.dart:260:27: Error: Method not found: 'TooManyRequestsException'.
+          final exception = TooManyRequestsException('Too many login attempts');
+                            ^^^^^^^^^^^^^^^^^^^^^^^^
+  test/unit/domain/use_cases/login_use_case_test.dart:272:33: Error: 'TooManyRequestsException' isn't a type.
+              expect(failure, isA<TooManyRequestsException>());
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  test/unit/domain/use_cases/login_use_case_test.dart:283:27: Error: Method not found: 'ForbiddenException'.
+          final exception = ForbiddenException('Account is locked');
+                            ^^^^^^^^^^^^^^^^^^
+  test/unit/domain/use_cases/login_use_case_test.dart:295:33: Error: 'ForbiddenException' isn't a type.
+              expect(failure, isA<ForbiddenException>());
+                                  ^^^^^^^^^^^^^^^^^^
+  test/unit/domain/use_cases/login_use_case_test.dart:308:11: Error: No named parameter with the name 'emailVerified'.
+            emailVerified: false,
+            ^^^^^^^^^^^^^
+  lib/domain/entities/user.dart:69:17: Context: Found this candidate, but the arguments don't match.
+    const factory User({
+                  ^
+  test/unit/domain/use_cases/login_use_case_test.dart:44:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          when(mockAuthRepository.login(testEmail, testPassword))
+                                       ^
+  test/unit/domain/use_cases/login_use_case_test.dart:48:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final result = await loginUseCase.execute(
+                                                   ^
+  test/unit/domain/use_cases/login_use_case_test.dart:62:40: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          verify(mockAuthRepository.login(testEmail, testPassword)).called(1);
+                                         ^
+  test/unit/domain/use_cases/login_use_case_test.dart:68:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          when(mockAuthRepository.login(testEmail, testPassword))
+                                       ^
+  test/unit/domain/use_cases/login_use_case_test.dart:72:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final result = await loginUseCase.execute(
+                                                   ^
+  test/unit/domain/use_cases/login_use_case_test.dart:91:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          when(mockAuthRepository.login(invalidEmail, testPassword))
+                                       ^
+  test/unit/domain/use_cases/login_use_case_test.dart:95:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final result = await loginUseCase.execute(
+                                                   ^
+  test/unit/domain/use_cases/login_use_case_test.dart:113:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          when(mockAuthRepository.login(testEmail, testPassword))
+                                       ^
+  test/unit/domain/use_cases/login_use_case_test.dart:117:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final result = await loginUseCase.execute(
+                                                   ^
+  test/unit/domain/use_cases/login_use_case_test.dart:138:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          when(mockAuthRepository.login(emptyEmail, testPassword))
+                                       ^
+  test/unit/domain/use_cases/login_use_case_test.dart:142:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final result = await loginUseCase.execute(
+                                                   ^
+  test/unit/domain/use_cases/login_use_case_test.dart:157:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          when(mockAuthRepository.login(testEmail, emptyPassword))
+                                       ^
+  test/unit/domain/use_cases/login_use_case_test.dart:161:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final result = await loginUseCase.execute(
+                                                   ^
+  test/unit/domain/use_cases/login_use_case_test.dart:176:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          when(mockAuthRepository.login(testEmail, shortPassword))
+                                       ^
+  test/unit/domain/use_cases/login_use_case_test.dart:180:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final result = await loginUseCase.execute(
+                                                   ^
+  test/unit/domain/use_cases/login_use_case_test.dart:198:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          when(mockAuthRepository.login(
+                                       ^
+  test/unit/domain/use_cases/login_use_case_test.dart:205:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final result = await loginUseCase.execute(
+                                                   ^
+  test/unit/domain/use_cases/login_use_case_test.dart:215:40: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          verify(mockAuthRepository.login(
+                                         ^
+  test/unit/domain/use_cases/login_use_case_test.dart:232:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          when(mockAuthRepository.login(
+                                       ^
+  test/unit/domain/use_cases/login_use_case_test.dart:239:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final result = await loginUseCase.execute(
+                                                   ^
+  test/unit/domain/use_cases/login_use_case_test.dart:249:40: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          verify(mockAuthRepository.login(
+                                         ^
+  test/unit/domain/use_cases/login_use_case_test.dart:261:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          when(mockAuthRepository.login(testEmail, testPassword))
+                                       ^
+  test/unit/domain/use_cases/login_use_case_test.dart:265:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final result = await loginUseCase.execute(
+                                                   ^
+  test/unit/domain/use_cases/login_use_case_test.dart:284:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          when(mockAuthRepository.login(testEmail, testPassword))
+                                       ^
+  test/unit/domain/use_cases/login_use_case_test.dart:288:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final result = await loginUseCase.execute(
+                                                   ^
+  test/unit/domain/use_cases/login_use_case_test.dart:319:38: Error: Too many positional arguments: 1 allowed, but 2 found.
+  Try removing the extra positional arguments.
+          when(mockAuthRepository.login(testEmail, testPassword))
+                                       ^
+  test/unit/domain/use_cases/login_use_case_test.dart:323:50: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+          final result = await loginUseCase.execute(
+                                                   ^
+  .
+00:00 +0 -1: Some tests failed.

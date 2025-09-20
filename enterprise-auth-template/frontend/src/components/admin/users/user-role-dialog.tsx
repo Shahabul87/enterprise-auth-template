@@ -31,7 +31,7 @@ export default function UserRoleDialog({
   open,
   onClose,
   onSuccess,
-}: UserRoleDialogProps): JSX.Element {
+}: UserRoleDialogProps): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [availableRoles, setAvailableRoles] = useState<Role[]>([]);

@@ -23,6 +23,7 @@ router = APIRouter(prefix="/sessions", tags=["sessions"])
 # Request/Response schemas
 class SessionResponse(BaseModel):
     """Response schema for session data."""
+
     id: UUID
     user_id: UUID
     user_email: str
@@ -41,12 +42,14 @@ class SessionResponse(BaseModel):
 
 class RevokeSessionRequest(BaseModel):
     """Request schema for revoking a session."""
+
     session_id: UUID = Field(..., description="Session ID to revoke")
     reason: Optional[str] = Field(None, description="Reason for revocation")
 
 
 class SessionsStatisticsResponse(BaseModel):
     """Response schema for session statistics."""
+
     total_sessions: int
     active_sessions: int
     expired_sessions: int
@@ -61,15 +64,14 @@ class SessionsStatisticsResponse(BaseModel):
 async def get_my_sessions(
     include_inactive: bool = Query(False, description="Include inactive sessions"),
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> List[SessionResponse]:
     """
     Get all sessions for the current user.
     """
     service = SessionService(db)
     sessions = await service.get_user_sessions(
-        user_id=current_user.id,
-        include_inactive=include_inactive
+        user_id=current_user.id, include_inactive=include_inactive
     )
 
     return [
@@ -85,7 +87,7 @@ async def get_my_sessions(
             is_active=session.is_active,
             created_at=session.created_at.isoformat(),
             last_activity=session.last_activity.isoformat(),
-            expires_at=session.expires_at.isoformat()
+            expires_at=session.expires_at.isoformat(),
         )
         for session in sessions
     ]
@@ -98,7 +100,7 @@ async def list_all_sessions(
     user_id: Optional[UUID] = Query(None, description="Filter by user ID"),
     include_inactive: bool = Query(False, description="Include inactive sessions"),
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> List[SessionResponse]:
     """
     List all sessions (admin only).
@@ -112,14 +114,10 @@ async def list_all_sessions(
 
     if user_id:
         sessions = await service.get_user_sessions(
-            user_id=user_id,
-            include_inactive=include_inactive
+            user_id=user_id, include_inactive=include_inactive
         )
     else:
-        sessions = await service.get_all_active_sessions(
-            skip=skip,
-            limit=limit
-        )
+        sessions = await service.get_all_active_sessions(skip=skip, limit=limit)
 
     # Get user emails for display
     user_emails = {}
@@ -144,7 +142,7 @@ async def list_all_sessions(
             is_active=session.is_active,
             created_at=session.created_at.isoformat(),
             last_activity=session.last_activity.isoformat(),
-            expires_at=session.expires_at.isoformat()
+            expires_at=session.expires_at.isoformat(),
         )
         for session in sessions
     ]
@@ -154,7 +152,7 @@ async def list_all_sessions(
 async def get_session(
     session_id: UUID,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> SessionResponse:
     """
     Get a specific session by ID.
@@ -167,7 +165,7 @@ async def get_session(
     if not session:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Session with ID {session_id} not found"
+            detail=f"Session with ID {session_id} not found",
         )
 
     # Check if user can view this session
@@ -191,7 +189,7 @@ async def get_session(
         is_active=session.is_active,
         created_at=session.created_at.isoformat(),
         last_activity=session.last_activity.isoformat(),
-        expires_at=session.expires_at.isoformat()
+        expires_at=session.expires_at.isoformat(),
     )
 
 
@@ -199,7 +197,7 @@ async def get_session(
 async def revoke_session(
     request: RevokeSessionRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> dict:
     """
     Revoke a session.
@@ -214,7 +212,7 @@ async def revoke_session(
     if not session:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Session with ID {request.session_id} not found"
+            detail=f"Session with ID {request.session_id} not found",
         )
 
     # Check if user can revoke this session
@@ -223,8 +221,7 @@ async def revoke_session(
 
     # Revoke the session
     success = await service.revoke_session(
-        session_id=request.session_id,
-        reason=request.reason or "Manual revocation"
+        session_id=request.session_id, reason=request.reason or "Manual revocation"
     )
 
     if success:
@@ -234,23 +231,17 @@ async def revoke_session(
             action="session.revoke",
             resource_type="session",
             resource_id=str(request.session_id),
-            details={
-                "reason": request.reason,
-                "revoked_user_id": str(session.user_id)
-            }
+            details={"reason": request.reason, "revoked_user_id": str(session.user_id)},
         )
 
-    return {
-        "success": success,
-        "message": "Session revoked successfully"
-    }
+    return {"success": success, "message": "Session revoked successfully"}
 
 
 @router.post("/revoke-all", status_code=status.HTTP_200_OK)
 async def revoke_all_user_sessions(
     user_id: Optional[UUID] = None,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> dict:
     """
     Revoke all sessions for a user.
@@ -269,8 +260,7 @@ async def revoke_all_user_sessions(
 
     # Revoke all sessions
     count = await service.revoke_user_sessions(
-        user_id=target_user_id,
-        reason="Bulk revocation"
+        user_id=target_user_id, reason="Bulk revocation"
     )
 
     # Audit log
@@ -279,22 +269,16 @@ async def revoke_all_user_sessions(
         action="session.revoke_all",
         resource_type="user",
         resource_id=str(target_user_id),
-        details={
-            "sessions_revoked": count
-        }
+        details={"sessions_revoked": count},
     )
 
-    return {
-        "success": True,
-        "message": f"Revoked {count} sessions",
-        "count": count
-    }
+    return {"success": True, "message": f"Revoked {count} sessions", "count": count}
 
 
 @router.delete("/cleanup", status_code=status.HTTP_200_OK)
 async def cleanup_expired_sessions(
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> dict:
     """
     Clean up expired sessions (admin only).
@@ -314,22 +298,20 @@ async def cleanup_expired_sessions(
         action="session.cleanup",
         resource_type="system",
         resource_id="sessions",
-        details={
-            "expired_sessions_removed": count
-        }
+        details={"expired_sessions_removed": count},
     )
 
     return {
         "success": True,
         "message": f"Cleaned up {count} expired sessions",
-        "count": count
+        "count": count,
     }
 
 
 @router.get("/statistics/summary", response_model=SessionsStatisticsResponse)
 async def get_session_statistics(
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> SessionsStatisticsResponse:
     """
     Get session statistics (admin only).
@@ -373,22 +355,21 @@ async def get_session_statistics(
         unique_users=unique_users,
         unique_ips=unique_ips,
         device_breakdown=device_breakdown,
-        location_breakdown=location_breakdown
+        location_breakdown=location_breakdown,
     )
 
 
 @router.get("/active/count", response_model=dict)
 async def get_active_session_count(
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> dict:
     """
     Get count of active sessions for the current user.
     """
     service = SessionService(db)
     sessions = await service.get_user_sessions(
-        user_id=current_user.id,
-        include_inactive=False
+        user_id=current_user.id, include_inactive=False
     )
 
     active_count = len([s for s in sessions if s.is_active and not s.is_expired()])
@@ -396,5 +377,5 @@ async def get_active_session_count(
     return {
         "user_id": str(current_user.id),
         "active_sessions": active_count,
-        "max_allowed": 10  # Configure based on your needs
+        "max_allowed": 10,  # Configure based on your needs
     }

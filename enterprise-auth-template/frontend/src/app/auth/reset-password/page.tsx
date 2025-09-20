@@ -5,7 +5,7 @@ import { useGuestOnly } from '@/stores/auth.store';
 import { ModernResetPasswordForm } from '@/components/auth/modern-reset-password-form';
 import { Suspense } from 'react';
 
-function ResetPasswordContent(): JSX.Element {
+function ResetPasswordContent(): React.ReactElement {
   const { isLoading } = useGuestOnly('/dashboard');
   const searchParams = useSearchParams();
   const token = searchParams.get('token') || '';
@@ -44,7 +44,7 @@ function ResetPasswordContent(): JSX.Element {
   );
 }
 
-export default function ResetPasswordPage(): JSX.Element {
+export default function ResetPasswordPage(): React.ReactElement {
   return (
     <Suspense
       fallback={

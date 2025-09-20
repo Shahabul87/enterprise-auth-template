@@ -30,7 +30,7 @@ interface SystemSettingsProps {
   className?: string;
 }
 
-export default function SystemSettingsPanel({ className }: SystemSettingsProps): JSX.Element {
+export default function SystemSettingsPanel({ className }: SystemSettingsProps): React.ReactElement {
   const { hasPermission } = useAuth();
 
   // State management

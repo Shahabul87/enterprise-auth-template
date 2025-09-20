@@ -32,8 +32,18 @@ from app.core.security import get_password_hash
 user_roles_table = Table(
     "user_roles_association",
     Base.metadata,
-    Column("user_id", UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True),
-    Column("role_id", UUID(as_uuid=True), ForeignKey("roles.id", ondelete="CASCADE"), primary_key=True),
+    Column(
+        "user_id",
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column(
+        "role_id",
+        UUID(as_uuid=True),
+        ForeignKey("roles.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
 )
 
 if TYPE_CHECKING:
@@ -168,7 +178,7 @@ class User(Base):
     # Organization for multi-tenancy
     organization_id: Mapped[Optional[UUID]] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("organizations.id"),
+        ForeignKey("organizations.id", ondelete="SET NULL"),
         nullable=True,
         index=True
     )
@@ -178,7 +188,7 @@ class User(Base):
         "Role",
         secondary="user_roles_association",
         back_populates="users",
-        lazy="selectin"
+        lazy="selectin",
     )
 
     refresh_tokens: Mapped[List["RefreshToken"]] = relationship(
@@ -200,14 +210,17 @@ class User(Base):
     # New relationships for enhanced features
     organization: Mapped[Optional["Organization"]] = relationship(
         "Organization",
-        foreign_keys="User.organization_id",
-        back_populates="users"
+        foreign_keys=[organization_id],
+        back_populates="users",
+        lazy="select"
     )
 
     owned_organizations: Mapped[List["Organization"]] = relationship(
         "Organization",
         foreign_keys="Organization.owner_id",
-        back_populates="owner"
+        back_populates="owner",
+        lazy="select",
+        overlaps="organization,users"
     )
 
     api_keys: Mapped[List["APIKey"]] = relationship(
@@ -217,7 +230,7 @@ class User(Base):
     notifications: Mapped[List["Notification"]] = relationship(
         "Notification", back_populates="user", cascade="all, delete-orphan"
     )
-    
+
     devices: Mapped[List["UserDevice"]] = relationship(
         "UserDevice", back_populates="user", cascade="all, delete-orphan"
     )
@@ -290,9 +303,11 @@ class User(Base):
         from sqlalchemy import select
         from sqlalchemy.orm import selectinload
 
+        from app.models.role import Role
+
         stmt = (
             select(cls)
-            .options(selectinload(cls.roles).selectinload("permissions"))
+            .options(selectinload(cls.roles).selectinload(Role.permissions))
             .where(cls.id == user_id)
         )
         result = await db.execute(stmt)
@@ -315,9 +330,11 @@ class User(Base):
         from sqlalchemy import select
         from sqlalchemy.orm import selectinload
 
+        from app.models.role import Role
+
         stmt = (
             select(cls)
-            .options(selectinload(cls.roles).selectinload("permissions"))
+            .options(selectinload(cls.roles).selectinload(Role.permissions))
             .where(cls.email == email)
         )
         result = await db.execute(stmt)
@@ -353,9 +370,6 @@ class User(Base):
         return result.scalars().all()
 
 
-
-
-
 class UserRole(Base):
     """
     Audit table for tracking User-Role assignments.
@@ -385,7 +399,9 @@ class UserRole(Base):
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
     assigned_by: Mapped[Optional[UUID]] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="SET NULL", use_alter=True),
+        nullable=True
     )
 
     def __repr__(self) -> str:

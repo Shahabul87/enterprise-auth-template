@@ -113,7 +113,9 @@ class MagicLinkService:
 
             # Send magic link email
             success = await self._send_magic_link_email(
-                email=email, user_name=user.full_name or user.email, token=magic_link.token
+                email=email,
+                user_name=user.full_name or user.email,
+                token=magic_link.token,
             )
 
             if not success:
@@ -234,7 +236,7 @@ class MagicLinkService:
                 user_id=str(user.id),
                 email=user.email,
                 roles=[role.name for role in user.roles] if user.roles else [],
-                permissions=user.get_permissions()
+                permissions=user.get_permissions(),
             )
             refresh_token_jwt, refresh_token_id = create_refresh_token(str(user.id))
 

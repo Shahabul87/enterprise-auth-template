@@ -17,6 +17,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db_session
 from app.dependencies.auth import CurrentUser, get_current_user
 from app.models.user import User
+
 # Import new refactored services
 from app.services.auth.password_management_service import PasswordManagementService
 from app.services.auth.email_verification_service import EmailVerificationService
@@ -53,7 +54,9 @@ class ProfileResponse(BaseModel):
 class ProfileUpdateRequest(BaseModel):
     """Profile update request model."""
 
-    full_name: Optional[str] = Field(None, min_length=2, max_length=100, description="Full name")
+    full_name: Optional[str] = Field(
+        None, min_length=2, max_length=100, description="Full name"
+    )
     phone_number: Optional[str] = Field(None, max_length=20, description="Phone number")
     bio: Optional[str] = Field(None, max_length=500, description="User bio")
     timezone: Optional[str] = Field(None, description="User timezone")
@@ -66,7 +69,7 @@ class ProfileUpdateRequest(BaseModel):
                 "phone_number": "+1234567890",
                 "bio": "Software developer with 5 years of experience",
                 "timezone": "America/New_York",
-                "language": "en"
+                "language": "en",
             }
         }
     )
@@ -82,7 +85,7 @@ class PasswordChangeRequest(BaseModel):
         json_schema_extra={
             "example": {
                 "current_password": "CurrentPass123!",
-                "new_password": "NewSecurePass456!"
+                "new_password": "NewSecurePass456!",
             }
         }
     )
@@ -98,7 +101,7 @@ class EmailChangeRequest(BaseModel):
         json_schema_extra={
             "example": {
                 "new_email": "newemail@example.com",
-                "password": "CurrentPass123!"
+                "password": "CurrentPass123!",
             }
         }
     )
@@ -120,7 +123,7 @@ class NotificationPreferencesRequest(BaseModel):
                 "push_notifications": True,
                 "sms_notifications": False,
                 "marketing_emails": False,
-                "security_alerts": True
+                "security_alerts": True,
             }
         }
     )
@@ -129,10 +132,14 @@ class NotificationPreferencesRequest(BaseModel):
 class SecuritySettingsResponse(BaseModel):
     """Security settings response model."""
 
-    two_factor_enabled: bool = Field(..., description="Two-factor authentication enabled")
+    two_factor_enabled: bool = Field(
+        ..., description="Two-factor authentication enabled"
+    )
     login_alerts: bool = Field(..., description="Login alerts enabled")
     session_timeout: int = Field(..., description="Session timeout in minutes")
-    password_last_changed: Optional[str] = Field(None, description="Last password change")
+    password_last_changed: Optional[str] = Field(
+        None, description="Last password change"
+    )
     active_sessions: int = Field(..., description="Number of active sessions")
 
 
@@ -166,19 +173,18 @@ async def get_profile(
 
         if not user:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             )
 
         return ProfileResponse(
             id=str(user.id),
             email=user.email,
             full_name=user.full_name,
-            phone_number=getattr(user, 'phone_number', None),
-            bio=getattr(user, 'bio', None),
-            avatar_url=getattr(user, 'avatar_url', None),
-            timezone=getattr(user, 'timezone', None),
-            language=getattr(user, 'language', 'en'),
+            phone_number=getattr(user, "phone_number", None),
+            bio=getattr(user, "bio", None),
+            avatar_url=getattr(user, "avatar_url", None),
+            timezone=getattr(user, "timezone", None),
+            language=getattr(user, "language", "en"),
             is_active=user.is_active,
             is_verified=user.email_verified,  # Fix: use email_verified instead of is_verified
             roles=current_user.roles,
@@ -193,7 +199,7 @@ async def get_profile(
         logger.error("Failed to get profile", user_id=current_user.id, error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve profile"
+            detail="Failed to retrieve profile",
         )
 
 
@@ -228,26 +234,25 @@ async def update_profile(
         # Build update data dictionary
         update_data = {}
         if profile_update.full_name is not None:
-            update_data['full_name'] = profile_update.full_name
+            update_data["full_name"] = profile_update.full_name
         if profile_update.phone_number is not None:
-            update_data['phone_number'] = profile_update.phone_number
+            update_data["phone_number"] = profile_update.phone_number
         if profile_update.bio is not None:
-            update_data['bio'] = profile_update.bio
+            update_data["bio"] = profile_update.bio
         if profile_update.timezone is not None:
-            update_data['timezone'] = profile_update.timezone
+            update_data["timezone"] = profile_update.timezone
         if profile_update.language is not None:
-            update_data['language'] = profile_update.language
+            update_data["language"] = profile_update.language
 
         if not update_data:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="No update data provided"
+                detail="No update data provided",
             )
 
         # Update user profile
         updated_user = await user_service.update_user_profile(
-            user_id=current_user.id,
-            update_data=update_data
+            user_id=current_user.id, update_data=update_data
         )
 
         # Log audit event
@@ -258,31 +263,39 @@ async def update_profile(
             resource_id=current_user.id,
             details={
                 "updated_fields": list(update_data.keys()),
-                "ip_address": request.client.host if request and request.client else None
-            }
+                "ip_address": (
+                    request.client.host if request and request.client else None
+                ),
+            },
         )
 
         logger.info(
             "Profile updated successfully",
             user_id=current_user.id,
-            updated_fields=list(update_data.keys())
+            updated_fields=list(update_data.keys()),
         )
 
         return ProfileResponse(
             id=str(updated_user.id),
             email=updated_user.email,
             full_name=updated_user.full_name,
-            phone_number=getattr(updated_user, 'phone_number', None),
-            bio=getattr(updated_user, 'bio', None),
-            avatar_url=getattr(updated_user, 'avatar_url', None),
-            timezone=getattr(updated_user, 'timezone', None),
-            language=getattr(updated_user, 'language', 'en'),
+            phone_number=getattr(updated_user, "phone_number", None),
+            bio=getattr(updated_user, "bio", None),
+            avatar_url=getattr(updated_user, "avatar_url", None),
+            timezone=getattr(updated_user, "timezone", None),
+            language=getattr(updated_user, "language", "en"),
             is_active=updated_user.is_active,
             is_verified=updated_user.email_verified,  # Fix: use email_verified instead of is_verified
             roles=current_user.roles,
-            created_at=updated_user.created_at.isoformat() if updated_user.created_at else "",
-            updated_at=updated_user.updated_at.isoformat() if updated_user.updated_at else "",
-            last_login=updated_user.last_login.isoformat() if updated_user.last_login else None,
+            created_at=(
+                updated_user.created_at.isoformat() if updated_user.created_at else ""
+            ),
+            updated_at=(
+                updated_user.updated_at.isoformat() if updated_user.updated_at else ""
+            ),
+            last_login=(
+                updated_user.last_login.isoformat() if updated_user.last_login else None
+            ),
         )
 
     except HTTPException:
@@ -291,7 +304,7 @@ async def update_profile(
         logger.error("Failed to update profile", user_id=current_user.id, error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to update profile"
+            detail="Failed to update profile",
         )
 
 
@@ -333,15 +346,16 @@ async def change_password(
 
         if not user:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             )
 
         # Verify current password
-        if not verify_password(password_change.current_password, user.password_hash or user.hashed_password):
+        if not verify_password(
+            password_change.current_password, user.password_hash or user.hashed_password
+        ):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Current password is incorrect"
+                detail="Current password is incorrect",
             )
 
         # Validate new password strength
@@ -356,7 +370,7 @@ async def change_password(
             .values(
                 password_hash=new_password_hash,
                 password_changed_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
+                updated_at=datetime.utcnow(),
             )
         )
         await db.execute(stmt)
@@ -369,9 +383,11 @@ async def change_password(
             resource_type="user_account",
             resource_id=current_user.id,
             details={
-                "ip_address": request.client.host if request and request.client else None,
-                "user_agent": request.headers.get("user-agent") if request else None
-            }
+                "ip_address": (
+                    request.client.host if request and request.client else None
+                ),
+                "user_agent": request.headers.get("user-agent") if request else None,
+            },
         )
 
         # Send security notification
@@ -380,8 +396,10 @@ async def change_password(
             event_type="password_changed",
             details={
                 "timestamp": datetime.utcnow().isoformat(),
-                "ip_address": request.client.host if request and request.client else None
-            }
+                "ip_address": (
+                    request.client.host if request and request.client else None
+                ),
+            },
         )
 
         logger.info("Password changed successfully", user_id=current_user.id)
@@ -391,15 +409,12 @@ async def change_password(
     except HTTPException:
         raise
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         logger.error("Failed to change password", user_id=current_user.id, error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to change password"
+            detail="Failed to change password",
         )
 
 
@@ -425,7 +440,11 @@ async def change_email(
     Returns:
         MessageResponse: Success message
     """
-    logger.info("Email change requested", user_id=current_user.id, new_email=email_change.new_email)
+    logger.info(
+        "Email change requested",
+        user_id=current_user.id,
+        new_email=email_change.new_email,
+    )
 
     try:
         # Use new password management service
@@ -441,14 +460,14 @@ async def change_email(
 
         if not user:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             )
 
-        if not verify_password(email_change.password, user.password_hash or user.hashed_password):
+        if not verify_password(
+            email_change.password, user.password_hash or user.hashed_password
+        ):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Password is incorrect"
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Password is incorrect"
             )
 
         # Check if new email is already in use
@@ -456,7 +475,7 @@ async def change_email(
         if existing_user and existing_user.id != current_user.id:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Email address is already in use"
+                detail="Email address is already in use",
             )
 
         # Initiate email change process (would send verification emails)
@@ -465,7 +484,7 @@ async def change_email(
         await email_service.initiate_email_change(
             user_id=current_user.id,
             new_email=email_change.new_email,
-            ip_address=request.client.host if request and request.client else None
+            ip_address=request.client.host if request and request.client else None,
         )
 
         # Log audit event
@@ -477,8 +496,10 @@ async def change_email(
             details={
                 "old_email": user.email,
                 "new_email": email_change.new_email,
-                "ip_address": request.client.host if request and request.client else None
-            }
+                "ip_address": (
+                    request.client.host if request and request.client else None
+                ),
+            },
         )
 
         logger.info("Email change initiated", user_id=current_user.id)
@@ -493,7 +514,7 @@ async def change_email(
         logger.error("Failed to change email", user_id=current_user.id, error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to initiate email change"
+            detail="Failed to initiate email change",
         )
 
 
@@ -520,18 +541,20 @@ async def get_security_settings(
         security_info = await user_service.get_user_security_info(current_user.id)
 
         return SecuritySettingsResponse(
-            two_factor_enabled=security_info.get('two_factor_enabled', False),
-            login_alerts=security_info.get('login_alerts', True),
-            session_timeout=security_info.get('session_timeout', 30),
-            password_last_changed=security_info.get('password_last_changed'),
-            active_sessions=security_info.get('active_sessions', 1)
+            two_factor_enabled=security_info.get("two_factor_enabled", False),
+            login_alerts=security_info.get("login_alerts", True),
+            session_timeout=security_info.get("session_timeout", 30),
+            password_last_changed=security_info.get("password_last_changed"),
+            active_sessions=security_info.get("active_sessions", 1),
         )
 
     except Exception as e:
-        logger.error("Failed to get security settings", user_id=current_user.id, error=str(e))
+        logger.error(
+            "Failed to get security settings", user_id=current_user.id, error=str(e)
+        )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve security settings"
+            detail="Failed to retrieve security settings",
         )
 
 
@@ -562,8 +585,7 @@ async def update_notification_preferences(
 
         # Update notification preferences
         await user_service.update_notification_preferences(
-            user_id=current_user.id,
-            preferences=preferences.dict()
+            user_id=current_user.id, preferences=preferences.dict()
         )
 
         logger.info("Notification preferences updated", user_id=current_user.id)
@@ -574,11 +596,11 @@ async def update_notification_preferences(
         logger.error(
             "Failed to update notification preferences",
             user_id=current_user.id,
-            error=str(e)
+            error=str(e),
         )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to update notification preferences"
+            detail="Failed to update notification preferences",
         )
 
 
@@ -620,14 +642,12 @@ async def delete_account(
 
         if not user:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found"
+                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             )
 
         if not verify_password(password, user.password_hash or user.hashed_password):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Password is incorrect"
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Password is incorrect"
             )
 
         # Log audit event before deletion
@@ -637,9 +657,11 @@ async def delete_account(
             resource_type="user_account",
             resource_id=current_user.id,
             details={
-                "ip_address": request.client.host if request and request.client else None,
-                "user_agent": request.headers.get("user-agent") if request else None
-            }
+                "ip_address": (
+                    request.client.host if request and request.client else None
+                ),
+                "user_agent": request.headers.get("user-agent") if request else None,
+            },
         )
 
         # Delete user account (this would handle cleanup)
@@ -655,5 +677,5 @@ async def delete_account(
         logger.error("Failed to delete account", user_id=current_user.id, error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to delete account"
+            detail="Failed to delete account",
         )

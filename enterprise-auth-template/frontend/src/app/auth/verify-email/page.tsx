@@ -24,7 +24,7 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 
-function VerifyEmailContent(): JSX.Element {
+function VerifyEmailContent(): React.ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { resendVerification } = useAuthStore();
@@ -397,7 +397,7 @@ function VerifyEmailContent(): JSX.Element {
   );
 }
 
-export default function VerifyEmailPage(): JSX.Element {
+export default function VerifyEmailPage(): React.ReactElement {
   return (
     <Suspense
       fallback={

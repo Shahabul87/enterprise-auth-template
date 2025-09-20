@@ -126,16 +126,14 @@ class EnhancedEmailService:
         """Check if email service is properly configured."""
         if settings.EMAIL_PROVIDER == "smtp":
             return bool(
-                settings.SMTP_HOST and
-                settings.SMTP_USER and
-                settings.SMTP_PASSWORD
+                settings.SMTP_HOST and settings.SMTP_USER and settings.SMTP_PASSWORD
             )
         elif settings.EMAIL_PROVIDER == "sendgrid":
             return bool(getattr(settings, "SENDGRID_API_KEY", None))
         elif settings.EMAIL_PROVIDER == "aws_ses":
             return bool(
-                getattr(settings, "AWS_ACCESS_KEY_ID", None) and
-                getattr(settings, "AWS_SECRET_ACCESS_KEY", None)
+                getattr(settings, "AWS_ACCESS_KEY_ID", None)
+                and getattr(settings, "AWS_SECRET_ACCESS_KEY", None)
             )
         return False
 
@@ -157,11 +155,13 @@ class EnhancedEmailService:
             str: Rendered template content
         """
         # Add common context
-        context.update({
-            "app_name": self.from_name,
-            "frontend_url": self.frontend_url,
-            "current_year": 2024,
-        })
+        context.update(
+            {
+                "app_name": self.from_name,
+                "frontend_url": self.frontend_url,
+                "current_year": 2024,
+            }
+        )
 
         # Try to load template from file
         if self.template_env:
@@ -330,7 +330,9 @@ class EnhancedEmailService:
             subject=f"Verify your {self.from_name} account",
             template_name="verification.html",
             context=context,
-            html_content=self._render_template("verification.html", context, inline_template),
+            html_content=self._render_template(
+                "verification.html", context, inline_template
+            ),
             text_content=text_content,
         )
 
@@ -410,7 +412,9 @@ class EnhancedEmailService:
             subject=f"Reset your {self.from_name} password",
             template_name="password_reset.html",
             context=context,
-            html_content=self._render_template("password_reset.html", context, inline_template),
+            html_content=self._render_template(
+                "password_reset.html", context, inline_template
+            ),
             text_content=text_content,
         )
 
@@ -486,7 +490,9 @@ class EnhancedEmailService:
             subject=f"Sign in to {self.from_name}",
             template_name="magic_link.html",
             context=context,
-            html_content=self._render_template("magic_link.html", context, inline_template),
+            html_content=self._render_template(
+                "magic_link.html", context, inline_template
+            ),
             text_content=text_content,
         )
 

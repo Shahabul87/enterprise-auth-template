@@ -6,9 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 
-import '../constants/api_constants.dart';
-import '../errors/app_exception.dart';
-import '../storage/secure_storage_service.dart';
+import 'package:flutter_auth_template/core/constants/api_constants.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
+import 'package:flutter_auth_template/core/storage/secure_storage_service.dart';
 
 enum WebSocketState {
   disconnected,
@@ -112,10 +112,7 @@ class WebSocketService {
       // Get authentication token
       final token = await _storageService.getToken();
       if (token == null) {
-        throw AppException.authentication(
-          message: 'No authentication token found',
-          reason: 'missing_token',
-        );
+        throw const UnauthorizedException('No authentication token found', null);
       }
 
       // Build WebSocket URL

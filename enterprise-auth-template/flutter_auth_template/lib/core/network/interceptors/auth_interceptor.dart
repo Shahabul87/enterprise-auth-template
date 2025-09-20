@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../security/token_manager.dart';
-import '../../constants/api_constants.dart';
-import '../api_client.dart';
+import 'package:flutter_auth_template/core/security/token_manager.dart';
+import 'package:flutter_auth_template/core/constants/api_constants.dart';
+import 'package:flutter_auth_template/core/network/api_client.dart';
 
 class AuthInterceptor extends QueuedInterceptor {
   final Ref _ref;

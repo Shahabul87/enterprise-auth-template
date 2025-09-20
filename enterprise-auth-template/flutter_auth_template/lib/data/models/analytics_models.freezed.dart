@@ -5038,3 +5038,1249 @@ abstract class _AnalyticsFilter implements AnalyticsFilter {
   _$$AnalyticsFilterImplCopyWith<_$AnalyticsFilterImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+SecurityConfiguration _$SecurityConfigurationFromJson(
+  Map<String, dynamic> json,
+) {
+  return _SecurityConfiguration.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SecurityConfiguration {
+  bool get enableTwoFactor => throw _privateConstructorUsedError;
+  bool get enableBiometric => throw _privateConstructorUsedError;
+  bool get enableIpBlocking => throw _privateConstructorUsedError;
+  bool get enableRateLimit => throw _privateConstructorUsedError;
+  int get maxLoginAttempts => throw _privateConstructorUsedError;
+  int get sessionTimeout => throw _privateConstructorUsedError;
+
+  /// Serializes this SecurityConfiguration to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of SecurityConfiguration
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $SecurityConfigurationCopyWith<SecurityConfiguration> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SecurityConfigurationCopyWith<$Res> {
+  factory $SecurityConfigurationCopyWith(
+    SecurityConfiguration value,
+    $Res Function(SecurityConfiguration) then,
+  ) = _$SecurityConfigurationCopyWithImpl<$Res, SecurityConfiguration>;
+  @useResult
+  $Res call({
+    bool enableTwoFactor,
+    bool enableBiometric,
+    bool enableIpBlocking,
+    bool enableRateLimit,
+    int maxLoginAttempts,
+    int sessionTimeout,
+  });
+}
+
+/// @nodoc
+class _$SecurityConfigurationCopyWithImpl<
+  $Res,
+  $Val extends SecurityConfiguration
+>
+    implements $SecurityConfigurationCopyWith<$Res> {
+  _$SecurityConfigurationCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of SecurityConfiguration
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enableTwoFactor = null,
+    Object? enableBiometric = null,
+    Object? enableIpBlocking = null,
+    Object? enableRateLimit = null,
+    Object? maxLoginAttempts = null,
+    Object? sessionTimeout = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            enableTwoFactor: null == enableTwoFactor
+                ? _value.enableTwoFactor
+                : enableTwoFactor // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            enableBiometric: null == enableBiometric
+                ? _value.enableBiometric
+                : enableBiometric // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            enableIpBlocking: null == enableIpBlocking
+                ? _value.enableIpBlocking
+                : enableIpBlocking // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            enableRateLimit: null == enableRateLimit
+                ? _value.enableRateLimit
+                : enableRateLimit // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            maxLoginAttempts: null == maxLoginAttempts
+                ? _value.maxLoginAttempts
+                : maxLoginAttempts // ignore: cast_nullable_to_non_nullable
+                      as int,
+            sessionTimeout: null == sessionTimeout
+                ? _value.sessionTimeout
+                : sessionTimeout // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$SecurityConfigurationImplCopyWith<$Res>
+    implements $SecurityConfigurationCopyWith<$Res> {
+  factory _$$SecurityConfigurationImplCopyWith(
+    _$SecurityConfigurationImpl value,
+    $Res Function(_$SecurityConfigurationImpl) then,
+  ) = __$$SecurityConfigurationImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    bool enableTwoFactor,
+    bool enableBiometric,
+    bool enableIpBlocking,
+    bool enableRateLimit,
+    int maxLoginAttempts,
+    int sessionTimeout,
+  });
+}
+
+/// @nodoc
+class __$$SecurityConfigurationImplCopyWithImpl<$Res>
+    extends
+        _$SecurityConfigurationCopyWithImpl<$Res, _$SecurityConfigurationImpl>
+    implements _$$SecurityConfigurationImplCopyWith<$Res> {
+  __$$SecurityConfigurationImplCopyWithImpl(
+    _$SecurityConfigurationImpl _value,
+    $Res Function(_$SecurityConfigurationImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of SecurityConfiguration
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enableTwoFactor = null,
+    Object? enableBiometric = null,
+    Object? enableIpBlocking = null,
+    Object? enableRateLimit = null,
+    Object? maxLoginAttempts = null,
+    Object? sessionTimeout = null,
+  }) {
+    return _then(
+      _$SecurityConfigurationImpl(
+        enableTwoFactor: null == enableTwoFactor
+            ? _value.enableTwoFactor
+            : enableTwoFactor // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        enableBiometric: null == enableBiometric
+            ? _value.enableBiometric
+            : enableBiometric // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        enableIpBlocking: null == enableIpBlocking
+            ? _value.enableIpBlocking
+            : enableIpBlocking // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        enableRateLimit: null == enableRateLimit
+            ? _value.enableRateLimit
+            : enableRateLimit // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        maxLoginAttempts: null == maxLoginAttempts
+            ? _value.maxLoginAttempts
+            : maxLoginAttempts // ignore: cast_nullable_to_non_nullable
+                  as int,
+        sessionTimeout: null == sessionTimeout
+            ? _value.sessionTimeout
+            : sessionTimeout // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SecurityConfigurationImpl implements _SecurityConfiguration {
+  const _$SecurityConfigurationImpl({
+    required this.enableTwoFactor,
+    required this.enableBiometric,
+    required this.enableIpBlocking,
+    required this.enableRateLimit,
+    required this.maxLoginAttempts,
+    required this.sessionTimeout,
+  });
+
+  factory _$SecurityConfigurationImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SecurityConfigurationImplFromJson(json);
+
+  @override
+  final bool enableTwoFactor;
+  @override
+  final bool enableBiometric;
+  @override
+  final bool enableIpBlocking;
+  @override
+  final bool enableRateLimit;
+  @override
+  final int maxLoginAttempts;
+  @override
+  final int sessionTimeout;
+
+  @override
+  String toString() {
+    return 'SecurityConfiguration(enableTwoFactor: $enableTwoFactor, enableBiometric: $enableBiometric, enableIpBlocking: $enableIpBlocking, enableRateLimit: $enableRateLimit, maxLoginAttempts: $maxLoginAttempts, sessionTimeout: $sessionTimeout)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SecurityConfigurationImpl &&
+            (identical(other.enableTwoFactor, enableTwoFactor) ||
+                other.enableTwoFactor == enableTwoFactor) &&
+            (identical(other.enableBiometric, enableBiometric) ||
+                other.enableBiometric == enableBiometric) &&
+            (identical(other.enableIpBlocking, enableIpBlocking) ||
+                other.enableIpBlocking == enableIpBlocking) &&
+            (identical(other.enableRateLimit, enableRateLimit) ||
+                other.enableRateLimit == enableRateLimit) &&
+            (identical(other.maxLoginAttempts, maxLoginAttempts) ||
+                other.maxLoginAttempts == maxLoginAttempts) &&
+            (identical(other.sessionTimeout, sessionTimeout) ||
+                other.sessionTimeout == sessionTimeout));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    enableTwoFactor,
+    enableBiometric,
+    enableIpBlocking,
+    enableRateLimit,
+    maxLoginAttempts,
+    sessionTimeout,
+  );
+
+  /// Create a copy of SecurityConfiguration
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SecurityConfigurationImplCopyWith<_$SecurityConfigurationImpl>
+  get copyWith =>
+      __$$SecurityConfigurationImplCopyWithImpl<_$SecurityConfigurationImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SecurityConfigurationImplToJson(this);
+  }
+}
+
+abstract class _SecurityConfiguration implements SecurityConfiguration {
+  const factory _SecurityConfiguration({
+    required final bool enableTwoFactor,
+    required final bool enableBiometric,
+    required final bool enableIpBlocking,
+    required final bool enableRateLimit,
+    required final int maxLoginAttempts,
+    required final int sessionTimeout,
+  }) = _$SecurityConfigurationImpl;
+
+  factory _SecurityConfiguration.fromJson(Map<String, dynamic> json) =
+      _$SecurityConfigurationImpl.fromJson;
+
+  @override
+  bool get enableTwoFactor;
+  @override
+  bool get enableBiometric;
+  @override
+  bool get enableIpBlocking;
+  @override
+  bool get enableRateLimit;
+  @override
+  int get maxLoginAttempts;
+  @override
+  int get sessionTimeout;
+
+  /// Create a copy of SecurityConfiguration
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SecurityConfigurationImplCopyWith<_$SecurityConfigurationImpl>
+  get copyWith => throw _privateConstructorUsedError;
+}
+
+IpBlockRule _$IpBlockRuleFromJson(Map<String, dynamic> json) {
+  return _IpBlockRule.fromJson(json);
+}
+
+/// @nodoc
+mixin _$IpBlockRule {
+  String get id => throw _privateConstructorUsedError;
+  String get ipAddress => throw _privateConstructorUsedError;
+  String get cidr => throw _privateConstructorUsedError;
+  IpRuleType get type => throw _privateConstructorUsedError;
+  String get reason => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime? get expiresAt => throw _privateConstructorUsedError;
+  bool get isActive => throw _privateConstructorUsedError;
+
+  /// Serializes this IpBlockRule to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of IpBlockRule
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $IpBlockRuleCopyWith<IpBlockRule> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $IpBlockRuleCopyWith<$Res> {
+  factory $IpBlockRuleCopyWith(
+    IpBlockRule value,
+    $Res Function(IpBlockRule) then,
+  ) = _$IpBlockRuleCopyWithImpl<$Res, IpBlockRule>;
+  @useResult
+  $Res call({
+    String id,
+    String ipAddress,
+    String cidr,
+    IpRuleType type,
+    String reason,
+    DateTime createdAt,
+    DateTime? expiresAt,
+    bool isActive,
+  });
+}
+
+/// @nodoc
+class _$IpBlockRuleCopyWithImpl<$Res, $Val extends IpBlockRule>
+    implements $IpBlockRuleCopyWith<$Res> {
+  _$IpBlockRuleCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of IpBlockRule
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? ipAddress = null,
+    Object? cidr = null,
+    Object? type = null,
+    Object? reason = null,
+    Object? createdAt = null,
+    Object? expiresAt = freezed,
+    Object? isActive = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            ipAddress: null == ipAddress
+                ? _value.ipAddress
+                : ipAddress // ignore: cast_nullable_to_non_nullable
+                      as String,
+            cidr: null == cidr
+                ? _value.cidr
+                : cidr // ignore: cast_nullable_to_non_nullable
+                      as String,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as IpRuleType,
+            reason: null == reason
+                ? _value.reason
+                : reason // ignore: cast_nullable_to_non_nullable
+                      as String,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            expiresAt: freezed == expiresAt
+                ? _value.expiresAt
+                : expiresAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            isActive: null == isActive
+                ? _value.isActive
+                : isActive // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$IpBlockRuleImplCopyWith<$Res>
+    implements $IpBlockRuleCopyWith<$Res> {
+  factory _$$IpBlockRuleImplCopyWith(
+    _$IpBlockRuleImpl value,
+    $Res Function(_$IpBlockRuleImpl) then,
+  ) = __$$IpBlockRuleImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String id,
+    String ipAddress,
+    String cidr,
+    IpRuleType type,
+    String reason,
+    DateTime createdAt,
+    DateTime? expiresAt,
+    bool isActive,
+  });
+}
+
+/// @nodoc
+class __$$IpBlockRuleImplCopyWithImpl<$Res>
+    extends _$IpBlockRuleCopyWithImpl<$Res, _$IpBlockRuleImpl>
+    implements _$$IpBlockRuleImplCopyWith<$Res> {
+  __$$IpBlockRuleImplCopyWithImpl(
+    _$IpBlockRuleImpl _value,
+    $Res Function(_$IpBlockRuleImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of IpBlockRule
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? ipAddress = null,
+    Object? cidr = null,
+    Object? type = null,
+    Object? reason = null,
+    Object? createdAt = null,
+    Object? expiresAt = freezed,
+    Object? isActive = null,
+  }) {
+    return _then(
+      _$IpBlockRuleImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        ipAddress: null == ipAddress
+            ? _value.ipAddress
+            : ipAddress // ignore: cast_nullable_to_non_nullable
+                  as String,
+        cidr: null == cidr
+            ? _value.cidr
+            : cidr // ignore: cast_nullable_to_non_nullable
+                  as String,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as IpRuleType,
+        reason: null == reason
+            ? _value.reason
+            : reason // ignore: cast_nullable_to_non_nullable
+                  as String,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        expiresAt: freezed == expiresAt
+            ? _value.expiresAt
+            : expiresAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        isActive: null == isActive
+            ? _value.isActive
+            : isActive // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$IpBlockRuleImpl implements _IpBlockRule {
+  const _$IpBlockRuleImpl({
+    required this.id,
+    required this.ipAddress,
+    required this.cidr,
+    required this.type,
+    required this.reason,
+    required this.createdAt,
+    this.expiresAt,
+    required this.isActive,
+  });
+
+  factory _$IpBlockRuleImpl.fromJson(Map<String, dynamic> json) =>
+      _$$IpBlockRuleImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String ipAddress;
+  @override
+  final String cidr;
+  @override
+  final IpRuleType type;
+  @override
+  final String reason;
+  @override
+  final DateTime createdAt;
+  @override
+  final DateTime? expiresAt;
+  @override
+  final bool isActive;
+
+  @override
+  String toString() {
+    return 'IpBlockRule(id: $id, ipAddress: $ipAddress, cidr: $cidr, type: $type, reason: $reason, createdAt: $createdAt, expiresAt: $expiresAt, isActive: $isActive)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$IpBlockRuleImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.ipAddress, ipAddress) ||
+                other.ipAddress == ipAddress) &&
+            (identical(other.cidr, cidr) || other.cidr == cidr) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.reason, reason) || other.reason == reason) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.expiresAt, expiresAt) ||
+                other.expiresAt == expiresAt) &&
+            (identical(other.isActive, isActive) ||
+                other.isActive == isActive));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    ipAddress,
+    cidr,
+    type,
+    reason,
+    createdAt,
+    expiresAt,
+    isActive,
+  );
+
+  /// Create a copy of IpBlockRule
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$IpBlockRuleImplCopyWith<_$IpBlockRuleImpl> get copyWith =>
+      __$$IpBlockRuleImplCopyWithImpl<_$IpBlockRuleImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$IpBlockRuleImplToJson(this);
+  }
+}
+
+abstract class _IpBlockRule implements IpBlockRule {
+  const factory _IpBlockRule({
+    required final String id,
+    required final String ipAddress,
+    required final String cidr,
+    required final IpRuleType type,
+    required final String reason,
+    required final DateTime createdAt,
+    final DateTime? expiresAt,
+    required final bool isActive,
+  }) = _$IpBlockRuleImpl;
+
+  factory _IpBlockRule.fromJson(Map<String, dynamic> json) =
+      _$IpBlockRuleImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get ipAddress;
+  @override
+  String get cidr;
+  @override
+  IpRuleType get type;
+  @override
+  String get reason;
+  @override
+  DateTime get createdAt;
+  @override
+  DateTime? get expiresAt;
+  @override
+  bool get isActive;
+
+  /// Create a copy of IpBlockRule
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$IpBlockRuleImplCopyWith<_$IpBlockRuleImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+RateLimitRule _$RateLimitRuleFromJson(Map<String, dynamic> json) {
+  return _RateLimitRule.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RateLimitRule {
+  String get id => throw _privateConstructorUsedError;
+  String get endpoint => throw _privateConstructorUsedError;
+  int get maxRequests => throw _privateConstructorUsedError;
+  int get timeWindowSeconds => throw _privateConstructorUsedError;
+  String get action => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  bool get isActive => throw _privateConstructorUsedError;
+
+  /// Serializes this RateLimitRule to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of RateLimitRule
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $RateLimitRuleCopyWith<RateLimitRule> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RateLimitRuleCopyWith<$Res> {
+  factory $RateLimitRuleCopyWith(
+    RateLimitRule value,
+    $Res Function(RateLimitRule) then,
+  ) = _$RateLimitRuleCopyWithImpl<$Res, RateLimitRule>;
+  @useResult
+  $Res call({
+    String id,
+    String endpoint,
+    int maxRequests,
+    int timeWindowSeconds,
+    String action,
+    DateTime createdAt,
+    bool isActive,
+  });
+}
+
+/// @nodoc
+class _$RateLimitRuleCopyWithImpl<$Res, $Val extends RateLimitRule>
+    implements $RateLimitRuleCopyWith<$Res> {
+  _$RateLimitRuleCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of RateLimitRule
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? endpoint = null,
+    Object? maxRequests = null,
+    Object? timeWindowSeconds = null,
+    Object? action = null,
+    Object? createdAt = null,
+    Object? isActive = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            endpoint: null == endpoint
+                ? _value.endpoint
+                : endpoint // ignore: cast_nullable_to_non_nullable
+                      as String,
+            maxRequests: null == maxRequests
+                ? _value.maxRequests
+                : maxRequests // ignore: cast_nullable_to_non_nullable
+                      as int,
+            timeWindowSeconds: null == timeWindowSeconds
+                ? _value.timeWindowSeconds
+                : timeWindowSeconds // ignore: cast_nullable_to_non_nullable
+                      as int,
+            action: null == action
+                ? _value.action
+                : action // ignore: cast_nullable_to_non_nullable
+                      as String,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            isActive: null == isActive
+                ? _value.isActive
+                : isActive // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$RateLimitRuleImplCopyWith<$Res>
+    implements $RateLimitRuleCopyWith<$Res> {
+  factory _$$RateLimitRuleImplCopyWith(
+    _$RateLimitRuleImpl value,
+    $Res Function(_$RateLimitRuleImpl) then,
+  ) = __$$RateLimitRuleImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String id,
+    String endpoint,
+    int maxRequests,
+    int timeWindowSeconds,
+    String action,
+    DateTime createdAt,
+    bool isActive,
+  });
+}
+
+/// @nodoc
+class __$$RateLimitRuleImplCopyWithImpl<$Res>
+    extends _$RateLimitRuleCopyWithImpl<$Res, _$RateLimitRuleImpl>
+    implements _$$RateLimitRuleImplCopyWith<$Res> {
+  __$$RateLimitRuleImplCopyWithImpl(
+    _$RateLimitRuleImpl _value,
+    $Res Function(_$RateLimitRuleImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of RateLimitRule
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? endpoint = null,
+    Object? maxRequests = null,
+    Object? timeWindowSeconds = null,
+    Object? action = null,
+    Object? createdAt = null,
+    Object? isActive = null,
+  }) {
+    return _then(
+      _$RateLimitRuleImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        endpoint: null == endpoint
+            ? _value.endpoint
+            : endpoint // ignore: cast_nullable_to_non_nullable
+                  as String,
+        maxRequests: null == maxRequests
+            ? _value.maxRequests
+            : maxRequests // ignore: cast_nullable_to_non_nullable
+                  as int,
+        timeWindowSeconds: null == timeWindowSeconds
+            ? _value.timeWindowSeconds
+            : timeWindowSeconds // ignore: cast_nullable_to_non_nullable
+                  as int,
+        action: null == action
+            ? _value.action
+            : action // ignore: cast_nullable_to_non_nullable
+                  as String,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        isActive: null == isActive
+            ? _value.isActive
+            : isActive // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$RateLimitRuleImpl implements _RateLimitRule {
+  const _$RateLimitRuleImpl({
+    required this.id,
+    required this.endpoint,
+    required this.maxRequests,
+    required this.timeWindowSeconds,
+    required this.action,
+    required this.createdAt,
+    required this.isActive,
+  });
+
+  factory _$RateLimitRuleImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RateLimitRuleImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String endpoint;
+  @override
+  final int maxRequests;
+  @override
+  final int timeWindowSeconds;
+  @override
+  final String action;
+  @override
+  final DateTime createdAt;
+  @override
+  final bool isActive;
+
+  @override
+  String toString() {
+    return 'RateLimitRule(id: $id, endpoint: $endpoint, maxRequests: $maxRequests, timeWindowSeconds: $timeWindowSeconds, action: $action, createdAt: $createdAt, isActive: $isActive)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RateLimitRuleImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.endpoint, endpoint) ||
+                other.endpoint == endpoint) &&
+            (identical(other.maxRequests, maxRequests) ||
+                other.maxRequests == maxRequests) &&
+            (identical(other.timeWindowSeconds, timeWindowSeconds) ||
+                other.timeWindowSeconds == timeWindowSeconds) &&
+            (identical(other.action, action) || other.action == action) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.isActive, isActive) ||
+                other.isActive == isActive));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    endpoint,
+    maxRequests,
+    timeWindowSeconds,
+    action,
+    createdAt,
+    isActive,
+  );
+
+  /// Create a copy of RateLimitRule
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RateLimitRuleImplCopyWith<_$RateLimitRuleImpl> get copyWith =>
+      __$$RateLimitRuleImplCopyWithImpl<_$RateLimitRuleImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RateLimitRuleImplToJson(this);
+  }
+}
+
+abstract class _RateLimitRule implements RateLimitRule {
+  const factory _RateLimitRule({
+    required final String id,
+    required final String endpoint,
+    required final int maxRequests,
+    required final int timeWindowSeconds,
+    required final String action,
+    required final DateTime createdAt,
+    required final bool isActive,
+  }) = _$RateLimitRuleImpl;
+
+  factory _RateLimitRule.fromJson(Map<String, dynamic> json) =
+      _$RateLimitRuleImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get endpoint;
+  @override
+  int get maxRequests;
+  @override
+  int get timeWindowSeconds;
+  @override
+  String get action;
+  @override
+  DateTime get createdAt;
+  @override
+  bool get isActive;
+
+  /// Create a copy of RateLimitRule
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$RateLimitRuleImplCopyWith<_$RateLimitRuleImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+SecurityEvent _$SecurityEventFromJson(Map<String, dynamic> json) {
+  return _SecurityEvent.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SecurityEvent {
+  String get id => throw _privateConstructorUsedError;
+  String get type => throw _privateConstructorUsedError;
+  SecurityEventSeverity get severity => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
+  String get ipAddress => throw _privateConstructorUsedError;
+  String? get userId => throw _privateConstructorUsedError;
+  Map<String, dynamic> get metadata => throw _privateConstructorUsedError;
+  DateTime get timestamp => throw _privateConstructorUsedError;
+  bool get resolved => throw _privateConstructorUsedError;
+
+  /// Serializes this SecurityEvent to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of SecurityEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $SecurityEventCopyWith<SecurityEvent> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SecurityEventCopyWith<$Res> {
+  factory $SecurityEventCopyWith(
+    SecurityEvent value,
+    $Res Function(SecurityEvent) then,
+  ) = _$SecurityEventCopyWithImpl<$Res, SecurityEvent>;
+  @useResult
+  $Res call({
+    String id,
+    String type,
+    SecurityEventSeverity severity,
+    String description,
+    String ipAddress,
+    String? userId,
+    Map<String, dynamic> metadata,
+    DateTime timestamp,
+    bool resolved,
+  });
+}
+
+/// @nodoc
+class _$SecurityEventCopyWithImpl<$Res, $Val extends SecurityEvent>
+    implements $SecurityEventCopyWith<$Res> {
+  _$SecurityEventCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of SecurityEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? type = null,
+    Object? severity = null,
+    Object? description = null,
+    Object? ipAddress = null,
+    Object? userId = freezed,
+    Object? metadata = null,
+    Object? timestamp = null,
+    Object? resolved = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String,
+            severity: null == severity
+                ? _value.severity
+                : severity // ignore: cast_nullable_to_non_nullable
+                      as SecurityEventSeverity,
+            description: null == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String,
+            ipAddress: null == ipAddress
+                ? _value.ipAddress
+                : ipAddress // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: freezed == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            metadata: null == metadata
+                ? _value.metadata
+                : metadata // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            resolved: null == resolved
+                ? _value.resolved
+                : resolved // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$SecurityEventImplCopyWith<$Res>
+    implements $SecurityEventCopyWith<$Res> {
+  factory _$$SecurityEventImplCopyWith(
+    _$SecurityEventImpl value,
+    $Res Function(_$SecurityEventImpl) then,
+  ) = __$$SecurityEventImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({
+    String id,
+    String type,
+    SecurityEventSeverity severity,
+    String description,
+    String ipAddress,
+    String? userId,
+    Map<String, dynamic> metadata,
+    DateTime timestamp,
+    bool resolved,
+  });
+}
+
+/// @nodoc
+class __$$SecurityEventImplCopyWithImpl<$Res>
+    extends _$SecurityEventCopyWithImpl<$Res, _$SecurityEventImpl>
+    implements _$$SecurityEventImplCopyWith<$Res> {
+  __$$SecurityEventImplCopyWithImpl(
+    _$SecurityEventImpl _value,
+    $Res Function(_$SecurityEventImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of SecurityEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? type = null,
+    Object? severity = null,
+    Object? description = null,
+    Object? ipAddress = null,
+    Object? userId = freezed,
+    Object? metadata = null,
+    Object? timestamp = null,
+    Object? resolved = null,
+  }) {
+    return _then(
+      _$SecurityEventImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String,
+        severity: null == severity
+            ? _value.severity
+            : severity // ignore: cast_nullable_to_non_nullable
+                  as SecurityEventSeverity,
+        description: null == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String,
+        ipAddress: null == ipAddress
+            ? _value.ipAddress
+            : ipAddress // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: freezed == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        metadata: null == metadata
+            ? _value._metadata
+            : metadata // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        resolved: null == resolved
+            ? _value.resolved
+            : resolved // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SecurityEventImpl implements _SecurityEvent {
+  const _$SecurityEventImpl({
+    required this.id,
+    required this.type,
+    required this.severity,
+    required this.description,
+    required this.ipAddress,
+    this.userId,
+    required final Map<String, dynamic> metadata,
+    required this.timestamp,
+    required this.resolved,
+  }) : _metadata = metadata;
+
+  factory _$SecurityEventImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SecurityEventImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String type;
+  @override
+  final SecurityEventSeverity severity;
+  @override
+  final String description;
+  @override
+  final String ipAddress;
+  @override
+  final String? userId;
+  final Map<String, dynamic> _metadata;
+  @override
+  Map<String, dynamic> get metadata {
+    if (_metadata is EqualUnmodifiableMapView) return _metadata;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_metadata);
+  }
+
+  @override
+  final DateTime timestamp;
+  @override
+  final bool resolved;
+
+  @override
+  String toString() {
+    return 'SecurityEvent(id: $id, type: $type, severity: $severity, description: $description, ipAddress: $ipAddress, userId: $userId, metadata: $metadata, timestamp: $timestamp, resolved: $resolved)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SecurityEventImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.severity, severity) ||
+                other.severity == severity) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.ipAddress, ipAddress) ||
+                other.ipAddress == ipAddress) &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            const DeepCollectionEquality().equals(other._metadata, _metadata) &&
+            (identical(other.timestamp, timestamp) ||
+                other.timestamp == timestamp) &&
+            (identical(other.resolved, resolved) ||
+                other.resolved == resolved));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    type,
+    severity,
+    description,
+    ipAddress,
+    userId,
+    const DeepCollectionEquality().hash(_metadata),
+    timestamp,
+    resolved,
+  );
+
+  /// Create a copy of SecurityEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SecurityEventImplCopyWith<_$SecurityEventImpl> get copyWith =>
+      __$$SecurityEventImplCopyWithImpl<_$SecurityEventImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SecurityEventImplToJson(this);
+  }
+}
+
+abstract class _SecurityEvent implements SecurityEvent {
+  const factory _SecurityEvent({
+    required final String id,
+    required final String type,
+    required final SecurityEventSeverity severity,
+    required final String description,
+    required final String ipAddress,
+    final String? userId,
+    required final Map<String, dynamic> metadata,
+    required final DateTime timestamp,
+    required final bool resolved,
+  }) = _$SecurityEventImpl;
+
+  factory _SecurityEvent.fromJson(Map<String, dynamic> json) =
+      _$SecurityEventImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get type;
+  @override
+  SecurityEventSeverity get severity;
+  @override
+  String get description;
+  @override
+  String get ipAddress;
+  @override
+  String? get userId;
+  @override
+  Map<String, dynamic> get metadata;
+  @override
+  DateTime get timestamp;
+  @override
+  bool get resolved;
+
+  /// Create a copy of SecurityEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SecurityEventImplCopyWith<_$SecurityEventImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

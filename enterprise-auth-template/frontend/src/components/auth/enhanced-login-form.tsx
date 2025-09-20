@@ -44,7 +44,7 @@ interface EnhancedLoginFormProps {
 export function EnhancedLoginForm({ 
   onSuccess,
   initialMethod = 'passkey',
-}: EnhancedLoginFormProps): JSX.Element {
+}: EnhancedLoginFormProps): React.ReactElement {
   const router = useRouter();
   const [currentMethod, setCurrentMethod] = useState(initialMethod);
   const [isWebAuthnSupported, setIsWebAuthnSupported] = useState(false);
@@ -266,7 +266,7 @@ export function EnhancedLoginForm({
  */
 export function QuickPasskeyLogin({ 
   onSuccess,
-}: { onSuccess?: () => void }): JSX.Element {
+}: { onSuccess?: () => void }): React.ReactElement {
   const [showFullForm, setShowFullForm] = useState(false);
 
   if (showFullForm) {

@@ -425,3 +425,113 @@ Map<String, dynamic> _$$AnalyticsFilterImplToJson(
   'operator': instance.operator,
   if (instance.value case final value?) 'value': value,
 };
+
+_$SecurityConfigurationImpl _$$SecurityConfigurationImplFromJson(
+  Map<String, dynamic> json,
+) => _$SecurityConfigurationImpl(
+  enableTwoFactor: json['enableTwoFactor'] as bool,
+  enableBiometric: json['enableBiometric'] as bool,
+  enableIpBlocking: json['enableIpBlocking'] as bool,
+  enableRateLimit: json['enableRateLimit'] as bool,
+  maxLoginAttempts: (json['maxLoginAttempts'] as num).toInt(),
+  sessionTimeout: (json['sessionTimeout'] as num).toInt(),
+);
+
+Map<String, dynamic> _$$SecurityConfigurationImplToJson(
+  _$SecurityConfigurationImpl instance,
+) => <String, dynamic>{
+  'enableTwoFactor': instance.enableTwoFactor,
+  'enableBiometric': instance.enableBiometric,
+  'enableIpBlocking': instance.enableIpBlocking,
+  'enableRateLimit': instance.enableRateLimit,
+  'maxLoginAttempts': instance.maxLoginAttempts,
+  'sessionTimeout': instance.sessionTimeout,
+};
+
+_$IpBlockRuleImpl _$$IpBlockRuleImplFromJson(Map<String, dynamic> json) =>
+    _$IpBlockRuleImpl(
+      id: json['id'] as String,
+      ipAddress: json['ipAddress'] as String,
+      cidr: json['cidr'] as String,
+      type: $enumDecode(_$IpRuleTypeEnumMap, json['type']),
+      reason: json['reason'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      expiresAt: json['expiresAt'] == null
+          ? null
+          : DateTime.parse(json['expiresAt'] as String),
+      isActive: json['isActive'] as bool,
+    );
+
+Map<String, dynamic> _$$IpBlockRuleImplToJson(_$IpBlockRuleImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'ipAddress': instance.ipAddress,
+      'cidr': instance.cidr,
+      'type': _$IpRuleTypeEnumMap[instance.type]!,
+      'reason': instance.reason,
+      'createdAt': instance.createdAt.toIso8601String(),
+      if (instance.expiresAt?.toIso8601String() case final value?)
+        'expiresAt': value,
+      'isActive': instance.isActive,
+    };
+
+const _$IpRuleTypeEnumMap = {
+  IpRuleType.block: 'block',
+  IpRuleType.allow: 'allow',
+  IpRuleType.monitor: 'monitor',
+};
+
+_$RateLimitRuleImpl _$$RateLimitRuleImplFromJson(Map<String, dynamic> json) =>
+    _$RateLimitRuleImpl(
+      id: json['id'] as String,
+      endpoint: json['endpoint'] as String,
+      maxRequests: (json['maxRequests'] as num).toInt(),
+      timeWindowSeconds: (json['timeWindowSeconds'] as num).toInt(),
+      action: json['action'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      isActive: json['isActive'] as bool,
+    );
+
+Map<String, dynamic> _$$RateLimitRuleImplToJson(_$RateLimitRuleImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'endpoint': instance.endpoint,
+      'maxRequests': instance.maxRequests,
+      'timeWindowSeconds': instance.timeWindowSeconds,
+      'action': instance.action,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'isActive': instance.isActive,
+    };
+
+_$SecurityEventImpl _$$SecurityEventImplFromJson(Map<String, dynamic> json) =>
+    _$SecurityEventImpl(
+      id: json['id'] as String,
+      type: json['type'] as String,
+      severity: $enumDecode(_$SecurityEventSeverityEnumMap, json['severity']),
+      description: json['description'] as String,
+      ipAddress: json['ipAddress'] as String,
+      userId: json['userId'] as String?,
+      metadata: json['metadata'] as Map<String, dynamic>,
+      timestamp: DateTime.parse(json['timestamp'] as String),
+      resolved: json['resolved'] as bool,
+    );
+
+Map<String, dynamic> _$$SecurityEventImplToJson(_$SecurityEventImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'type': instance.type,
+      'severity': _$SecurityEventSeverityEnumMap[instance.severity]!,
+      'description': instance.description,
+      'ipAddress': instance.ipAddress,
+      if (instance.userId case final value?) 'userId': value,
+      'metadata': instance.metadata,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'resolved': instance.resolved,
+    };
+
+const _$SecurityEventSeverityEnumMap = {
+  SecurityEventSeverity.low: 'low',
+  SecurityEventSeverity.medium: 'medium',
+  SecurityEventSeverity.high: 'high',
+  SecurityEventSeverity.critical: 'critical',
+};

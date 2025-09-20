@@ -12,7 +12,7 @@ export interface UseAuthFormOptions<T extends FieldValues> {
 export interface UseAuthFormReturn<T extends FieldValues> {
   form: UseFormReturn<T>;
   isSubmitting: boolean;
-  error: string;
+  error: string | null;
   setError: (error: string) => void;
   clearError: () => void;
   handleSubmit: (onSubmit: (data: T) => Promise<boolean>) => (data: T) => Promise<void>;
@@ -23,21 +23,21 @@ export function useAuthForm<T extends FieldValues>(
 ): UseAuthFormReturn<T> {
   const { defaultValues, onSuccess, onError } = options;
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<T>({
     defaultValues,
-    mode: 'onChange',
+    mode: 'onBlur',
   }) as UseFormReturn<T>;
 
   const clearError = useCallback(() => {
-    setError('');
+    setError(null);
   }, []);
 
   const handleSubmit = useCallback(
     (onSubmit: (data: T) => Promise<boolean>) =>
       async (data: T): Promise<void> => {
-        setError('');
+        setError(null);
         setIsSubmitting(true);
 
         try {
@@ -71,7 +71,7 @@ export function useAuthForm<T extends FieldValues>(
     form,
     isSubmitting,
     error,
-    setError,
+    setError: (err: string) => setError(err || null),
     clearError,
     handleSubmit,
   };

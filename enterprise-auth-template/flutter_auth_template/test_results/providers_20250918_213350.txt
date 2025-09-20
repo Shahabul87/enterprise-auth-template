@@ -1,0 +1,67 @@
+00:00 +0: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/providers/auth_provider_simple_test.dart
+00:00 +0: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/providers/auth_provider_simple_test.dart: AuthStateProvider Tests initial state should be authenticating during initialization
+00:00 +1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/providers/auth_provider_simple_test.dart: AuthStateProvider Tests should have correct state type checks
+00:00 +2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/providers/auth_provider_simple_test.dart: AuthStateProvider Tests should handle state pattern matching
+00:00 +3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/providers/auth_provider_simple_test.dart: AuthStateProvider Tests should handle maybeWhen pattern matching
+00:00 +4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/providers/auth_provider_simple_test.dart: AuthStateProvider Tests should extract user from authenticated state
+00:00 +5: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/providers/auth_provider_comprehensive_test.dart
+test/unit/providers/auth_provider_comprehensive_test.dart:136:27: Error: 'AuthError' isn't a type.
+        expect(state, isA<AuthError>());
+                          ^^^^^^^^^
+test/unit/providers/auth_provider_comprehensive_test.dart:137:22: Error: 'AuthError' isn't a type.
+        if (state is AuthError) {
+                     ^^^^^^^^^
+test/unit/providers/auth_provider_comprehensive_test.dart:213:27: Error: 'AuthError' isn't a type.
+        expect(state, isA<AuthError>());
+                          ^^^^^^^^^
+test/unit/providers/auth_provider_comprehensive_test.dart:214:22: Error: 'AuthError' isn't a type.
+        if (state is AuthError) {
+                     ^^^^^^^^^
+test/unit/providers/auth_provider_comprehensive_test.dart:297:27: Error: 'AuthError' isn't a type.
+        expect(state, isA<AuthError>());
+                          ^^^^^^^^^
+test/unit/providers/auth_provider_comprehensive_test.dart:365:55: Error: 'AuthError' isn't a type.
+        expect(container.read(authStateProvider), isA<AuthError>());
+                                                      ^^^^^^^^^
+test/unit/providers/auth_provider_comprehensive_test.dart:138:24: Error: The getter 'message' isn't defined for the type 'AuthState'.
+ - 'AuthState' is from 'package:flutter_auth_template/domain/entities/auth_state.dart' ('lib/domain/entities/auth_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+          expect(state.message, equals(errorMessage));
+                       ^^^^^^^
+test/unit/providers/auth_provider_comprehensive_test.dart:215:24: Error: The getter 'message' isn't defined for the type 'AuthState'.
+ - 'AuthState' is from 'package:flutter_auth_template/domain/entities/auth_state.dart' ('lib/domain/entities/auth_state.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+          expect(state.message, equals(errorMessage));
+                       ^^^^^^^
+00:00 +5 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/providers/auth_provider_comprehensive_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/providers/auth_provider_comprehensive_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/unit/providers/auth_provider_comprehensive_test.dart: test/unit/providers/auth_provider_comprehensive_test.dart:136:27: Error: 'AuthError' isn't a type.
+          expect(state, isA<AuthError>());
+                            ^^^^^^^^^
+  test/unit/providers/auth_provider_comprehensive_test.dart:137:22: Error: 'AuthError' isn't a type.
+          if (state is AuthError) {
+                       ^^^^^^^^^
+  test/unit/providers/auth_provider_comprehensive_test.dart:213:27: Error: 'AuthError' isn't a type.
+          expect(state, isA<AuthError>());
+                            ^^^^^^^^^
+  test/unit/providers/auth_provider_comprehensive_test.dart:214:22: Error: 'AuthError' isn't a type.
+          if (state is AuthError) {
+                       ^^^^^^^^^
+  test/unit/providers/auth_provider_comprehensive_test.dart:297:27: Error: 'AuthError' isn't a type.
+          expect(state, isA<AuthError>());
+                            ^^^^^^^^^
+  test/unit/providers/auth_provider_comprehensive_test.dart:365:55: Error: 'AuthError' isn't a type.
+          expect(container.read(authStateProvider), isA<AuthError>());
+                                                        ^^^^^^^^^
+  test/unit/providers/auth_provider_comprehensive_test.dart:138:24: Error: The getter 'message' isn't defined for the type 'AuthState'.
+   - 'AuthState' is from 'package:flutter_auth_template/domain/entities/auth_state.dart' ('lib/domain/entities/auth_state.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+            expect(state.message, equals(errorMessage));
+                         ^^^^^^^
+  test/unit/providers/auth_provider_comprehensive_test.dart:215:24: Error: The getter 'message' isn't defined for the type 'AuthState'.
+   - 'AuthState' is from 'package:flutter_auth_template/domain/entities/auth_state.dart' ('lib/domain/entities/auth_state.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+            expect(state.message, equals(errorMessage));
+                         ^^^^^^^
+  .
+00:00 +5 -1: Some tests failed.

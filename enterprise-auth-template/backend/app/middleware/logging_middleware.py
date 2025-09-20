@@ -109,11 +109,17 @@ class DataSanitizer:
                     sanitized[key] = "***"
             else:
                 # Truncate long header values
-                sanitized[key] = value[:MAX_HEADER_VALUE_SIZE] if len(value) > MAX_HEADER_VALUE_SIZE else value
+                sanitized[key] = (
+                    value[:MAX_HEADER_VALUE_SIZE]
+                    if len(value) > MAX_HEADER_VALUE_SIZE
+                    else value
+                )
         return sanitized
 
     @staticmethod
-    def sanitize_json_data(data: Union[Dict, List, str], max_depth: int = 10) -> Union[Dict, List, str]:
+    def sanitize_json_data(
+        data: Union[Dict, List, str], max_depth: int = 10
+    ) -> Union[Dict, List, str]:
         """Recursively sanitize sensitive fields in JSON data."""
         if max_depth <= 0:
             return "[DEPTH_LIMIT_REACHED]"
@@ -125,17 +131,23 @@ class DataSanitizer:
                 if any(sensitive in key_lower for sensitive in SENSITIVE_FIELDS):
                     sanitized[key] = "***SANITIZED***"
                 elif isinstance(value, (dict, list)):
-                    sanitized[key] = DataSanitizer.sanitize_json_data(value, max_depth - 1)
+                    sanitized[key] = DataSanitizer.sanitize_json_data(
+                        value, max_depth - 1
+                    )
                 else:
                     sanitized[key] = value
             return sanitized
         elif isinstance(data, list):
-            return [DataSanitizer.sanitize_json_data(item, max_depth - 1) for item in data]
+            return [
+                DataSanitizer.sanitize_json_data(item, max_depth - 1) for item in data
+            ]
         else:
             return data
 
     @staticmethod
-    def sanitize_query_params(query_params: Dict[str, List[str]]) -> Dict[str, List[str]]:
+    def sanitize_query_params(
+        query_params: Dict[str, List[str]],
+    ) -> Dict[str, List[str]]:
         """Sanitize sensitive query parameters."""
         sanitized = {}
         for key, values in query_params.items():
@@ -168,21 +180,29 @@ class PerformanceTracker:
 
     def get_metrics(self) -> Dict[str, Any]:
         """Get performance metrics."""
-        duration = self.end_time - self.start_time if self.end_time > self.start_time else 0
+        duration = (
+            self.end_time - self.start_time if self.end_time > self.start_time else 0
+        )
         return {
             "duration_ms": round(duration * 1000, 3),
             "start_time": self.start_time,
             "end_time": self.end_time,
             "request_size_bytes": self.request_size,
             "response_size_bytes": self.response_size,
-            "throughput_kb_per_sec": round((self.request_size + self.response_size) / 1024 / duration, 2) if duration > 0 else 0,
+            "throughput_kb_per_sec": (
+                round((self.request_size + self.response_size) / 1024 / duration, 2)
+                if duration > 0
+                else 0
+            ),
         }
 
 
 class RequestLogger:
     """Handles detailed request logging with security and compliance features."""
 
-    def __init__(self, enable_body_logging: bool = True, enable_performance_tracking: bool = True):
+    def __init__(
+        self, enable_body_logging: bool = True, enable_performance_tracking: bool = True
+    ):
         """Initialize request logger."""
         self.enable_body_logging = enable_body_logging
         self.enable_performance_tracking = enable_performance_tracking
@@ -192,7 +212,7 @@ class RequestLogger:
         self,
         request: Request,
         correlation_id: str,
-        performance_tracker: Optional[PerformanceTracker] = None
+        performance_tracker: Optional[PerformanceTracker] = None,
     ) -> Dict[str, Any]:
         """Log incoming request with comprehensive details."""
         try:
@@ -212,7 +232,9 @@ class RequestLogger:
             }
 
             # Sanitize sensitive data
-            request_data["headers"] = self.sanitizer.sanitize_headers(request_data["headers"])
+            request_data["headers"] = self.sanitizer.sanitize_headers(
+                request_data["headers"]
+            )
             request_data["query_params"] = self.sanitizer.sanitize_query_params(
                 {k: [v] for k, v in request_data["query_params"].items()}
             )
@@ -239,7 +261,9 @@ class RequestLogger:
             return request_data
 
         except Exception as e:
-            logger.error("Failed to log request", error=str(e), correlation_id=correlation_id)
+            logger.error(
+                "Failed to log request", error=str(e), correlation_id=correlation_id
+            )
             return {"correlation_id": correlation_id, "error": "Failed to log request"}
 
     async def log_response(
@@ -248,7 +272,7 @@ class RequestLogger:
         response: Response,
         correlation_id: str,
         performance_tracker: Optional[PerformanceTracker] = None,
-        exception: Optional[Exception] = None
+        exception: Optional[Exception] = None,
     ):
         """Log outgoing response with performance metrics."""
         try:
@@ -263,7 +287,9 @@ class RequestLogger:
             }
 
             # Sanitize response headers
-            response_data["headers"] = self.sanitizer.sanitize_headers(response_data["headers"])
+            response_data["headers"] = self.sanitizer.sanitize_headers(
+                response_data["headers"]
+            )
 
             # Add performance metrics
             if performance_tracker and self.enable_performance_tracking:
@@ -283,10 +309,14 @@ class RequestLogger:
             if hasattr(request.state, "user_id"):
                 response_data["user_id"] = request.state.user_id
             if hasattr(request.state, "session_id"):
-                response_data["session_id"] = request.state.session_id[:16]  # Partial for security
+                response_data["session_id"] = request.state.session_id[
+                    :16
+                ]  # Partial for security
 
             # Determine log level based on status code and endpoint
-            log_level = self._get_response_log_level(response.status_code, request.url.path)
+            log_level = self._get_response_log_level(
+                response.status_code, request.url.path
+            )
 
             # Log with appropriate level
             if log_level == LOG_LEVEL_ERROR:
@@ -299,7 +329,9 @@ class RequestLogger:
                 logger.info("Response completed", **response_data)
 
         except Exception as e:
-            logger.error("Failed to log response", error=str(e), correlation_id=correlation_id)
+            logger.error(
+                "Failed to log response", error=str(e), correlation_id=correlation_id
+            )
 
     def _get_client_ip(self, request: Request) -> str:
         """Extract client IP from request with proxy awareness."""
@@ -333,12 +365,17 @@ class RequestLogger:
 
         # Don't log body for file uploads
         content_type = request.headers.get("content-type", "")
-        if "multipart/form-data" in content_type or "application/octet-stream" in content_type:
+        if (
+            "multipart/form-data" in content_type
+            or "application/octet-stream" in content_type
+        ):
             return False
 
         return True
 
-    async def _extract_request_body(self, request: Request) -> Optional[Union[Dict, str]]:
+    async def _extract_request_body(
+        self, request: Request
+    ) -> Optional[Union[Dict, str]]:
         """Extract and sanitize request body."""
         try:
             content_type = request.headers.get("content-type", "")
@@ -374,7 +411,9 @@ class RequestLogger:
         """Get appropriate log level for request based on path."""
         if path in HIGH_FREQUENCY_ENDPOINTS:
             return LOG_LEVEL_DEBUG
-        elif any(path.startswith(sensitive) for sensitive in SECURITY_SENSITIVE_ENDPOINTS):
+        elif any(
+            path.startswith(sensitive) for sensitive in SECURITY_SENSITIVE_ENDPOINTS
+        ):
             return LOG_LEVEL_WARNING
         else:
             return LOG_LEVEL_INFO
@@ -430,7 +469,9 @@ class LoggingMiddleware(BaseHTTPMiddleware):
             SENSITIVE_FIELDS = SENSITIVE_FIELDS.union(custom_sensitive_fields)
 
         # Initialize components
-        self.request_logger = RequestLogger(enable_body_logging, enable_performance_tracking)
+        self.request_logger = RequestLogger(
+            enable_body_logging, enable_performance_tracking
+        )
         self.log_high_frequency = log_high_frequency_endpoints
         self.enable_performance_tracking = enable_performance_tracking
 
@@ -438,7 +479,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
             "Logging middleware initialized",
             body_logging=enable_body_logging,
             performance_tracking=enable_performance_tracking,
-            high_frequency_logging=log_high_frequency_endpoints
+            high_frequency_logging=log_high_frequency_endpoints,
         )
 
     async def dispatch(self, request: Request, call_next):
@@ -448,10 +489,14 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         request.state.correlation_id = correlation_id
 
         # Initialize performance tracking
-        performance_tracker = PerformanceTracker() if self.enable_performance_tracking else None
+        performance_tracker = (
+            PerformanceTracker() if self.enable_performance_tracking else None
+        )
 
         # Skip logging for high-frequency endpoints if disabled
-        should_log = self.log_high_frequency or request.url.path not in HIGH_FREQUENCY_ENDPOINTS
+        should_log = (
+            self.log_high_frequency or request.url.path not in HIGH_FREQUENCY_ENDPOINTS
+        )
 
         response = None
         exception = None
@@ -459,7 +504,9 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         try:
             # Log incoming request
             if should_log:
-                await self.request_logger.log_request(request, correlation_id, performance_tracker)
+                await self.request_logger.log_request(
+                    request, correlation_id, performance_tracker
+                )
 
             # Process request
             response = await call_next(request)
@@ -483,6 +530,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
 
             # Create error response
             from fastapi.responses import JSONResponse
+
             response = JSONResponse(
                 status_code=500,
                 content={
@@ -500,7 +548,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
                 headers={
                     "X-Correlation-ID": correlation_id,
                     "X-Request-ID": correlation_id,
-                }
+                },
             )
 
             return response
@@ -517,7 +565,7 @@ def create_logging_middleware(
     app,
     enable_body_logging: Optional[bool] = None,
     enable_performance_tracking: Optional[bool] = None,
-    **kwargs
+    **kwargs,
 ) -> LoggingMiddleware:
     """
     Factory function to create logging middleware.
@@ -533,7 +581,10 @@ def create_logging_middleware(
     """
     # Use settings defaults if not specified
     if enable_body_logging is None:
-        enable_body_logging = settings.DEBUG or settings.ENVIRONMENT.lower() in ["development", "dev"]
+        enable_body_logging = settings.DEBUG or settings.ENVIRONMENT.lower() in [
+            "development",
+            "dev",
+        ]
 
     if enable_performance_tracking is None:
         enable_performance_tracking = True
@@ -542,5 +593,5 @@ def create_logging_middleware(
         app,
         enable_body_logging=enable_body_logging,
         enable_performance_tracking=enable_performance_tracking,
-        **kwargs
+        **kwargs,
     )

@@ -104,7 +104,7 @@ class Settings(BaseSettings):
                 generate_secure_jwt_secret,
                 validate_jwt_secret,
                 KeyValidationError,
-                KeyGenerationError
+                KeyGenerationError,
             )
         except ImportError:
             # Fallback to basic validation if key management not available
@@ -128,9 +128,9 @@ class Settings(BaseSettings):
                 logger.warning(
                     "Generating secure JWT secret key",
                     reason="missing_or_insecure_key",
-                    environment=environment
+                    environment=environment,
                 )
-                return str(generate_secure_jwt_secret(environment=environment))
+                return str(generate_secure_jwt_secret())
             except KeyGenerationError as e:
                 raise ValueError(f"Failed to generate secure key: {e}")
 
@@ -141,24 +141,17 @@ class Settings(BaseSettings):
 
         # Validate existing key using enterprise standards
         try:
-            validation_result = validate_jwt_secret(v, environment)
+            is_valid = validate_jwt_secret(v, 32)  # min_length = 32
 
-            if not validation_result["valid"]:
-                issues = "; ".join(validation_result["issues"])
-                recommendations = "; ".join(validation_result["recommendations"])
+            if not is_valid:
 
                 # In production, auto-generate if key is invalid
                 if environment.lower() in {"production", "prod", "live"}:
-                    logger.error(
-                        "Invalid JWT secret in production, generating new key",
-                        issues=issues,
-                        recommendations=recommendations
-                    )
-                    return str(generate_secure_jwt_secret(environment=environment))
+                    logger.error("Invalid JWT secret in production, generating new key")
+                    return str(generate_secure_jwt_secret())
 
                 raise ValueError(
-                    f"SECRET_KEY validation failed: {issues}. "
-                    f"Recommendations: {recommendations}"
+                    "SECRET_KEY validation failed: Key does not meet security requirements"
                 )
 
             # Log successful validation
@@ -166,22 +159,27 @@ class Settings(BaseSettings):
                 "JWT secret key validated",
                 length=validation_result["length"],
                 entropy_score=validation_result["entropy_score"],
-                environment=environment
+                environment=environment,
             )
 
             return v
 
         except KeyValidationError as e:
             if environment.lower() in {"production", "prod", "live"}:
-                logger.error("Key validation failed in production, generating new key", error=str(e))
-                return str(generate_secure_jwt_secret(environment=environment))
+                logger.error(
+                    "Key validation failed in production, generating new key",
+                    error=str(e),
+                )
+                return str(generate_secure_jwt_secret())
             raise ValueError(f"SECRET_KEY validation failed: {e}")
 
     @classmethod
     def _fallback_key_validation(cls, v: str, environment: str) -> str:
         """Fallback key validation when enterprise key management is not available."""
         if not v:
-            v = secrets.token_urlsafe(64 if environment.lower() in {"production", "prod"} else 32)
+            v = secrets.token_urlsafe(
+                64 if environment.lower() in {"production", "prod"} else 32
+            )
 
         # Basic length validation
         min_length = 64 if environment.lower() in {"production", "prod"} else 32
@@ -483,6 +481,7 @@ class Settings(BaseSettings):
     def get_current_timestamp(self) -> str:
         """Get current timestamp in ISO format."""
         from datetime import datetime
+
         return datetime.utcnow().isoformat() + "Z"
 
     class Config:

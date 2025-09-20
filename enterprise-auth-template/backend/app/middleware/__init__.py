@@ -99,27 +99,23 @@ __all__ = [
     "JWTTokenManager",
     "DeviceFingerprinter",
     "create_auth_middleware",
-
     # Logging
     "LoggingMiddleware",
     "DataSanitizer",
     "PerformanceTracker",
     "RequestLogger",
     "create_logging_middleware",
-
     # CORS
     "CORSMiddleware",
     "CORSConfig",
     "OriginValidator",
     "create_cors_middleware",
-
     # Security Headers
     "SecurityHeadersMiddleware",
     "SecurityHeadersConfig",
     "CSPBuilder",
     "PermissionsPolicyBuilder",
     "create_security_headers_middleware",
-
     # Request ID
     "RequestIDMiddleware",
     "RequestIDGenerator",
@@ -131,7 +127,6 @@ __all__ = [
     "get_current_request_context",
     "request_context_manager",
     "create_request_id_middleware",
-
     # Existing middleware
     "RateLimitMiddleware",
     "RateLimiter",
@@ -153,7 +148,7 @@ def create_enterprise_middleware_stack(
     enable_rate_limiting: bool = True,
     enable_csrf: bool = False,  # Usually for web apps, not APIs
     enable_performance: bool = True,
-    **kwargs
+    **kwargs,
 ) -> list:
     """
     Create a complete enterprise middleware stack with all components.
@@ -222,11 +217,9 @@ def create_enterprise_middleware_stack(
 
     # 5. CORS middleware (before auth, handles preflight)
     if enable_cors:
-        middleware_stack.append(create_cors_middleware(
-            app,
-            allowed_origins=cors_origins,
-            **kwargs
-        ))
+        middleware_stack.append(
+            create_cors_middleware(app, allowed_origins=cors_origins, **kwargs)
+        )
 
     # 6. Rate limiting middleware (before auth to prevent abuse)
     if enable_rate_limiting:
@@ -235,19 +228,17 @@ def create_enterprise_middleware_stack(
     # 7. CSRF protection (if enabled, before auth)
     if enable_csrf:
         from app.core.config import get_settings
+
         settings = get_settings()
-        middleware_stack.append(CSRFProtectionMiddleware(
-            app,
-            secret_key=settings.SECRET_KEY
-        ))
+        middleware_stack.append(
+            CSRFProtectionMiddleware(app, secret_key=settings.SECRET_KEY)
+        )
 
     # 8. Authentication middleware (after rate limiting and CSRF)
     if enable_auth:
-        middleware_stack.append(create_auth_middleware(
-            app,
-            redis_url=redis_url,
-            **kwargs
-        ))
+        middleware_stack.append(
+            create_auth_middleware(app, redis_url=redis_url, **kwargs)
+        )
 
     return middleware_stack
 
@@ -259,9 +250,9 @@ def create_api_middleware_stack(app, redis_url: Optional[str] = None, **kwargs) 
         app,
         redis_url=redis_url,
         enable_csrf=False,  # APIs typically don't need CSRF
-        enable_cors=True,   # APIs often need CORS
-        enable_auth=True,   # APIs need authentication
-        **kwargs
+        enable_cors=True,  # APIs often need CORS
+        enable_auth=True,  # APIs need authentication
+        **kwargs,
     )
 
 
@@ -270,10 +261,10 @@ def create_web_middleware_stack(app, redis_url: Optional[str] = None, **kwargs) 
     return create_enterprise_middleware_stack(
         app,
         redis_url=redis_url,
-        enable_csrf=True,   # Web apps need CSRF protection
-        enable_cors=True,   # May need CORS for SPA
-        enable_auth=True,   # Web apps need authentication
-        **kwargs
+        enable_csrf=True,  # Web apps need CSRF protection
+        enable_cors=True,  # May need CORS for SPA
+        enable_auth=True,  # Web apps need authentication
+        **kwargs,
     )
 
 
@@ -285,5 +276,5 @@ def create_minimal_middleware_stack(app, **kwargs) -> list:
         enable_rate_limiting=False,
         enable_csrf=False,
         enable_performance=False,
-        **kwargs
+        **kwargs,
     )

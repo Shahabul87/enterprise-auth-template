@@ -36,7 +36,7 @@ class PermissionService:
         description: Optional[str] = None,
         scope: Optional[str] = None,
         is_system: bool = False,
-        current_user: Optional[Any] = None
+        current_user: Optional[Any] = None,
     ) -> Permission:
         """
         Create a new permission.
@@ -69,7 +69,7 @@ class PermissionService:
                 action=action,
                 scope=scope,
                 is_system=is_system,
-                is_active=True
+                is_active=True,
             )
 
             self.db.add(permission)
@@ -83,7 +83,7 @@ class PermissionService:
                     action="permission.create",
                     resource_type="permission",
                     resource_id=str(permission.id),
-                    details={"permission_name": name}
+                    details={"permission_name": name},
                 )
 
             logger.info(f"Created permission: {name}")
@@ -111,9 +111,7 @@ class PermissionService:
         return result.scalar_one_or_none()
 
     async def get_permissions_by_resource(
-        self,
-        resource: str,
-        include_inactive: bool = False
+        self, resource: str, include_inactive: bool = False
     ) -> List[Permission]:
         """Get all permissions for a specific resource."""
         query = select(Permission).where(Permission.resource == resource)
@@ -127,9 +125,7 @@ class PermissionService:
         return result.scalars().all()
 
     async def get_permissions_by_action(
-        self,
-        action: str,
-        include_inactive: bool = False
+        self, action: str, include_inactive: bool = False
     ) -> List[Permission]:
         """Get all permissions for a specific action."""
         query = select(Permission).where(Permission.action == action)
@@ -148,7 +144,7 @@ class PermissionService:
         limit: int = 100,
         include_inactive: bool = False,
         resource_filter: Optional[str] = None,
-        action_filter: Optional[str] = None
+        action_filter: Optional[str] = None,
     ) -> List[Permission]:
         """
         Get all permissions with pagination and filters.
@@ -186,7 +182,7 @@ class PermissionService:
         description: Optional[str] = None,
         scope: Optional[str] = None,
         is_active: Optional[bool] = None,
-        current_user: Optional[Any] = None
+        current_user: Optional[Any] = None,
     ) -> Permission:
         """
         Update permission information.
@@ -231,20 +227,20 @@ class PermissionService:
                 action="permission.update",
                 resource_type="permission",
                 resource_id=str(permission_id),
-                details={"changes": {
-                    "display_name": display_name,
-                    "description": description,
-                    "scope": scope,
-                    "is_active": is_active
-                }}
+                details={
+                    "changes": {
+                        "display_name": display_name,
+                        "description": description,
+                        "scope": scope,
+                        "is_active": is_active,
+                    }
+                },
             )
 
         return permission
 
     async def delete_permission(
-        self,
-        permission_id: UUID,
-        current_user: Optional[Any] = None
+        self, permission_id: UUID, current_user: Optional[Any] = None
     ) -> bool:
         """
         Delete a permission.
@@ -264,13 +260,17 @@ class PermissionService:
             raise ValueError("Cannot delete system permissions")
 
         # Check if permission is assigned to any roles
-        query = select(Role).join(Role.permissions).where(Permission.id == permission_id)
+        query = (
+            select(Role).join(Role.permissions).where(Permission.id == permission_id)
+        )
         result = await self.db.execute(query)
         roles = result.scalars().all()
 
         if roles:
             role_names = [r.name for r in roles]
-            raise ValueError(f"Cannot delete permission assigned to roles: {', '.join(role_names)}")
+            raise ValueError(
+                f"Cannot delete permission assigned to roles: {', '.join(role_names)}"
+            )
 
         await self.db.delete(permission)
         await self.db.commit()
@@ -282,16 +282,13 @@ class PermissionService:
                 action="permission.delete",
                 resource_type="permission",
                 resource_id=str(permission_id),
-                details={"permission_name": permission.name}
+                details={"permission_name": permission.name},
             )
 
         logger.info(f"Deleted permission: {permission.name}")
         return True
 
-    async def get_roles_with_permission(
-        self,
-        permission_id: UUID
-    ) -> List[Role]:
+    async def get_roles_with_permission(self, permission_id: UUID) -> List[Role]:
         """Get all roles that have a specific permission."""
         query = (
             select(Role)
@@ -317,16 +314,18 @@ class PermissionService:
             if perm.resource not in grouped:
                 grouped[perm.resource] = []
 
-            grouped[perm.resource].append({
-                "id": str(perm.id),
-                "name": perm.name,
-                "display_name": perm.display_name,
-                "action": perm.action,
-                "scope": perm.scope,
-                "description": perm.description,
-                "is_system": perm.is_system,
-                "is_active": perm.is_active
-            })
+            grouped[perm.resource].append(
+                {
+                    "id": str(perm.id),
+                    "name": perm.name,
+                    "display_name": perm.display_name,
+                    "action": perm.action,
+                    "scope": perm.scope,
+                    "description": perm.description,
+                    "is_system": perm.is_system,
+                    "is_active": perm.is_active,
+                }
+            )
 
         return grouped
 
@@ -345,7 +344,7 @@ class PermissionService:
                         resource=perm_data["resource"],
                         action=perm_data["action"],
                         description=f"System permission: {perm_data['display_name']}",
-                        is_system=True
+                        is_system=True,
                     )
                     logger.info(f"Created system permission: {perm_data['name']}")
 
@@ -363,19 +362,24 @@ class PermissionService:
         issues = []
 
         # Check for duplicate names
-        query = select(
-            Permission.name,
-            func.count(Permission.id).label('count')
-        ).group_by(Permission.name).having(func.count(Permission.id) > 1)
+        query = (
+            select(Permission.name, func.count(Permission.id).label("count"))
+            .group_by(Permission.name)
+            .having(func.count(Permission.id) > 1)
+        )
 
         result = await self.db.execute(query)
         duplicates = result.all()
 
         if duplicates:
-            issues.append({
-                "type": "duplicate_names",
-                "permissions": [{"name": d.name, "count": d.count} for d in duplicates]
-            })
+            issues.append(
+                {
+                    "type": "duplicate_names",
+                    "permissions": [
+                        {"name": d.name, "count": d.count} for d in duplicates
+                    ],
+                }
+            )
 
         # Check for orphaned permissions (not assigned to any role)
         all_perms = await self.get_all_permissions(limit=1000, include_inactive=True)
@@ -387,13 +391,10 @@ class PermissionService:
                 orphaned.append(perm.name)
 
         if orphaned:
-            issues.append({
-                "type": "orphaned_permissions",
-                "permissions": orphaned
-            })
+            issues.append({"type": "orphaned_permissions", "permissions": orphaned})
 
         return {
             "has_issues": len(issues) > 0,
             "issues": issues,
-            "checked_at": datetime.utcnow().isoformat()
+            "checked_at": datetime.utcnow().isoformat(),
         }

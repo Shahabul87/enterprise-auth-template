@@ -7,7 +7,7 @@ import { useAuthStore } from '@/stores/auth.store';
 import { Button } from '@/components/ui/button';
 import { Shield, LogOut, User, Home } from 'lucide-react';
 
-export function AuthHeader(): JSX.Element {
+export function AuthHeader(): React.ReactElement {
   const router = useRouter();
   const { isAuthenticated, user, logout } = useAuthStore();
 

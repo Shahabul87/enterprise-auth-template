@@ -140,14 +140,14 @@ class EmailVerificationMiddleware:
                                 "details": {
                                     "verification_required": True,
                                     "user_email": user.email,
-                                    "resend_endpoint": "/api/v1/auth/verify-email/resend"
-                                }
+                                    "resend_endpoint": "/api/v1/auth/verify-email/resend",
+                                },
                             },
                             "metadata": {
                                 "timestamp": settings.get_current_timestamp(),
                                 "request_id": self._get_request_id(request),
-                            }
-                        }
+                            },
+                        },
                     )
 
                 # Log successful verification check

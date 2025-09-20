@@ -9,7 +9,7 @@ import { AlertCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/stores/auth.store';
 import AuthAPI from '@/lib/auth-api';
 
-function OAuthCallbackContent(): JSX.Element {
+function OAuthCallbackContent(): React.ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
   useAuth(); // Initialize auth context
@@ -143,7 +143,7 @@ function OAuthCallbackContent(): JSX.Element {
   );
 }
 
-export default function OAuthCallbackPage(): JSX.Element {
+export default function OAuthCallbackPage(): React.ReactElement {
   return (
     <Suspense
       fallback={

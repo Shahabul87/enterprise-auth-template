@@ -1,4 +1,4 @@
-import '../../config/environment.dart';
+import 'package:flutter_auth_template/core/config/environment.dart';
 
 class ApiConstants {
   // Base URLs - Now dynamic based on environment
@@ -33,6 +33,8 @@ class ApiConstants {
   static const String profileChangePasswordPath =
       '$profileBasePath/change-password';
   static const String profileChangeEmailPath = '$profileBasePath/change-email';
+  static const String profileEmailPath = '$profileBasePath/email';
+  static const String profileVerifyEmailPath = '$profileBasePath/verify-email';
   static const String profileSecurityPath = '$profileBasePath/security';
   static const String profileNotificationsPath =
       '$profileBasePath/notifications';
@@ -43,6 +45,13 @@ class ApiConstants {
       '$profileBasePath/account-settings';
   static const String profileStatisticsPath = '$profileBasePath/statistics';
   static const String profileExportPath = '$profileBasePath/export';
+  static const String profileActivitiesPath = '$profileBasePath/activities';
+  static const String profileSessionsPath = '$profileBasePath/sessions';
+  static const String profileRevokeAllSessionsPath = '$profileBasePath/sessions/revoke-all';
+  static const String profileConnectedAccountsPath = '$profileBasePath/connected-accounts';
+  static const String profilePreferencesPath = '$profileBasePath/preferences';
+  static const String profileExportDataPath = '$profileBasePath/export-data';
+  static const String profileExportStatusPath = '$profileBasePath/export-status';
 
   // OAuth endpoints
   static const String oauthBasePath = '/oauth';
@@ -109,6 +118,9 @@ class ApiConstants {
 
   // API Keys endpoints
   static const String apiKeysPath = '$adminBasePath/api-keys';
+
+  // Webhooks endpoints
+  static const String webhooksPath = '$adminBasePath/webhooks';
 
   // Health endpoint
   static const String healthPath = '/health';

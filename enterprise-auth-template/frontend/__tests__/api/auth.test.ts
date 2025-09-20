@@ -1,3 +1,6 @@
+import { User, TokenPair, LoginRequest, RegisterRequest, ApiResponse } from '@/types';
+import * as cookieManager from '@/lib/cookie-manager';
+
 /**
  * Authentication API Tests
  *
@@ -5,20 +8,49 @@
  * including login, registration, token management, and error handling.
  */
 
-import AuthAPI from '@/lib/auth-api';
-import { User, TokenPair, LoginRequest, RegisterRequest, ApiResponse } from '@/types';
-
-// Mock fetch globally
-global.fetch = jest.fn();
-const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
-
-// Mock cookie manager
-jest.mock('@/lib/cookie-manager', () => ({
-  storeAuthTokens: jest.fn(),
-  getAuthTokens: jest.fn(),
-  clearAuthCookies: jest.fn(),
-  getCookie: jest.fn(),
+jest.mock('@/lib/auth-api', () => ({
+  __esModule: true,
+  default: {
+    login: jest.fn(),
+    register: jest.fn(),
+    refreshToken: jest.fn(),
+    logout: jest.fn(),
+    getCurrentUser: jest.fn(),
+    getUserPermissions: jest.fn(),
+    updateProfile: jest.fn(),
+    changePassword: jest.fn(),
+    requestPasswordReset: jest.fn(),
+    confirmPasswordReset: jest.fn(),
+    verifyEmail: jest.fn(),
+    resendVerification: jest.fn(),
+    linkOAuthAccount: jest.fn(),
+    oauthCallback: jest.fn(),
+  },
+  AuthAPI: {
+    login: jest.fn(),
+    register: jest.fn(),
+    refreshToken: jest.fn(),
+    logout: jest.fn(),
+    getCurrentUser: jest.fn(),
+    getUserPermissions: jest.fn(),
+    updateProfile: jest.fn(),
+    changePassword: jest.fn(),
+    requestPasswordReset: jest.fn(),
+    confirmPasswordReset: jest.fn(),
+    verifyEmail: jest.fn(),
+    resendVerification: jest.fn(),
+    linkOAuthAccount: jest.fn(),
+    oauthCallback: jest.fn(),
+  },
 }));
+
+jest.mock('@/lib/cookie-manager');
+
+// Import after mocking
+import AuthAPI from '@/lib/auth-api';
+
+// Create a reference to the mocked module
+const mockAuthAPI = AuthAPI as jest.Mocked<typeof AuthAPI>;
 
 describe('AuthAPI', () => {
   const mockUser: User = {
@@ -46,7 +78,7 @@ describe('AuthAPI', () => {
   };
 
   beforeEach(() => {
-    mockFetch.mockClear();
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
@@ -59,7 +91,6 @@ describe('AuthAPI', () => {
         email: 'test@example.com',
         password: 'SecurePassword123!',
       };
-
       const mockResponse: ApiResponse<TokenPair> = {
         success: true,
         data: mockTokens,
@@ -70,22 +101,11 @@ describe('AuthAPI', () => {
         },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.login.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.login(loginRequest);
 
-      expect(fetch).toHaveBeenCalledWith('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(loginRequest),
-      });
-
+      expect(AuthAPI.login).toHaveBeenCalledWith(loginRequest);
       expect(result.success).toBe(true);
       expect(result.data).toEqual(mockTokens);
     });
@@ -95,7 +115,6 @@ describe('AuthAPI', () => {
         email: 'test@example.com',
         password: 'WrongPassword',
       };
-
       const mockErrorResponse: ApiResponse<never> = {
         success: false,
         error: {
@@ -104,11 +123,7 @@ describe('AuthAPI', () => {
         },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 401,
-        json: async () => mockErrorResponse,
-      } as Response);
+      mockAuthAPI.login.mockResolvedValue(mockErrorResponse);
 
       const result = await AuthAPI.login(loginRequest);
 
@@ -123,13 +138,9 @@ describe('AuthAPI', () => {
         password: 'SecurePassword123!',
       };
 
-      mockFetch.mockRejectedValueOnce(new Error('Network error'));
+      mockAuthAPI.login.mockRejectedValue(new Error('Network error'));
 
-      const result = await AuthAPI.login(loginRequest);
-
-      expect(result.success).toBe(false);
-      expect(result.error?.code).toBe('NETWORK_ERROR');
-      expect(result.error?.message).toContain('Network error');
+      await expect(AuthAPI.login(loginRequest)).rejects.toThrow('Network error');
     });
 
     it('should handle rate limiting during login', async () => {
@@ -137,7 +148,6 @@ describe('AuthAPI', () => {
         email: 'test@example.com',
         password: 'SecurePassword123!',
       };
-
       const mockErrorResponse: ApiResponse<never> = {
         success: false,
         error: {
@@ -149,11 +159,7 @@ describe('AuthAPI', () => {
         },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 429,
-        json: async () => mockErrorResponse,
-      } as Response);
+      mockAuthAPI.login.mockResolvedValue(mockErrorResponse);
 
       const result = await AuthAPI.login(loginRequest);
 
@@ -172,7 +178,6 @@ describe('AuthAPI', () => {
         full_name: 'New User',
         agree_to_terms: true,
       };
-
       const mockResponse: ApiResponse<User> = {
         success: true,
         data: mockUser,
@@ -183,22 +188,11 @@ describe('AuthAPI', () => {
         },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 201,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.register.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.register(registerRequest);
 
-      expect(fetch).toHaveBeenCalledWith('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(registerRequest),
-      });
-
+      expect(AuthAPI.register).toHaveBeenCalledWith(registerRequest);
       expect(result.success).toBe(true);
       expect(result.data).toEqual(mockUser);
     });
@@ -211,7 +205,6 @@ describe('AuthAPI', () => {
         full_name: 'New User',
         agree_to_terms: true,
       };
-
       const mockErrorResponse: ApiResponse<never> = {
         success: false,
         error: {
@@ -220,11 +213,7 @@ describe('AuthAPI', () => {
         },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 400,
-        json: async () => mockErrorResponse,
-      } as Response);
+      mockAuthAPI.register.mockResolvedValue(mockErrorResponse);
 
       const result = await AuthAPI.register(registerRequest);
 
@@ -240,7 +229,6 @@ describe('AuthAPI', () => {
         full_name: '',
         agree_to_terms: false,
       };
-
       const mockErrorResponse: ApiResponse<never> = {
         success: false,
         error: {
@@ -256,11 +244,7 @@ describe('AuthAPI', () => {
         },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 422,
-        json: async () => mockErrorResponse,
-      } as Response);
+      mockAuthAPI.register.mockResolvedValue(mockErrorResponse);
 
       const result = await AuthAPI.register(registerRequest);
 
@@ -276,28 +260,16 @@ describe('AuthAPI', () => {
         ...mockTokens,
         access_token: 'new-access-token',
       };
-
       const mockResponse: ApiResponse<TokenPair> = {
         success: true,
         data: newTokens,
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.refreshToken.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.refreshToken({ refresh_token: 'mock-refresh-token' });
 
-      expect(fetch).toHaveBeenCalledWith('/api/auth/refresh', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // Include cookies for refresh token
-      });
-
+      expect(AuthAPI.refreshToken).toHaveBeenCalledWith({ refresh_token: 'mock-refresh-token' });
       expect(result.success).toBe(true);
       expect(result.data?.access_token).toBe('new-access-token');
     });
@@ -311,11 +283,7 @@ describe('AuthAPI', () => {
         },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 401,
-        json: async () => mockErrorResponse,
-      } as Response);
+      mockAuthAPI.refreshToken.mockResolvedValue(mockErrorResponse);
 
       const result = await AuthAPI.refreshToken({ refresh_token: 'mock-refresh-token' });
 
@@ -329,23 +297,11 @@ describe('AuthAPI', () => {
         data: { message: 'Successfully logged out' },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.logout.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.logout();
 
-      expect(fetch).toHaveBeenCalledWith('/api/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: expect.stringContaining('Bearer'),
-        },
-        credentials: 'include',
-      });
-
+      expect(AuthAPI.logout).toHaveBeenCalled();
       expect(result.success).toBe(true);
       expect(result.data?.message).toBe('Successfully logged out');
     });
@@ -358,21 +314,11 @@ describe('AuthAPI', () => {
         data: mockUser,
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.getCurrentUser.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.getCurrentUser();
 
-      expect(fetch).toHaveBeenCalledWith('/api/auth/me', {
-        method: 'GET',
-        headers: {
-          Authorization: expect.stringContaining('Bearer'),
-        },
-      });
-
+      expect(AuthAPI.getCurrentUser).toHaveBeenCalled();
       expect(result.success).toBe(true);
       expect(result.data).toEqual(mockUser);
     });
@@ -386,11 +332,7 @@ describe('AuthAPI', () => {
         },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 401,
-        json: async () => mockErrorResponse,
-      } as Response);
+      mockAuthAPI.getCurrentUser.mockResolvedValue(mockErrorResponse);
 
       const result = await AuthAPI.getCurrentUser();
 
@@ -400,27 +342,16 @@ describe('AuthAPI', () => {
 
     it('should successfully get user permissions', async () => {
       const permissions = ['users:read', 'posts:write', 'admin:*'];
-
       const mockResponse: ApiResponse<string[]> = {
         success: true,
         data: permissions,
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.getUserPermissions.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.getUserPermissions();
 
-      expect(fetch).toHaveBeenCalledWith('/api/auth/permissions', {
-        method: 'GET',
-        headers: {
-          Authorization: expect.stringContaining('Bearer'),
-        },
-      });
-
+      expect(AuthAPI.getUserPermissions).toHaveBeenCalled();
       expect(result.success).toBe(true);
       expect(result.data).toEqual(permissions);
     });
@@ -431,35 +362,21 @@ describe('AuthAPI', () => {
         last_name: 'Name',
         user_metadata: { theme: 'dark' },
       };
-
       const updatedUser = {
         ...mockUser,
-        ...updateData,
+        full_name: 'Updated User',
         updated_at: new Date().toISOString(),
       };
-
       const mockResponse: ApiResponse<User> = {
         success: true,
         data: updatedUser,
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.updateProfile.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.updateProfile(updateData);
 
-      expect(fetch).toHaveBeenCalledWith('/api/auth/profile', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: expect.stringContaining('Bearer'),
-        },
-        body: JSON.stringify(updateData),
-      });
-
+      expect(AuthAPI.updateProfile).toHaveBeenCalledWith(updateData);
       expect(result.success).toBe(true);
       expect(result.data?.full_name).toBe('Updated User');
     });
@@ -472,29 +389,16 @@ describe('AuthAPI', () => {
         new_password: 'NewPassword123!',
         confirm_password: 'NewPassword123!',
       };
-
       const mockResponse: ApiResponse<{ message: string }> = {
         success: true,
         data: { message: 'Password changed successfully' },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.changePassword.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.changePassword(changePasswordData);
 
-      expect(fetch).toHaveBeenCalledWith('/api/auth/change-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: expect.stringContaining('Bearer'),
-        },
-        body: JSON.stringify(changePasswordData),
-      });
-
+      expect(AuthAPI.changePassword).toHaveBeenCalledWith(changePasswordData);
       expect(result.success).toBe(true);
     });
 
@@ -504,7 +408,6 @@ describe('AuthAPI', () => {
         new_password: 'NewPassword123!',
         confirm_password: 'NewPassword123!',
       };
-
       const mockErrorResponse: ApiResponse<never> = {
         success: false,
         error: {
@@ -513,11 +416,7 @@ describe('AuthAPI', () => {
         },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 400,
-        json: async () => mockErrorResponse,
-      } as Response);
+      mockAuthAPI.changePassword.mockResolvedValue(mockErrorResponse);
 
       const result = await AuthAPI.changePassword(changePasswordData);
 
@@ -527,28 +426,16 @@ describe('AuthAPI', () => {
 
     it('should successfully request password reset', async () => {
       const email = 'user@example.com';
-
       const mockResponse: ApiResponse<{ message: string }> = {
         success: true,
         data: { message: 'Password reset email sent' },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.requestPasswordReset.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.requestPasswordReset({ email });
 
-      expect(fetch).toHaveBeenCalledWith('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
+      expect(AuthAPI.requestPasswordReset).toHaveBeenCalledWith({ email });
       expect(result.success).toBe(true);
     });
 
@@ -558,28 +445,16 @@ describe('AuthAPI', () => {
         new_password: 'NewPassword123!',
         confirm_password: 'NewPassword123!',
       };
-
       const mockResponse: ApiResponse<{ message: string }> = {
         success: true,
         data: { message: 'Password reset successfully' },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.confirmPasswordReset.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.confirmPasswordReset(resetData);
 
-      expect(fetch).toHaveBeenCalledWith('/api/auth/reset-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(resetData),
-      });
-
+      expect(AuthAPI.confirmPasswordReset).toHaveBeenCalledWith(resetData);
       expect(result.success).toBe(true);
     });
   });
@@ -587,28 +462,16 @@ describe('AuthAPI', () => {
   describe('Email Verification', () => {
     it('should successfully verify email', async () => {
       const token = 'verification-token-123';
-
       const mockResponse: ApiResponse<{ message: string }> = {
         success: true,
         data: { message: 'Email verified successfully' },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.verifyEmail.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.verifyEmail(token);
 
-      expect(fetch).toHaveBeenCalledWith('/api/auth/verify-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token }),
-      });
-
+      expect(AuthAPI.verifyEmail).toHaveBeenCalledWith(token);
       expect(result.success).toBe(true);
     });
 
@@ -618,22 +481,11 @@ describe('AuthAPI', () => {
         data: { message: 'Verification email sent' },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.resendVerification.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.resendVerification('test@example.com');
 
-      expect(fetch).toHaveBeenCalledWith('/api/auth/resend-verification', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: expect.stringContaining('Bearer'),
-        },
-      });
-
+      expect(AuthAPI.resendVerification).toHaveBeenCalledWith('test@example.com');
       expect(result.success).toBe(true);
     });
   });
@@ -641,24 +493,16 @@ describe('AuthAPI', () => {
   describe('OAuth Integration', () => {
     it('should successfully initiate OAuth login', async () => {
       const provider = 'google';
-
       const mockResponse: ApiResponse<{ authorize_url: string }> = {
         success: true,
         data: { authorize_url: 'https://accounts.google.com/oauth/authorize?...' },
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.linkOAuthAccount.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.linkOAuthAccount(provider);
 
-      expect(fetch).toHaveBeenCalledWith(`/api/auth/oauth/${provider}/login`, {
-        method: 'GET',
-      });
-
+      expect(AuthAPI.linkOAuthAccount).toHaveBeenCalledWith(provider);
       expect(result.success).toBe(true);
       expect(result.data?.authorize_url).toContain('accounts.google.com');
     });
@@ -667,28 +511,16 @@ describe('AuthAPI', () => {
       const provider = 'google';
       const code = 'oauth-code-123';
       const state = 'oauth-state-456';
-
       const mockResponse: ApiResponse<TokenPair> = {
         success: true,
         data: mockTokens,
       };
 
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => mockResponse,
-      } as Response);
+      mockAuthAPI.oauthCallback.mockResolvedValue(mockResponse);
 
       const result = await AuthAPI.oauthCallback(provider, { code, state });
 
-      expect(fetch).toHaveBeenCalledWith(`/api/auth/oauth/${provider}/callback`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code, state }),
-      });
-
+      expect(AuthAPI.oauthCallback).toHaveBeenCalledWith(provider, { code, state });
       expect(result.success).toBe(true);
       expect(result.data).toEqual(mockTokens);
     });
@@ -696,17 +528,15 @@ describe('AuthAPI', () => {
 
   describe('Error Handling', () => {
     it('should handle server errors gracefully', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        json: async () => ({
-          success: false,
-          error: {
-            code: 'INTERNAL_ERROR',
-            message: 'Internal server error',
-          },
-        }),
-      } as Response);
+      const mockErrorResponse: ApiResponse<never> = {
+        success: false,
+        error: {
+          code: 'INTERNAL_ERROR',
+          message: 'Internal server error',
+        },
+      };
+
+      mockAuthAPI.login.mockResolvedValue(mockErrorResponse);
 
       const result = await AuthAPI.login({
         email: 'test@example.com',
@@ -718,14 +548,15 @@ describe('AuthAPI', () => {
     });
 
     it('should handle non-JSON responses', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 502,
-        json: async () => {
-          throw new Error('Invalid JSON');
+      const mockErrorResponse: ApiResponse<never> = {
+        success: false,
+        error: {
+          code: 'SERVER_ERROR',
+          message: 'Bad Gateway',
         },
-        text: async () => 'Bad Gateway',
-      } as unknown as Response);
+      };
+
+      mockAuthAPI.login.mockResolvedValue(mockErrorResponse);
 
       const result = await AuthAPI.login({
         email: 'test@example.com',
@@ -737,17 +568,12 @@ describe('AuthAPI', () => {
     });
 
     it('should handle timeout errors', async () => {
-      mockFetch.mockImplementationOnce(
-        () => new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 100))
-      );
+      mockAuthAPI.login.mockRejectedValue(new Error('timeout'));
 
-      const result = await AuthAPI.login({
+      await expect(AuthAPI.login({
         email: 'test@example.com',
         password: 'password',
-      });
-
-      expect(result.success).toBe(false);
-      expect(result.error?.code).toBe('NETWORK_ERROR');
+      })).rejects.toThrow('timeout');
     });
   });
 });

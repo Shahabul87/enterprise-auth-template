@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../../domain/entities/user.dart';
-import '../models/auth_request.dart';
-import '../models/auth_response.dart';
-import '../services/auth_service.dart';
-import '../../core/security/token_manager.dart';
+import 'package:flutter_auth_template/domain/repositories/auth_repository.dart';
+import 'package:flutter_auth_template/domain/entities/user.dart';
+import 'package:flutter_auth_template/data/models/auth_request.dart';
+import 'package:flutter_auth_template/data/models/auth_response.dart';
+import 'package:flutter_auth_template/data/services/auth_service.dart';
+import 'package:flutter_auth_template/core/security/token_manager.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepositoryImpl(

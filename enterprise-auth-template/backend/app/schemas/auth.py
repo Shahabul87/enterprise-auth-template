@@ -39,7 +39,9 @@ class RegisterRequest(BaseModel):
     password: str = Field(..., min_length=8, description="User password")
     full_name: str = Field(..., min_length=2, max_length=100, description="Full name")
     confirm_password: Optional[str] = Field(None, description="Password confirmation")
-    agree_to_terms: Optional[bool] = Field(True, description="Agreement to terms and conditions")
+    agree_to_terms: Optional[bool] = Field(
+        True, description="Agreement to terms and conditions"
+    )
 
     @field_validator("password")
     @classmethod
@@ -99,14 +101,24 @@ class UserResponse(BaseModel):
     email: str = Field(..., description="User email address")
     full_name: str = Field(..., description="Full name")
     name: str = Field(..., description="Display name for Flutter compatibility")
-    profile_picture: Optional[str] = Field(None, description="Profile picture URL", alias="profilePicture")
-    email_verified: bool = Field(..., description="Whether email is verified", alias="isEmailVerified")
-    two_factor_enabled: bool = Field(False, description="Whether 2FA is enabled", alias="isTwoFactorEnabled")
+    profile_picture: Optional[str] = Field(
+        None, description="Profile picture URL", alias="profilePicture"
+    )
+    email_verified: bool = Field(
+        ..., description="Whether email is verified", alias="isEmailVerified"
+    )
+    two_factor_enabled: bool = Field(
+        False, description="Whether 2FA is enabled", alias="isTwoFactorEnabled"
+    )
     roles: list[str] = Field(default_factory=list, description="User roles")
     permissions: list[str] = Field(default_factory=list, description="User permissions")
-    created_at: str = Field(..., description="Account creation timestamp", alias="createdAt")
+    created_at: str = Field(
+        ..., description="Account creation timestamp", alias="createdAt"
+    )
     updated_at: str = Field(..., description="Last update timestamp", alias="updatedAt")
-    last_login_at: Optional[str] = Field(None, description="Last login timestamp", alias="lastLoginAt")
+    last_login_at: Optional[str] = Field(
+        None, description="Last login timestamp", alias="lastLoginAt"
+    )
     is_active: bool = Field(True, description="Whether user account is active")
 
     model_config = ConfigDict(
@@ -146,10 +158,22 @@ class UserResponse(BaseModel):
             two_factor_enabled=user.two_factor_enabled,
             roles=roles or [],
             permissions=permissions or [],
-            created_at=user.created_at.isoformat() if hasattr(user, 'created_at') and user.created_at else "",
-            updated_at=user.updated_at.isoformat() if hasattr(user, 'updated_at') and user.updated_at else "",
-            last_login_at=user.last_login.isoformat() if hasattr(user, 'last_login') and user.last_login else None,
-            is_active=user.is_active
+            created_at=(
+                user.created_at.isoformat()
+                if hasattr(user, "created_at") and user.created_at
+                else ""
+            ),
+            updated_at=(
+                user.updated_at.isoformat()
+                if hasattr(user, "updated_at") and user.updated_at
+                else ""
+            ),
+            last_login_at=(
+                user.last_login.isoformat()
+                if hasattr(user, "last_login") and user.last_login
+                else None
+            ),
+            is_active=user.is_active,
         )
 
 
@@ -158,7 +182,9 @@ class AuthResponseData(BaseModel):
 
     user: UserResponse = Field(..., description="User information")
     access_token: str = Field(..., description="JWT access token", alias="accessToken")
-    refresh_token: Optional[str] = Field(None, description="JWT refresh token", alias="refreshToken")
+    refresh_token: Optional[str] = Field(
+        None, description="JWT refresh token", alias="refreshToken"
+    )
     token_type: str = Field("bearer", description="Token type")
     expires_in: int = Field(..., description="Access token expiration in seconds")
 
@@ -426,9 +452,7 @@ class TwoFactorVerifyRequest(BaseModel):
             raise ValueError("Code must be exactly 6 digits")
         return v
 
-    model_config = ConfigDict(
-        json_schema_extra={"example": {"code": "123456"}}
-    )
+    model_config = ConfigDict(json_schema_extra={"example": {"code": "123456"}})
 
 
 class TwoFactorStatusResponse(BaseModel):

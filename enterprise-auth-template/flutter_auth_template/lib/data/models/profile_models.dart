@@ -34,6 +34,7 @@ class ProfileUpdateRequest with _$ProfileUpdateRequest {
   const factory ProfileUpdateRequest({
     String? firstName,
     String? lastName,
+    String? name,
     String? phoneNumber,
     String? bio,
     String? timezone,

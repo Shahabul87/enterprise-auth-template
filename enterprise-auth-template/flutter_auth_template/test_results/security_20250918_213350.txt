@@ -1,0 +1,1530 @@
+00:00 +0: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_comprehensive_test.dart
+Error: Couldn't resolve the package 'otp' in 'package:otp/otp.dart'.
+test/core/security/two_factor_service_comprehensive_test.dart:9:8: Error: Not found: 'package:otp/otp.dart'
+import 'package:otp/otp.dart';
+       ^
+test/core/security/two_factor_service_comprehensive_test.dart:27:7: Error: No named parameter with the name 'apiClient'.
+      apiClient: mockApiClient,
+      ^^^^^^^^^
+lib/core/security/two_factor_service.dart:11:7: Context: The class 'TwoFactorService' has a constructor that takes no arguments.
+class TwoFactorService {
+      ^
+test/core/security/two_factor_service_comprehensive_test.dart:40:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.success(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:65:25: Error: 'TwoFactorSetup' isn't a type.
+      expect(setup, isA<TwoFactorSetup>());
+                        ^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:100:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.error(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:110:21: Error: 'TwoFactorException' isn't a type.
+        throwsA(isA<TwoFactorException>()),
+                    ^^^^^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:127:20: Error: Undefined name 'Algorithm'.
+        algorithm: Algorithm.SHA1,
+                   ^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:124:25: Error: Undefined name 'OTP'.
+      final validCode = OTP.generateTOTPCodeString(
+                        ^^^
+test/core/security/two_factor_service_comprehensive_test.dart:134:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.success(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:151:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.error(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:171:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.success(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:195:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.error(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:218:20: Error: Undefined name 'Algorithm'.
+        algorithm: Algorithm.SHA1,
+                   ^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:215:24: Error: Undefined name 'OTP'.
+      final pastCode = OTP.generateTOTPCodeString(
+                       ^^^
+test/core/security/two_factor_service_comprehensive_test.dart:225:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.success(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:246:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.success(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:270:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.success(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:289:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.error(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:313:36: Error: Undefined name 'ApiResponse'.
+          .thenAnswer((_) async => ApiResponse.success(
+                                   ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:386:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.success(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:408:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.success(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:434:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.error(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:456:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.success(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:480:36: Error: Undefined name 'ApiResponse'.
+          .thenAnswer((_) async => ApiResponse.success(
+                                   ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:498:34: Error: Undefined name 'ApiResponse'.
+      )).thenAnswer((_) async => ApiResponse.error(
+                                 ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:506:21: Error: 'TwoFactorException' isn't a type.
+        throwsA(isA<TwoFactorException>().having(
+                    ^^^^^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:523:36: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.error(
+                                   ^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:534:21: Error: 'TwoFactorException' isn't a type.
+        throwsA(isA<TwoFactorException>().having(
+                    ^^^^^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:39:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:57:35: Error: Too many positional arguments: 0 allowed, but 2 found.
+Try removing the extra positional arguments.
+      when(mockSecureStorage.write(any, any))
+                                  ^
+test/core/security/two_factor_service_comprehensive_test.dart:60:44: Error: The method 'generateSetup' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'generateSetup'.
+      final setup = await twoFactorService.generateSetup(
+                                           ^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:70:47: Error: No named parameter with the name 'body'.
+      verify(mockApiClient.post('/2fa/setup', body: anyNamed('body')))
+                                              ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:72:37: Error: Too many positional arguments: 0 allowed, but 2 found.
+Try removing the extra positional arguments.
+      verify(mockSecureStorage.write('2fa_secret', 'JBSWY3DPEHPK3PXP'))
+                                    ^
+test/core/security/two_factor_service_comprehensive_test.dart:74:37: Error: Too many positional arguments: 0 allowed, but 2 found.
+Try removing the extra positional arguments.
+      verify(mockSecureStorage.write(
+                                    ^
+test/core/security/two_factor_service_comprehensive_test.dart:87:9: Error: No named parameter with the name 'userEmail'.
+        userEmail: userEmail,
+        ^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:99:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:106:32: Error: The method 'generateSetup' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'generateSetup'.
+        () => twoFactorService.generateSetup(
+                               ^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:120:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+      when(mockSecureStorage.read('2fa_secret'))
+                                 ^
+test/core/security/two_factor_service_comprehensive_test.dart:133:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:138:46: Error: The method 'verifyCode' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'verifyCode'.
+      final isValid = await twoFactorService.verifyCode(validCode);
+                                             ^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:141:48: Error: No named parameter with the name 'body'.
+      verify(mockApiClient.post('/2fa/verify', body: anyNamed('body')))
+                                               ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:150:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:156:46: Error: The method 'verifyCode' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'verifyCode'.
+      final isValid = await twoFactorService.verifyCode(invalidCode);
+                                             ^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:165:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+      when(mockSecureStorage.read('2fa_backup_codes'))
+                                 ^
+test/core/security/two_factor_service_comprehensive_test.dart:170:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:175:35: Error: Too many positional arguments: 0 allowed, but 2 found.
+Try removing the extra positional arguments.
+      when(mockSecureStorage.write(any, any))
+                                  ^
+test/core/security/two_factor_service_comprehensive_test.dart:178:45: Error: The method 'verifyBackupCode' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'verifyBackupCode'.
+      final result = await twoFactorService.verifyBackupCode(backupCode);
+                                            ^^^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:183:37: Error: Too many positional arguments: 0 allowed, but 2 found.
+Try removing the extra positional arguments.
+      verify(mockSecureStorage.write(
+                                    ^
+test/core/security/two_factor_service_comprehensive_test.dart:194:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:200:45: Error: The method 'verifyBackupCode' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'verifyBackupCode'.
+      final result = await twoFactorService.verifyBackupCode(invalidBackupCode);
+                                            ^^^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:208:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+      when(mockSecureStorage.read('2fa_secret'))
+                                 ^
+test/core/security/two_factor_service_comprehensive_test.dart:224:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:230:46: Error: The method 'verifyCode' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'verifyCode'.
+      final isValid = await twoFactorService.verifyCode(
+                                             ^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:245:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:253:35: Error: Too many positional arguments: 0 allowed, but 2 found.
+Try removing the extra positional arguments.
+      when(mockSecureStorage.write(any, any))
+                                  ^
+test/core/security/two_factor_service_comprehensive_test.dart:256:45: Error: The method 'enable' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'enable'.
+      final result = await twoFactorService.enable(verificationCode);
+                                            ^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:259:48: Error: No named parameter with the name 'body'.
+      verify(mockApiClient.post('/2fa/enable', body: anyNamed('body')))
+                                               ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:261:37: Error: Too many positional arguments: 0 allowed, but 2 found.
+Try removing the extra positional arguments.
+      verify(mockSecureStorage.write('2fa_enabled', 'true')).called(1);
+                                    ^
+test/core/security/two_factor_service_comprehensive_test.dart:269:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:274:30: Error: The method 'deleteAll' isn't defined for the type 'MockSecureStorageService'.
+ - 'MockSecureStorageService' is from 'test/core/security/two_factor_service_comprehensive_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'deleteAll'.
+      when(mockSecureStorage.deleteAll())
+                             ^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:277:45: Error: The method 'disable' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'disable'.
+      final result = await twoFactorService.disable(verificationCode);
+                                            ^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:280:49: Error: No named parameter with the name 'body'.
+      verify(mockApiClient.post('/2fa/disable', body: anyNamed('body')))
+                                                ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:282:32: Error: The method 'deleteAll' isn't defined for the type 'MockSecureStorageService'.
+ - 'MockSecureStorageService' is from 'test/core/security/two_factor_service_comprehensive_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'deleteAll'.
+      verify(mockSecureStorage.deleteAll()).called(1);
+                               ^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:288:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:294:45: Error: The method 'enable' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'enable'.
+      final result = await twoFactorService.enable('000000');
+                                            ^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:300:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+      when(mockSecureStorage.read('2fa_enabled'))
+                                 ^
+test/core/security/two_factor_service_comprehensive_test.dart:303:48: Error: The method 'isEnabled' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'isEnabled'.
+      final isEnabled = await twoFactorService.isEnabled();
+                                               ^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:306:36: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+      verify(mockSecureStorage.read('2fa_enabled')).called(1);
+                                   ^
+test/core/security/two_factor_service_comprehensive_test.dart:328:35: Error: Too many positional arguments: 0 allowed, but 2 found.
+Try removing the extra positional arguments.
+      when(mockSecureStorage.write(any, any))
+                                  ^
+test/core/security/two_factor_service_comprehensive_test.dart:331:47: Error: The method 'regenerateBackupCodes' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'regenerateBackupCodes'.
+      final newCodes = await twoFactorService.regenerateBackupCodes();
+                                              ^^^^^^^^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:337:37: Error: Too many positional arguments: 0 allowed, but 2 found.
+Try removing the extra positional arguments.
+      verify(mockSecureStorage.write(
+                                    ^
+test/core/security/two_factor_service_comprehensive_test.dart:345:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+      when(mockSecureStorage.read('2fa_backup_codes'))
+                                 ^
+test/core/security/two_factor_service_comprehensive_test.dart:348:44: Error: The method 'getBackupCodes' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'getBackupCodes'.
+      final codes = await twoFactorService.getBackupCodes();
+                                           ^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:355:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+      when(mockSecureStorage.read('2fa_backup_codes'))
+                                 ^
+test/core/security/two_factor_service_comprehensive_test.dart:358:44: Error: The method 'getBackupCodes' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'getBackupCodes'.
+      final codes = await twoFactorService.getBackupCodes();
+                                           ^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:366:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+Try removing the extra positional arguments.
+      when(mockSecureStorage.read('2fa_backup_codes'))
+                                 ^
+test/core/security/two_factor_service_comprehensive_test.dart:369:50: Error: The method 'downloadBackupCodes' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'downloadBackupCodes'.
+      final fileContent = await twoFactorService.downloadBackupCodes();
+                                                 ^^^^^^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:385:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:393:49: Error: The method 'initiateRecovery' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'initiateRecovery'.
+      final recoveryId = await twoFactorService.initiateRecovery(email);
+                                                ^^^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:397:15: Error: No named parameter with the name 'body'.
+              body: {'email': email}))
+              ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:407:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:415:30: Error: The method 'deleteAll' isn't defined for the type 'MockSecureStorageService'.
+ - 'MockSecureStorageService' is from 'test/core/security/two_factor_service_comprehensive_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'deleteAll'.
+      when(mockSecureStorage.deleteAll())
+                             ^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:418:45: Error: The method 'completeRecovery' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'completeRecovery'.
+      final result = await twoFactorService.completeRecovery(
+                                            ^^^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:425:15: Error: No named parameter with the name 'body'.
+              body: {'recoveryId': recoveryId, 'code': recoveryCode}))
+              ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:427:32: Error: The method 'deleteAll' isn't defined for the type 'MockSecureStorageService'.
+ - 'MockSecureStorageService' is from 'test/core/security/two_factor_service_comprehensive_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'deleteAll'.
+      verify(mockSecureStorage.deleteAll()).called(1);
+                               ^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:433:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:439:45: Error: The method 'completeRecovery' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'completeRecovery'.
+      final result = await twoFactorService.completeRecovery(
+                                            ^^^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:455:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:463:35: Error: Too many positional arguments: 0 allowed, but 2 found.
+Try removing the extra positional arguments.
+      when(mockSecureStorage.write(any, any))
+                                  ^
+test/core/security/two_factor_service_comprehensive_test.dart:466:44: Error: The method 'verifyForSession' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'verifyForSession'.
+      final token = await twoFactorService.verifyForSession(
+                                           ^^^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:472:37: Error: Too many positional arguments: 0 allowed, but 2 found.
+Try removing the extra positional arguments.
+      verify(mockSecureStorage.write('session_token', 'verified-session-token'))
+                                    ^
+test/core/security/two_factor_service_comprehensive_test.dart:487:50: Error: The method 'sessionRequires2FA' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'sessionRequires2FA'.
+      final requires2FA = await twoFactorService.sessionRequires2FA(sessionId);
+                                                 ^^^^^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:497:9: Error: No named parameter with the name 'body'.
+        body: anyNamed('body'),
+        ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:507:20: Error: The getter 'message' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+          (e) => e.message,
+                   ^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:505:32: Error: The method 'verifyCode' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'verifyCode'.
+        () => twoFactorService.verifyCode('123456'),
+                               ^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:516:24: Error: The method 'setMaxAttempts' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'setMaxAttempts'.
+      twoFactorService.setMaxAttempts(maxAttempts);
+                       ^^^^^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:522:11: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:528:32: Error: The method 'verifyCode' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'verifyCode'.
+        await twoFactorService.verifyCode('000000');
+                               ^^^^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:535:20: Error: The getter 'message' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+          (e) => e.message,
+                   ^^^^^^^
+test/core/security/two_factor_service_comprehensive_test.dart:533:32: Error: The method 'verifyCode' isn't defined for the type 'TwoFactorService'.
+ - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'verifyCode'.
+        () => twoFactorService.verifyCode('123456'),
+                               ^^^^^^^^^^
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_comprehensive_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_comprehensive_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_comprehensive_test.dart: Error: Couldn't resolve the package 'otp' in 'package:otp/otp.dart'.
+  test/core/security/two_factor_service_comprehensive_test.dart:9:8: Error: Not found: 'package:otp/otp.dart'
+  import 'package:otp/otp.dart';
+         ^
+  test/core/security/two_factor_service_comprehensive_test.dart:27:7: Error: No named parameter with the name 'apiClient'.
+        apiClient: mockApiClient,
+        ^^^^^^^^^
+  lib/core/security/two_factor_service.dart:11:7: Context: The class 'TwoFactorService' has a constructor that takes no arguments.
+  class TwoFactorService {
+        ^
+  test/core/security/two_factor_service_comprehensive_test.dart:40:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.success(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:65:25: Error: 'TwoFactorSetup' isn't a type.
+        expect(setup, isA<TwoFactorSetup>());
+                          ^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:100:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.error(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:110:21: Error: 'TwoFactorException' isn't a type.
+          throwsA(isA<TwoFactorException>()),
+                      ^^^^^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:127:20: Error: Undefined name 'Algorithm'.
+          algorithm: Algorithm.SHA1,
+                     ^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:124:25: Error: Undefined name 'OTP'.
+        final validCode = OTP.generateTOTPCodeString(
+                          ^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:134:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.success(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:151:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.error(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:171:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.success(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:195:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.error(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:218:20: Error: Undefined name 'Algorithm'.
+          algorithm: Algorithm.SHA1,
+                     ^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:215:24: Error: Undefined name 'OTP'.
+        final pastCode = OTP.generateTOTPCodeString(
+                         ^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:225:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.success(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:246:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.success(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:270:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.success(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:289:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.error(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:313:36: Error: Undefined name 'ApiResponse'.
+            .thenAnswer((_) async => ApiResponse.success(
+                                     ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:386:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.success(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:408:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.success(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:434:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.error(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:456:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.success(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:480:36: Error: Undefined name 'ApiResponse'.
+            .thenAnswer((_) async => ApiResponse.success(
+                                     ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:498:34: Error: Undefined name 'ApiResponse'.
+        )).thenAnswer((_) async => ApiResponse.error(
+                                   ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:506:21: Error: 'TwoFactorException' isn't a type.
+          throwsA(isA<TwoFactorException>().having(
+                      ^^^^^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:523:36: Error: Undefined name 'ApiResponse'.
+          )).thenAnswer((_) async => ApiResponse.error(
+                                     ^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:534:21: Error: 'TwoFactorException' isn't a type.
+          throwsA(isA<TwoFactorException>().having(
+                      ^^^^^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:39:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:57:35: Error: Too many positional arguments: 0 allowed, but 2 found.
+  Try removing the extra positional arguments.
+        when(mockSecureStorage.write(any, any))
+                                    ^
+  test/core/security/two_factor_service_comprehensive_test.dart:60:44: Error: The method 'generateSetup' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'generateSetup'.
+        final setup = await twoFactorService.generateSetup(
+                                             ^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:70:47: Error: No named parameter with the name 'body'.
+        verify(mockApiClient.post('/2fa/setup', body: anyNamed('body')))
+                                                ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:72:37: Error: Too many positional arguments: 0 allowed, but 2 found.
+  Try removing the extra positional arguments.
+        verify(mockSecureStorage.write('2fa_secret', 'JBSWY3DPEHPK3PXP'))
+                                      ^
+  test/core/security/two_factor_service_comprehensive_test.dart:74:37: Error: Too many positional arguments: 0 allowed, but 2 found.
+  Try removing the extra positional arguments.
+        verify(mockSecureStorage.write(
+                                      ^
+  test/core/security/two_factor_service_comprehensive_test.dart:87:9: Error: No named parameter with the name 'userEmail'.
+          userEmail: userEmail,
+          ^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:99:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:106:32: Error: The method 'generateSetup' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'generateSetup'.
+          () => twoFactorService.generateSetup(
+                                 ^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:120:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+        when(mockSecureStorage.read('2fa_secret'))
+                                   ^
+  test/core/security/two_factor_service_comprehensive_test.dart:133:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:138:46: Error: The method 'verifyCode' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'verifyCode'.
+        final isValid = await twoFactorService.verifyCode(validCode);
+                                               ^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:141:48: Error: No named parameter with the name 'body'.
+        verify(mockApiClient.post('/2fa/verify', body: anyNamed('body')))
+                                                 ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:150:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:156:46: Error: The method 'verifyCode' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'verifyCode'.
+        final isValid = await twoFactorService.verifyCode(invalidCode);
+                                               ^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:165:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+        when(mockSecureStorage.read('2fa_backup_codes'))
+                                   ^
+  test/core/security/two_factor_service_comprehensive_test.dart:170:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:175:35: Error: Too many positional arguments: 0 allowed, but 2 found.
+  Try removing the extra positional arguments.
+        when(mockSecureStorage.write(any, any))
+                                    ^
+  test/core/security/two_factor_service_comprehensive_test.dart:178:45: Error: The method 'verifyBackupCode' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'verifyBackupCode'.
+        final result = await twoFactorService.verifyBackupCode(backupCode);
+                                              ^^^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:183:37: Error: Too many positional arguments: 0 allowed, but 2 found.
+  Try removing the extra positional arguments.
+        verify(mockSecureStorage.write(
+                                      ^
+  test/core/security/two_factor_service_comprehensive_test.dart:194:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:200:45: Error: The method 'verifyBackupCode' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'verifyBackupCode'.
+        final result = await twoFactorService.verifyBackupCode(invalidBackupCode);
+                                              ^^^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:208:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+        when(mockSecureStorage.read('2fa_secret'))
+                                   ^
+  test/core/security/two_factor_service_comprehensive_test.dart:224:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:230:46: Error: The method 'verifyCode' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'verifyCode'.
+        final isValid = await twoFactorService.verifyCode(
+                                               ^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:245:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:253:35: Error: Too many positional arguments: 0 allowed, but 2 found.
+  Try removing the extra positional arguments.
+        when(mockSecureStorage.write(any, any))
+                                    ^
+  test/core/security/two_factor_service_comprehensive_test.dart:256:45: Error: The method 'enable' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'enable'.
+        final result = await twoFactorService.enable(verificationCode);
+                                              ^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:259:48: Error: No named parameter with the name 'body'.
+        verify(mockApiClient.post('/2fa/enable', body: anyNamed('body')))
+                                                 ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:261:37: Error: Too many positional arguments: 0 allowed, but 2 found.
+  Try removing the extra positional arguments.
+        verify(mockSecureStorage.write('2fa_enabled', 'true')).called(1);
+                                      ^
+  test/core/security/two_factor_service_comprehensive_test.dart:269:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:274:30: Error: The method 'deleteAll' isn't defined for the type 'MockSecureStorageService'.
+   - 'MockSecureStorageService' is from 'test/core/security/two_factor_service_comprehensive_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'deleteAll'.
+        when(mockSecureStorage.deleteAll())
+                               ^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:277:45: Error: The method 'disable' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'disable'.
+        final result = await twoFactorService.disable(verificationCode);
+                                              ^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:280:49: Error: No named parameter with the name 'body'.
+        verify(mockApiClient.post('/2fa/disable', body: anyNamed('body')))
+                                                  ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:282:32: Error: The method 'deleteAll' isn't defined for the type 'MockSecureStorageService'.
+   - 'MockSecureStorageService' is from 'test/core/security/two_factor_service_comprehensive_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'deleteAll'.
+        verify(mockSecureStorage.deleteAll()).called(1);
+                                 ^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:288:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:294:45: Error: The method 'enable' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'enable'.
+        final result = await twoFactorService.enable('000000');
+                                              ^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:300:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+        when(mockSecureStorage.read('2fa_enabled'))
+                                   ^
+  test/core/security/two_factor_service_comprehensive_test.dart:303:48: Error: The method 'isEnabled' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'isEnabled'.
+        final isEnabled = await twoFactorService.isEnabled();
+                                                 ^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:306:36: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+        verify(mockSecureStorage.read('2fa_enabled')).called(1);
+                                     ^
+  test/core/security/two_factor_service_comprehensive_test.dart:328:35: Error: Too many positional arguments: 0 allowed, but 2 found.
+  Try removing the extra positional arguments.
+        when(mockSecureStorage.write(any, any))
+                                    ^
+  test/core/security/two_factor_service_comprehensive_test.dart:331:47: Error: The method 'regenerateBackupCodes' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'regenerateBackupCodes'.
+        final newCodes = await twoFactorService.regenerateBackupCodes();
+                                                ^^^^^^^^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:337:37: Error: Too many positional arguments: 0 allowed, but 2 found.
+  Try removing the extra positional arguments.
+        verify(mockSecureStorage.write(
+                                      ^
+  test/core/security/two_factor_service_comprehensive_test.dart:345:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+        when(mockSecureStorage.read('2fa_backup_codes'))
+                                   ^
+  test/core/security/two_factor_service_comprehensive_test.dart:348:44: Error: The method 'getBackupCodes' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'getBackupCodes'.
+        final codes = await twoFactorService.getBackupCodes();
+                                             ^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:355:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+        when(mockSecureStorage.read('2fa_backup_codes'))
+                                   ^
+  test/core/security/two_factor_service_comprehensive_test.dart:358:44: Error: The method 'getBackupCodes' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'getBackupCodes'.
+        final codes = await twoFactorService.getBackupCodes();
+                                             ^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:366:34: Error: Too many positional arguments: 0 allowed, but 1 found.
+  Try removing the extra positional arguments.
+        when(mockSecureStorage.read('2fa_backup_codes'))
+                                   ^
+  test/core/security/two_factor_service_comprehensive_test.dart:369:50: Error: The method 'downloadBackupCodes' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'downloadBackupCodes'.
+        final fileContent = await twoFactorService.downloadBackupCodes();
+                                                   ^^^^^^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:385:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:393:49: Error: The method 'initiateRecovery' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'initiateRecovery'.
+        final recoveryId = await twoFactorService.initiateRecovery(email);
+                                                  ^^^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:397:15: Error: No named parameter with the name 'body'.
+                body: {'email': email}))
+                ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:407:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:415:30: Error: The method 'deleteAll' isn't defined for the type 'MockSecureStorageService'.
+   - 'MockSecureStorageService' is from 'test/core/security/two_factor_service_comprehensive_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'deleteAll'.
+        when(mockSecureStorage.deleteAll())
+                               ^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:418:45: Error: The method 'completeRecovery' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'completeRecovery'.
+        final result = await twoFactorService.completeRecovery(
+                                              ^^^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:425:15: Error: No named parameter with the name 'body'.
+                body: {'recoveryId': recoveryId, 'code': recoveryCode}))
+                ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:427:32: Error: The method 'deleteAll' isn't defined for the type 'MockSecureStorageService'.
+   - 'MockSecureStorageService' is from 'test/core/security/two_factor_service_comprehensive_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'deleteAll'.
+        verify(mockSecureStorage.deleteAll()).called(1);
+                                 ^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:433:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:439:45: Error: The method 'completeRecovery' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'completeRecovery'.
+        final result = await twoFactorService.completeRecovery(
+                                              ^^^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:455:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:463:35: Error: Too many positional arguments: 0 allowed, but 2 found.
+  Try removing the extra positional arguments.
+        when(mockSecureStorage.write(any, any))
+                                    ^
+  test/core/security/two_factor_service_comprehensive_test.dart:466:44: Error: The method 'verifyForSession' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'verifyForSession'.
+        final token = await twoFactorService.verifyForSession(
+                                             ^^^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:472:37: Error: Too many positional arguments: 0 allowed, but 2 found.
+  Try removing the extra positional arguments.
+        verify(mockSecureStorage.write('session_token', 'verified-session-token'))
+                                      ^
+  test/core/security/two_factor_service_comprehensive_test.dart:487:50: Error: The method 'sessionRequires2FA' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'sessionRequires2FA'.
+        final requires2FA = await twoFactorService.sessionRequires2FA(sessionId);
+                                                   ^^^^^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:497:9: Error: No named parameter with the name 'body'.
+          body: anyNamed('body'),
+          ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:507:20: Error: The getter 'message' isn't defined for the type 'Object?'.
+   - 'Object' is from 'dart:core'.
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+            (e) => e.message,
+                     ^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:505:32: Error: The method 'verifyCode' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'verifyCode'.
+          () => twoFactorService.verifyCode('123456'),
+                                 ^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:516:24: Error: The method 'setMaxAttempts' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'setMaxAttempts'.
+        twoFactorService.setMaxAttempts(maxAttempts);
+                         ^^^^^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:522:11: Error: No named parameter with the name 'body'.
+            body: anyNamed('body'),
+            ^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:528:32: Error: The method 'verifyCode' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'verifyCode'.
+          await twoFactorService.verifyCode('000000');
+                                 ^^^^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:535:20: Error: The getter 'message' isn't defined for the type 'Object?'.
+   - 'Object' is from 'dart:core'.
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'message'.
+            (e) => e.message,
+                     ^^^^^^^
+  test/core/security/two_factor_service_comprehensive_test.dart:533:32: Error: The method 'verifyCode' isn't defined for the type 'TwoFactorService'.
+   - 'TwoFactorService' is from 'package:flutter_auth_template/core/security/two_factor_service.dart' ('lib/core/security/two_factor_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'verifyCode'.
+          () => twoFactorService.verifyCode('123456'),
+                                 ^^^^^^^^^^
+  .
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/webauthn_service_comprehensive_test.dart
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_comprehensive_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 910:11    DefaultResidentCompiler._compile.<fn>
+  dart:async/zone.dart 1538:47                     _rootRunUnary
+  dart:async/zone.dart 1429:19                     _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone.dart 1525:13                     _rootRun
+  dart:async/zone.dart 1422:19                     _CustomZone.run
+  dart:async/zone.dart 1321:7                      _CustomZone.runGuarded
+  dart:async/zone.dart 1362:23                     _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 194:5      _RawReceivePort._handleMessage
+  
+00:00 +0 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/webauthn_service_comprehensive_test.dart: WebAuthnService - Platform Support checks if WebAuthn is supported
+00:00 +1 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/webauthn_service_comprehensive_test.dart: WebAuthnService - Platform Support checks if platform authenticator is available
+00:00 +2 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/webauthn_service_comprehensive_test.dart: WebAuthnService - Platform Support handles platform exception for isSupported
+00:00 +3 -1: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/webauthn_service_comprehensive_test.dart: WebAuthnService - Platform Support handles platform exception for isPlatformAuthenticatorAvailable
+00:00 +4 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/webauthn_service_test.dart
+test/core/security/webauthn_service_test.dart:27:9: Error: No named parameter with the name 'dio'.
+        dio: mockDio,
+        ^^^
+lib/core/security/webauthn_service.dart:12:7: Context: The class 'WebAuthnService' has a constructor that takes no arguments.
+class WebAuthnService {
+      ^
+test/core/security/webauthn_service_test.dart:70:47: Error: The method 'initiateRegistration' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'initiateRegistration'.
+        final options = await webAuthnService.initiateRegistration(userId);
+                                              ^^^^^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:111:46: Error: The method 'completeRegistration' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'completeRegistration'.
+        final result = await webAuthnService.completeRegistration(userId, credential);
+                                             ^^^^^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:143:33: Error: The method 'initiateRegistration' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'initiateRegistration'.
+          () => webAuthnService.initiateRegistration(userId),
+                                ^^^^^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:177:47: Error: The method 'initiateAuthentication' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'initiateAuthentication'.
+        final options = await webAuthnService.initiateAuthentication(userId);
+                                              ^^^^^^^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:226:46: Error: The method 'completeAuthentication' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'completeAuthentication'.
+        final result = await webAuthnService.completeAuthentication(userId, assertion);
+                                             ^^^^^^^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:268:33: Error: The method 'completeAuthentication' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'completeAuthentication'.
+          () => webAuthnService.completeAuthentication(userId, assertion),
+                                ^^^^^^^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:293:54: Error: The method 'hasCredentials' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'hasCredentials'.
+        final hasCredentials = await webAuthnService.hasCredentials(userId);
+                                                     ^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:327:46: Error: The method 'listCredentials' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'listCredentials'.
+        final result = await webAuthnService.listCredentials(userId);
+                                             ^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:354:46: Error: The method 'deleteCredential' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'deleteCredential'.
+        final result = await webAuthnService.deleteCredential(userId, credentialId);
+                                             ^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:382:46: Error: The method 'renameCredential' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'renameCredential'.
+        final result = await webAuthnService.renameCredential(
+                                             ^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:413:47: Error: The method 'checkPlatformSupport' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'checkPlatformSupport'.
+        final support = await webAuthnService.checkPlatformSupport();
+                                              ^^^^^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:435:47: Error: The method 'checkPlatformSupport' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'checkPlatformSupport'.
+        final support = await webAuthnService.checkPlatformSupport();
+                                              ^^^^^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:450:32: Error: The method 'isValidChallenge' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'isValidChallenge'.
+        expect(webAuthnService.isValidChallenge(validChallenge), isTrue);
+                               ^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:451:32: Error: The method 'isValidChallenge' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'isValidChallenge'.
+        expect(webAuthnService.isValidChallenge(invalidChallenge), isFalse);
+                               ^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:456:43: Error: The method 'generateChallenge' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'generateChallenge'.
+        final challenge = webAuthnService.generateChallenge();
+                                          ^^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:479:33: Error: The method 'initiateRegistration' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'initiateRegistration'.
+          () => webAuthnService.initiateRegistration(userId),
+                                ^^^^^^^^^^^^^^^^^^^^
+test/core/security/webauthn_service_test.dart:491:31: Error: The method 'clearStoredCredentials' isn't defined for the type 'WebAuthnService'.
+ - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'clearStoredCredentials'.
+        await webAuthnService.clearStoredCredentials(userId);
+                              ^^^^^^^^^^^^^^^^^^^^^^
+00:00 +4 -2: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/webauthn_service_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/webauthn_service_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/webauthn_service_test.dart: test/core/security/webauthn_service_test.dart:27:9: Error: No named parameter with the name 'dio'.
+          dio: mockDio,
+          ^^^
+  lib/core/security/webauthn_service.dart:12:7: Context: The class 'WebAuthnService' has a constructor that takes no arguments.
+  class WebAuthnService {
+        ^
+  test/core/security/webauthn_service_test.dart:70:47: Error: The method 'initiateRegistration' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'initiateRegistration'.
+          final options = await webAuthnService.initiateRegistration(userId);
+                                                ^^^^^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:111:46: Error: The method 'completeRegistration' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'completeRegistration'.
+          final result = await webAuthnService.completeRegistration(userId, credential);
+                                               ^^^^^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:143:33: Error: The method 'initiateRegistration' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'initiateRegistration'.
+            () => webAuthnService.initiateRegistration(userId),
+                                  ^^^^^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:177:47: Error: The method 'initiateAuthentication' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'initiateAuthentication'.
+          final options = await webAuthnService.initiateAuthentication(userId);
+                                                ^^^^^^^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:226:46: Error: The method 'completeAuthentication' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'completeAuthentication'.
+          final result = await webAuthnService.completeAuthentication(userId, assertion);
+                                               ^^^^^^^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:268:33: Error: The method 'completeAuthentication' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'completeAuthentication'.
+            () => webAuthnService.completeAuthentication(userId, assertion),
+                                  ^^^^^^^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:293:54: Error: The method 'hasCredentials' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'hasCredentials'.
+          final hasCredentials = await webAuthnService.hasCredentials(userId);
+                                                       ^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:327:46: Error: The method 'listCredentials' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'listCredentials'.
+          final result = await webAuthnService.listCredentials(userId);
+                                               ^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:354:46: Error: The method 'deleteCredential' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'deleteCredential'.
+          final result = await webAuthnService.deleteCredential(userId, credentialId);
+                                               ^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:382:46: Error: The method 'renameCredential' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'renameCredential'.
+          final result = await webAuthnService.renameCredential(
+                                               ^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:413:47: Error: The method 'checkPlatformSupport' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'checkPlatformSupport'.
+          final support = await webAuthnService.checkPlatformSupport();
+                                                ^^^^^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:435:47: Error: The method 'checkPlatformSupport' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'checkPlatformSupport'.
+          final support = await webAuthnService.checkPlatformSupport();
+                                                ^^^^^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:450:32: Error: The method 'isValidChallenge' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'isValidChallenge'.
+          expect(webAuthnService.isValidChallenge(validChallenge), isTrue);
+                                 ^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:451:32: Error: The method 'isValidChallenge' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'isValidChallenge'.
+          expect(webAuthnService.isValidChallenge(invalidChallenge), isFalse);
+                                 ^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:456:43: Error: The method 'generateChallenge' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'generateChallenge'.
+          final challenge = webAuthnService.generateChallenge();
+                                            ^^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:479:33: Error: The method 'initiateRegistration' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'initiateRegistration'.
+            () => webAuthnService.initiateRegistration(userId),
+                                  ^^^^^^^^^^^^^^^^^^^^
+  test/core/security/webauthn_service_test.dart:491:31: Error: The method 'clearStoredCredentials' isn't defined for the type 'WebAuthnService'.
+   - 'WebAuthnService' is from 'package:flutter_auth_template/core/security/webauthn_service.dart' ('lib/core/security/webauthn_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'clearStoredCredentials'.
+          await webAuthnService.clearStoredCredentials(userId);
+                                ^^^^^^^^^^^^^^^^^^^^^^
+  .
+00:00 +4 -2: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart
+00:00 +4 -2: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_comprehensive_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 910:11    DefaultResidentCompiler._compile.<fn>
+  dart:async/zone.dart 1538:47                     _rootRunUnary
+  dart:async/zone.dart 1429:19                     _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone.dart 1525:13                     _rootRun
+  dart:async/zone.dart 1422:19                     _CustomZone.run
+  dart:async/zone.dart 1321:7                      _CustomZone.runGuarded
+  dart:async/zone.dart 1362:23                     _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 194:5      _RawReceivePort._handleMessage
+  
+00:00 +4 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurity isDeviceCompromised should return false when device is secure
+00:00 +5 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurity isDeviceCompromised should return true on exception for safety
+00:00 +6 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurity Android-specific tests should check Android root indicators
+00:00 +7 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurity iOS-specific tests should check iOS jailbreak indicators
+00:00 +8 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurity isDeveloperModeEnabled should detect developer mode on Android
+00:00 +9 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurity isDeveloperModeEnabled should return false for non-Android platforms
+00:00 +10 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurity isEmulator should detect emulator on Android
+00:00 +11 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurity isEmulator should detect emulator on iOS
+00:00 +12 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurity isEmulator should return false for unsupported platforms
+00:00 +13 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurity performSecurityCheck should return comprehensive security status
+00:00 +14 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurity performSecurityCheck should correctly calculate isSecure flag
+00:00 +15 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurityStatus should create instance with all required fields
+00:00 +16 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurityStatus should serialize to JSON correctly
+00:00 +17 -2: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/device_security_test.dart: DeviceSecurityStatus should handle security compromise scenarios
+00:00 +18 -2: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/csrf_protection_test.dart
+test/core/security/csrf_protection_test.dart:18:10: Error: 'CsrfProtection' isn't a type.
+    late CsrfProtection csrfProtection;
+         ^^^^^^^^^^^^^^
+test/core/security/csrf_protection_test.dart:25:24: Error: Method not found: 'CsrfProtection'.
+      csrfProtection = CsrfProtection(
+                       ^^^^^^^^^^^^^^
+test/core/security/csrf_protection_test.dart:434:43: Error: The argument type 'List<dynamic>' can't be assigned to the parameter type 'Iterable<Future<dynamic>>'.
+ - 'List' is from 'dart:core'.
+ - 'Iterable' is from 'dart:core'.
+ - 'Future' is from 'dart:async'.
+        final results = await Future.wait([
+                                          ^
+00:01 +18 -3: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/csrf_protection_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/csrf_protection_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/csrf_protection_test.dart: test/core/security/csrf_protection_test.dart:18:10: Error: 'CsrfProtection' isn't a type.
+      late CsrfProtection csrfProtection;
+           ^^^^^^^^^^^^^^
+  test/core/security/csrf_protection_test.dart:25:24: Error: Method not found: 'CsrfProtection'.
+        csrfProtection = CsrfProtection(
+                         ^^^^^^^^^^^^^^
+  test/core/security/csrf_protection_test.dart:434:43: Error: The argument type 'List<dynamic>' can't be assigned to the parameter type 'Iterable<Future<dynamic>>'.
+   - 'List' is from 'dart:core'.
+   - 'Iterable' is from 'dart:core'.
+   - 'Future' is from 'dart:async'.
+          final results = await Future.wait([
+                                            ^
+  .
+00:01 +18 -3: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart
+00:01 +18 -3: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_comprehensive_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 910:11    DefaultResidentCompiler._compile.<fn>
+  dart:async/zone.dart 1538:47                     _rootRunUnary
+  dart:async/zone.dart 1429:19                     _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone.dart 1525:13                     _rootRun
+  dart:async/zone.dart 1422:19                     _CustomZone.run
+  dart:async/zone.dart 1321:7                      _CustomZone.runGuarded
+  dart:async/zone.dart 1362:23                     _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 194:5      _RawReceivePort._handleMessage
+  
+00:01 +18 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeText should return empty string for empty input
+00:01 +19 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeText should remove HTML tags
+00:01 +20 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeText should escape HTML special characters
+00:01 +21 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeText should remove null bytes
+00:01 +22 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeText should trim whitespace
+00:01 +23 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeText should handle complex XSS attempts
+00:01 +24 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeText should preserve safe text content
+00:01 +25 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeEmail should return null for empty input
+00:01 +26 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeEmail should accept valid email addresses
+00:01 +27 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeEmail should reject invalid email addresses
+00:01 +28 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeEmail should convert to lowercase
+00:01 +29 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeEmail should trim whitespace
+00:01 +30 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeEmail should sanitize email content
+00:01 +31 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeUrl should return null for empty input
+00:01 +32 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeUrl should accept valid HTTP URLs
+00:01 +33 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeUrl should reject non-HTTP schemes
+00:01 +34 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeUrl should handle malformed URLs
+00:01 +35 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeUrl should handle edge case URLs
+00:01 +36 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizePhoneNumber should return null for empty input
+00:01 +37 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizePhoneNumber should accept valid phone numbers
+00:01 +38 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizePhoneNumber should remove formatting characters
+00:01 +39 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizePhoneNumber should reject numbers that are too short or too long
+00:01 +40 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizePhoneNumber should preserve country code
+00:01 +41 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeInteger should return null for empty input
+00:01 +42 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeInteger should parse valid integers
+00:01 +43 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeInteger should remove non-numeric characters
+00:01 +44 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeInteger should handle negative numbers
+00:01 +45 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeInteger should return null for invalid input
+00:01 +46 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeInteger should sanitize input with mixed characters
+00:01 +47 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeDecimal should return null for empty input
+00:01 +48 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeDecimal should parse valid decimal numbers
+00:01 +49 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeDecimal should remove non-numeric characters except decimal point
+00:01 +50 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeDecimal should handle negative numbers
+00:01 +51 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeFileName should return "file" for empty input
+00:01 +52 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeFileName should remove dangerous characters
+00:01 +53 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeFileName should limit length to 255 characters
+00:01 +54 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeFileName should handle reserved Windows names
+00:01 +55 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeFileName should preserve safe file names
+00:01 +56 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeFileName should handle mixed case reserved names
+00:01 +57 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeSql should return empty string for empty input
+00:01 +58 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeSql should escape single quotes
+00:01 +59 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeSql should remove SQL comment indicators
+00:01 +60 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeSql should remove dangerous SQL keywords
+00:01 +61 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeSql should preserve safe SQL content
+00:01 +62 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeSql should handle mixed case SQL keywords
+00:01 +63 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeJson should return "{}" for empty input
+00:01 +64 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeJson should decode URI-encoded JSON
+00:01 +65 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeJson should return input for invalid input when not URI encoded
+00:01 +66 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeJson should return "{}" for truly invalid URI encoded input
+00:01 +67 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeJson should handle already valid JSON
+00:01 +68 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizePassword should return null for passwords shorter than 8 characters
+00:01 +69 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizePassword should reject common weak passwords
+00:01 +70 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizePassword should accept strong passwords unchanged
+00:01 +71 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizePassword should be case insensitive for weak pattern detection
+00:01 +72 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer stripHtml should return empty string for empty input
+00:01 +73 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer stripHtml should remove all HTML tags
+00:01 +74 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer stripHtml should decode HTML entities
+00:01 +75 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer stripHtml should handle complex HTML
+00:01 +76 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer stripHtml should trim result
+00:01 +77 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeSearchQuery should return empty string for empty input
+00:01 +78 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeSearchQuery should remove special characters
+00:01 +79 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeSearchQuery should preserve safe characters
+00:01 +80 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeSearchQuery should limit length to 100 characters
+00:01 +81 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeSearchQuery should trim whitespace
+00:01 +82 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/input_sanitizer_test.dart: InputSanitizer sanitizeSearchQuery should handle numbers and letters
+00:01 +83 -3: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart
+00:02 +83 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: BiometricConfig should create with default values
+00:02 +84 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: BiometricConfig should serialize to JSON correctly
+00:02 +85 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: BiometricConfig should deserialize from JSON correctly
+00:02 +86 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: BiometricConfig should handle null values in JSON
+00:02 +87 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: BiometricConfig should create copy with updated values
+00:02 +88 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager initialize should load existing config from storage
+00:02 +89 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager initialize should create default config if none exists
+00:02 +90 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager initialize should handle storage errors gracefully
+00:02 +91 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager enableBiometric should enable biometric when authentication succeeds
+00:02 +92 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager enableBiometric should fail when biometric capability is not available
+00:02 +93 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager enableBiometric should fail when authentication fails
+00:02 +94 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager enableBiometric should save fallback PIN when provided
+00:02 +95 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager disableBiometric should disable biometric when authentication succeeds
+00:02 +96 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager disableBiometric should fail when authentication fails
+00:02 +97 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager authenticateWithBiometric should authenticate successfully and reset failed attempts
+00:02 +98 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager authenticateWithBiometric should increment failed attempts on authentication failure
+00:02 +99 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager authenticateWithBiometric should lock user after max failed attempts
+00:02 +100 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager authenticateWithBiometric should reject authentication when locked out
+00:02 +101 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager authenticateWithBiometric should start biometric session when duration specified
+00:02 +102 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager authenticateWithPin should authenticate with correct PIN
+00:02 +103 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager authenticateWithPin should fail with incorrect PIN
+00:02 +104 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager authenticateWithPin should fail when no PIN configured
+00:02 +105 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager authenticateWithPin should respect lockout state
+00:02 +106 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager isSessionActive should return false when no authentication
+00:02 +107 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager isSessionActive should return true within session duration
+00:02 +108 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager isSessionActive should return false after session expiry
+00:02 +109 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager updateSettings should update configuration settings
+00:02 +110 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager reset should reset all configuration and storage
+00:02 +111 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: EnhancedBiometricManager getBiometricStatus should return comprehensive status information
+00:02 +112 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: BiometricAuthState should create instance with all required fields
+00:02 +113 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/enhanced_biometric_manager_test.dart: BiometricAuthState should handle locked out state
+00:02 +114 -3: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/oauth_service_comprehensive_test.dart
+00:02 +114 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/oauth_service_comprehensive_test.dart: OAuthService - Google Sign In returns not configured error for Google sign-in
+00:02 +115 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/oauth_service_comprehensive_test.dart: OAuthService - Google Sign In signOutFromGoogle completes without error
+Google Sign-In sign out (mock)
+00:02 +116 -3: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/oauth_service_comprehensive_test.dart: OAuthService - Google Sign In isGoogleSignedIn returns false when not signed in
+00:02 +117 -3: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/oauth_service_test.dart
+test/core/security/oauth_service_test.dart:26:9: Error: No named parameter with the name 'dio'.
+        dio: mockDio,
+        ^^^
+lib/infrastructure/services/auth/oauth_service.dart:15:3: Context: Found this candidate, but the arguments don't match.
+  OAuthService();
+  ^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:44:40: Error: The method 'initiateGoogleLogin' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'initiateGoogleLogin'.
+        final url = await oauthService.initiateGoogleLogin();
+                                       ^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:83:43: Error: The method 'handleGoogleCallback' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'handleGoogleCallback'.
+        final result = await oauthService.handleGoogleCallback(code, state);
+                                          ^^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:117:45: Error: The method 'refreshGoogleToken' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'refreshGoogleToken'.
+        final newToken = await oauthService.refreshGoogleToken();
+                                            ^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:146:43: Error: The method 'revokeGoogleAccess' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'revokeGoogleAccess'.
+        final result = await oauthService.revokeGoogleAccess();
+                                          ^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:168:40: Error: The method 'initiateGitHubLogin' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'initiateGitHubLogin'.
+        final url = await oauthService.initiateGitHubLogin();
+                                       ^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:204:43: Error: The method 'handleGitHubCallback' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'handleGitHubCallback'.
+        final result = await oauthService.handleGitHubCallback(code, state);
+                                          ^^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:230:40: Error: The method 'initiateMicrosoftLogin' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'initiateMicrosoftLogin'.
+        final url = await oauthService.initiateMicrosoftLogin();
+                                       ^^^^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:268:43: Error: The method 'handleMicrosoftCallback' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'handleMicrosoftCallback'.
+        final result = await oauthService.handleMicrosoftCallback(code, state);
+                                          ^^^^^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:284:42: Error: The method 'generateState' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'generateState'.
+        final state = await oauthService.generateState();
+                                         ^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:301:48: Error: The method 'validateState' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'validateState'.
+        final validResult = await oauthService.validateState(receivedState);
+                                               ^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:302:50: Error: The method 'validateState' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'validateState'.
+        final invalidResult = await oauthService.validateState(invalidState);
+                                                 ^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:318:28: Error: The method 'validateState' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'validateState'.
+        await oauthService.validateState(state);
+                           ^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:334:52: Error: The method 'isProviderConnected' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'isProviderConnected'.
+        final googleConnected = await oauthService.isProviderConnected('google');
+                                                   ^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:335:52: Error: The method 'isProviderConnected' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'isProviderConnected'.
+        final githubConnected = await oauthService.isProviderConnected('github');
+                                                   ^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:352:46: Error: The method 'getConnectedProviders' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'getConnectedProviders'.
+        final providers = await oauthService.getConnectedProviders();
+                                             ^^^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:377:43: Error: The method 'disconnectProvider' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'disconnectProvider'.
+        final result = await oauthService.disconnectProvider(provider);
+                                          ^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:408:30: Error: The method 'handleGoogleCallback' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'handleGoogleCallback'.
+          () => oauthService.handleGoogleCallback(code, state),
+                             ^^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:425:30: Error: The method 'initiateGoogleLogin' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'initiateGoogleLogin'.
+          () => oauthService.initiateGoogleLogin(),
+                             ^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:456:30: Error: The method 'refreshGoogleToken' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'refreshGoogleToken'.
+          () => oauthService.refreshGoogleToken(),
+                             ^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:466:39: Error: The method 'generateCodeVerifier' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'generateCodeVerifier'.
+        final verifier = oauthService.generateCodeVerifier();
+                                      ^^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:467:40: Error: The method 'generateCodeChallenge' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'generateCodeChallenge'.
+        final challenge = oauthService.generateCodeChallenge(verifier);
+                                       ^^^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:479:43: Error: The method 'generateCodeVerifier' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'generateCodeVerifier'.
+        final codeVerifier = oauthService.generateCodeVerifier();
+                                          ^^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:480:44: Error: The method 'generateCodeChallenge' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'generateCodeChallenge'.
+        final codeChallenge = oauthService.generateCodeChallenge(codeVerifier);
+                                           ^^^^^^^^^^^^^^^^^^^^^
+test/core/security/oauth_service_test.dart:500:40: Error: The method 'initiateGoogleLoginWithPKCE' isn't defined for the type 'OAuthService'.
+ - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'initiateGoogleLoginWithPKCE'.
+        final url = await oauthService.initiateGoogleLoginWithPKCE();
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+00:03 +117 -4: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/oauth_service_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/oauth_service_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/oauth_service_test.dart: test/core/security/oauth_service_test.dart:26:9: Error: No named parameter with the name 'dio'.
+          dio: mockDio,
+          ^^^
+  lib/infrastructure/services/auth/oauth_service.dart:15:3: Context: Found this candidate, but the arguments don't match.
+    OAuthService();
+    ^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:44:40: Error: The method 'initiateGoogleLogin' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'initiateGoogleLogin'.
+          final url = await oauthService.initiateGoogleLogin();
+                                         ^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:83:43: Error: The method 'handleGoogleCallback' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'handleGoogleCallback'.
+          final result = await oauthService.handleGoogleCallback(code, state);
+                                            ^^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:117:45: Error: The method 'refreshGoogleToken' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshGoogleToken'.
+          final newToken = await oauthService.refreshGoogleToken();
+                                              ^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:146:43: Error: The method 'revokeGoogleAccess' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'revokeGoogleAccess'.
+          final result = await oauthService.revokeGoogleAccess();
+                                            ^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:168:40: Error: The method 'initiateGitHubLogin' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'initiateGitHubLogin'.
+          final url = await oauthService.initiateGitHubLogin();
+                                         ^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:204:43: Error: The method 'handleGitHubCallback' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'handleGitHubCallback'.
+          final result = await oauthService.handleGitHubCallback(code, state);
+                                            ^^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:230:40: Error: The method 'initiateMicrosoftLogin' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'initiateMicrosoftLogin'.
+          final url = await oauthService.initiateMicrosoftLogin();
+                                         ^^^^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:268:43: Error: The method 'handleMicrosoftCallback' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'handleMicrosoftCallback'.
+          final result = await oauthService.handleMicrosoftCallback(code, state);
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:284:42: Error: The method 'generateState' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'generateState'.
+          final state = await oauthService.generateState();
+                                           ^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:301:48: Error: The method 'validateState' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'validateState'.
+          final validResult = await oauthService.validateState(receivedState);
+                                                 ^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:302:50: Error: The method 'validateState' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'validateState'.
+          final invalidResult = await oauthService.validateState(invalidState);
+                                                   ^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:318:28: Error: The method 'validateState' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'validateState'.
+          await oauthService.validateState(state);
+                             ^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:334:52: Error: The method 'isProviderConnected' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'isProviderConnected'.
+          final googleConnected = await oauthService.isProviderConnected('google');
+                                                     ^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:335:52: Error: The method 'isProviderConnected' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'isProviderConnected'.
+          final githubConnected = await oauthService.isProviderConnected('github');
+                                                     ^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:352:46: Error: The method 'getConnectedProviders' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'getConnectedProviders'.
+          final providers = await oauthService.getConnectedProviders();
+                                               ^^^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:377:43: Error: The method 'disconnectProvider' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'disconnectProvider'.
+          final result = await oauthService.disconnectProvider(provider);
+                                            ^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:408:30: Error: The method 'handleGoogleCallback' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'handleGoogleCallback'.
+            () => oauthService.handleGoogleCallback(code, state),
+                               ^^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:425:30: Error: The method 'initiateGoogleLogin' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'initiateGoogleLogin'.
+            () => oauthService.initiateGoogleLogin(),
+                               ^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:456:30: Error: The method 'refreshGoogleToken' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshGoogleToken'.
+            () => oauthService.refreshGoogleToken(),
+                               ^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:466:39: Error: The method 'generateCodeVerifier' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'generateCodeVerifier'.
+          final verifier = oauthService.generateCodeVerifier();
+                                        ^^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:467:40: Error: The method 'generateCodeChallenge' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'generateCodeChallenge'.
+          final challenge = oauthService.generateCodeChallenge(verifier);
+                                         ^^^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:479:43: Error: The method 'generateCodeVerifier' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'generateCodeVerifier'.
+          final codeVerifier = oauthService.generateCodeVerifier();
+                                            ^^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:480:44: Error: The method 'generateCodeChallenge' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'generateCodeChallenge'.
+          final codeChallenge = oauthService.generateCodeChallenge(codeVerifier);
+                                             ^^^^^^^^^^^^^^^^^^^^^
+  test/core/security/oauth_service_test.dart:500:40: Error: The method 'initiateGoogleLoginWithPKCE' isn't defined for the type 'OAuthService'.
+   - 'OAuthService' is from 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart' ('lib/infrastructure/services/auth/oauth_service.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'initiateGoogleLoginWithPKCE'.
+          final url = await oauthService.initiateGoogleLoginWithPKCE();
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  .
+00:03 +117 -4: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart
+00:03 +117 -4: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_comprehensive_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 910:11    DefaultResidentCompiler._compile.<fn>
+  dart:async/zone.dart 1538:47                     _rootRunUnary
+  dart:async/zone.dart 1429:19                     _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone.dart 1525:13                     _rootRun
+  dart:async/zone.dart 1422:19                     _CustomZone.run
+  dart:async/zone.dart 1321:7                      _CustomZone.runGuarded
+  dart:async/zone.dart 1362:23                     _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 194:5      _RawReceivePort._handleMessage
+  
+00:03 +117 -4: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService generateQRCodeUrl should generate valid TOTP QR code URL
+00:03 +117 -5: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService generateQRCodeUrl should generate valid TOTP QR code URL [E]
+  Expected: contains 'TestApp%3Auser%40example.com'
+    Actual: 'otpauth://totp/TestApp:user%40example.com?secret=JBSWY3DPEHPK3PXP&issuer=TestApp&algorithm=SHA1&digits=6&period=30'
+     Which: does not contain 'TestApp%3Auser%40example.com'
+  
+  package:matcher                                       expect
+  package:flutter_test/src/widget_tester.dart 473:18    expect
+  test/core/security/two_factor_service_test.dart 25:9  main.<fn>.<fn>.<fn>
+  
+00:03 +117 -5: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService generateQRCodeUrl should properly encode special characters in account name
+00:03 +117 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService generateQRCodeUrl should properly encode special characters in account name [E]
+  Expected: contains 'Test%20App%3Auser%2Btest%40example.com'
+    Actual: 'otpauth://totp/Test%20App:user%2Btest%40example.com?secret=JBSWY3DPEHPK3PXP&issuer=Test%20App&algorithm=SHA1&digits=6&period=30'
+     Which: does not contain 'Test%20App%3Auser%2Btest%40example.com'
+  
+  package:matcher                                       expect
+  package:flutter_test/src/widget_tester.dart 473:18    expect
+  test/core/security/two_factor_service_test.dart 44:9  main.<fn>.<fn>.<fn>
+  
+00:03 +117 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService generateQRCodeUrl should handle empty values gracefully
+00:03 +118 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService validateTOTPCode should validate correct TOTP code
+00:03 +119 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService validateTOTPCode should reject incorrect TOTP code
+00:03 +120 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService validateTOTPCode should validate code within time window
+00:03 +121 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService validateTOTPCode should handle empty secret gracefully
+00:03 +122 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService validateTOTPCode should handle invalid secret format
+00:03 +123 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService validateTOTPCode should handle malformed code
+00:03 +124 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService getCurrentTOTPCode should generate 6-digit TOTP code
+00:03 +125 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService getCurrentTOTPCode should generate different codes for different secrets
+00:03 +126 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService getCurrentTOTPCode should generate same code for same secret within time window
+00:03 +127 -6: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService getCurrentTOTPCode should handle empty secret
+00:03 +127 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService getCurrentTOTPCode should handle empty secret [E]
+  Expected: throws <Instance of 'Exception'>
+    Actual: <Closure: () => String>
+     Which: returned '273592'
+  
+  package:matcher                                        expect
+  package:flutter_test/src/widget_tester.dart 473:18     expect
+  test/core/security/two_factor_service_test.dart 160:9  main.<fn>.<fn>.<fn>
+  
+00:03 +127 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService getSecondsUntilNextCode should return seconds between 1 and 30
+00:03 +128 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService getSecondsUntilNextCode should decrease over time
+00:04 +129 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService generateBackupCodes should generate default 10 backup codes
+00:04 +130 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService generateBackupCodes should generate specified number of codes
+00:04 +131 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService generateBackupCodes should generate codes of specified length
+00:04 +132 -7: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService generateBackupCodes should generate unique backup codes
+00:04 +132 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService generateBackupCodes should generate unique backup codes [E]
+  Expected: a value greater than <15>
+    Actual: <1>
+     Which: is not a value greater than <15>
+  
+  package:matcher                                        expect
+  package:flutter_test/src/widget_tester.dart 473:18     expect
+  test/core/security/two_factor_service_test.dart 223:9  main.<fn>.<fn>.<fn>
+  
+00:04 +132 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService generateBackupCodes should handle edge cases
+00:04 +133 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService isValidBackupCodeFormat should validate correct backup code formats
+00:04 +134 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService isValidBackupCodeFormat should reject invalid backup code formats
+00:04 +135 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService isValidBackupCodeFormat should handle formatted codes with dashes
+00:04 +136 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService formatBackupCode should format 8-character codes with dash
+00:04 +137 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService formatBackupCode should not format codes of different lengths
+00:04 +138 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService formatBackupCode should handle empty string
+00:04 +139 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService parseBackupCode should parse formatted backup codes
+00:04 +140 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService parseBackupCode should convert to uppercase
+00:04 +141 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService parseBackupCode should remove all non-alphanumeric characters
+00:04 +142 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService parseBackupCode should handle empty input
+00:04 +143 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService isBackupCode should identify valid backup codes
+00:04 +144 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService isBackupCode should reject invalid backup codes
+00:04 +145 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService isTOTPCode should identify valid TOTP codes
+00:04 +146 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService isTOTPCode should reject invalid TOTP codes
+00:04 +147 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService classifyInput should classify TOTP codes correctly
+00:04 +148 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService classifyInput should classify backup codes correctly
+00:04 +149 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService classifyInput should classify invalid input correctly
+00:04 +150 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService classifyInput should handle edge cases
+00:04 +151 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService getSetupInstructions should return comprehensive setup instructions
+00:04 +152 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService getSetupInstructions should handle empty app name
+00:04 +153 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService getSupportedAuthenticatorApps should return list of supported authenticator apps
+00:04 +154 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: TwoFactorService getSupportedAuthenticatorApps should provide complete app information
+00:04 +155 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: AuthenticatorApp should create app with all required fields
+00:04 +156 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: AuthenticatorApp getDownloadUrl should return URL for supported platform
+00:04 +157 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: AuthenticatorApp getDownloadUrl should return null for unsupported platform
+00:04 +158 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: AuthenticatorApp supportsPlatform should return true for supported platforms
+00:04 +159 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: AuthenticatorApp supportsPlatform should return false for unsupported platforms
+00:04 +160 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: AuthenticatorApp should handle empty platforms list
+00:04 +161 -8: /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/security/two_factor_service_test.dart: AuthenticatorApp should handle empty download URLs
+00:04 +162 -8: Some tests failed.

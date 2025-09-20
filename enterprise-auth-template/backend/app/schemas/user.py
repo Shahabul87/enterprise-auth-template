@@ -23,9 +23,7 @@ class UserUpdate(BaseModel):
         None, min_length=2, max_length=255, description="Full name"
     )
 
-    model_config = ConfigDict(
-        json_schema_extra={"example": {"full_name": "John Doe"}}
-    )
+    model_config = ConfigDict(json_schema_extra={"example": {"full_name": "John Doe"}})
 
 
 class UserResponse(BaseModel):

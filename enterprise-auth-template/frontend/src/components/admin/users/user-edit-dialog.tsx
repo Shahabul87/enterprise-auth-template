@@ -32,7 +32,7 @@ export default function UserEditDialog({
   open,
   onClose,
   onSuccess,
-}: UserEditDialogProps): JSX.Element {
+}: UserEditDialogProps): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 

@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
-import '../storage/secure_storage_service.dart';
+import 'package:flutter_auth_template/core/storage/secure_storage_service.dart';
 import 'biometric_service.dart';
-import '../errors/app_exception.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
 
 final enhancedBiometricManagerProvider = Provider<EnhancedBiometricManager>((ref) {
   return EnhancedBiometricManager(

@@ -1,0 +1,987 @@
+00:00 +0: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/interceptors/error_interceptor_test.dart
+test/core/network/interceptors/error_interceptor_test.dart:46:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:71:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:96:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:121:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:153:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:187:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:212:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:237:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:260:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:281:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:302:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:323:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:344:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:371:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:395:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:419:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+test/core/network/interceptors/error_interceptor_test.dart:443:32: Error: This expression has type 'void' and can't be used.
+        await errorInterceptor.onError(error, mockHandler);
+                               ^
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/interceptors/error_interceptor_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/interceptors/error_interceptor_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/interceptors/error_interceptor_test.dart: test/core/network/interceptors/error_interceptor_test.dart:46:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:71:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:96:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:121:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:153:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:187:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:212:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:237:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:260:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:281:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:302:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:323:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:344:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:371:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:395:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:419:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  test/core/network/interceptors/error_interceptor_test.dart:443:32: Error: This expression has type 'void' and can't be used.
+          await errorInterceptor.onError(error, mockHandler);
+                                 ^
+  .
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/interceptors/auth_interceptor_test.dart
+00:00 +0 -1: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/interceptors/error_interceptor_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 910:11    DefaultResidentCompiler._compile.<fn>
+  dart:async/zone.dart 1538:47                     _rootRunUnary
+  dart:async/zone.dart 1429:19                     _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone.dart 1525:13                     _rootRun
+  dart:async/zone.dart 1422:19                     _CustomZone.run
+  dart:async/zone.dart 1321:7                      _CustomZone.runGuarded
+  dart:async/zone.dart 1362:23                     _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 194:5      _RawReceivePort._handleMessage
+  
+test/core/network/interceptors/auth_interceptor_test.dart:30:40: Error: Too few positional arguments: 1 required, 0 given.
+      authInterceptor = AuthInterceptor(tokenManager: mockTokenManager);
+                                       ^
+lib/core/network/interceptors/auth_interceptor.dart:10:3: Context: Found this candidate, but the arguments don't match.
+  AuthInterceptor(this._ref);
+  ^^^^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:243:42: Error: Too few positional arguments: 1 required, 0 given.
+        authInterceptor = AuthInterceptor(
+                                         ^
+lib/core/network/interceptors/auth_interceptor.dart:10:3: Context: Found this candidate, but the arguments don't match.
+  AuthInterceptor(this._ref);
+  ^^^^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:281:42: Error: Too few positional arguments: 1 required, 0 given.
+        authInterceptor = AuthInterceptor(
+                                         ^
+lib/core/network/interceptors/auth_interceptor.dart:10:3: Context: Found this candidate, but the arguments don't match.
+  AuthInterceptor(this._ref);
+  ^^^^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:38:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+        when(mockTokenManager.getAccessToken()).thenAnswer((_) async => token);
+                              ^^^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:49:33: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+        verify(mockTokenManager.getAccessToken()).called(1);
+                                ^^^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:56:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+        when(mockTokenManager.getAccessToken()).thenAnswer((_) async => null);
+                              ^^^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:67:33: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+        verify(mockTokenManager.getAccessToken()).called(1);
+                                ^^^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:85:38: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+        verifyNever(mockTokenManager.getAccessToken());
+                                     ^^^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:92:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+        when(mockTokenManager.getAccessToken()).thenThrow(Exception('Token error'));
+                              ^^^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:119:31: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+        when(mockTokenManager.refreshToken()).thenAnswer((_) async => 'new_token');
+                              ^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:120:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+        when(mockTokenManager.getAccessToken()).thenAnswer((_) async => 'new_token');
+                              ^^^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:126:33: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+        verify(mockTokenManager.refreshToken()).called(1);
+                                ^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:139:31: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+        when(mockTokenManager.refreshToken()).thenThrow(Exception('Refresh failed'));
+                              ^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:146:33: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+        verify(mockTokenManager.refreshToken()).called(1);
+                                ^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:165:38: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+        verifyNever(mockTokenManager.refreshToken());
+                                     ^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:187:31: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+        when(mockTokenManager.refreshToken()).thenAnswer((_) async {
+                              ^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:191:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+        when(mockTokenManager.getAccessToken()).thenAnswer((_) async => 'new_token');
+                              ^^^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:200:33: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+        verify(mockTokenManager.refreshToken()).called(1);
+                                ^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:217:38: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+        verifyNever(mockTokenManager.refreshToken());
+                                     ^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:234:31: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+        when(mockTokenManager.refreshToken()).thenAnswer((_) async => 'new_token');
+                              ^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:235:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+        when(mockTokenManager.getAccessToken()).thenAnswer((_) async => 'new_token');
+                              ^^^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:252:33: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+        verify(mockTokenManager.refreshToken()).called(1);
+                                ^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:268:31: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+        when(mockTokenManager.refreshToken()).thenAnswer((_) async => newToken);
+                              ^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:269:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+        when(mockTokenManager.getAccessToken()).thenAnswer((_) async => newToken);
+                              ^^^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:303:31: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+        when(mockTokenManager.refreshToken()).thenThrow(DioException(
+                              ^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:313:33: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+        verify(mockTokenManager.refreshToken()).called(1);
+                                ^^^^^^^^^^^^
+test/core/network/interceptors/auth_interceptor_test.dart:342:40: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+ - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+          verifyNever(mockTokenManager.getAccessToken());
+                                       ^^^^^^^^^^^^^^
+00:00 +0 -2: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/interceptors/auth_interceptor_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/interceptors/auth_interceptor_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/interceptors/auth_interceptor_test.dart: test/core/network/interceptors/auth_interceptor_test.dart:30:40: Error: Too few positional arguments: 1 required, 0 given.
+        authInterceptor = AuthInterceptor(tokenManager: mockTokenManager);
+                                         ^
+  lib/core/network/interceptors/auth_interceptor.dart:10:3: Context: Found this candidate, but the arguments don't match.
+    AuthInterceptor(this._ref);
+    ^^^^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:243:42: Error: Too few positional arguments: 1 required, 0 given.
+          authInterceptor = AuthInterceptor(
+                                           ^
+  lib/core/network/interceptors/auth_interceptor.dart:10:3: Context: Found this candidate, but the arguments don't match.
+    AuthInterceptor(this._ref);
+    ^^^^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:281:42: Error: Too few positional arguments: 1 required, 0 given.
+          authInterceptor = AuthInterceptor(
+                                           ^
+  lib/core/network/interceptors/auth_interceptor.dart:10:3: Context: Found this candidate, but the arguments don't match.
+    AuthInterceptor(this._ref);
+    ^^^^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:38:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+          when(mockTokenManager.getAccessToken()).thenAnswer((_) async => token);
+                                ^^^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:49:33: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+          verify(mockTokenManager.getAccessToken()).called(1);
+                                  ^^^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:56:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+          when(mockTokenManager.getAccessToken()).thenAnswer((_) async => null);
+                                ^^^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:67:33: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+          verify(mockTokenManager.getAccessToken()).called(1);
+                                  ^^^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:85:38: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+          verifyNever(mockTokenManager.getAccessToken());
+                                       ^^^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:92:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+          when(mockTokenManager.getAccessToken()).thenThrow(Exception('Token error'));
+                                ^^^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:119:31: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+          when(mockTokenManager.refreshToken()).thenAnswer((_) async => 'new_token');
+                                ^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:120:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+          when(mockTokenManager.getAccessToken()).thenAnswer((_) async => 'new_token');
+                                ^^^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:126:33: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+          verify(mockTokenManager.refreshToken()).called(1);
+                                  ^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:139:31: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+          when(mockTokenManager.refreshToken()).thenThrow(Exception('Refresh failed'));
+                                ^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:146:33: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+          verify(mockTokenManager.refreshToken()).called(1);
+                                  ^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:165:38: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+          verifyNever(mockTokenManager.refreshToken());
+                                       ^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:187:31: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+          when(mockTokenManager.refreshToken()).thenAnswer((_) async {
+                                ^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:191:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+          when(mockTokenManager.getAccessToken()).thenAnswer((_) async => 'new_token');
+                                ^^^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:200:33: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+          verify(mockTokenManager.refreshToken()).called(1);
+                                  ^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:217:38: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+          verifyNever(mockTokenManager.refreshToken());
+                                       ^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:234:31: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+          when(mockTokenManager.refreshToken()).thenAnswer((_) async => 'new_token');
+                                ^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:235:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+          when(mockTokenManager.getAccessToken()).thenAnswer((_) async => 'new_token');
+                                ^^^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:252:33: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+          verify(mockTokenManager.refreshToken()).called(1);
+                                  ^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:268:31: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+          when(mockTokenManager.refreshToken()).thenAnswer((_) async => newToken);
+                                ^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:269:31: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+          when(mockTokenManager.getAccessToken()).thenAnswer((_) async => newToken);
+                                ^^^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:303:31: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+          when(mockTokenManager.refreshToken()).thenThrow(DioException(
+                                ^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:313:33: Error: The method 'refreshToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'refreshToken'.
+          verify(mockTokenManager.refreshToken()).called(1);
+                                  ^^^^^^^^^^^^
+  test/core/network/interceptors/auth_interceptor_test.dart:342:40: Error: The method 'getAccessToken' isn't defined for the type 'MockTokenManager'.
+   - 'MockTokenManager' is from 'test/core/network/interceptors/auth_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getAccessToken'.
+            verifyNever(mockTokenManager.getAccessToken());
+                                         ^^^^^^^^^^^^^^
+  .
+00:00 +0 -2: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/offline_interceptor_test.dart
+00:00 +0 -2: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/interceptors/error_interceptor_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 910:11    DefaultResidentCompiler._compile.<fn>
+  dart:async/zone.dart 1538:47                     _rootRunUnary
+  dart:async/zone.dart 1429:19                     _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone.dart 1525:13                     _rootRun
+  dart:async/zone.dart 1422:19                     _CustomZone.run
+  dart:async/zone.dart 1321:7                      _CustomZone.runGuarded
+  dart:async/zone.dart 1362:23                     _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 194:5      _RawReceivePort._handleMessage
+  
+test/core/network/offline_interceptor_test.dart:35:46: Error: Too few positional arguments: 1 required, 0 given.
+      offlineInterceptor = OfflineInterceptor(
+                                             ^
+lib/core/network/offline_interceptor.dart:14:3: Context: Found this candidate, but the arguments don't match.
+  OfflineInterceptor(this._offlineService);
+  ^^^^^^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:47:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+ - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+ - 'Future' is from 'dart:async'.
+ - 'List' is from 'dart:core'.
+            .thenAnswer((_) async => ConnectivityResult.wifi);
+                                                        ^
+test/core/network/offline_interceptor_test.dart:54:40: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+        verifyNever(mockOfflineService.queueRequest(any));
+                                       ^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:66:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+ - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+ - 'Future' is from 'dart:async'.
+ - 'List' is from 'dart:core'.
+            .thenAnswer((_) async => ConnectivityResult.none);
+                                                        ^
+test/core/network/offline_interceptor_test.dart:67:33: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+        when(mockOfflineService.queueRequest(any)).thenAnswer((_) async => true);
+                                ^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:73:35: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+        verify(mockOfflineService.queueRequest(any)).called(1);
+                                  ^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:86:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+ - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+ - 'Future' is from 'dart:async'.
+ - 'List' is from 'dart:core'.
+            .thenAnswer((_) async => ConnectivityResult.none);
+                                                        ^
+test/core/network/offline_interceptor_test.dart:87:33: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+        when(mockOfflineService.queueRequest(any)).thenAnswer((_) async => true);
+                                ^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:93:35: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+        verify(mockOfflineService.queueRequest(any)).called(1);
+                                  ^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:105:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+ - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+ - 'Future' is from 'dart:async'.
+ - 'List' is from 'dart:core'.
+            .thenAnswer((_) async => ConnectivityResult.none);
+                                                        ^
+test/core/network/offline_interceptor_test.dart:106:33: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+        when(mockOfflineService.queueRequest(any)).thenAnswer((_) async => true);
+                                ^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:112:35: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+        verify(mockOfflineService.queueRequest(any)).called(1);
+                                  ^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:125:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+ - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+ - 'Future' is from 'dart:async'.
+ - 'List' is from 'dart:core'.
+            .thenAnswer((_) async => ConnectivityResult.none);
+                                                        ^
+test/core/network/offline_interceptor_test.dart:126:33: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+        when(mockOfflineService.getCachedResponse('/api/test'))
+                                ^^^^^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:133:35: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+        verify(mockOfflineService.getCachedResponse('/api/test')).called(1);
+                                  ^^^^^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:145:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+ - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+ - 'Future' is from 'dart:async'.
+ - 'List' is from 'dart:core'.
+            .thenAnswer((_) async => ConnectivityResult.none);
+                                                        ^
+test/core/network/offline_interceptor_test.dart:146:33: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+        when(mockOfflineService.getCachedResponse('/api/test'))
+                                ^^^^^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:153:35: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+        verify(mockOfflineService.getCachedResponse('/api/test')).called(1);
+                                  ^^^^^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:160:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+ - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+ - 'Future' is from 'dart:async'.
+ - 'List' is from 'dart:core'.
+            .thenAnswer((_) async => ConnectivityResult.mobile);
+                                                        ^
+test/core/network/offline_interceptor_test.dart:172:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+ - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+ - 'Future' is from 'dart:async'.
+ - 'List' is from 'dart:core'.
+            .thenAnswer((_) async => ConnectivityResult.ethernet);
+                                                        ^
+test/core/network/offline_interceptor_test.dart:194:33: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+        when(mockOfflineService.cacheResponse('/api/test', any))
+                                ^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:201:35: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+        verify(mockOfflineService.cacheResponse('/api/test', {'test': 'data'}))
+                                  ^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:221:40: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+        verifyNever(mockOfflineService.cacheResponse(any, any));
+                                       ^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:240:40: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+        verifyNever(mockOfflineService.cacheResponse(any, any));
+                                       ^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:255:33: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+        when(mockOfflineService.cacheResponse(any, any))
+                                ^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:257:33: Error: The method 'syncQueuedRequests' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'syncQueuedRequests'.
+        when(mockOfflineService.syncQueuedRequests())
+                                ^^^^^^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:264:35: Error: The method 'syncQueuedRequests' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'syncQueuedRequests'.
+        verify(mockOfflineService.syncQueuedRequests()).called(1);
+                                  ^^^^^^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:281:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+ - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+ - 'Future' is from 'dart:async'.
+ - 'List' is from 'dart:core'.
+            .thenAnswer((_) async => ConnectivityResult.none);
+                                                        ^
+test/core/network/offline_interceptor_test.dart:282:33: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+        when(mockOfflineService.getCachedResponse('/api/test'))
+                                ^^^^^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:289:35: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+        verify(mockOfflineService.getCachedResponse('/api/test')).called(1);
+                                  ^^^^^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:305:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+ - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+ - 'Future' is from 'dart:async'.
+ - 'List' is from 'dart:core'.
+            .thenAnswer((_) async => ConnectivityResult.none);
+                                                        ^
+test/core/network/offline_interceptor_test.dart:306:33: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+        when(mockOfflineService.queueRequest(any)).thenAnswer((_) async => true);
+                                ^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:312:35: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+        verify(mockOfflineService.queueRequest(any)).called(1);
+                                  ^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:346:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+ - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+ - 'Future' is from 'dart:async'.
+ - 'List' is from 'dart:core'.
+            .thenAnswer((_) async => ConnectivityResult.none);
+                                                        ^
+test/core/network/offline_interceptor_test.dart:347:33: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+        when(mockOfflineService.getCachedResponse('/api/test'))
+                                ^^^^^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:377:40: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+        verifyNever(mockOfflineService.cacheResponse(any, any));
+                                       ^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:395:33: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+        when(mockOfflineService.cacheResponse(any, any, ttl: anyNamed('ttl')))
+                                ^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:402:35: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+        verify(mockOfflineService.cacheResponse(
+                                  ^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:427:40: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+        verifyNever(mockOfflineService.cacheResponse(any, any));
+                                       ^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:443:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+ - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+ - 'Future' is from 'dart:async'.
+ - 'List' is from 'dart:core'.
+            .thenAnswer((_) async => ConnectivityResult.none);
+                                                        ^
+test/core/network/offline_interceptor_test.dart:444:33: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+        when(mockOfflineService.queueRequest(any)).thenAnswer((_) async => true);
+                                ^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:451:30: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+          mockOfflineService.queueRequest(captureAny)
+                             ^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:471:33: Error: The method 'syncQueuedRequests' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'syncQueuedRequests'.
+        when(mockOfflineService.syncQueuedRequests())
+                                ^^^^^^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:473:33: Error: The method 'hasPendingRequests' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'hasPendingRequests'.
+        when(mockOfflineService.hasPendingRequests())
+                                ^^^^^^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:480:35: Error: The method 'syncQueuedRequests' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'syncQueuedRequests'.
+        verify(mockOfflineService.syncQueuedRequests()).called(1);
+                                  ^^^^^^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:494:33: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+        when(mockOfflineService.cacheResponse(any, any))
+                                ^^^^^^^^^^^^^
+test/core/network/offline_interceptor_test.dart:496:33: Error: The method 'syncQueuedRequests' isn't defined for the type 'MockOfflineService'.
+ - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+Try correcting the name to the name of an existing method, or defining a method named 'syncQueuedRequests'.
+        when(mockOfflineService.syncQueuedRequests())
+                                ^^^^^^^^^^^^^^^^^^
+00:00 +0 -3: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/offline_interceptor_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/offline_interceptor_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/offline_interceptor_test.dart: test/core/network/offline_interceptor_test.dart:35:46: Error: Too few positional arguments: 1 required, 0 given.
+        offlineInterceptor = OfflineInterceptor(
+                                               ^
+  lib/core/network/offline_interceptor.dart:14:3: Context: Found this candidate, but the arguments don't match.
+    OfflineInterceptor(this._offlineService);
+    ^^^^^^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:47:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+   - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+   - 'Future' is from 'dart:async'.
+   - 'List' is from 'dart:core'.
+              .thenAnswer((_) async => ConnectivityResult.wifi);
+                                                          ^
+  test/core/network/offline_interceptor_test.dart:54:40: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+          verifyNever(mockOfflineService.queueRequest(any));
+                                         ^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:66:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+   - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+   - 'Future' is from 'dart:async'.
+   - 'List' is from 'dart:core'.
+              .thenAnswer((_) async => ConnectivityResult.none);
+                                                          ^
+  test/core/network/offline_interceptor_test.dart:67:33: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+          when(mockOfflineService.queueRequest(any)).thenAnswer((_) async => true);
+                                  ^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:73:35: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+          verify(mockOfflineService.queueRequest(any)).called(1);
+                                    ^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:86:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+   - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+   - 'Future' is from 'dart:async'.
+   - 'List' is from 'dart:core'.
+              .thenAnswer((_) async => ConnectivityResult.none);
+                                                          ^
+  test/core/network/offline_interceptor_test.dart:87:33: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+          when(mockOfflineService.queueRequest(any)).thenAnswer((_) async => true);
+                                  ^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:93:35: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+          verify(mockOfflineService.queueRequest(any)).called(1);
+                                    ^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:105:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+   - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+   - 'Future' is from 'dart:async'.
+   - 'List' is from 'dart:core'.
+              .thenAnswer((_) async => ConnectivityResult.none);
+                                                          ^
+  test/core/network/offline_interceptor_test.dart:106:33: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+          when(mockOfflineService.queueRequest(any)).thenAnswer((_) async => true);
+                                  ^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:112:35: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+          verify(mockOfflineService.queueRequest(any)).called(1);
+                                    ^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:125:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+   - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+   - 'Future' is from 'dart:async'.
+   - 'List' is from 'dart:core'.
+              .thenAnswer((_) async => ConnectivityResult.none);
+                                                          ^
+  test/core/network/offline_interceptor_test.dart:126:33: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+          when(mockOfflineService.getCachedResponse('/api/test'))
+                                  ^^^^^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:133:35: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+          verify(mockOfflineService.getCachedResponse('/api/test')).called(1);
+                                    ^^^^^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:145:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+   - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+   - 'Future' is from 'dart:async'.
+   - 'List' is from 'dart:core'.
+              .thenAnswer((_) async => ConnectivityResult.none);
+                                                          ^
+  test/core/network/offline_interceptor_test.dart:146:33: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+          when(mockOfflineService.getCachedResponse('/api/test'))
+                                  ^^^^^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:153:35: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+          verify(mockOfflineService.getCachedResponse('/api/test')).called(1);
+                                    ^^^^^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:160:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+   - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+   - 'Future' is from 'dart:async'.
+   - 'List' is from 'dart:core'.
+              .thenAnswer((_) async => ConnectivityResult.mobile);
+                                                          ^
+  test/core/network/offline_interceptor_test.dart:172:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+   - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+   - 'Future' is from 'dart:async'.
+   - 'List' is from 'dart:core'.
+              .thenAnswer((_) async => ConnectivityResult.ethernet);
+                                                          ^
+  test/core/network/offline_interceptor_test.dart:194:33: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+          when(mockOfflineService.cacheResponse('/api/test', any))
+                                  ^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:201:35: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+          verify(mockOfflineService.cacheResponse('/api/test', {'test': 'data'}))
+                                    ^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:221:40: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+          verifyNever(mockOfflineService.cacheResponse(any, any));
+                                         ^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:240:40: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+          verifyNever(mockOfflineService.cacheResponse(any, any));
+                                         ^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:255:33: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+          when(mockOfflineService.cacheResponse(any, any))
+                                  ^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:257:33: Error: The method 'syncQueuedRequests' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'syncQueuedRequests'.
+          when(mockOfflineService.syncQueuedRequests())
+                                  ^^^^^^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:264:35: Error: The method 'syncQueuedRequests' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'syncQueuedRequests'.
+          verify(mockOfflineService.syncQueuedRequests()).called(1);
+                                    ^^^^^^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:281:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+   - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+   - 'Future' is from 'dart:async'.
+   - 'List' is from 'dart:core'.
+              .thenAnswer((_) async => ConnectivityResult.none);
+                                                          ^
+  test/core/network/offline_interceptor_test.dart:282:33: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+          when(mockOfflineService.getCachedResponse('/api/test'))
+                                  ^^^^^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:289:35: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+          verify(mockOfflineService.getCachedResponse('/api/test')).called(1);
+                                    ^^^^^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:305:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+   - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+   - 'Future' is from 'dart:async'.
+   - 'List' is from 'dart:core'.
+              .thenAnswer((_) async => ConnectivityResult.none);
+                                                          ^
+  test/core/network/offline_interceptor_test.dart:306:33: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+          when(mockOfflineService.queueRequest(any)).thenAnswer((_) async => true);
+                                  ^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:312:35: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+          verify(mockOfflineService.queueRequest(any)).called(1);
+                                    ^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:346:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+   - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+   - 'Future' is from 'dart:async'.
+   - 'List' is from 'dart:core'.
+              .thenAnswer((_) async => ConnectivityResult.none);
+                                                          ^
+  test/core/network/offline_interceptor_test.dart:347:33: Error: The method 'getCachedResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'getCachedResponse'.
+          when(mockOfflineService.getCachedResponse('/api/test'))
+                                  ^^^^^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:377:40: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+          verifyNever(mockOfflineService.cacheResponse(any, any));
+                                         ^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:395:33: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+          when(mockOfflineService.cacheResponse(any, any, ttl: anyNamed('ttl')))
+                                  ^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:402:35: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+          verify(mockOfflineService.cacheResponse(
+                                    ^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:427:40: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+          verifyNever(mockOfflineService.cacheResponse(any, any));
+                                         ^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:443:57: Error: A value of type 'ConnectivityResult' can't be returned from an async function with return type 'Future<List<ConnectivityResult>>'.
+   - 'ConnectivityResult' is from 'package:connectivity_plus_platform_interface/src/enums.dart' ('../../../.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1/lib/src/enums.dart').
+   - 'Future' is from 'dart:async'.
+   - 'List' is from 'dart:core'.
+              .thenAnswer((_) async => ConnectivityResult.none);
+                                                          ^
+  test/core/network/offline_interceptor_test.dart:444:33: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+          when(mockOfflineService.queueRequest(any)).thenAnswer((_) async => true);
+                                  ^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:451:30: Error: The method 'queueRequest' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'queueRequest'.
+            mockOfflineService.queueRequest(captureAny)
+                               ^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:471:33: Error: The method 'syncQueuedRequests' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'syncQueuedRequests'.
+          when(mockOfflineService.syncQueuedRequests())
+                                  ^^^^^^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:473:33: Error: The method 'hasPendingRequests' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'hasPendingRequests'.
+          when(mockOfflineService.hasPendingRequests())
+                                  ^^^^^^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:480:35: Error: The method 'syncQueuedRequests' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'syncQueuedRequests'.
+          verify(mockOfflineService.syncQueuedRequests()).called(1);
+                                    ^^^^^^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:494:33: Error: The method 'cacheResponse' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'cacheResponse'.
+          when(mockOfflineService.cacheResponse(any, any))
+                                  ^^^^^^^^^^^^^
+  test/core/network/offline_interceptor_test.dart:496:33: Error: The method 'syncQueuedRequests' isn't defined for the type 'MockOfflineService'.
+   - 'MockOfflineService' is from 'test/core/network/offline_interceptor_test.mocks.dart'.
+  Try correcting the name to the name of an existing method, or defining a method named 'syncQueuedRequests'.
+          when(mockOfflineService.syncQueuedRequests())
+                                  ^^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -3: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/api_client_test.dart
+00:00 +0 -3: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/interceptors/error_interceptor_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 910:11    DefaultResidentCompiler._compile.<fn>
+  dart:async/zone.dart 1538:47                     _rootRunUnary
+  dart:async/zone.dart 1429:19                     _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone.dart 1525:13                     _rootRun
+  dart:async/zone.dart 1422:19                     _CustomZone.run
+  dart:async/zone.dart 1321:7                      _CustomZone.runGuarded
+  dart:async/zone.dart 1362:23                     _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 194:5      _RawReceivePort._handleMessage
+  
+test/core/network/api_client_test.dart:49:28: Error: Too few positional arguments: 1 required, 0 given.
+      apiClient = ApiClient();
+                           ^
+lib/core/network/api_client.dart:17:3: Context: Found this candidate, but the arguments don't match.
+  ApiClient(this._ref) {
+  ^^^^^^^^^
+test/core/network/api_client_test.dart:51:28: Error: Too few positional arguments: 1 required, 0 given.
+      apiClient = ApiClient();
+                           ^
+lib/core/network/api_client.dart:17:3: Context: Found this candidate, but the arguments don't match.
+  ApiClient(this._ref) {
+  ^^^^^^^^^
+test/core/network/api_client_test.dart:389:11: Error: No named parameter with the name 'onSendProgress'.
+          onSendProgress: (sent, total) {
+          ^^^^^^^^^^^^^^
+test/core/network/api_client_test.dart:418:11: Error: No named parameter with the name 'onReceiveProgress'.
+          onReceiveProgress: (received, total) {
+          ^^^^^^^^^^^^^^^^^
+00:00 +0 -4: loading /Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/api_client_test.dart [E]
+  Failed to load "/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/api_client_test.dart":
+  Compilation failed for testPath=/Users/mdshahabulalam/basetemplate/enterprise-auth-template/flutter_auth_template/test/core/network/api_client_test.dart: test/core/network/api_client_test.dart:49:28: Error: Too few positional arguments: 1 required, 0 given.
+        apiClient = ApiClient();
+                             ^
+  lib/core/network/api_client.dart:17:3: Context: Found this candidate, but the arguments don't match.
+    ApiClient(this._ref) {
+    ^^^^^^^^^
+  test/core/network/api_client_test.dart:51:28: Error: Too few positional arguments: 1 required, 0 given.
+        apiClient = ApiClient();
+                             ^
+  lib/core/network/api_client.dart:17:3: Context: Found this candidate, but the arguments don't match.
+    ApiClient(this._ref) {
+    ^^^^^^^^^
+  test/core/network/api_client_test.dart:389:11: Error: No named parameter with the name 'onSendProgress'.
+            onSendProgress: (sent, total) {
+            ^^^^^^^^^^^^^^
+  test/core/network/api_client_test.dart:418:11: Error: No named parameter with the name 'onReceiveProgress'.
+            onReceiveProgress: (received, total) {
+            ^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -4: Some tests failed.

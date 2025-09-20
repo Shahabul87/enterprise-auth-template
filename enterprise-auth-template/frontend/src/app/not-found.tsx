@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function NotFound(): JSX.Element {
+export default function NotFound(): React.ReactElement {
   const navigationLinks = [
     {
       href: '/',

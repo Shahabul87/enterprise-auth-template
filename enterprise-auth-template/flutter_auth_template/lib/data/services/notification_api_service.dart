@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../core/config/app_config.dart';
-import '../models/notification_models.dart';
+import 'package:flutter_auth_template/core/config/app_config.dart';
+import 'package:flutter_auth_template/data/models/notification_models.dart';
 
 class NotificationApiService {
   final http.Client _client;

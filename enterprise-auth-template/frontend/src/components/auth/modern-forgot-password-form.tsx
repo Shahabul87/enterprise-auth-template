@@ -20,7 +20,7 @@ import {
   Shield,
 } from 'lucide-react';
 
-export function ModernForgotPasswordForm(): JSX.Element {
+export function ModernForgotPasswordForm(): React.ReactElement {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');

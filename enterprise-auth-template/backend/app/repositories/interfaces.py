@@ -45,7 +45,9 @@ class IUserRepository(Protocol):
         """Find a user by their phone number."""
         ...
 
-    async def find_by_oauth_provider(self, provider: str, provider_id: str) -> Optional[Any]:
+    async def find_by_oauth_provider(
+        self, provider: str, provider_id: str
+    ) -> Optional[Any]:
         """Find a user by OAuth provider and provider ID."""
         ...
 
@@ -137,7 +139,9 @@ class ISessionRepository(Protocol):
         """Find all sessions for a user."""
         ...
 
-    async def update(self, session_id: str, session_data: Dict[str, Any]) -> Optional[Any]:
+    async def update(
+        self, session_id: str, session_data: Dict[str, Any]
+    ) -> Optional[Any]:
         """Update session data."""
         ...
 
@@ -201,7 +205,9 @@ class IPermissionRepository(Protocol):
         """Remove a permission from a role."""
         ...
 
-    async def user_has_permission(self, user_id: UUID, resource: str, action: str) -> bool:
+    async def user_has_permission(
+        self, user_id: UUID, resource: str, action: str
+    ) -> bool:
         """Check if a user has a specific permission."""
         ...
 
@@ -223,7 +229,7 @@ class IAuditLogRepository(Protocol):
         skip: int = 0,
         limit: int = 100,
         start_date: Optional[datetime] = None,
-        end_date: Optional[datetime] = None
+        end_date: Optional[datetime] = None,
     ) -> List[Any]:
         """Find audit logs for a specific user."""
         ...
@@ -234,26 +240,19 @@ class IAuditLogRepository(Protocol):
         skip: int = 0,
         limit: int = 100,
         start_date: Optional[datetime] = None,
-        end_date: Optional[datetime] = None
+        end_date: Optional[datetime] = None,
     ) -> List[Any]:
         """Find audit logs by action type."""
         ...
 
     async def find_by_resource(
-        self,
-        resource_type: str,
-        resource_id: str,
-        skip: int = 0,
-        limit: int = 100
+        self, resource_type: str, resource_id: str, skip: int = 0, limit: int = 100
     ) -> List[Any]:
         """Find audit logs for a specific resource."""
         ...
 
     async def find_by_ip_address(
-        self,
-        ip_address: str,
-        skip: int = 0,
-        limit: int = 100
+        self, ip_address: str, skip: int = 0, limit: int = 100
     ) -> List[Any]:
         """Find audit logs from a specific IP address."""
         ...

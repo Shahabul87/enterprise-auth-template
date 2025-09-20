@@ -4,7 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../error/app_exception.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
 
 final offlineServiceProvider = Provider<OfflineService>((ref) {
   return OfflineService();
@@ -378,10 +378,7 @@ class OfflineService {
 
   Future<void> forceSyncNow() async {
     if (!isOnline) {
-      throw AppException.connectivity(
-        message: 'Cannot sync while offline',
-        type: 'no_connection',
-      );
+      throw const NetworkException('Cannot sync while offline', null);
     }
     
     await _syncPendingActions();

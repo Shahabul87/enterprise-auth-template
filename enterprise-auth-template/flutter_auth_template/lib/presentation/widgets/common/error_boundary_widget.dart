@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/error/app_exception.dart';
-import '../../../core/error/error_handler.dart';
-import '../../../core/error/error_logger.dart';
+import 'package:flutter_auth_template/core/error/app_exception.dart';
+import 'package:flutter_auth_template/core/error/error_handler.dart';
+import 'package:flutter_auth_template/core/error/error_logger.dart';
 
 class ErrorBoundary extends ConsumerStatefulWidget {
   final Widget child;

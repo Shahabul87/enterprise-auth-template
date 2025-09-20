@@ -199,9 +199,9 @@ export function useWebSocket(
   });
 
   const webSocketRef = useRef<WebSocket | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
-  const connectionTimeoutRef = useRef<NodeJS.Timeout>();
-  const heartbeatIntervalRef = useRef<NodeJS.Timeout>();
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const connectionTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const heartbeatIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const messageQueueRef = useRef<WebSocketMessage[]>([]);
   const subscribersRef = useRef<Map<string, Set<(data: unknown) => void>>>(new Map());
   const metricsStartTimeRef = useRef<number>(Date.now());

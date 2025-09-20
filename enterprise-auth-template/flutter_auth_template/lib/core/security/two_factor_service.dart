@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:crypto/crypto.dart';
-import '../errors/app_exception.dart';
+import 'package:flutter_auth_template/core/errors/app_exception.dart';
 
 final twoFactorServiceProvider = Provider<TwoFactorService>((ref) {
   return TwoFactorService();
