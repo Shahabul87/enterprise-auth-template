@@ -14,11 +14,22 @@ import 'package:flutter_auth_template/presentation/pages/home/public_home_screen
 import 'package:flutter_auth_template/presentation/pages/auth/forgot_password_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
-  // final authState = ref.watch(authStateProvider); // Unused variable
-  final isAuthenticated = ref.watch(isAuthenticatedProvider);
+  // Watch the auth state - this will cause router to rebuild when auth changes
+  final authState = ref.watch(authStateProvider);
+
+  // Get authentication status
+  final isAuthenticated = authState.when(
+    authenticated: (_, __, ___) => true,
+    error: (_) => false,
+    authenticating: () => false,
+    unauthenticated: () => false,
+  );
+
+  debugPrint('Router rebuild - isAuthenticated: $isAuthenticated');
 
   return GoRouter(
     initialLocation: '/home',
+    debugLogDiagnostics: true, // Enable debug logging
     redirect: (BuildContext context, GoRouterState state) {
       final isGoingToLogin = state.matchedLocation == '/auth/login';
       final isGoingToRegister = state.matchedLocation == '/auth/register';
@@ -28,19 +39,26 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isGoingToForgotPassword = state.matchedLocation == '/auth/forgot-password';
       final isGoingTo2FA = state.matchedLocation.startsWith('/auth/2fa');
 
-      // Public pages - always accessible
-      if (isGoingToHome || isGoingToLogin || isGoingToRegister ||
-          isGoingToSplash || isGoingToForgotPassword || isGoingTo2FA) {
-        // If authenticated and going to login/register, redirect to dashboard
-        if (isAuthenticated && (isGoingToLogin || isGoingToRegister)) {
+      debugPrint('Router redirect - auth: $isAuthenticated, path: ${state.matchedLocation}');
+
+      // Handle authentication redirects
+      if (isAuthenticated) {
+        // Authenticated users should not see login/register pages
+        if (isGoingToLogin || isGoingToRegister) {
+          debugPrint('Authenticated user on auth page - redirecting to dashboard');
           return '/dashboard';
         }
-        return null;
-      }
-
-      // Protected pages - require authentication
-      if (isGoingToDashboard && !isAuthenticated) {
-        return '/home';
+        // Authenticated users on home should go to dashboard
+        if (isGoingToHome) {
+          debugPrint('Authenticated user on home - redirecting to dashboard');
+          return '/dashboard';
+        }
+      } else {
+        // Unauthenticated users cannot access protected pages
+        if (isGoingToDashboard) {
+          debugPrint('Unauthenticated user on dashboard - redirecting to home');
+          return '/home';
+        }
       }
 
       return null; // No redirect needed
@@ -95,7 +113,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/dashboard',
         name: 'dashboard',
-        builder: (context, state) => const ModernHomeScreen(),
+        builder: (context, state) => const DashboardScreen(),
       ),
 
       // Default redirect

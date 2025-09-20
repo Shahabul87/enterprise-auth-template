@@ -63,22 +63,25 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// Login with email and password
   Future<void> login(String email, String password) async {
     state = const AuthState.authenticating();
-    
+
     final request = LoginRequest(email: email, password: password);
     final response = await _authService.login(request);
-    
-    response.when(
-      success: (user, message) {
+
+    await response.when(
+      success: (user, message) async {
+        // Update state to authenticated
         state = AuthState.authenticated(
           user: user,
           accessToken: '', // Token is managed internally
         );
+        // Force a small delay to ensure state is propagated
+        await Future.delayed(const Duration(milliseconds: 100));
       },
-      error: (message, code, _, __) {
+      error: (message, code, _, __) async {
         state = AuthState.error(message);
-        throw Exception(message);
+        // Don't throw here - let the UI handle the error state
       },
-      loading: () {
+      loading: () async {
         state = const AuthState.authenticating();
       },
     );
@@ -470,8 +473,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  /// Override logout to include OAuth sign-out
-  @override
+  /// Logout to include OAuth sign-out
   Future<void> logout() async {
     state = const AuthState.authenticating();
     

@@ -62,26 +62,68 @@ class _ModernLoginScreenState extends ConsumerState<ModernLoginScreen>
         _passwordController.text,
       );
 
-      if (mounted) {
+      // Small delay for state to propagate
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      if (!mounted) return;
+
+      // Check the updated auth state
+      final authState = ref.read(authStateProvider);
+      final isAuthenticated = ref.read(isAuthenticatedProvider);
+
+      setState(() => _isLoading = false);
+
+      if (isAuthenticated) {
+        // Successfully authenticated
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Welcome back!'),
+            content: Text('Login successful! Redirecting...'),
             backgroundColor: Colors.green,
+            duration: Duration(seconds: 1),
           ),
         );
-        context.go('/dashboard');
+
+        // Navigate to dashboard immediately
+        if (mounted) {
+          context.go('/dashboard');
+        }
+      } else {
+        // Check if it's an error state
+        authState.when(
+          error: (message) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          },
+          authenticating: () {
+            // Still loading
+          },
+          authenticated: (_, __, ___) {
+            // This shouldn't happen if isAuthenticated is false
+          },
+          unauthenticated: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Login failed. Please check your credentials.'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          },
+        );
       }
     } catch (e) {
       if (mounted) {
+        setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString()),
+            content: Text('Login error: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
       }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -445,8 +487,11 @@ class _ModernLoginScreenState extends ConsumerState<ModernLoginScreen>
               if (value == null || value.isEmpty) {
                 return 'Please enter your email';
               }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                  .hasMatch(value)) {
+              // Simple but effective email validation
+              final emailRegex = RegExp(
+                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+              );
+              if (!emailRegex.hasMatch(value)) {
                 return 'Please enter a valid email';
               }
               return null;
