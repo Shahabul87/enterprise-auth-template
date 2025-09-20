@@ -3,9 +3,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_auth_template/presentation/providers/auth_provider.dart';
-import 'package:flutter_auth_template/core/security/biometric_service.dart';
-import 'package:flutter_auth_template/core/security/oauth_service.dart';
+import 'package:flutter_auth_template/infrastructure/services/auth/biometric_service.dart' as bio;
+import 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart';
+import 'package:flutter_auth_template/core/storage/secure_storage_service.dart';
 import 'package:flutter_auth_template/core/errors/app_exception.dart';
+import 'package:flutter_auth_template/domain/entities/auth_state.dart';
 
 class EnhancedLoginForm extends HookConsumerWidget {
   final VoidCallback? onSuccess;
@@ -24,8 +26,9 @@ class EnhancedLoginForm extends HookConsumerWidget {
     final theme = Theme.of(context);
     final authState = ref.watch(authStateProvider);
     final authNotifier = ref.read(authStateProvider.notifier);
-    final biometricService = ref.read(biometricServiceProvider);
+    final biometricService = ref.read(bio.biometricServiceProvider);
     final oauthService = ref.read(oauthServiceProvider);
+    final secureStorage = ref.read(secureStorageServiceProvider);
 
     // Form controllers
     final emailController = useTextEditingController();
@@ -37,7 +40,7 @@ class EnhancedLoginForm extends HookConsumerWidget {
     final rememberMe = useState(false);
     final isLoading = useState(false);
     final errorMessage = useState<String?>(null);
-    final biometricCapability = useState<BiometricCapability?>(null);
+    final biometricCapability = useState<bio.BiometricCapability?>(null);
 
     // Initialize biometric capability
     useEffect(() {
@@ -106,17 +109,45 @@ class EnhancedLoginForm extends HookConsumerWidget {
             return;
           }
 
-          // TODO: Implement biometric login with backend
-          // This would typically involve using WebAuthn or a stored token
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Biometric login not fully implemented yet'),
-            ),
-          );
+          // Implement biometric login with backend
+          // Retrieve stored refresh token and authenticate
+          final refreshToken = await secureStorage.getRefreshToken();
+
+          if (refreshToken != null && refreshToken.isNotEmpty) {
+            try {
+              // Use refresh token to get a new access token
+              await authNotifier.refreshToken();
+
+              // Check if authentication was successful
+              final authState = ref.read(authStateProvider);
+              if (authState is Authenticated) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Biometric authentication successful'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+                // Navigation will be handled by router
+              } else {
+                throw const UnknownException(
+                  'Biometric authentication failed',
+                  null,
+                );
+              }
+            } catch (e) {
+              // If refresh token is invalid, fall back to password login
+              errorMessage.value = 'Biometric login failed. Please use password.';
+              await secureStorage.deleteRefreshToken();
+              await biometricService.disableBiometricAuth();
+            }
+          } else {
+            // No stored credentials, prompt for password first
+            errorMessage.value = 'Please log in with password first to enable biometric';
+          }
         }
       } catch (e) {
         String message = 'Biometric authentication failed';
-        if (e is BiometricException) {
+        if (e is bio.BiometricException) {
           message = e.message;
         }
         errorMessage.value = message;
@@ -129,13 +160,20 @@ class EnhancedLoginForm extends HookConsumerWidget {
         errorMessage.value = null;
         isLoading.value = true;
 
-        final account = await oauthService.signInWithGoogle();
-        if (account == null) {
+        final result = await oauthService.signInWithGoogle();
+        if (!result.isSuccess || result.dataOrNull == null) {
           isLoading.value = false;
-          return; // User canceled
+          if (result.errorCode == 'USER_CANCELLED') {
+            return; // User canceled
+          }
+          throw UnknownException(
+            result.errorMessage ?? 'Google Sign-In failed',
+            null,
+          );
         }
 
-        final token = await oauthService.getGoogleAuthToken(account);
+        final googleSignInResult = result.dataOrNull!;
+        final token = await oauthService.getGoogleAuthToken(googleSignInResult.user);
         if (token == null) {
           throw const UnknownException(
             'Failed to get Google authentication token',
@@ -144,8 +182,19 @@ class EnhancedLoginForm extends HookConsumerWidget {
         }
 
         // Complete OAuth login with backend
-        // TODO: Implement OAuth login completion
-        // await authNotifier.completeOAuthLogin('google', token);
+        await authNotifier.signInWithGoogle();
+
+        // Check authentication state
+        final authState = ref.read(authStateProvider);
+        if (authState is Authenticated) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Google sign-in successful'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          // Navigation will be handled by router
+        }
       } catch (e) {
         isLoading.value = false;
         errorMessage.value = e is AppException
@@ -263,7 +312,11 @@ class EnhancedLoginForm extends HookConsumerWidget {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
                     }
-                    if (!value.contains('@')) {
+                    // Simple but effective email validation
+                    final emailRegex = RegExp(
+                      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                    );
+                    if (!emailRegex.hasMatch(value.trim())) {
                       return 'Please enter a valid email';
                     }
                     return null;

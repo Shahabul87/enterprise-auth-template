@@ -194,6 +194,38 @@ class BiometricService {
     }
   }
 
+  /// Get biometric capability (simplified interface for UI)
+  Future<BiometricCapability?> getBiometricCapability() async {
+    try {
+      final result = await checkBiometricAvailability();
+      if (result.isSuccess && result.dataOrNull != null) {
+        final availability = result.dataOrNull!;
+        return BiometricCapability(
+          canAuthenticate: availability.isAvailable,
+          availableBiometrics: availability.availableBiometrics,
+        );
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Helper method for authentication
+  Future<bool> _authenticate(String reason) async {
+    final result = await authenticateWithBiometrics(reason: reason);
+    return result.isSuccess && (result.dataOrNull ?? false);
+  }
+
+  /// Authenticate for login purposes
+  Future<bool> authenticateForLogin() async {
+    try {
+      return await _authenticate('Authenticate to log in');
+    } catch (e) {
+      throw BiometricException('Authentication failed', e);
+    }
+  }
+
   /// Get biometric status including device capabilities and app settings
   Future<ApiResponse<BiometricStatus>> getBiometricStatus() async {
     try {
@@ -405,4 +437,26 @@ class BiometricAuthResult {
     return 'BiometricAuthResult(success: $success, errorMessage: $errorMessage, '
         'errorCode: $errorCode)';
   }
+}
+
+/// Biometric capability for UI
+class BiometricCapability {
+  final bool canAuthenticate;
+  final List<BiometricType>? availableBiometrics;
+
+  const BiometricCapability({
+    required this.canAuthenticate,
+    this.availableBiometrics,
+  });
+}
+
+/// Biometric exception for error handling
+class BiometricException implements Exception {
+  final String message;
+  final dynamic originalError;
+
+  const BiometricException(this.message, this.originalError);
+
+  @override
+  String toString() => 'BiometricException: $message (${originalError != null ? originalError.toString() : ""})';
 }

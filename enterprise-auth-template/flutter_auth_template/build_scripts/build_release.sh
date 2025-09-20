@@ -1,26 +1,41 @@
 #!/bin/bash
 
-# Build script with obfuscation and optimization
+# Build Release Script with Security Hardening
+# This script builds the Flutter app with obfuscation and security features
 
-echo "Building Flutter app with obfuscation..."
+set -e  # Exit on error
 
-# Clean previous builds
-flutter clean
+echo "═══════════════════════════════════════════════════════"
+echo "   Flutter Release Build with Security Hardening"
+echo "═══════════════════════════════════════════════════════"
 
-# Get dependencies
-flutter pub get
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-# Build for Android with obfuscation
-echo "Building Android APK with obfuscation..."
-flutter build apk --obfuscate --split-debug-info=build/debug-info --release --target-platform android-arm,android-arm64,android-x64
+# Configuration
+BUILD_TYPE=${1:-"apk"}  # Default to APK
+ENVIRONMENT=${2:-"production"}  # Default to production
 
-# Build for Android App Bundle with obfuscation
-echo "Building Android App Bundle with obfuscation..."
-flutter build appbundle --obfuscate --split-debug-info=build/debug-info --release
+# Paths
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+DEBUG_INFO_DIR="$PROJECT_ROOT/debug_symbols"
+OUTPUT_DIR="$PROJECT_ROOT/build/output"
 
-# Build for iOS with obfuscation
-echo "Building iOS with obfuscation..."
-flutter build ios --obfuscate --split-debug-info=build/debug-info --release
+# Create necessary directories
+mkdir -p "$DEBUG_INFO_DIR"
+mkdir -p "$OUTPUT_DIR"
 
-echo "Build complete! Debug symbols saved in build/debug-info/"
-echo "Remember to upload debug symbols to your crash reporting service."
+echo -e "${YELLOW}Build Type: $BUILD_TYPE${NC}"
+echo -e "${YELLOW}Environment: $ENVIRONMENT${NC}"
+
+# Build command with obfuscation
+if [ "$BUILD_TYPE" == "apk" ]; then
+    flutter build apk --release --obfuscate --split-debug-info="$DEBUG_INFO_DIR"
+elif [ "$BUILD_TYPE" == "ios" ]; then
+    flutter build ios --release --obfuscate --split-debug-info="$DEBUG_INFO_DIR"
+fi
+
+echo -e "${GREEN}Build completed with obfuscation!${NC}"

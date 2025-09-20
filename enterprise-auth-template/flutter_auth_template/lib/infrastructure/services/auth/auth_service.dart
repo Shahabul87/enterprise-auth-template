@@ -75,7 +75,7 @@ class AuthService {
   Future<ApiResponse<User>> login(LoginRequest request) async {
     return _handleRequest(
       () => _apiClient.post(ApiConstants.loginPath, data: request.toJson()),
-      (response) => _handleAuthResponse(response),
+      (response) async => await _handleAuthResponse(response),
     );
   }
 
@@ -83,7 +83,7 @@ class AuthService {
   Future<ApiResponse<User>> register(RegisterRequest request) async {
     return _handleRequest(
       () => _apiClient.post(ApiConstants.registerPath, data: request.toJson()),
-      (response) => _handleAuthResponse(response),
+      (response) async => await _handleAuthResponse(response),
     );
   }
 
@@ -91,7 +91,7 @@ class AuthService {
   Future<ApiResponse<User>> getCurrentUser() async {
     return _handleRequest(
       () => _apiClient.get(ApiConstants.userMePath),
-      (response) => _parseResponse<User>(
+      (response) async => _parseResponse<User>(
         response,
         (data) => User.fromJson(data as Map<String, dynamic>),
       ),
@@ -102,10 +102,21 @@ class AuthService {
   Future<ApiResponse<User>> updateProfile(Map<String, dynamic> data) async {
     return _handleRequest(
       () => _apiClient.patch(ApiConstants.userMePath, data: data),
-      (response) => _parseResponse<User>(
+      (response) async => _parseResponse<User>(
         response,
         (data) => User.fromJson(data as Map<String, dynamic>),
       ),
+    );
+  }
+
+  /// Refresh authentication token using refresh token
+  Future<ApiResponse<User>> refreshToken(String refreshToken) async {
+    return _handleRequest(
+      () => _apiClient.post(
+        ApiConstants.refreshTokenPath,
+        data: {'refresh_token': refreshToken},
+      ),
+      (response) async => await _handleAuthResponse(response),
     );
   }
 
@@ -127,7 +138,7 @@ class AuthService {
   Future<ApiResponse<String>> forgotPassword(ForgotPasswordRequest request) async {
     return _handleRequest(
       () => _apiClient.post(ApiConstants.forgotPasswordPath, data: request.toJson()),
-      (response) => _parseMessageResponse(response),
+      (response) async => _parseMessageResponse(response),
     );
   }
 
@@ -135,7 +146,7 @@ class AuthService {
   Future<ApiResponse<String>> resetPassword(ResetPasswordRequest request) async {
     return _handleRequest(
       () => _apiClient.post(ApiConstants.resetPasswordPath, data: request.toJson()),
-      (response) => _parseMessageResponse(response),
+      (response) async => _parseMessageResponse(response),
     );
   }
 
@@ -143,7 +154,7 @@ class AuthService {
   Future<ApiResponse<String>> changePassword(ChangePasswordRequest request) async {
     return _handleRequest(
       () => _apiClient.post(ApiConstants.profileChangePasswordPath, data: request.toJson()),
-      (response) => _parseMessageResponse(response),
+      (response) async => _parseMessageResponse(response),
     );
   }
 
@@ -151,7 +162,7 @@ class AuthService {
   Future<ApiResponse<String>> verifyEmail(VerifyEmailRequest request) async {
     return _handleRequest(
       () => _apiClient.post(ApiConstants.verifyEmailPath, data: request.toJson()),
-      (response) => _parseMessageResponse(response),
+      (response) async => _parseMessageResponse(response),
     );
   }
 
@@ -159,7 +170,7 @@ class AuthService {
   Future<ApiResponse<String>> resendEmailVerification(String email) async {
     return _handleRequest(
       () => _apiClient.post(ApiConstants.resendVerificationPath, data: {'email': email}),
-      (response) => _parseMessageResponse(response),
+      (response) async => _parseMessageResponse(response),
     );
   }
 
@@ -167,7 +178,7 @@ class AuthService {
   Future<ApiResponse<TwoFactorSetupResponse>> setup2FA() async {
     return _handleRequest(
       () => _apiClient.post(ApiConstants.twoFactorSetupPath),
-      (response) => _parseResponse<TwoFactorSetupResponse>(
+      (response) async => _parseResponse<TwoFactorSetupResponse>(
         response,
         (data) => TwoFactorSetupResponse.fromJson(data as Map<String, dynamic>),
       ),
@@ -178,7 +189,7 @@ class AuthService {
   Future<ApiResponse<String>> enable2FA(String code) async {
     return _handleRequest(
       () => _apiClient.post(ApiConstants.twoFactorEnablePath, data: {'code': code}),
-      (response) => _parseMessageResponse(response),
+      (response) async => _parseMessageResponse(response),
     );
   }
 
@@ -186,7 +197,7 @@ class AuthService {
   Future<ApiResponse<User>> verify2FA(VerifyTwoFactorRequest request) async {
     return _handleRequest(
       () => _apiClient.post(ApiConstants.twoFactorVerifyPath, data: request.toJson()),
-      (response) => _handleAuthResponse(response),
+      (response) async => await _handleAuthResponse(response),
     );
   }
 
@@ -194,16 +205,16 @@ class AuthService {
   Future<ApiResponse<String>> disable2FA(String password) async {
     return _handleRequest(
       () => _apiClient.post(ApiConstants.twoFactorDisablePath, data: {'password': password}),
-      (response) => _parseMessageResponse(response),
+      (response) async => _parseMessageResponse(response),
     );
   }
 
   /// OAuth login
   Future<ApiResponse<User>> oauthLogin(OAuthLoginRequest request) async {
     return _handleRequest(
-      () => _apiClient.post(ApiConstants.oauthCallbackPath.replaceAll('{provider}', request.provider), 
+      () => _apiClient.post(ApiConstants.oauthCallbackPath.replaceAll('{provider}', request.provider),
         data: request.toJson()),
-      (response) => _handleAuthResponse(response),
+      (response) async => await _handleAuthResponse(response),
     );
   }
 
@@ -211,50 +222,19 @@ class AuthService {
   Future<ApiResponse<String>> requestMagicLink(MagicLinkRequest request) async {
     return _handleRequest(
       () => _apiClient.post(ApiConstants.magicLinkRequestPath, data: request.toJson()),
-      (response) => _parseMessageResponse(response),
+      (response) async => _parseMessageResponse(response),
     );
   }
 
   /// Verify magic link
   Future<ApiResponse<User>> verifyMagicLink(String token) async {
     return _handleRequest(
-      () => _apiClient.post(ApiConstants.magicLinkVerifyPath.replaceAll('{token}', token), 
+      () => _apiClient.post(ApiConstants.magicLinkVerifyPath.replaceAll('{token}', token),
         data: {'token': token}),
-      (response) => _handleAuthResponse(response),
+      (response) async => await _handleAuthResponse(response),
     );
   }
 
-  /// Refresh authentication token
-  Future<bool> refreshToken() async {
-    try {
-      final refreshToken = await _secureStorage.getRefreshToken();
-      if (refreshToken == null) {
-        return false;
-      }
-
-      final response = await _apiClient.post(
-        ApiConstants.refreshPath,
-        data: {'refresh_token': refreshToken},
-      );
-
-      if (response.statusCode == 200) {
-        final data = response.data;
-        if (data is Map<String, dynamic> && data['success'] == true) {
-          final tokenData = data['data'];
-          if (tokenData != null) {
-            await _secureStorage.storeAccessToken(tokenData['access_token']);
-            if (tokenData['refresh_token'] != null) {
-              await _secureStorage.storeRefreshToken(tokenData['refresh_token']);
-            }
-            return true;
-          }
-        }
-      }
-      return false;
-    } catch (e) {
-      return false;
-    }
-  }
 
   /// Check if user is authenticated
   Future<bool> isAuthenticated() async {
@@ -275,11 +255,11 @@ class AuthService {
   /// Generic request handler with error handling
   Future<ApiResponse<T>> _handleRequest<T>(
     Future<Response> Function() request,
-    ApiResponse<T> Function(Response response) parser,
+    Future<ApiResponse<T>> Function(Response response) parser,
   ) async {
     try {
       final response = await request();
-      return parser(response);
+      return await parser(response);
     } on DioException catch (e) {
       if (e.error is AppException) {
         final appError = e.error as AppException;
@@ -302,13 +282,13 @@ class AuthService {
   }
 
   /// Handle authentication response and store tokens
-  ApiResponse<User> _handleAuthResponse(Response response) {
+  Future<ApiResponse<User>> _handleAuthResponse(Response response) async {
     if (response.statusCode == 200 || response.statusCode == 201) {
       final responseData = response.data;
-      
+
       if (responseData is Map<String, dynamic>) {
         final success = responseData['success'] as bool? ?? false;
-        
+
         if (success) {
           final data = responseData['data'] as Map<String, dynamic>?;
           if (data != null) {
@@ -319,12 +299,12 @@ class AuthService {
               final accessToken = data['accessToken'] as String? ?? data['access_token'] as String?;
               final refreshToken = data['refreshToken'] as String? ?? data['refresh_token'] as String?;
 
-              // Store tokens asynchronously
+              // Store tokens synchronously (await the storage operations)
               if (accessToken != null) {
-                _secureStorage.storeAccessToken(accessToken);
+                await _secureStorage.storeAccessToken(accessToken);
               }
               if (refreshToken != null) {
-                _secureStorage.storeRefreshToken(refreshToken);
+                await _secureStorage.storeRefreshToken(refreshToken);
               }
 
               return ApiResponse.success(data: user);
@@ -336,7 +316,7 @@ class AuthService {
             }
           }
         }
-        
+
         final error = responseData['error'] as Map<String, dynamic>?;
         final message = error?['message'] as String? ?? 'Request failed';
         return ApiResponse.error(message: message);
@@ -390,6 +370,67 @@ class AuthService {
     return _parseResponse<String>(
       response,
       (data) => (data as Map<String, dynamic>)['message'] as String,
+    );
+  }
+
+  /// Register a passkey
+  Future<ApiResponse<bool>> registerPasskey({
+    required String credentialId,
+    required String publicKey,
+    required String userId,
+    required String deviceName,
+  }) async {
+    return _handleRequest(
+      () => _apiClient.post(
+        '/auth/passkey/register',
+        data: {
+          'credentialId': credentialId,
+          'publicKey': publicKey,
+          'userId': userId,
+          'deviceName': deviceName,
+        },
+      ),
+      (response) async => _parseResponse<bool>(
+        response,
+        (data) => true,
+      ),
+    );
+  }
+
+  /// Authenticate with passkey
+  Future<ApiResponse<User>> authenticateWithPasskey({
+    required String credentialId,
+    required String signature,
+    required String clientData,
+    String? userEmail,
+  }) async {
+    return _handleRequest(
+      () => _apiClient.post(
+        '/auth/passkey/authenticate',
+        data: {
+          'credentialId': credentialId,
+          'signature': signature,
+          'clientData': clientData,
+          if (userEmail != null) 'userEmail': userEmail,
+        },
+      ),
+      (response) async => _parseResponse<User>(
+        response,
+        (data) => User.fromJson(data as Map<String, dynamic>),
+      ),
+    );
+  }
+
+  /// Remove a passkey
+  Future<ApiResponse<bool>> removePasskey(String credentialId) async {
+    return _handleRequest(
+      () => _apiClient.delete(
+        '/auth/passkey/$credentialId',
+      ),
+      (response) async => _parseResponse<bool>(
+        response,
+        (data) => true,
+      ),
     );
   }
 }

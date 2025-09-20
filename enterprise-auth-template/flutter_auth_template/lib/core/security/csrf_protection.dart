@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_auth_template/core/storage/secure_storage_service.dart';
+import 'package:flutter_auth_template/core/security/encryption_key_manager.dart';
 
 /// CSRF Protection Service
 ///
@@ -287,7 +288,8 @@ class _CSRFFormFieldState extends State<CSRFFormField> {
   }
 
   Future<void> _generateToken() async {
-    final storage = SecureStorageService();
+    final keyManager = EncryptionKeyManager();
+    final storage = SecureStorageService(keyManager);
     final csrfService = CSRFProtectionService(storage);
     final token = await csrfService.getFormToken();
 

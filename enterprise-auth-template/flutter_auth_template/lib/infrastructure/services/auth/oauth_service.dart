@@ -59,6 +59,17 @@ class OAuthService {
     }
   }
 
+  /// Get Google authentication token
+  Future<String?> getGoogleAuthToken(GoogleSignInAccount account) async {
+    try {
+      // Mock implementation - returns a dummy token
+      return 'mock_google_auth_token_${account.email}';
+    } catch (e) {
+      debugPrint('Error getting Google auth token: $e');
+      return null;
+    }
+  }
+
   /// Check if Google Sign-In is available on this platform
   bool _isGoogleSignInAvailable() {
     // Google Sign-In is available on iOS, Android, and Web

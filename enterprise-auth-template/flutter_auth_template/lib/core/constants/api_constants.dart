@@ -14,6 +14,7 @@ class ApiConstants {
   static const String loginPath = '$authBasePath/login';
   static const String registerPath = '$authBasePath/register';
   static const String refreshPath = '$authBasePath/refresh';
+  static const String refreshTokenPath = '$authBasePath/refresh'; // Alias for refreshPath
   static const String logoutPath = '$authBasePath/logout';
   static const String forgotPasswordPath = '$authBasePath/forgot-password';
   static const String resetPasswordPath = '$authBasePath/reset-password';

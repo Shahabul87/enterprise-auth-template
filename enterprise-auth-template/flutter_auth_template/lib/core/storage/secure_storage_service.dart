@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_auth_template/core/security/encryption_key_manager.dart';
 
 // Secure Storage Service Provider
 final secureStorageServiceProvider = Provider<SecureStorageService>((ref) {
-  return SecureStorageService();
+  final keyManager = ref.watch(encryptionKeyManagerProvider);
+  return SecureStorageService(keyManager);
 });
 
 /// Service for securely storing sensitive data
@@ -17,6 +19,8 @@ class SecureStorageService {
     ),
   );
 
+  final EncryptionKeyManager _keyManager;
+
   // Keys for common storage items
   static const String _accessTokenKey = 'access_token';
   static const String _refreshTokenKey = 'refresh_token';
@@ -26,15 +30,52 @@ class SecureStorageService {
   static const String _fcmTokenKey = 'fcm_token';
   static const String _lastLoginKey = 'last_login';
   static const String _twoFactorSecretKey = 'two_factor_secret';
+  static const String _encryptedPrefix = 'enc_';
 
-  /// Store access token
-  Future<void> storeAccessToken(String token) async {
-    await _storage.write(key: _accessTokenKey, value: token);
+  SecureStorageService(this._keyManager);
+
+  /// Initialize the service and key manager
+  Future<void> initialize() async {
+    await _keyManager.initialize();
   }
 
-  /// Get access token
+  /// Store access token with encryption and key rotation support
+  Future<void> storeAccessToken(String token) async {
+    // Encrypt the token with current key
+    final encrypted = await _keyManager.encrypt(token);
+
+    // Store encrypted data with metadata
+    await _storage.write(
+      key: '$_encryptedPrefix$_accessTokenKey',
+      value: jsonEncode(encrypted.toJson()),
+    );
+  }
+
+  /// Get access token with decryption support for rotated keys
   Future<String?> getAccessToken() async {
-    return await _storage.read(key: _accessTokenKey);
+    // Try to read encrypted token first
+    final encryptedJson = await _storage.read(key: '$_encryptedPrefix$_accessTokenKey');
+    if (encryptedJson != null) {
+      try {
+        final encrypted = EncryptedData.fromJson(jsonDecode(encryptedJson));
+        return await _keyManager.decrypt(encrypted);
+      } catch (e) {
+        // If decryption fails, try legacy unencrypted token
+        print('Failed to decrypt token, trying legacy: $e');
+      }
+    }
+
+    // Fallback to legacy unencrypted token
+    final legacyToken = await _storage.read(key: _accessTokenKey);
+    if (legacyToken != null) {
+      // Migrate to encrypted storage
+      await storeAccessToken(legacyToken);
+      // Remove legacy token
+      await _storage.delete(key: _accessTokenKey);
+      return legacyToken;
+    }
+
+    return null;
   }
 
   /// Get token (alias for getAccessToken, used by WebSocket service)
@@ -44,22 +85,60 @@ class SecureStorageService {
 
   /// Remove access token
   Future<void> removeAccessToken() async {
+    await _storage.delete(key: '$_encryptedPrefix$_accessTokenKey');
+    // Also remove legacy token if exists
     await _storage.delete(key: _accessTokenKey);
   }
 
-  /// Store refresh token
+  /// Store refresh token with encryption and key rotation support
   Future<void> storeRefreshToken(String token) async {
-    await _storage.write(key: _refreshTokenKey, value: token);
+    // Encrypt the refresh token with current key
+    final encrypted = await _keyManager.encrypt(token);
+
+    // Store encrypted data with metadata
+    await _storage.write(
+      key: '$_encryptedPrefix$_refreshTokenKey',
+      value: jsonEncode(encrypted.toJson()),
+    );
   }
 
-  /// Get refresh token
+  /// Get refresh token with decryption support for rotated keys
   Future<String?> getRefreshToken() async {
-    return await _storage.read(key: _refreshTokenKey);
+    // Try to read encrypted token first
+    final encryptedJson = await _storage.read(key: '$_encryptedPrefix$_refreshTokenKey');
+    if (encryptedJson != null) {
+      try {
+        final encrypted = EncryptedData.fromJson(jsonDecode(encryptedJson));
+        return await _keyManager.decrypt(encrypted);
+      } catch (e) {
+        // If decryption fails, try legacy unencrypted token
+        print('Failed to decrypt refresh token, trying legacy: $e');
+      }
+    }
+
+    // Fallback to legacy unencrypted token
+    final legacyToken = await _storage.read(key: _refreshTokenKey);
+    if (legacyToken != null) {
+      // Migrate to encrypted storage
+      await storeRefreshToken(legacyToken);
+      // Remove legacy token
+      await _storage.delete(key: _refreshTokenKey);
+      return legacyToken;
+    }
+
+    return null;
   }
 
   /// Remove refresh token
   Future<void> removeRefreshToken() async {
+    await _storage.delete(key: '$_encryptedPrefix$_refreshTokenKey');
+    // Also remove legacy token if exists
     await _storage.delete(key: _refreshTokenKey);
+  }
+
+  /// Delete refresh token (alias for removeRefreshToken)
+  Future<void> deleteRefreshToken() async {
+    await removeRefreshToken();
   }
 
   /// Store user data as JSON
@@ -140,18 +219,49 @@ class SecureStorageService {
     return null;
   }
 
-  /// Store two-factor secret
+  /// Store two-factor secret with encryption
   Future<void> storeTwoFactorSecret(String secret) async {
-    await _storage.write(key: _twoFactorSecretKey, value: secret);
+    // Encrypt the 2FA secret with current key
+    final encrypted = await _keyManager.encrypt(secret);
+
+    // Store encrypted data with metadata
+    await _storage.write(
+      key: '$_encryptedPrefix$_twoFactorSecretKey',
+      value: jsonEncode(encrypted.toJson()),
+    );
   }
 
-  /// Get two-factor secret
+  /// Get two-factor secret with decryption
   Future<String?> getTwoFactorSecret() async {
-    return await _storage.read(key: _twoFactorSecretKey);
+    // Try to read encrypted secret first
+    final encryptedJson = await _storage.read(key: '$_encryptedPrefix$_twoFactorSecretKey');
+    if (encryptedJson != null) {
+      try {
+        final encrypted = EncryptedData.fromJson(jsonDecode(encryptedJson));
+        return await _keyManager.decrypt(encrypted);
+      } catch (e) {
+        // If decryption fails, try legacy unencrypted secret
+        print('Failed to decrypt 2FA secret, trying legacy: $e');
+      }
+    }
+
+    // Fallback to legacy unencrypted secret
+    final legacySecret = await _storage.read(key: _twoFactorSecretKey);
+    if (legacySecret != null) {
+      // Migrate to encrypted storage
+      await storeTwoFactorSecret(legacySecret);
+      // Remove legacy secret
+      await _storage.delete(key: _twoFactorSecretKey);
+      return legacySecret;
+    }
+
+    return null;
   }
 
   /// Remove two-factor secret
   Future<void> removeTwoFactorSecret() async {
+    await _storage.delete(key: '$_encryptedPrefix$_twoFactorSecretKey');
+    // Also remove legacy secret if exists
     await _storage.delete(key: _twoFactorSecretKey);
   }
 
@@ -188,6 +298,33 @@ class SecureStorageService {
   /// Clear all stored data (logout)
   Future<void> clearAll() async {
     await _storage.deleteAll();
+  }
+
+  /// Check if key rotation is needed
+  Future<bool> isKeyRotationNeeded() async {
+    return await _keyManager.isRotationNeeded();
+  }
+
+  /// Perform key rotation for all stored tokens
+  Future<void> rotateEncryptionKeys() async {
+    // Get current tokens before rotation
+    final accessToken = await getAccessToken();
+    final refreshToken = await getRefreshToken();
+    final twoFactorSecret = await getTwoFactorSecret();
+
+    // Rotate the key
+    await _keyManager.rotateKey();
+
+    // Re-encrypt tokens with new key
+    if (accessToken != null) {
+      await storeAccessToken(accessToken);
+    }
+    if (refreshToken != null) {
+      await storeRefreshToken(refreshToken);
+    }
+    if (twoFactorSecret != null) {
+      await storeTwoFactorSecret(twoFactorSecret);
+    }
   }
 
   /// Check if key exists

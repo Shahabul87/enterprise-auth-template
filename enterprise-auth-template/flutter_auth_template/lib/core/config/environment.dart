@@ -12,23 +12,17 @@ class Environment {
 
   /// API base URL for current environment
   static String get apiBaseUrl {
+    // For development, always use 10.0.2.2 for Android emulator compatibility
+    // This works for both emulator and real devices connecting to local backend
     switch (current) {
       case production:
-        return const String.fromEnvironment(
-          'API_BASE_URL',
-          defaultValue: 'https://api.yourdomain.com',
-        );
+        return 'https://api.yourdomain.com';
       case staging:
-        return const String.fromEnvironment(
-          'API_BASE_URL',
-          defaultValue: 'https://staging-api.yourdomain.com',
-        );
+        return 'https://staging-api.yourdomain.com';
       case development:
       default:
-        return const String.fromEnvironment(
-          'API_BASE_URL',
-          defaultValue: 'http://localhost:8000',
-        );
+        // 10.0.2.2 is the special alias to host loopback interface from Android emulator
+        return 'http://10.0.2.2:8000';
     }
   }
 

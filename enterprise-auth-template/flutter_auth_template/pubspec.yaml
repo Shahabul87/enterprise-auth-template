@@ -81,13 +81,14 @@ dependencies:
   
   # Utilities
   url_launcher: ^6.2.2
-  package_info_plus: ^8.3.1
+  package_info_plus: ^9.0.0
   device_info_plus: ^11.5.0
   image_picker: ^1.1.2
   html_unescape: ^2.0.0
   
   # UI Icons
   cupertino_icons: ^1.0.8
+  stack_trace: ^1.12.1
 
 dev_dependencies:
   flutter_test:

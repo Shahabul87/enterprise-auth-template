@@ -8,13 +8,19 @@ import 'package:flutter_auth_template/data/models/auth_response.dart';
 import 'package:flutter_auth_template/infrastructure/services/auth/auth_service.dart';
 import 'package:flutter_auth_template/infrastructure/services/auth/oauth_service.dart';
 import 'package:flutter_auth_template/core/storage/secure_storage_service.dart';
+import 'package:flutter_auth_template/core/security/account_lockout_service.dart';
+import 'package:flutter_auth_template/core/security/device_fingerprint_service.dart';
+import 'package:flutter_auth_template/core/security/rate_limiter.dart';
 
 // Authentication state provider
 final authStateProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   final authService = ref.watch(authServiceProvider);
   final oauthService = ref.watch(oauthServiceProvider);
   final secureStorage = ref.watch(secureStorageServiceProvider);
-  return AuthNotifier(authService, oauthService, secureStorage);
+  final accountLockout = ref.watch(accountLockoutServiceProvider);
+  final deviceFingerprint = ref.watch(deviceFingerprintServiceProvider);
+  final rateLimiter = ref.watch(rateLimiterProvider);
+  return AuthNotifier(authService, oauthService, secureStorage, accountLockout, deviceFingerprint, rateLimiter);
 });
 
 /// Authentication state notifier
@@ -22,9 +28,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final AuthService _authService;
   final OAuthService _oauthService;
   final SecureStorageService _secureStorage;
+  final AccountLockoutService _accountLockout;
+  final DeviceFingerprintService _deviceFingerprint;
+  final RateLimiter _rateLimiter;
 
-  AuthNotifier(this._authService, this._oauthService, this._secureStorage)
-      : super(const AuthState.unauthenticated()) {
+  AuthNotifier(
+    this._authService,
+    this._oauthService,
+    this._secureStorage,
+    this._accountLockout,
+    this._deviceFingerprint,
+    this._rateLimiter,
+  ) : super(const AuthState.unauthenticated()) {
     _initializeAuth();
   }
 
@@ -64,11 +79,66 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> login(String email, String password) async {
     state = const AuthState.authenticating();
 
+    // Check rate limit
+    final rateLimitResult = await _rateLimiter.checkLimit(
+      endpoint: '/api/auth/login',
+      clientId: email,
+      metadata: {'ip': 'client-ip'}, // In production, get actual IP
+    );
+
+    if (!rateLimitResult.allowed) {
+      state = AuthState.error(
+        rateLimitResult.reason ?? 'Too many attempts. Please try again later.',
+      );
+      return;
+    }
+
+    // Check if account is locked
+    if (await _accountLockout.isAccountLocked()) {
+      final minutes = await _accountLockout.getRemainingLockoutMinutes();
+      state = AuthState.error(
+        'Account is locked. Please try again in $minutes minutes.',
+      );
+      return;
+    }
+
     final request = LoginRequest(email: email, password: password);
     final response = await _authService.login(request);
 
     await response.when(
       success: (user, message) async {
+        // Clear failed attempts and rate limit on successful login
+        await _accountLockout.clearFailedAttempts(email);
+        _rateLimiter.recordSuccess(
+          endpoint: '/api/auth/login',
+          clientId: email,
+        );
+
+        // Generate and verify device fingerprint
+        try {
+          final fingerprint = await _deviceFingerprint.generateFingerprint();
+
+          // Check if this device is trusted
+          final isTrusted = await _deviceFingerprint.isDeviceTrusted(user.id);
+
+          if (!isTrusted) {
+            // For new devices, you might want to send verification email
+            // or require additional authentication
+            // For now, we'll automatically trust the device
+            await _deviceFingerprint.trustDevice(
+              userId: user.id,
+              customName: '${fingerprint.deviceModel} - ${fingerprint.platform}',
+            );
+          } else {
+            // Record that the device was verified
+            await _deviceFingerprint.recordDeviceVerification();
+          }
+        } catch (e) {
+          // Don't fail login if device fingerprinting fails
+          // Just log the error
+          print('Device fingerprinting error: $e');
+        }
+
         // Update state to authenticated
         state = AuthState.authenticated(
           user: user,
@@ -78,7 +148,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
         await Future.delayed(const Duration(milliseconds: 100));
       },
       error: (message, code, _, __) async {
-        state = AuthState.error(message);
+        // Record failed attempt
+        final lockoutStatus = await _accountLockout.recordFailedAttempt(email);
+
+        // Use lockout message if account is locked, otherwise use original error
+        final errorMessage = lockoutStatus.isLocked
+            ? lockoutStatus.message
+            : message;
+
+        state = AuthState.error(errorMessage);
         // Don't throw here - let the UI handle the error state
       },
       loading: () async {
@@ -90,7 +168,21 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// Register new user
   Future<void> register(String email, String password, String name) async {
     state = const AuthState.authenticating();
-    
+
+    // Check rate limit for registration
+    final rateLimitResult = await _rateLimiter.checkLimit(
+      endpoint: '/api/auth/register',
+      clientId: email,
+      metadata: {'ip': 'client-ip'}, // In production, get actual IP
+    );
+
+    if (!rateLimitResult.allowed) {
+      state = AuthState.error(
+        rateLimitResult.reason ?? 'Too many registration attempts. Please try again later.',
+      );
+      throw Exception(rateLimitResult.reason ?? 'Rate limit exceeded');
+    }
+
     final request = RegisterRequest(
       email: email,
       password: password,
@@ -127,6 +219,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   /// Forgot password
   Future<void> forgotPassword(String email) async {
+    // Check rate limit for forgot password
+    final rateLimitResult = await _rateLimiter.checkLimit(
+      endpoint: '/api/auth/forgot-password',
+      clientId: email,
+      metadata: {'ip': 'client-ip'}, // In production, get actual IP
+    );
+
+    if (!rateLimitResult.allowed) {
+      throw Exception(rateLimitResult.reason ?? 'Too many password reset attempts. Please try again later.');
+    }
+
     final request = ForgotPasswordRequest(email: email);
     final response = await _authService.forgotPassword(request);
     
@@ -256,7 +359,21 @@ class AuthNotifier extends StateNotifier<AuthState> {
   /// Verify Two-Factor Authentication code
   Future<void> verify2FA(String code, {String? token, bool isBackup = false}) async {
     state = const AuthState.authenticating();
-    
+
+    // Check rate limit for 2FA verification
+    final rateLimitResult = await _rateLimiter.checkLimit(
+      endpoint: '/api/auth/verify-2fa',
+      clientId: token ?? 'unknown',
+      metadata: {'ip': 'client-ip'}, // In production, get actual IP
+    );
+
+    if (!rateLimitResult.allowed) {
+      state = AuthState.error(
+        rateLimitResult.reason ?? 'Too many verification attempts. Please try again later.',
+      );
+      throw Exception(rateLimitResult.reason ?? 'Rate limit exceeded');
+    }
+
     final request = VerifyTwoFactorRequest(
       code: code,
       token: token,
@@ -328,6 +445,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   /// Request magic link
   Future<void> requestMagicLink(String email) async {
+    // Check rate limit for magic link
+    final rateLimitResult = await _rateLimiter.checkLimit(
+      endpoint: '/api/auth/magic-link',
+      clientId: email,
+      metadata: {'ip': 'client-ip'}, // In production, get actual IP
+    );
+
+    if (!rateLimitResult.allowed) {
+      throw Exception(rateLimitResult.reason ?? 'Too many magic link requests. Please try again later.');
+    }
+
     final request = MagicLinkRequest(email: email);
     final response = await _authService.requestMagicLink(request);
     
@@ -392,7 +520,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     if (state is Authenticated) {
       try {
         final response = await _authService.getCurrentUser();
-        
+
         response.when(
           success: (user, _) {
             final currentState = state as Authenticated;
@@ -408,6 +536,55 @@ class AuthNotifier extends StateNotifier<AuthState> {
       } catch (e) {
         // Ignore refresh errors
       }
+    }
+  }
+
+  /// Refresh authentication token
+  Future<void> refreshToken() async {
+    state = const AuthState.authenticating();
+
+    // Check rate limit for token refresh
+    final rateLimitResult = await _rateLimiter.checkLimit(
+      endpoint: '/api/auth/refresh-token',
+      clientId: 'refresh',
+      metadata: {'ip': 'client-ip'}, // In production, get actual IP
+    );
+
+    if (!rateLimitResult.allowed) {
+      state = const AuthState.unauthenticated();
+      throw Exception(rateLimitResult.reason ?? 'Too many refresh attempts. Please login again.');
+    }
+
+    try {
+      // Get stored refresh token
+      final refreshToken = await _secureStorage.getRefreshToken();
+
+      if (refreshToken == null || refreshToken.isEmpty) {
+        state = const AuthState.unauthenticated();
+        throw Exception('No refresh token available');
+      }
+
+      // Call backend to refresh the token
+      final response = await _authService.refreshToken(refreshToken);
+
+      await response.when(
+        success: (user, message) async {
+          state = AuthState.authenticated(
+            user: user,
+            accessToken: '', // Token is managed internally
+          );
+        },
+        error: (message, code, _, __) async {
+          state = const AuthState.unauthenticated();
+          throw Exception(message);
+        },
+        loading: () async {
+          state = const AuthState.authenticating();
+        },
+      );
+    } catch (e) {
+      state = const AuthState.unauthenticated();
+      rethrow;
     }
   }
 
