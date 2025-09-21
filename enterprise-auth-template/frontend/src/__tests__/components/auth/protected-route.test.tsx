@@ -61,7 +61,7 @@ jest.mock('@/stores/auth.store', () => ({
   useGuestOnly: jest.fn(() => ({
     isLoading: false,
   })),
-}));}));
+}));
 /**
  * Comprehensive test suite for ProtectedRoute component
  * Tests authentication checks, permission validation, role-based access, and loading states
@@ -307,9 +307,9 @@ describe('Permission Validation', () => {
       expect(mockHasPermission).toHaveBeenCalledWith('write:posts');
     });
     it('should check all permissions until one matches', () => {
-      const mockHasPermission = jest.fn();
-        .mockReturnValueOnce(false);
-        .mockReturnValueOnce(false);
+      const mockHasPermission = jest.fn()
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce(false)
         .mockReturnValueOnce(true);
       const mockState: MockAuthState = {
         ...defaultAuthState,
@@ -369,8 +369,8 @@ describe('Role Validation', () => {
       expect(mockHasRole).toHaveBeenCalledWith('user');
     });
     it('should check all roles until one matches', () => {
-      const mockHasRole = jest.fn();
-        .mockReturnValueOnce(false);
+      const mockHasRole = jest.fn()
+        .mockReturnValueOnce(false)
         .mockReturnValueOnce(true);
       const mockState: MockAuthState = {
         ...defaultAuthState,

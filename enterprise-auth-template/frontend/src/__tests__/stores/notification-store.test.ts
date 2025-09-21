@@ -164,6 +164,8 @@ describe('Marking as Read', () => {
         type: 'info',
         timestamp: new Date().toISOString(),
         read: false,
+      }));
+
       act(() => {
         notifications.forEach(notif => result.current.addNotification(notif));
       });

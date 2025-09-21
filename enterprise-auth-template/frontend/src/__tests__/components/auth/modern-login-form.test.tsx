@@ -63,7 +63,7 @@ jest.mock('@/stores/auth.store', () => ({
   useGuestOnly: jest.fn(() => ({
     isLoading: false,
   })),
-}));}));
+}));
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));

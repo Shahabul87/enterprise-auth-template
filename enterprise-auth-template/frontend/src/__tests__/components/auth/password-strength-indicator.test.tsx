@@ -60,6 +60,8 @@ describe('PasswordStrengthIndicator Component', () => {
     },
     isValid: false,
     feedback: [],
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
     mockUsePasswordStrength.mockReturnValue(defaultPasswordStrength);

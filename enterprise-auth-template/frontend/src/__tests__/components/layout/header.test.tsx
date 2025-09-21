@@ -11,7 +11,8 @@ jest.mock('next/navigation', () => ({
 }));
 
 jest.mock('next/link', () => {
-  return function MockLink({ children, href, ...props }: { children: React.ReactNode; href: string; [key: string]: any }) {}});
+  return function MockLink({ children, href, ...props }: { children: React.ReactNode; href: string; [key: string]: any }) {
+    const React = require('react');
     const mockRouter = (require('next/navigation').useRouter)();
 
     if (React.isValidElement(children)) {

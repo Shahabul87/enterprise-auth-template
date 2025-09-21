@@ -301,7 +301,7 @@ const mockGetUsers = mockAdminAPI.getUsers;
   CardTitleProps,
   AlertProps,
   AlertDescriptionProps
-} from '../../../types/test-interfaces';
+} from '@/types/test-interfaces';
 // Admin-specific component interfaces
 interface DropdownMenuProps {
   children: React.ReactNode;

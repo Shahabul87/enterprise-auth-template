@@ -55,7 +55,7 @@ jest.mock('@/components/layout/sidebar', () => {
   const React = require('react');
   const { usePathname } = require('next/navigation');
   const Link = require('next/link').default;
-});
+
   const mockNavigationItems = [
     {
       title: 'Dashboard',
@@ -345,7 +345,8 @@ describe('Rendering', () => {
       expect(screen.getByText('Admin Panel')).toBeInTheDocument();
       expect(screen.getByTestId('zap-icon')).toBeInTheDocument();
     });
-  });
+  };
+});
 
 describe('Navigation', () => {
     it('should highlight active menu item', async () => {
@@ -375,7 +376,9 @@ describe('Collapse/Expand', () => {
       const onCollapsedChange = jest.fn();
       render(<Sidebar collapsed={false} onCollapsedChange={onCollapsedChange} />);
       const collapseButton = screen.getByText('Collapse').closest('button')!;
-      await act(async () => { await userEvent.click(collapseButton);
+      await act(async () => { 
+        await userEvent.click(collapseButton);
+      });
       expect(onCollapsedChange).toHaveBeenCalledWith(true);
     });
     it('should call onCollapsedChange with false when expand button is clicked', async () => {

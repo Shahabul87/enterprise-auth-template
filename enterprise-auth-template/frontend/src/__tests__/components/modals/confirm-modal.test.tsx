@@ -35,7 +35,7 @@ describe('ConfirmModal Component', () => {
     const handleCancel = jest.fn();
     render(<ConfirmModal {...defaultProps} onCancel={handleCancel} />);
 
-    act(() => { fireEvent.click(screen.getByRole('button', { name: 'Cancel' }) }));
+    act(() => { fireEvent.click(screen.getByRole('button', { name: 'Cancel' })); });
     expect(handleCancel).toHaveBeenCalledTimes(1);
   });
 

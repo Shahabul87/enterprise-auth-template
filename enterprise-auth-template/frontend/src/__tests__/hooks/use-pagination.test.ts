@@ -568,7 +568,7 @@ describe('usePaginatedData', () => {
 
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: jest.fn().mockResolvedValueOnce(mockResponse);
+      json: jest.fn().mockResolvedValueOnce(mockResponse),
     });
 
     const { result } = renderHook(() => usePaginatedData('/api/items'));

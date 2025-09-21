@@ -178,4 +178,4 @@ describe('Minimal Mode', () => {
       expect(screen.getByTestId('zap-icon')).toBeInTheDocument();
     });
   });
-}}}}}
+});

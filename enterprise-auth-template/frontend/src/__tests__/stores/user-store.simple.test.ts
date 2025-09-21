@@ -275,3 +275,4 @@ describe('Store Methods Availability', () => {
     });
   });
 });
+}

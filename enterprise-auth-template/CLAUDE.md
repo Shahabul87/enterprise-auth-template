@@ -233,11 +233,19 @@ npm test                 # Run all tests
 npm run test:watch      # Run tests in watch mode
 npm run test:coverage   # Run tests with coverage
 
+# Test specific files or patterns
+npm test -- --testPathPattern="auth-store"  # Test specific file pattern
+npm test -- --testNamePattern="login"       # Test specific test names
+
 # Code quality
 npm run lint            # Run ESLint
 npm run lint:fix        # Auto-fix linting issues
 npm run typecheck       # Run TypeScript compiler check
 npx prettier --write .  # Format code
+
+# Debug failing tests
+npm test -- --verbose   # Show detailed test output
+npm test -- --no-cache  # Clear Jest cache and run tests
 ```
 
 ### Docker Operations
@@ -623,3 +631,72 @@ docker-compose exec frontend npm run todo:check
 3. On security scan issues → Create security todos
 4. On performance regression → Create optimization todos
 5. On dependency updates → Create update todos
+
+## Test Development Best Practices
+
+### Frontend Test Setup
+**ALWAYS follow these patterns when writing frontend tests:**
+
+1. **Mock Syntax Validation**
+   - Ensure all `jest.mock()` calls have proper closing parentheses
+   - Each mock should be self-contained with `}));` at the end
+   - Never leave hanging mock declarations
+
+2. **Store Method Verification**
+   - Always verify actual method names exist in the store before testing
+   - Use `grep` or IDE search to confirm method signatures
+   - Match test expectations to actual implementation
+
+3. **Timing-Based Tests**
+   - Use `jest.useFakeTimers()` for consistent timing control
+   - Advance timers explicitly with `jest.advanceTimersByTime()`
+   - Don't assume zero/negative delays work synchronously
+
+4. **Module Mocking Best Practices**
+   ```typescript
+   // Always use type assertions for mocked modules
+   jest.mock('@/lib/module');
+   const mockModule = Module as jest.Mocked<typeof Module>;
+   ```
+
+5. **Test Environment Setup**
+   - Maintain comprehensive polyfills in `jest.setup.js`
+   - Include crypto, clipboard, and other browser APIs
+   - Keep E2E tests separate from unit tests
+
+### Common Test Anti-Patterns to Avoid
+- ❌ Modifying assertions to make tests pass
+- ❌ Skipping tests without fixing root causes
+- ❌ Using `any` type in test code
+- ❌ Mixing E2E and unit test configurations
+- ❌ Clearing all mocks without preserving implementations
+
+### Test Debugging Workflow
+1. Read error messages completely
+2. Verify mock implementations
+3. Check method names match implementation
+4. Validate timing expectations
+5. Ensure proper test environment setup
+
+### Critical Test Development Rules
+**MANDATORY when writing or fixing tests:**
+
+1. **Always check actual store/component implementation before writing tests**
+   - Never assume API structure without verification
+   - Read the actual source code to understand method names and properties
+   - Use `grep` or IDE search to find exact implementations
+
+2. **Verify property names and method signatures match implementation**
+   - Don't test `sidebarOpen` if the actual property is `sidebarState`
+   - Don't call `setSidebarOpen()` if the actual method is `setSidebarState()`
+   - Match test expectations to real API surface
+
+3. **Consider test environment limitations with complex UI libraries**
+   - Some features work in production but fail in test environments
+   - Skip tests that can't work reliably in jsdom (with clear comments)
+   - Focus on testing the logic, not the framework quirks
+
+4. **Keep tests aligned with actual API structure**
+   - If store has nested categories, test the nested structure
+   - If methods return promises, test with async/await
+   - If components use portals, account for portal rendering

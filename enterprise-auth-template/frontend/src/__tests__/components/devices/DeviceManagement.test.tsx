@@ -345,3 +345,4 @@ describe('DeviceManagement', () => {});
     expect(screen.getByText('iPad')).toBeInTheDocument(); // tablet
   });
 });
+}

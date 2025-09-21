@@ -50,7 +50,6 @@ interface MockAuthStore {
 
 // Mock modules
 // Mock next/link
-});
 
 describe('AuthHeader Component', () => {
   let mockRouter: MockRouter;

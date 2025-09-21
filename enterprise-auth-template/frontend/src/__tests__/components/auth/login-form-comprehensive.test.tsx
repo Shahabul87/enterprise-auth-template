@@ -170,7 +170,14 @@ jest.mock('@/components/auth/two-factor-verify', () => ({
     tempToken: string;
     onSuccess: () => void;
     onCancel: () => void;
-  }) => (})));
+  }) => (
+    <div data-testid="two-factor-verify">
+      <span>{tempToken}</span>
+      <button onClick={onSuccess} data-testid="2fa-success">Success</button>
+      <button onClick={onCancel} data-testid="2fa-cancel">Cancel</button>
+    </div>
+  ),
+}));
 jest.mock('lucide-react', () => ({
   Loader2: () => <span data-testid="loader-icon">Loading</span>,
   Mail: () => <span data-testid="mail-icon">Mail</span>,
@@ -270,6 +277,8 @@ interface ButtonProps {
   disabled?: boolean;
   className?: string;
   onClick?: () => void;
+}
+
 interface InputProps {
   type?: string;
   placeholder?: string;
@@ -277,20 +286,22 @@ interface InputProps {
   disabled?: boolean;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
 interface FormFieldProps {
   control: MockFormControl['control'];
   name: string;
   rules?: object;
   render: (props: { field: { value: string; onChange: () => void; onBlur: () => void } }) => React.ReactNode;
+}
+
 interface CheckboxProps {
   id?: string;
   checked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
   disabled?: boolean;
-    <div data-testid="two-factor-verify">
-      <button onClick={onSuccess} data-testid="2fa-success">Success</button>
-      <button onClick={onCancel} data-testid="2fa-cancel">Cancel</button>
-      <span data-testid="temp-token">{tempToken}</span>
+}
+
 // Test data with proper types
 const mockUser: User = {
   id: 'user-123',

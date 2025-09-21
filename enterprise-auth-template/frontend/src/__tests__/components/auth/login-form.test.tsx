@@ -156,6 +156,7 @@ jest.mock('next/link', () => {
       </a>
     );
   };
+  MockLink.displayName = 'MockLink';
   return MockLink;
 });
 
@@ -197,24 +198,11 @@ interface MockLinkProps {
   rel?: string;
 }
 // Mock Next.js router
-// Mock auth context
-// Mock auth form hook
-// Mock OAuth providers
-});
-// Mock Two Factor Verify component
-// Mock UI components
-  AlertDescription: function AlertDescription({ children, ...props }: ComponentProps) {
-      <div data-testid='alert-description' {...props}>
-  FormItem: ({ children, ...props }: ComponentProps) => <div {...props}>{children}</div>,
-  FormLabel: ({ children, ...props }: ComponentProps) => <label {...props}>{children}</label>,
-  FormMessage: ({ children, ...props }: ComponentProps) => (
-    <div data-testid='form-message' {...props}>
-  MockLink.displayName = 'MockLink';
-  return MockLink;
 const mockRouter = {
   push: jest.fn(),
   replace: jest.fn(),
-  back: jest.fn(),};
+  back: jest.fn(),
+};
 const mockAuthContext = {
   user: {
     id: 'current-user',
@@ -249,6 +237,8 @@ const mockAuthContext = {
   refreshToken: jest.fn(),
   setUser: jest.fn(),
   error: null,
+};
+
 const mockForm = {
   handleSubmit: jest.fn(),
   control: {},
