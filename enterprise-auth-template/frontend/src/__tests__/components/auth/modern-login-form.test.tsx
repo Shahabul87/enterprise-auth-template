@@ -191,7 +191,7 @@ jest.mock('@/hooks/use-error-handler', () => ({
 }));
 
 // Mock dependencies
-  useAuthStore: jest.fn(),
+  useAuthStore: jest.fn()
 });
 const mockRouter = {
   push: jest.fn(),
@@ -248,7 +248,7 @@ describe('ModernLoginForm', () => {
     const user = userEvent.setup();
     mockAuthStore.login.mockResolvedValue({
       success: true,
-      data: { user: { id: '1', email: 'test@example.com' } },
+      data: { user: { id: '1', email: 'test@example.com' } }
     });
     render(<ModernLoginForm />);
     // Fill in form
@@ -259,7 +259,7 @@ describe('ModernLoginForm', () => {
     await act(async () => { await act(async () => { await act(async () => { await waitFor(() => {
       expect(mockAuthStore.login).toHaveBeenCalledWith({
         email: 'test@example.com',
-        password: 'password123',
+        password: 'password123'
       }); }); });
     });
   });
@@ -272,7 +272,7 @@ describe('ModernLoginForm', () => {
       expect(mockToast).toHaveBeenCalledWith({
         title: 'Missing credentials',
         description: 'Please enter both email and password',
-        variant: 'destructive',
+        variant: 'destructive'
       }); }); });
     });
   });
@@ -313,7 +313,7 @@ describe('ModernLoginForm', () => {
     const { webAuthnService } = require('@/services/auth-api.service');
     webAuthnService.startAuthentication.mockResolvedValue({
       success: true,
-      data: { challenge: 'mock-challenge', allowCredentials: [] },
+      data: { challenge: 'mock-challenge', allowCredentials: [] }
     });
     // Mock navigator.credentials.get
     global.navigator.credentials = {
@@ -353,7 +353,7 @@ describe('ModernLoginForm', () => {
     const user = userEvent.setup();
     mockAuthStore.login.mockResolvedValue({
       success: false,
-      error: { message: 'Invalid credentials' },
+      error: { message: 'Invalid credentials' }
     });
     render(<ModernLoginForm />);
     // Fill in form
@@ -365,7 +365,7 @@ describe('ModernLoginForm', () => {
       expect(mockToast).toHaveBeenCalledWith({
         title: 'Login failed',
         description: 'Invalid credentials',
-        variant: 'destructive',
+        variant: 'destructive'
       }); }); });
     });
   });
@@ -451,7 +451,7 @@ describe('Edge Cases', () => {
         expect(mockToast).toHaveBeenCalledWith({
           title: 'Login failed',
           description: 'An unexpected error occurred. Please try again.',
-          variant: 'destructive',
+          variant: 'destructive'
         }); }); });
       });
     });
@@ -468,7 +468,7 @@ describe('Edge Cases', () => {
         expect(mockToast).toHaveBeenCalledWith({
           title: 'Passkey not supported',
           description: 'Your browser does not support passkeys.',
-          variant: 'destructive',
+          variant: 'destructive'
         }); }); });
       });
     });
@@ -507,3 +507,4 @@ describe('Visual States', () => {
     });
   });
 });
+}}}}}}}}}}}}}}}}

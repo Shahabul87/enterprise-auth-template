@@ -4,7 +4,6 @@ import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle, CheckCircle2, XCircle, Info } from 'lucide-react';
-
 /**
  * @jest-environment jsdom
  */

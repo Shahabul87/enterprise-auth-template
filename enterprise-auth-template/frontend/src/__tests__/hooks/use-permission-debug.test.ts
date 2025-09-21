@@ -8,7 +8,7 @@ import React from 'react';
 jest.mock('@/hooks/api/use-auth', () => ({
   useUserPermissions: jest.fn(),
   useUserRoles: jest.fn(),
-// Orphaned closing removed
+}));
 /**
  * Debug test for usePermission hook
  */

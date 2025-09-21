@@ -4,7 +4,6 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import '@testing-library/jest-dom';
 import WebhookManagement from '@/components/webhooks/WebhookManagement';
 import { useToast } from '@/components/ui/use-toast';
-
 /**
  * @jest-environment jsdom
  */
@@ -13,11 +12,9 @@ jest.mock('@/components/ui/use-toast');
 jest.mock('date-fns', () => ({
   formatDistanceToNow: jest.fn(() => '5 minutes'),
   format: jest.fn(() => 'Jan 1, 2024, 12:00 PM'),
-// Orphaned closing removed
 jest.mock('date-fns', () => ({
   formatDistanceToNow: jest.fn(() => '5 minutes'),
   format: jest.fn(() => 'Jan 1, 2024, 12:00 PM'),
-// Orphaned closing removed
 // Mock dependencies
 // Mock fetch globally
 global.fetch = jest.fn() as jest.MockedFunction<typeof fetch>;
@@ -34,7 +31,7 @@ Object.defineProperty(navigator, 'clipboard', {
   value: {
     writeText: jest.fn(),
   },
-  writable: true,
+  writable: true
 });
 
 describe('WebhookManagement', () => {
@@ -95,18 +92,18 @@ describe('WebhookManagement', () => {
       if (url.includes('/api/v1/webhooks/deliveries')) {
         return Promise.resolve({
           ok: true,
-          json: () => Promise.resolve({ deliveries: mockDeliveries }),
+          json: () => Promise.resolve({ deliveries: mockDeliveries })
         });
       }
       if (url.includes('/api/v1/webhooks')) {
         return Promise.resolve({
           ok: true,
-          json: () => Promise.resolve({ webhooks: mockWebhooks }),
+          json: () => Promise.resolve({ webhooks: mockWebhooks })
         });
       }
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({}),
+        json: () => Promise.resolve({})
       });
     });
   });
@@ -159,7 +156,7 @@ describe('WebhookManagement', () => {
     await act(async () => { await act(async () => { await waitFor(() => {
       expect(mockToast).toHaveBeenCalledWith({
         title: 'Success',
-        description: 'Webhook created successfully',
+        description: 'Webhook created successfully'
       }); });
     }); });
   });
@@ -195,7 +192,7 @@ describe('WebhookManagement', () => {
       );
       expect(mockToast).toHaveBeenCalledWith({
         title: 'Success',
-        description: 'Webhook deleted successfully',
+        description: 'Webhook deleted successfully'
       });
     });
   }); });
@@ -258,7 +255,7 @@ describe('WebhookManagement', () => {
       );
       expect(mockToast).toHaveBeenCalledWith({
         title: 'Success',
-        description: 'Delivery retry initiated',
+        description: 'Delivery retry initiated'
       });
     });
   }); });
@@ -273,7 +270,7 @@ describe('WebhookManagement', () => {
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('https://example.com/webhook');
     expect(mockToast).toHaveBeenCalledWith({
       title: 'Copied',
-      description: 'Copied to clipboard',
+      description: 'Copied to clipboard'
     });
   });
   it('views delivery details', async () => {
@@ -313,8 +310,9 @@ describe('WebhookManagement', () => {
       expect(mockToast).toHaveBeenCalledWith({
         title: 'Error',
         description: 'Failed to fetch webhooks',
-        variant: 'destructive',
+        variant: 'destructive'
       }); });
     }); });
   });
 });
+}}}}}}}}}}

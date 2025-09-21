@@ -146,7 +146,7 @@ jest.mock('next/link', () => {
         {children}
       </a>
     );
-  }
+  };
 jest.mock('lucide-react', () => ({
   Loader2: ({ className }: ComponentProps) => <div data-testid='loader-icon' className={className} />,
 /**
@@ -303,7 +303,7 @@ describe('LoginForm', () => {
   it('shows loading state when submitting', () => {
     (useAuthForm as jest.Mock).mockReturnValue({
       ...mockUseAuthForm,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<LoginForm />);
     expect(screen.getByText('Signing in...')).toBeInTheDocument();
@@ -312,7 +312,7 @@ describe('LoginForm', () => {
   it('shows error message when there is an error', () => {
     (useAuthForm as jest.Mock).mockReturnValue({
       ...mockUseAuthForm,
-      error: 'Invalid credentials',
+      error: 'Invalid credentials'
     });
     render(<LoginForm />);
     const alert = screen.getByTestId('alert');
@@ -329,7 +329,7 @@ describe('LoginForm', () => {
   it('disables submit button when loading', () => {
     (useAuth as unknown as jest.Mock).mockReturnValue({
       ...mockAuthContext,
-      isLoading: true,
+      isLoading: true
     });
     render(<LoginForm />);
     const submitButton = screen.getByRole('button', { name: /sign in/i });
@@ -338,7 +338,7 @@ describe('LoginForm', () => {
   it('disables submit button when submitting', () => {
     (useAuthForm as jest.Mock).mockReturnValue({
       ...mockUseAuthForm,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<LoginForm />);
     const submitButton = screen.getByRole('button', { name: /signing in/i });
@@ -410,7 +410,7 @@ describe('LoginForm', () => {
   it('disables form fields when loading', () => {
     (useAuth as unknown as jest.Mock).mockReturnValue({
       ...mockAuthContext,
-      isLoading: true,
+      isLoading: true
     });
     render(<LoginForm />);
     const emailInput = screen.getByLabelText('Email address');
@@ -423,7 +423,7 @@ describe('LoginForm', () => {
   it('disables form fields when submitting', () => {
     (useAuthForm as jest.Mock).mockReturnValue({
       ...mockUseAuthForm,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<LoginForm />);
     const emailInput = screen.getByLabelText('Email address');
@@ -438,7 +438,7 @@ describe('LoginForm', () => {
     const mockLogin = jest.fn().mockResolvedValue(true);
     (useAuth as unknown as jest.Mock).mockReturnValue({
       ...mockAuthContext,
-      login: mockLogin,
+      login: mockLogin
     });
     mockUseAuthForm.handleSubmit.mockImplementation((callback) => {
       const testData = {
@@ -479,3 +479,4 @@ describe('LoginForm', () => {
     expect(screen.getByTestId('oauth-providers')).toBeInTheDocument();
     expect(screen.queryByTestId('oauth-on-success')).not.toBeInTheDocument();
   });
+}}}}}}}}}}}}}}

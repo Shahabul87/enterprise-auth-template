@@ -3,8 +3,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BarChart, SimpleBarChart, TrendingBarChart } from '@/components/charts/bar-chart';
-
-
 describe('BarChart Component', () => {
   const mockData = [
     { label: 'Jan', value: 100 },

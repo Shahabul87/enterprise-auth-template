@@ -6,7 +6,6 @@ import { ChangePasswordForm } from '@/components/profile/change-password-form';
 import { useAuthForm } from '@/hooks/use-auth-form';
 import AuthAPI from '@/lib/auth-api';
 import { Control, FieldValues, UseFormReturn } from 'react-hook-form';
-
 jest.mock('@/hooks/use-auth-form', () => ({
   useAuthForm: jest.fn(),
   validationRules: {
@@ -14,7 +13,6 @@ jest.mock('@/hooks/use-auth-form', () => ({
     confirmPassword: jest.fn(),
   },
   isFormValid: jest.fn(),
-// Orphaned closing removed
 jest.mock('@/lib/auth-api', () => ({
   __esModule: true,
   default: {
@@ -31,21 +29,18 @@ jest.mock('@/lib/auth-api', () => ({
     verify2FA: jest.fn(),
     disable2FA: jest.fn(),
   },
-// Orphaned closing removed
 jest.mock('@/components/auth/password-strength-indicator', () => ({
   PasswordStrengthIndicator: ({ password }: PasswordStrengthIndicatorProps) => (
     <div data-testid='password-strength' data-password={password}>
       Password strength indicator
     </div>
   ),
-// Orphaned closing removed
 jest.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, disabled, variant, type, ...props }: ButtonProps) => (
     <button onClick={onClick} disabled={disabled} type={type} data-variant={variant} {...props}>
       {children}
     </button>
   ),
-// Orphaned closing removed
 jest.mock('@/components/ui/password-input', () => ({
   PasswordInput: React.forwardRef<HTMLInputElement, PasswordInputProps>(function PasswordInput({ ...props }, ref) {
     return <input ref={ref} type='password' {...props} />;
@@ -62,7 +57,6 @@ jest.mock('@/components/ui/alert', () => ({
       {children}
     </div>
   ),
-// Orphaned closing removed
 jest.mock('@/components/ui/card', () => ({
   Card: ({ children, ...props }: CardProps) => (
     <div data-testid='card' {...props}>
@@ -89,7 +83,6 @@ jest.mock('@/components/ui/card', () => ({
       {children}
     </h2>
   ),
-// Orphaned closing removed
 jest.mock('@/components/ui/form', () => ({
   Form: ({ children, ...props }: FormProps) => <form {...props}>{children}</form>,
   FormControl: ({ children, ...props }: FormControlProps) => <div {...props}>{children}</div>,
@@ -104,7 +97,6 @@ jest.mock('lucide-react', () => ({
   CheckCircle: ({ className }: IconProps) => (
     <div data-testid='check-circle-icon' className={className} />
   ),
-// Orphaned closing removed
 /**
  * @jest-environment jsdom
  */
@@ -270,7 +262,7 @@ describe('ChangePasswordForm', () => {
     (mockForm.watch as jest.Mock).mockReturnValue('newpassword123');
     // Default API response
     mockAuthAPI.changePassword.mockResolvedValue({
-      success: true,
+      success: true
     });
     // Validation rules mock
     (require('@/hooks/use-auth-form').validationRules.confirmPassword as jest.Mock).mockReturnValue(
@@ -316,7 +308,7 @@ describe('ChangePasswordForm', () => {
   it('shows error message when there is an error', async () => {
     mockUseAuthFormHook.mockReturnValue({
       ...mockUseAuthForm,
-      error: 'Current password is incorrect',
+      error: 'Current password is incorrect'
     });
     render(<ChangePasswordForm />);
     expect(screen.getByTestId('alert')).toBeInTheDocument();
@@ -325,7 +317,7 @@ describe('ChangePasswordForm', () => {
   it('shows loading state when submitting', async () => {
     mockUseAuthFormHook.mockReturnValue({
       ...mockUseAuthForm,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<ChangePasswordForm />);
     expect(screen.getByText('Changing password...')).toBeInTheDocument();
@@ -334,7 +326,7 @@ describe('ChangePasswordForm', () => {
   it('disables form fields when submitting', async () => {
     mockUseAuthFormHook.mockReturnValue({
       ...mockUseAuthForm,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<ChangePasswordForm />);
     const currentPasswordInput = screen.getByLabelText('Current password');
@@ -353,7 +345,7 @@ describe('ChangePasswordForm', () => {
   it('disables submit button when submitting', async () => {
     mockUseAuthFormHook.mockReturnValue({
       ...mockUseAuthForm,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<ChangePasswordForm />);
     const submitButton = screen.getByRole('button', { name: /changing password/i });
@@ -375,7 +367,7 @@ describe('ChangePasswordForm', () => {
   it('shows success state after successful password change', async () => {
     const mockHandleSubmit = jest.fn();
     mockAuthAPI.changePassword.mockResolvedValue({
-      success: true,
+      success: true
     });
     mockUseAuthForm.handleSubmit.mockImplementation((callback) => {
       // Simulate successful form submission
@@ -383,7 +375,7 @@ describe('ChangePasswordForm', () => {
         callback({
           currentPassword: 'oldpassword',
           newPassword: 'newpassword123',
-          confirmNewPassword: 'newpassword123',
+          confirmNewPassword: 'newpassword123'
         });
       }, 0);
       return mockHandleSubmit;
@@ -415,13 +407,13 @@ describe('ChangePasswordForm', () => {
     const mockOnSuccess = jest.fn();
     const mockHandleSubmit = jest.fn();
     mockAuthAPI.changePassword.mockResolvedValue({
-      success: true,
+      success: true
     });
     mockUseAuthForm.handleSubmit.mockImplementation((callback) => {
       callback({
         currentPassword: 'oldpassword',
         newPassword: 'newpassword123',
-        confirmNewPassword: 'newpassword123',
+        confirmNewPassword: 'newpassword123'
       });
       return mockHandleSubmit;
     });
@@ -433,13 +425,13 @@ describe('ChangePasswordForm', () => {
     const mockHandleSubmit = jest.fn();
     mockAuthAPI.changePassword.mockResolvedValue({
       success: false,
-      error: { code: 'INVALID_PASSWORD', message: 'Current password is incorrect' },
+      error: { code: 'INVALID_PASSWORD', message: 'Current password is incorrect' }
     });
     mockUseAuthForm.handleSubmit.mockImplementation((callback) => {
       callback({
         currentPassword: 'wrongpassword',
         newPassword: 'newpassword123',
-        confirmNewPassword: 'newpassword123',
+        confirmNewPassword: 'newpassword123'
       });
       return mockHandleSubmit;
     });
@@ -456,7 +448,7 @@ describe('ChangePasswordForm', () => {
   it('disables cancel button when submitting', async () => {
     mockUseAuthFormHook.mockReturnValue({
       ...mockUseAuthForm,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<ChangePasswordForm />);
     const cancelButton = screen.getByRole('button', { name: /cancel/i });
@@ -500,7 +492,7 @@ describe('ChangePasswordForm', () => {
     // Submitting state
     mockUseAuthFormHook.mockReturnValue({
       ...mockUseAuthForm,
-      isSubmitting: true,
+      isSubmitting: true
     });
     rerender(<ChangePasswordForm />);
     expect(screen.getByLabelText('Current password')).toBeInTheDocument();
@@ -518,7 +510,7 @@ describe('ChangePasswordForm', () => {
     errorMessages.forEach((errorMessage) => {
       mockUseAuthFormHook.mockReturnValue({
         ...mockUseAuthForm,
-        error: errorMessage,
+        error: errorMessage
       });
       const { rerender } = render(<ChangePasswordForm />);
       expect(screen.getByText(errorMessage)).toBeInTheDocument();
@@ -562,3 +554,4 @@ describe('ChangePasswordForm', () => {
     // Component should initially show the form
     expect(screen.getByTestId('card-title')).toHaveTextContent('Change Password');
   });
+}}}}}}}}}}}}

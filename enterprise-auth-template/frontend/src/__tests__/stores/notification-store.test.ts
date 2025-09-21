@@ -8,7 +8,6 @@ jest.mock('zustand/middleware', () => ({
   devtools: (fn: any) => fn,
   persist: (fn: any) => fn,
   subscribeWithSelector: (fn: any) => fn,
-// Orphaned closing removed
 /**
  * @jest-environment jsdom
  */
@@ -41,7 +40,7 @@ describe('Initial State', () => {
         desktop: true,
         email: true,
         push: true,
-        frequency: 'instant',
+        frequency: 'instant'
       });
     });
   });
@@ -163,7 +162,6 @@ describe('Marking as Read', () => {
         type: 'info',
         timestamp: new Date().toISOString(),
         read: false,
-// Orphaned closing removed
       act(() => {
         notifications.forEach(notif => result.current.addNotification(notif));
       });
@@ -237,7 +235,6 @@ describe('Removing Notifications', () => {
         type: 'info',
         timestamp: new Date().toISOString(),
         read: i % 2 === 0,
-// Orphaned closing removed
       act(() => {
         notifications.forEach(notif => result.current.addNotification(notif));
       });
@@ -291,7 +288,7 @@ describe('Notification Types', () => {
             message: `This is a ${type} message`,
             type,
             timestamp: new Date().toISOString(),
-            read: false,
+            read: false
           });
         });
       });
@@ -376,7 +373,7 @@ describe('Settings Management', () => {
           desktop: false,
           email: false,
           push: false,
-          frequency: 'weekly',
+          frequency: 'weekly'
         });
       });
       act(() => {
@@ -388,7 +385,7 @@ describe('Settings Management', () => {
         desktop: true,
         email: true,
         push: true,
-        frequency: 'instant',
+        frequency: 'instant'
       });
     });
   });
@@ -489,7 +486,6 @@ describe('Pagination', () => {
         type: 'info',
         timestamp: new Date(Date.now() - i * 1000).toISOString(),
         read: false,
-// Orphaned closing removed
       act(() => {
         notifications.forEach(notif => result.current.addNotification(notif));
       });
@@ -605,3 +601,4 @@ describe('Persistence', () => {
     });
   });
 });
+}}}}

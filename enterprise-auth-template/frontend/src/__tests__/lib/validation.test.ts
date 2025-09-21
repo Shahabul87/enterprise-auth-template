@@ -16,9 +16,8 @@ import {
   validatePattern,
   createValidator,
   ValidationResult,
-  ValidationRule,
+  ValidationRule
 } from '@/lib/validation';
-
 describe('Email Validation', () => {
   it('should validate correct email addresses', () => {
     const validEmails = [

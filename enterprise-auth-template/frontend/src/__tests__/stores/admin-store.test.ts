@@ -1,7 +1,6 @@
 
 import { renderHook, act } from '@testing-library/react';
 import { useAdminStore } from '@/stores/admin.store';
-
 jest.mock('@/lib/api-client', () => ({
   apiClient: {
     get: jest.fn(),
@@ -9,7 +8,6 @@ jest.mock('@/lib/api-client', () => ({
     put: jest.fn(),
     delete: jest.fn(),
   },
-// Orphaned closing removed
 jest.mock('@/lib/admin-api', () => ({
   adminAPI: {
     getStats: jest.fn(),
@@ -23,7 +21,6 @@ jest.mock('@/lib/admin-api', () => ({
     getAuditLogs: jest.fn(),
     getSystemHealth: jest.fn(),
   },
-// Orphaned closing removed
 /**
  * @jest-environment jsdom
  */
@@ -44,7 +41,7 @@ describe('useAdminStore', () => {
       auditLogs: [],
       systemHealth: null,
       isLoading: false,
-      error: null,
+      error: null
     });
   });
   it('should have initial state', async () => {
@@ -73,7 +70,7 @@ describe('fetchStats', () => {
       };
       mockAdminAPI.getStats.mockResolvedValue({
         success: true,
-        data: mockStats,
+        data: mockStats
       });
       const { result } = renderHook(() => useAdminStore());
       await act(async () => {
@@ -87,7 +84,7 @@ describe('fetchStats', () => {
       const errorMessage = 'Failed to fetch stats';
       mockAdminAPI.getStats.mockResolvedValue({
         success: false,
-        error: { message: errorMessage },
+        error: { message: errorMessage }
       });
       const { result } = renderHook(() => useAdminStore());
       await act(async () => {
@@ -96,7 +93,6 @@ describe('fetchStats', () => {
       expect(result.current.stats).toBeNull();
       expect(result.current.error).toEqual(expect.objectContaining({
         message: errorMessage,
-// Orphaned closing removed
       expect(result.current.isLoading).toBe(false);
     });
     it('should set loading state during fetch', async () => {
@@ -140,7 +136,7 @@ describe('User Management', () => {
       ];
       mockAdminAPI.getUsers.mockResolvedValue({
         success: true,
-        data: { users: mockUsers, total: 2 },
+        data: { users: mockUsers, total: 2 }
       });
       const { result } = renderHook(() => useAdminStore());
       await act(async () => {
@@ -164,7 +160,7 @@ describe('User Management', () => {
       };
       mockAdminAPI.createUser.mockResolvedValue({
         success: true,
-        data: createdUser,
+        data: createdUser
       });
       const { result } = renderHook(() => useAdminStore());
       await act(async () => {
@@ -188,7 +184,7 @@ describe('User Management', () => {
       const updatedUser = { ...existingUser, ...updates };
       mockAdminAPI.setUser.mockResolvedValue({
         success: true,
-        data: updatedUser,
+        data: updatedUser
       });
       const { result } = renderHook(() => useAdminStore());
       await act(async () => {
@@ -205,7 +201,7 @@ describe('User Management', () => {
       useAdminStore.setState({ users });
       mockAdminAPI.deleteUser.mockResolvedValue({
         success: true,
-        data: { message: 'User deleted successfully' },
+        data: { message: 'User deleted successfully' }
       });
       const { result } = renderHook(() => useAdminStore());
       await act(async () => {
@@ -231,7 +227,7 @@ describe('User Management', () => {
             full_name: 'Full name is required',
             password: 'Password too weak',
           },
-        },
+        }
       });
       const { result } = renderHook(() => useAdminStore());
       await act(async () => {
@@ -239,8 +235,7 @@ describe('User Management', () => {
       });
       expect(result.current.error).toEqual(expect.objectContaining({
         code: 'VALIDATION_ERROR',
-        details: expect.any(Object),
-// Orphaned closing removed
+        details: expect.any(Object)
     });
   });
 
@@ -262,7 +257,7 @@ describe('Role and Permission Management', () => {
       ];
       mockAdminAPI.getRoles.mockResolvedValue({
         success: true,
-        data: mockRoles,
+        data: mockRoles
       });
       const { result } = renderHook(() => useAdminStore());
       await act(async () => {
@@ -290,7 +285,7 @@ describe('Role and Permission Management', () => {
       ];
       mockAdminAPI.getPermissions.mockResolvedValue({
         success: true,
-        data: mockPermissions,
+        data: mockPermissions
       });
       const { result } = renderHook(() => useAdminStore());
       await act(async () => {
@@ -321,7 +316,7 @@ describe('Audit Logs', () => {
       ];
       mockAdminAPI.getAuditLogs.mockResolvedValue({
         success: true,
-        data: { logs: mockAuditLogs, total: 2 },
+        data: { logs: mockAuditLogs, total: 2 }
       });
       const { result } = renderHook(() => useAdminStore());
       await act(async () => {
@@ -340,7 +335,7 @@ describe('Audit Logs', () => {
       ];
       mockAdminAPI.getAuditLogs.mockResolvedValue({
         success: true,
-        data: { logs: mockFilteredLogs, total: 1 },
+        data: { logs: mockFilteredLogs, total: 1 }
       });
       const { result } = renderHook(() => useAdminStore());
       const filters = {
@@ -369,7 +364,7 @@ describe('System Health', () => {
       };
       mockAdminAPI.getSystemHealth.mockResolvedValue({
         success: true,
-        data: mockHealth,
+        data: mockHealth
       });
       const { result } = renderHook(() => useAdminStore());
       await act(async () => {
@@ -388,7 +383,7 @@ describe('System Health', () => {
       };
       mockAdminAPI.getSystemHealth.mockResolvedValue({
         success: true,
-        data: mockHealth,
+        data: mockHealth
       });
       const { result } = renderHook(() => useAdminStore());
       await act(async () => {
@@ -408,17 +403,16 @@ describe('Error Handling', () => {
       });
       expect(result.current.error).toEqual(expect.objectContaining({
         message: 'Network error',
-// Orphaned closing removed
       expect(result.current.isLoading).toBe(false);
     });
     it('should clear errors when new requests succeed', async () => {
       // First, set an error
       useAdminStore.setState({
-        error: new Error('Previous error'),
+        error: new Error('Previous error')
       });
       mockAdminAPI.getStats.mockResolvedValue({
         success: true,
-        data: { totalUsers: 100 },
+        data: { totalUsers: 100 }
       });
       const { result } = renderHook(() => useAdminStore());
       await act(async () => {
@@ -444,7 +438,7 @@ describe('Error Handling', () => {
 describe('Store Actions', () => {
     it('should clear error state', async () => {
       useAdminStore.setState({
-        error: new Error('Test error'),
+        error: new Error('Test error')
       });
       const { result } = renderHook(() => useAdminStore());
       act(() => {
@@ -456,7 +450,7 @@ describe('Store Actions', () => {
       useAdminStore.setState({
         stats: { totalUsers: 100 },
         users: [{ id: '1', email: 'test@example.com' }],
-        error: new Error('Test error'),
+        error: new Error('Test error')
       });
       const { result } = renderHook(() => useAdminStore());
       act(() => {
@@ -474,10 +468,9 @@ describe('Performance', () => {
         id: `user${i}`,
         email: `user${i}@example.com`,
         full_name: `User ${i}`,
-// Orphaned closing removed
       mockAdminAPI.getUsers.mockResolvedValue({
         success: true,
-        data: { users: largeUserList, total: 1000 },
+        data: { users: largeUserList, total: 1000 }
       });
       const { result } = renderHook(() => useAdminStore());
       const startTime = performance.now();
@@ -490,3 +483,4 @@ describe('Performance', () => {
     });
   });
 });
+}}}}}}

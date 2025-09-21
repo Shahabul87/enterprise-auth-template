@@ -5,7 +5,6 @@ import userEvent from '@testing-library/user-event';
 import { LoginForm } from '@/components/auth/login-form';
 import { useAuthStore } from '@/stores/auth.store';
 import { useRouter } from 'next/navigation';
-
 // Create simplified mock component for testing
 const MockLoginForm = ({ onSuccess }) => {
   const [email, setEmail] = React.useState('');
@@ -218,10 +217,10 @@ describe('LoginForm', () => {
     jest.clearAllMocks();
     (useAuthStore as jest.Mock).mockReturnValue({
       login: mockLogin,
-      isLoading: false,
+      isLoading: false
     });
     (useRouter as jest.Mock).mockReturnValue({
-      push: mockPush,
+      push: mockPush
     });
   });
 
@@ -296,7 +295,7 @@ describe('Submission', () => {
       await act(async () => { await waitFor(() => {
         expect(mockLogin).toHaveBeenCalledWith({
           email: 'test@example.com',
-          password: 'SecurePassword123!',
+          password: 'SecurePassword123!'
         }); });
       });
       expect(mockPush).toHaveBeenCalledWith('/dashboard');
@@ -391,3 +390,4 @@ describe('Remember Me', () => {
     });
   });
 });
+}}}}}}}}}}}

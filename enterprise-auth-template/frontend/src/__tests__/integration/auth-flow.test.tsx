@@ -318,7 +318,7 @@ describe('Auth Flow Integration Tests', () => {
       return callback({
         email: 'test@example.com',
         password: 'password123',
-        rememberMe: false,
+        rememberMe: false
       });
     });
     mockUseAuthForm.handleSubmit.mockImplementation((callback: (data: Record<string, unknown>) => void) => callback);
@@ -338,11 +338,11 @@ describe('Complete Login Flow', () => {
           },
           accessToken: 'access-token',
           refreshToken: 'refresh-token',
-        },
+        }
       });
       (useAuthStore as jest.MockedFunction<typeof useAuthStore>).mockReturnValue({
         ...mockAuthStore,
-        login: mockLogin,
+        login: mockLogin
       });
       render(
         <TestWrapper>
@@ -371,7 +371,7 @@ describe('Complete Login Flow', () => {
       await waitFor(() => {
         expect(mockLogin).toHaveBeenCalledWith({
           email: 'test@example.com',
-          password: 'password123',
+          password: 'password123'
         });
       });
       // Verify redirect to dashboard
@@ -383,15 +383,15 @@ describe('Complete Login Flow', () => {
         error: {
           code: 'INVALID_CREDENTIALS',
           message: 'Invalid email or password',
-        },
+        }
       });
       (useAuthStore as jest.MockedFunction<typeof useAuthStore>).mockReturnValue({
         ...mockAuthStore,
-        login: mockLogin,
+        login: mockLogin
       });
       (require('@/hooks/use-auth-form').useAuthForm as jest.MockedFunction<typeof import('@/hooks/use-auth-form').useAuthForm>).mockReturnValue({
         ...mockUseAuthForm,
-        error: 'Invalid email or password',
+        error: 'Invalid email or password'
       });
       render(
         <TestWrapper>
@@ -458,7 +458,7 @@ describe('Form Validation Flow', () => {
     it('should show loading state during submission', async () => {
       (require('@/hooks/use-auth-form').useAuthForm as jest.MockedFunction<typeof import('@/hooks/use-auth-form').useAuthForm>).mockReturnValue({
         ...mockUseAuthForm,
-        isSubmitting: true,
+        isSubmitting: true
       });
       render(
         <TestWrapper>

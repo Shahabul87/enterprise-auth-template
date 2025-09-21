@@ -329,7 +329,7 @@ describe('LoginForm', () => {
     mockAuthStore.error = null;
     mockErrorHandler.handleFormError.mockReturnValue({
       userMessage: 'Test error message',
-      code: 'TEST_ERROR',
+      code: 'TEST_ERROR'
     });
     mockAuthForm.isSubmitting = false;
     mockAuthForm.error = null;
@@ -376,7 +376,7 @@ describe('Form Interaction', () => {
       await act(async () => { await act(async () => { await act(async () => { await waitFor(() => {
         expect(mockAuthStore.login).toHaveBeenCalledWith({
           email: 'test@example.com',
-          password: 'password123',
+          password: 'password123'
         }); }); });
       });
       expect(onSuccess).toHaveBeenCalled();
@@ -590,3 +590,4 @@ describe('Component Integration', () => {
       expect(require('@/hooks/use-error-handler').useFormErrorHandler).toHaveBeenCalled();
     });
   });
+}}}}}}}}}}}}}}}}}}}}}}

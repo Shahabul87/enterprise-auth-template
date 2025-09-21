@@ -3,7 +3,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { SimpleBreadcrumbs } from '@/components/navigation/breadcrumbs';
-
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
   usePathname: () => '/settings/profile',

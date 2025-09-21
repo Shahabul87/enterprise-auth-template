@@ -1,7 +1,6 @@
 
 import { renderHook, act } from '@testing-library/react';
 import { useForm, UseFormReturn, FieldValues, Path } from 'react-hook-form';
-
 import React from 'react';
 
 
@@ -21,9 +20,8 @@ jest.mock('react-hook-form', () => ({
   UseAuthFormOptions,
   validationRules,
   getFieldError,
-  isFormValid,
+  isFormValid
 } from '../../hooks/use-auth-form';
-
 // Type-safe interfaces for test data
 interface LoginFormData {
   email: string;
@@ -117,7 +115,7 @@ describe('Hook Initialization', () => {
       expect(typeof result.current.handleSubmit).toBe('function');
       expect(useForm).toHaveBeenCalledWith({
         defaultValues,
-        mode: 'onChange',
+        mode: 'onChange'
       });
     });
     it('accepts onSuccess callback', async () => {
@@ -365,7 +363,7 @@ describe('Hook Dependencies', () => {
             onError,
           }),
         {
-          initialProps: { onSuccess, onError },
+          initialProps: { onSuccess, onError }
         }
       );
       const firstHandleSubmit = result.current.handleSubmit;
@@ -537,7 +535,7 @@ describe('Form Helper Functions', () => {
     it('extracts field error message', async () => {
       const form = createMockForm({
         email: { message: 'Email is required' },
-        password: { message: 'Password is too weak' },
+        password: { message: 'Password is too weak' }
       });
       expect(getFieldError(form, 'email')).toBe('Email is required');
       expect(getFieldError(form, 'password')).toBe('Password is too weak');
@@ -545,7 +543,7 @@ describe('Form Helper Functions', () => {
     });
     it('handles missing error message', async () => {
       const form = createMockForm({
-        email: {},
+        email: {}
       });
       expect(getFieldError(form, 'email')).toBeUndefined();
     });
@@ -571,7 +569,7 @@ describe('isFormValid', () => {
         {
           email: 'test@example.com',
           password: 'password123',
-          terms: true,
+          terms: true
         }
       );
       const result = isFormValid(form, ['email', 'password', 'terms']);
@@ -583,7 +581,7 @@ describe('isFormValid', () => {
         { email: { message: 'Invalid email' } },
         {
           email: 'invalid-email',
-          password: 'password123',
+          password: 'password123'
         }
       );
       const result = isFormValid(form, ['email', 'password']);
@@ -595,7 +593,7 @@ describe('isFormValid', () => {
         {},
         {
           email: '',
-          password: 'password123',
+          password: 'password123'
         }
       );
       const result = isFormValid(form, ['email', 'password']);
@@ -608,7 +606,7 @@ describe('isFormValid', () => {
         {
           email: 'test@example.com',
           password: 'password123',
-          terms: false,
+          terms: false
         }
       );
       const result = isFormValid(form, ['email', 'password', 'terms']);
@@ -621,7 +619,7 @@ describe('isFormValid', () => {
         {
           email: 'test@example.com',
           password: 'password123',
-          terms: true,
+          terms: true
         }
       );
       const result = isFormValid(form, ['email', 'password', 'terms']);
@@ -634,7 +632,7 @@ describe('isFormValid', () => {
         {
           email: null,
           password: undefined,
-          name: '',
+          name: ''
         }
       );
       const result = isFormValid(form, ['email', 'password', 'name']);
@@ -646,7 +644,7 @@ describe('isFormValid', () => {
         {},
         {
           count: 0,
-          name: 'test',
+          name: 'test'
         }
       );
       const result = isFormValid(form, ['count', 'name']);
@@ -658,7 +656,7 @@ describe('isFormValid', () => {
         { email: { message: 'Invalid email' } },
         {
           email: 'test@example.com',
-          password: 'password123',
+          password: 'password123'
         }
       );
       const result = isFormValid(form, ['email', 'password']);
@@ -669,7 +667,7 @@ describe('isFormValid', () => {
         true,
         {},
         {
-          email: 'test@example.com',
+          email: 'test@example.com'
         }
       );
       const result = isFormValid(form, []);

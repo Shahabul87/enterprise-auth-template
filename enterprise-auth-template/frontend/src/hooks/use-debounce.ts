@@ -62,7 +62,7 @@ export interface DebouncedState<T> {
  * @returns The debounced value
  */
 export function useDebounce<T>(
-  value: T, 
+  value: T,
   delay: number,
   options?: DebounceOptions
 ): T {
@@ -72,18 +72,25 @@ export function useDebounce<T>(
   const maxTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const lastCallTimeRef = useRef<number | undefined>(undefined);
   const lastInvokeTimeRef = useRef<number>(0);
+  const lastValueRef = useRef<T>(value);
+  const leadingInvokedRef = useRef<boolean>(false);
+
+  // Keep track of the last value
+  lastValueRef.current = value;
 
   const invokeFunc = useCallback(() => {
-    setDebouncedValue(value);
+    setDebouncedValue(lastValueRef.current);
     lastInvokeTimeRef.current = Date.now();
-  }, [value]);
+  }, []);
 
   const leadingEdge = useCallback((time: number) => {
     lastInvokeTimeRef.current = time;
-    if (leading) {
-      invokeFunc();
+    if (leading && !leadingInvokedRef.current) {
+      // Set the value immediately for leading edge
+      setDebouncedValue(lastValueRef.current);
+      leadingInvokedRef.current = true;
     }
-  }, [leading, invokeFunc]);
+  }, [leading]);
 
   const remainingWait = useCallback((time: number) => {
     const timeSinceLastCall = time - (lastCallTimeRef.current || 0);
@@ -112,12 +119,13 @@ export function useDebounce<T>(
   
   const trailingEdgeFunc = useCallback(() => {
     timeoutRef.current = undefined;
-    
+
     if (trailing && lastCallTimeRef.current !== undefined) {
       invokeFunc();
     }
-    
+
     lastCallTimeRef.current = undefined;
+    leadingInvokedRef.current = false; // Reset for next cycle
     return debouncedValue;
   }, [trailing, invokeFunc, debouncedValue]);
 
@@ -142,7 +150,7 @@ export function useDebounce<T>(
 
     if (isInvoking) {
       if (timeoutRef.current === undefined) {
-        return leadingEdge(lastCallTimeRef.current);
+        leadingEdge(lastCallTimeRef.current);
       }
       if (maxWait !== undefined) {
         timeoutRef.current = setTimeout(timerExpired, delay);
@@ -150,9 +158,13 @@ export function useDebounce<T>(
       }
     }
 
-    if (timeoutRef.current === undefined) {
-      timeoutRef.current = setTimeout(timerExpired, delay);
+    // Clear existing timeout if any
+    if (timeoutRef.current !== undefined) {
+      clearTimeout(timeoutRef.current);
+      leadingInvokedRef.current = false;
     }
+
+    timeoutRef.current = setTimeout(timerExpired, delay);
   }, [shouldInvoke, leadingEdge, timerExpired, delay, maxWait]);
 
   // Trigger debounced function when value changes

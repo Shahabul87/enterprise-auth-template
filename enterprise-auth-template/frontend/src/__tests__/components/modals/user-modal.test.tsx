@@ -3,8 +3,6 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { UserModal } from '@/components/modals/user-modal';
-
-
 describe('UserModal Component', () => {
   const mockUser = {
     id: '1',

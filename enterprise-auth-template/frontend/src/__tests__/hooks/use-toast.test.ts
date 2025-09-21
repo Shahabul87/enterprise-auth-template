@@ -34,7 +34,7 @@ describe('useToast', () => {
     act(() => {
       result.current.toast({
         title: 'Test Toast',
-        description: 'This is a test toast',
+        description: 'This is a test toast'
       });
     });
 
@@ -42,7 +42,7 @@ describe('useToast', () => {
     expect(result.current.toasts[0]).toMatchObject({
       title: 'Test Toast',
       description: 'This is a test toast',
-      duration: 5000,
+      duration: 5000
     });
     expect(result.current.toasts[0].id).toBeDefined();
   });
@@ -54,14 +54,14 @@ describe('useToast', () => {
       result.current.toast({
         title: 'Success',
         description: 'Operation completed successfully',
-        variant: 'success',
+        variant: 'success'
       });
     });
 
     expect(result.current.toasts[0]).toMatchObject({
       title: 'Success',
       description: 'Operation completed successfully',
-      variant: 'success',
+      variant: 'success'
     });
   });
 
@@ -72,14 +72,14 @@ describe('useToast', () => {
       result.current.toast({
         title: 'Error',
         description: 'Something went wrong',
-        variant: 'destructive',
+        variant: 'destructive'
       });
     });
 
     expect(result.current.toasts[0]).toMatchObject({
       title: 'Error',
       description: 'Something went wrong',
-      variant: 'destructive',
+      variant: 'destructive'
     });
   });
 
@@ -89,7 +89,7 @@ describe('useToast', () => {
     act(() => {
       result.current.toast({
         title: 'Auto Dismiss',
-        duration: 3000,
+        duration: 3000
       });
     });
 
@@ -108,7 +108,7 @@ describe('useToast', () => {
     act(() => {
       result.current.toast({
         title: 'Custom Duration',
-        duration: 10000,
+        duration: 10000
       });
     });
 
@@ -133,7 +133,7 @@ describe('useToast', () => {
     act(() => {
       result.current.toast({
         title: 'Persistent Toast',
-        duration: 0,
+        duration: 0
       });
     });
 
@@ -151,10 +151,10 @@ describe('useToast', () => {
 
     act(() => {
       toastId = result.current.toast({
-        title: 'Toast 1',
+        title: 'Toast 1'
       });
       result.current.toast({
-        title: 'Toast 2',
+        title: 'Toast 2'
       });
     });
 
@@ -192,7 +192,7 @@ describe('useToast', () => {
     act(() => {
       result.current.toast({
         id: 'custom-toast-id',
-        title: 'Custom ID Toast',
+        title: 'Custom ID Toast'
       });
     });
 
@@ -262,7 +262,7 @@ describe('useToast', () => {
 
     expect(result.current.toasts).toHaveLength(1);
     expect(result.current.toasts[0]).toMatchObject({
-      duration: 5000,
+      duration: 5000
     });
   });
 

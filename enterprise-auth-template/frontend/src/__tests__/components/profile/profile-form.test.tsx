@@ -7,7 +7,6 @@ import { useAuthForm, UseAuthFormReturn } from '@/hooks/use-auth-form';
 import AuthAPI from '@/lib/auth-api';
 import { User } from '@/types/auth.types';
 import { UseFormReturn, FieldValues, Control } from 'react-hook-form';
-
 jest.mock('@/stores/auth.store', () => ({
   useAuthStore: jest.fn(() => ({
     user: null,
@@ -142,7 +141,7 @@ const mockSetUser = jest.fn();
   CardDescriptionProps,
   CardHeaderProps,
   CardTitleProps,
-  FormFieldProps,
+  FormFieldProps
 } from '../../types/test-interfaces';
 // Specific form component props
 interface FormProps {
@@ -252,12 +251,12 @@ describe('ProfileForm', () => {
     (mockForm.getValues as jest.Mock).mockReturnValue({
       first_name: 'John',
       last_name: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'john.doe@example.com'
     });
     // Default API response
     mockAuthAPI.updateProfile.mockResolvedValue({
       success: true,
-      data: { ...mockUser, full_name: 'Updated User' },
+      data: { ...mockUser, full_name: 'Updated User' }
     });
   });
   it('renders profile form with user data', async () => {
@@ -280,7 +279,7 @@ describe('ProfileForm', () => {
   it('shows loading state when user is loading', async () => {
     mockUseAuth.mockReturnValue({
       ...mockAuthContext,
-      isLoading: true,
+      isLoading: true
     });
     render(<ProfileForm />);
     expect(screen.getByTestId('loader-icon')).toBeInTheDocument();
@@ -288,7 +287,7 @@ describe('ProfileForm', () => {
   it('shows loading state when user is null', async () => {
     mockUseAuth.mockReturnValue({
       ...mockAuthContext,
-      user: null,
+      user: null
     });
     render(<ProfileForm />);
     expect(screen.getByTestId('loader-icon')).toBeInTheDocument();
@@ -296,7 +295,7 @@ describe('ProfileForm', () => {
   it('shows error message when there is an error', async () => {
     mockUseAuthForm.mockReturnValue({
       ...mockUseAuthFormReturn,
-      error: 'Update failed',
+      error: 'Update failed'
     });
     render(<ProfileForm />);
     expect(screen.getByTestId('alert')).toBeInTheDocument();
@@ -305,7 +304,7 @@ describe('ProfileForm', () => {
   it('shows loading state when submitting', async () => {
     mockUseAuthForm.mockReturnValue({
       ...mockUseAuthFormReturn,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<ProfileForm />);
     expect(screen.getByText('Saving...')).toBeInTheDocument();
@@ -314,7 +313,7 @@ describe('ProfileForm', () => {
   it('disables form fields when submitting', async () => {
     mockUseAuthForm.mockReturnValue({
       ...mockUseAuthFormReturn,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<ProfileForm />);
     const firstNameInput = screen.getByLabelText('First name');
@@ -333,7 +332,7 @@ describe('ProfileForm', () => {
   it('disables submit button when submitting', async () => {
     mockUseAuthForm.mockReturnValue({
       ...mockUseAuthFormReturn,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<ProfileForm />);
     const submitButton = screen.getByRole('button', { name: /saving/i });
@@ -344,7 +343,7 @@ describe('ProfileForm', () => {
     (mockForm.getValues as jest.Mock).mockReturnValue({
       first_name: 'John',
       last_name: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'john.doe@example.com'
     });
     render(<ProfileForm />);
     const submitButton = screen.getByRole('button', { name: /save changes/i });
@@ -355,7 +354,7 @@ describe('ProfileForm', () => {
     (mockForm.getValues as jest.Mock).mockReturnValue({
       first_name: 'Updated John',
       last_name: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'john.doe@example.com'
     });
     render(<ProfileForm />);
     const submitButton = screen.getByRole('button', { name: /save changes/i });
@@ -366,7 +365,7 @@ describe('ProfileForm', () => {
     (mockForm.getValues as jest.Mock).mockReturnValue({
       first_name: 'John',
       last_name: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'john.doe@example.com'
     });
     render(<ProfileForm />);
     const cancelButton = screen.getByRole('button', { name: /cancel/i });
@@ -377,7 +376,7 @@ describe('ProfileForm', () => {
     (mockForm.getValues as jest.Mock).mockReturnValue({
       first_name: 'Updated John',
       last_name: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'john.doe@example.com'
     });
     render(<ProfileForm />);
     const cancelButton = screen.getByRole('button', { name: /cancel/i });
@@ -391,13 +390,13 @@ describe('ProfileForm', () => {
       first_name: 'Updated',
     mockUseAuth.mockReturnValue({
       ...mockAuthContext,
-      user: updatedUser,
+      user: updatedUser
     });
     rerender(<ProfileForm />);
     expect(mockForm.reset).toHaveBeenCalledWith({
       first_name: 'Updated',
       last_name: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'john.doe@example.com'
     });
   });
   it('calls updateProfile API on form submission', async () => {
@@ -414,14 +413,14 @@ describe('ProfileForm', () => {
     const updatedUserData = { ...mockUser, first_name: 'Updated John' };
     mockAuthAPI.updateProfile.mockResolvedValue({
       success: true,
-      data: updatedUserData,
+      data: updatedUserData
     });
     const mockHandleSubmitFn = jest.fn((callback: (data: FieldValues) => Promise<boolean>) => {
       // Simulate successful form submission
       callback({
         first_name: 'Updated John',
         last_name: 'Doe',
-        email: 'john.doe@example.com',
+        email: 'john.doe@example.com'
       });
       return jest.fn();
     });
@@ -434,13 +433,13 @@ describe('ProfileForm', () => {
   it('handles API error gracefully', async () => {
     mockAuthAPI.updateProfile.mockResolvedValue({
       success: false,
-      error: { code: 'UPDATE_FAILED', message: 'Profile update failed' },
+      error: { code: 'UPDATE_FAILED', message: 'Profile update failed' }
     });
     const mockHandleSubmitFn2 = jest.fn((callback: (data: FieldValues) => Promise<boolean>) => {
       callback({
         first_name: 'Updated John',
         last_name: 'Doe',
-        email: 'john.doe@example.com',
+        email: 'john.doe@example.com'
       });
       return jest.fn();
     });
@@ -453,13 +452,13 @@ describe('ProfileForm', () => {
     const mockOnSuccess = jest.fn();
     mockAuthAPI.updateProfile.mockResolvedValue({
       success: true,
-      data: { ...mockUser, full_name: 'Updated User' },
+      data: { ...mockUser, full_name: 'Updated User' }
     });
     const mockHandleSubmitFn3 = jest.fn((callback: (data: FieldValues) => Promise<boolean>) => {
       callback({
         first_name: 'Updated',
         last_name: 'Doe',
-        email: 'john.doe@example.com',
+        email: 'john.doe@example.com'
       });
       return jest.fn();
     });
@@ -474,7 +473,7 @@ describe('ProfileForm', () => {
     (mockForm.getValues as jest.Mock).mockReturnValue({
       first_name: 'Updated John',
       last_name: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'john.doe@example.com'
     });
     render(<ProfileForm />);
     const user = userEvent.setup();
@@ -483,7 +482,7 @@ describe('ProfileForm', () => {
     expect(mockForm.reset).toHaveBeenCalledWith({
       first_name: 'John',
       last_name: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'john.doe@example.com'
     });
   });
   it('validates form fields correctly', async () => {
@@ -499,7 +498,7 @@ describe('ProfileForm', () => {
     (mockForm.getValues as jest.Mock).mockReturnValue({
       first_name: 'John',
       last_name: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'john.doe@example.com'
     });
     const { rerender } = render(<ProfileForm />);
     let submitButton = screen.getByRole('button', { name: /save changes/i });
@@ -508,7 +507,7 @@ describe('ProfileForm', () => {
     (mockForm.getValues as jest.Mock).mockReturnValue({
       first_name: 'Updated John',
       last_name: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'john.doe@example.com'
     });
     rerender(<ProfileForm />);
     submitButton = screen.getByRole('button', { name: /save changes/i });
@@ -518,7 +517,7 @@ describe('ProfileForm', () => {
     (mockForm.getValues as jest.Mock).mockReturnValue({
       first_name: 'Updated John',
       last_name: 'Updated Doe',
-      email: 'updated.john@example.com',
+      email: 'updated.john@example.com'
     });
     render(<ProfileForm />);
     const submitButton = screen.getByRole('button', { name: /save changes/i });
@@ -551,7 +550,7 @@ describe('ProfileForm', () => {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         roles: [],
-      } as User,
+      } as User
     });
     render(<ProfileForm />);
     expect(screen.getByTestId('card-title')).toHaveTextContent('Personal Information');
@@ -559,7 +558,7 @@ describe('ProfileForm', () => {
   it('maintains form state during submission', async () => {
     mockUseAuthForm.mockReturnValue({
       ...mockUseAuthFormReturn,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<ProfileForm />);
     // Form should still be present during submission
@@ -575,7 +574,7 @@ describe('ProfileForm', () => {
     (mockForm.getValues as jest.Mock).mockReturnValue({
       first_name: 'John',
       last_name: 'Doe',
-      email: 'john.doe@example.com',
+      email: 'john.doe@example.com'
     });
     const customMockReturn4 = { ...mockUseAuthFormReturn, handleSubmit: mockHandleSubmit };
     mockUseAuthForm.mockReturnValue(customMockReturn4);
@@ -584,3 +583,4 @@ describe('ProfileForm', () => {
     const submitButton = screen.getByRole('button', { name: /save changes/i });
     expect(submitButton).toBeDisabled();
   });
+}}}}}}}}}}}}}}}}}}}}

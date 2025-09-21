@@ -3,8 +3,6 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { EmptyState, NoDataFound, NoSearchResults } from '@/components/shared/empty-state';
-
-
 describe('EmptyState Component', () => {
   it('should render title and description', () => {
     render(

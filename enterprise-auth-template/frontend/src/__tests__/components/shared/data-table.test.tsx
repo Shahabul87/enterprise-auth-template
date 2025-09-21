@@ -3,8 +3,6 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { DataTable } from '@/components/shared/data-table';
-
-
 describe('DataTable Component', () => {
   const columns = [
     {

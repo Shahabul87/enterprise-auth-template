@@ -104,7 +104,9 @@ beforeAll(() => {
       (args[0].includes('Warning: ReactDOM.render') ||
        args[0].includes('Unknown event handler property') ||
        args[0].includes('onValueChange') ||
-       args[0].includes('onOpenChange'))
+       args[0].includes('onOpenChange') ||
+       args[0].includes('act(...)') ||
+       args[0].includes('overlapping act() calls'))
     ) {
       return;
     }
@@ -115,6 +117,9 @@ beforeAll(() => {
 afterAll(() => {
   console.error = originalError;
 });
+
+// Fix React 18 act() warnings for testing
+global.IS_REACT_ACT_ENVIRONMENT = true;
 
 // Make React available globally for tests
 global.React = require('react');

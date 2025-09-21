@@ -11,7 +11,7 @@ import React from 'react';
 jest.mock('@/hooks/api/use-auth', () => ({
   useUserPermissions: jest.fn(),
   useUserRoles: jest.fn(),
-// Orphaned closing removed
+}));
 /**
  * Comprehensive test suite for usePermission hook
  * Tests all permission checking functionality with proper TypeScript typing
@@ -61,7 +61,7 @@ describe('Hook Initialization', () => {
     });
     it('should initialize with custom config', () => {
       const config: PermissionConfig = {
-        user_id: 'user-123',
+        userId: 'user-123',
         token: 'token-abc',
         requireAll: true,
       };
@@ -474,7 +474,7 @@ describe('usePermissionGuard Hook', () => {
     expect(result.current).toBe(true);
   });
   it('should work with custom config', () => {
-    const config = { user_id: 'user-123', token: 'token-abc' };
+    const config = { userId: 'user-123', token: 'token-abc' };
     const { result } = renderHook(() =>
       usePermissionGuard({ permissions: ['user:read'] }, config)
     );

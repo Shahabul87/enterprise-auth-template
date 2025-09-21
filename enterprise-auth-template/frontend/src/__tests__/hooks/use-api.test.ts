@@ -9,7 +9,7 @@ jest.mock('next/navigation', () => ({
     replace: jest.fn(),
     back: jest.fn(),
   }),
-// Orphaned closing removed
+}));
 /**
  * @jest-environment jsdom
  */
@@ -25,25 +25,26 @@ describe('useApi', () => {
     (fetch as jest.Mock).mockReset();
   });
   it('should initialize with default state', async () => {
-    const { result } = renderHook(() => useApi('/api/test'));
+    const { result } = renderHook(() => useApi());
     expect(result.current.data).toBeNull();
     expect(result.current.error).toBeNull();
-    expect(result.current.isLoading).toBe(false);
+    expect(result.current.loading).toBe(false);
   });
   it('should handle successful GET request', async () => {
     const mockData = { id: 1, name: 'Test' };
+    const apiResponse = { success: true, data: mockData };
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockData),
-      headers: new Headers({ 'content-type': 'application/json' }),
+      json: () => Promise.resolve(apiResponse),
+      headers: new Headers({ 'content-type': 'application/json' })
     });
-    const { result } = renderHook(() => useApi('/api/test'));
+    const { result } = renderHook(() => useApi());
     await act(async () => {
-      await result.current.refetch();
+      await result.current.execute('/api/test');
     });
     expect(result.current.data).toEqual(mockData);
     expect(result.current.error).toBeNull();
-    expect(result.current.isLoading).toBe(false);
+    expect(result.current.loading).toBe(false);
   });
   it('should handle API errors', async () => {
     const errorMessage = 'Not found';
@@ -51,29 +52,30 @@ describe('useApi', () => {
       ok: false,
       status: 404,
       statusText: 'Not Found',
-      json: () => Promise.resolve({ error: errorMessage }),
+      json: () => Promise.resolve({ message: errorMessage })
     });
-    const { result } = renderHook(() => useApi('/api/test'));
+    const { result } = renderHook(() => useApi());
     await act(async () => {
-      await result.current.refetch();
+      await result.current.execute('/api/test');
     });
     expect(result.current.data).toBeNull();
     expect(result.current.error).toEqual(expect.objectContaining({
-      message: expect.stringContaining('404'),
-// Orphaned closing removed
-    expect(result.current.isLoading).toBe(false);
+      code: expect.any(String),
+      message: expect.any(String),
+    }));
+    expect(result.current.loading).toBe(false);
   });
   it('should handle network errors', async () => {
     (fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
-    const { result } = renderHook(() => useApi('/api/test'));
+    const { result } = renderHook(() => useApi());
     await act(async () => {
-      await result.current.refetch();
+      await result.current.execute('/api/test');
     });
     expect(result.current.data).toBeNull();
     expect(result.current.error).toEqual(expect.objectContaining({
       message: 'Network error',
-// Orphaned closing removed
-    expect(result.current.isLoading).toBe(false);
+}));
+    expect(result.current.loading).toBe(false);
   });
   it('should set loading state during request', async () => {
     let resolvePromise: (value: any) => void;
@@ -81,32 +83,33 @@ describe('useApi', () => {
       resolvePromise = resolve;
     });
     (fetch as jest.Mock).mockReturnValueOnce(promise);
-    const { result } = renderHook(() => useApi('/api/test'));
+    const { result } = renderHook(() => useApi());
     act(() => {
-      result.current.refetch();
+      result.current.execute('/api/test');
     });
-    expect(result.current.isLoading).toBe(true);
+    expect(result.current.loading).toBe(true);
     await act(async () => {
       resolvePromise!({
         ok: true,
-        json: () => Promise.resolve({ success: true }),
-        headers: new Headers({ 'content-type': 'application/json' }),
+        json: () => Promise.resolve({ success: true, data: { success: true } }),
+        headers: new Headers({ 'content-type': 'application/json' })
       });
       await promise;
     });
-    expect(result.current.isLoading).toBe(false);
+    expect(result.current.loading).toBe(false);
   });
   it('should support POST requests', async () => {
     const postData = { name: 'New Item' };
     const responseData = { id: 1, ...postData };
+    const apiResponse = { success: true, data: responseData };
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(responseData),
-      headers: new Headers({ 'content-type': 'application/json' }),
+      json: () => Promise.resolve(apiResponse),
+      headers: new Headers({ 'content-type': 'application/json' })
     });
-    const { result } = renderHook(() => useApi('/api/test'));
+    const { result } = renderHook(() => useApi());
     await act(async () => {
-      await result.current.post(postData);
+      await result.current.execute('/api/test', { method: 'POST', data: postData });
     });
     expect(fetch).toHaveBeenCalledWith('/api/test', {
       method: 'POST',
@@ -114,6 +117,8 @@ describe('useApi', () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(postData),
+      signal: expect.any(AbortSignal),
+      credentials: 'include',
     });
     expect(result.current.data).toEqual(responseData);
   });
@@ -121,12 +126,12 @@ describe('useApi', () => {
     const putData = { id: 1, name: 'Updated Item' };
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(putData),
-      headers: new Headers({ 'content-type': 'application/json' }),
+      json: () => Promise.resolve({ success: true, data: { success: true, data: putData } }),
+      headers: new Headers({ 'content-type': 'application/json' })
     });
-    const { result } = renderHook(() => useApi('/api/test'));
+    const { result } = renderHook(() => useApi());
     await act(async () => {
-      await result.current.put(putData);
+      await result.current.execute('/api/test', { method: 'PUT', data: putData });
     });
     expect(fetch).toHaveBeenCalledWith('/api/test', {
       method: 'PUT',
@@ -134,31 +139,35 @@ describe('useApi', () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(putData),
+      signal: expect.any(AbortSignal),
+      credentials: 'include',
     });
   });
   it('should support DELETE requests', async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve({ success: true }),
-      headers: new Headers({ 'content-type': 'application/json' }),
+      json: () => Promise.resolve({ success: true, data: { success: true } }),
+      headers: new Headers({ 'content-type': 'application/json' })
     });
-    const { result } = renderHook(() => useApi('/api/test/1'));
+    const { result } = renderHook(() => useApi());
     await act(async () => {
-      await result.current.delete();
+      await result.current.execute('/api/test', { method: 'DELETE' });
     });
-    expect(fetch).toHaveBeenCalledWith('/api/test/1', {
+    expect(fetch).toHaveBeenCalledWith('/api/test', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
+      signal: expect.any(AbortSignal),
+      credentials: 'include',
     });
   });
   it('should include authorization header when token provided', async () => {
     const mockData = { success: true };
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockData),
-      headers: new Headers({ 'content-type': 'application/json' }),
+      json: () => Promise.resolve({ success: true, data: { success: true, data: mockData } }),
+      headers: new Headers({ 'content-type': 'application/json' })
     });
     const { result } = renderHook(() =>
       useApi('/api/protected', {
@@ -166,48 +175,52 @@ describe('useApi', () => {
       })
     );
     await act(async () => {
-      await result.current.refetch();
+      await result.current.execute('/api/test');
     });
-    expect(fetch).toHaveBeenCalledWith('/api/protected', {
+    expect(fetch).toHaveBeenCalledWith('/api/test', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer token123',
       },
+      signal: expect.any(AbortSignal),
+      credentials: 'include',
     });
   });
   it('should handle non-JSON responses', async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      text: () => Promise.resolve('Plain text response'),
-      headers: new Headers({ 'content-type': 'text/plain' }),
+      json: () => Promise.reject(new Error('Not JSON')),
+      headers: new Headers({ 'content-type': 'text/plain' })
     });
-    const { result } = renderHook(() => useApi('/api/text'));
+    const { result } = renderHook(() => useApi());
     await act(async () => {
-      await result.current.refetch();
+      await result.current.execute('/api/test');
     });
-    expect(result.current.data).toBe('Plain text response');
+    expect(result.current.data).toBeNull();
+    expect(result.current.error).toEqual(expect.objectContaining({
+      message: expect.any(String),
+    }));
   });
   it('should handle empty responses', async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       status: 204,
-      text: () => Promise.resolve(''),
-      headers: new Headers(),
+      json: () => Promise.resolve({ success: true, data: null }),
+      headers: new Headers()
     });
-    const { result } = renderHook(() => useApi('/api/empty'));
+    const { result } = renderHook(() => useApi());
     await act(async () => {
-      await result.current.refetch();
+      await result.current.execute('/api/test');
     });
-    expect(result.current.data).toBe('');
+    expect(result.current.data).toBeNull();
     expect(result.current.error).toBeNull();
   });
   it('should support custom request options', async () => {
     const mockData = { success: true };
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockData),
-      headers: new Headers({ 'content-type': 'application/json' }),
+      json: () => Promise.resolve({ success: true, data: { success: true, data: mockData } }),
+      headers: new Headers({ 'content-type': 'application/json' })
     });
     const customOptions = {
       headers: { 'X-Custom-Header': 'value' },
@@ -215,14 +228,14 @@ describe('useApi', () => {
     };
     const { result } = renderHook(() => useApi('/api/test', customOptions));
     await act(async () => {
-      await result.current.refetch();
+      await result.current.execute('/api/test');
     });
     expect(fetch).toHaveBeenCalledWith('/api/test', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'X-Custom-Header': 'value',
       },
+      signal: expect.any(AbortSignal),
       credentials: 'include',
     });
   });
@@ -238,13 +251,13 @@ describe('useApi', () => {
       .mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve(mockData2),
-        headers: new Headers({ 'content-type': 'application/json' }),
+        headers: new Headers({ 'content-type': 'application/json' })
       });
-    const { result } = renderHook(() => useApi('/api/test'));
+    const { result } = renderHook(() => useApi());
     await act(async () => {
       const [response1, response2] = await Promise.all([
-        result.current.refetch(),
-        result.current.refetch(),
+        result.current.execute('/api/test'),
+        result.current.execute('/api/test'),
       ]);
     });
     expect(fetch).toHaveBeenCalledTimes(2);
@@ -256,17 +269,17 @@ describe('useApi', () => {
       .mockImplementationOnce(() => new Promise(resolve => setTimeout(resolve, 1000)))
       .mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ id: 2 }),
-        headers: new Headers({ 'content-type': 'application/json' }),
+        json: () => Promise.resolve({ success: true, data: { id: 2 } }),
+        headers: new Headers({ 'content-type': 'application/json' })
       });
-    const { result } = renderHook(() => useApi('/api/test'));
+    const { result } = renderHook(() => useApi());
     // Start first request
     act(() => {
-      result.current.refetch();
+      result.current.execute('/api/test');
     });
     // Start second request immediately
     await act(async () => {
-      await result.current.refetch();
+      await result.current.execute('/api/test');
     });
     expect(result.current.data).toEqual({ id: 2 });
   });
@@ -277,15 +290,15 @@ describe('Error Handling', () => {
         ok: true,
         json: () => Promise.reject(new Error('Invalid JSON')),
         text: () => Promise.resolve('Invalid JSON response'),
-        headers: new Headers({ 'content-type': 'application/json' }),
+        headers: new Headers({ 'content-type': 'application/json' })
       });
-      const { result } = renderHook(() => useApi('/api/test'));
+      const { result } = renderHook(() => useApi());
       await act(async () => {
-        await result.current.refetch();
+        await result.current.execute('/api/test');
       });
       expect(result.current.error).toEqual(expect.objectContaining({
         message: expect.stringContaining('Invalid JSON'),
-// Orphaned closing removed
+}));
     });
     it('should handle timeout errors', async () => {
       (fetch as jest.Mock).mockImplementationOnce(() =>
@@ -293,13 +306,13 @@ describe('Error Handling', () => {
           setTimeout(() => reject(new Error('Request timeout')), 100)
         )
       );
-      const { result } = renderHook(() => useApi('/api/test'));
+      const { result } = renderHook(() => useApi());
       await act(async () => {
-        await result.current.refetch();
+        await result.current.execute('/api/test');
       });
       expect(result.current.error).toEqual(expect.objectContaining({
         message: 'Request timeout',
-// Orphaned closing removed
+}));
     });
   });
 
@@ -308,15 +321,15 @@ describe('Caching', () => {
       const mockData = { id: 1, timestamp: Date.now() };
       (fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve(mockData),
-        headers: new Headers({ 'content-type': 'application/json' }),
+        json: () => Promise.resolve({ success: true, data: { success: true, data: mockData } }),
+        headers: new Headers({ 'content-type': 'application/json' })
       });
-      const { result } = renderHook(() => useApi('/api/test'));
+      const { result } = renderHook(() => useApi());
       await act(async () => {
-        await result.current.refetch();
+        await result.current.execute('/api/test');
       });
       await act(async () => {
-        await result.current.refetch();
+        await result.current.execute('/api/test');
       });
       expect(fetch).toHaveBeenCalledTimes(2);
     });

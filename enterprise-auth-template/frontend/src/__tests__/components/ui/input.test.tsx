@@ -4,8 +4,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { Input } from '@/components/ui/input';
-
-
 describe('Input Component', () => {
   describe('Rendering', () => {
     it('should render an input element', () => {
@@ -72,6 +70,7 @@ describe('Input Types', () => {
       expect(input).toHaveAttribute('max', '100');
     });
   });
+});
 
 describe('Props and Attributes', () => {
     it('should apply custom className', () => {
@@ -132,6 +131,7 @@ describe('Props and Attributes', () => {
       expect(ref.current?.tagName).toBe('INPUT');
     });
   });
+});
 
 describe('Interactions', () => {
     it('should handle onChange event', async () => {
@@ -213,6 +213,7 @@ describe('Interactions', () => {
       expect(handleClick).not.toHaveBeenCalled();
     });
   });
+});
 
 describe('Controlled vs Uncontrolled', () => {
     it('should work as an uncontrolled component', async () => {
@@ -243,12 +244,13 @@ describe('Controlled vs Uncontrolled', () => {
 
       expect(input.value).toBe('controlled');
 
-      await act(async () => { await userEvent.clear(input);
-      await act(async () => { await userEvent.type(input, 'updated');
+      await act(async () => { await userEvent.clear(input); });
+      await act(async () => { await userEvent.type(input, 'updated'); });
 
       expect(input.value).toBe('updated');
     });
   });
+});
 
 describe('Styling', () => {
     it('should have default styling classes', () => {
@@ -287,6 +289,7 @@ describe('Styling', () => {
       expect(input.className).toContain('file:font-medium');
     });
   });
+});
 
 describe('Accessibility', () => {
     it('should support aria-label', () => {
@@ -319,6 +322,7 @@ describe('Accessibility', () => {
       expect(input).toBeRequired();
     });
   });
+});
 
 describe('Edge Cases', () => {
     it('should handle empty string value', () => {

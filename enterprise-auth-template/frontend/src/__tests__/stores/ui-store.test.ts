@@ -1,7 +1,6 @@
 
 import { act, renderHook } from '@testing-library/react';
 import { useUIStore } from '@/stores/ui-store';
-
 jest.mock('zustand/middleware', () => ({
   devtools: (fn: any) => fn,
   persist: (fn: any) => fn,

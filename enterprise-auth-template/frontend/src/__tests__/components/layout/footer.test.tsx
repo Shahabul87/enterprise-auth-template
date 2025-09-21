@@ -3,8 +3,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Footer } from '@/components/layout/footer';
-
-
 jest.mock('@/components/ui/button', () => ({
   Button: ({ children, className, variant, size, asChild, ...props }: any) => {
     const { asChild: _, variant: __, size: ___, ...cleanProps } = props;
@@ -22,14 +20,12 @@ jest.mock('@/components/ui/separator', () => ({
   Separator: ({ className, orientation, ...props }: any) => (
     <hr className={className} {...props} />
   ),
-// Orphaned closing removed
 jest.mock('@/components/ui/badge', () => ({
   Badge: ({ children, className, variant, ...props }: any) => (
     <span className={className} {...props}>
       {children}
     </span>
   ),
-// Orphaned closing removed
 jest.mock('next/link', () => {
   return ({ children, href, ...props }: any) => (
     <a href={href} {...props}>
@@ -46,7 +42,6 @@ jest.mock('lucide-react', () => ({
   ExternalLink: () => <div data-testid="external-link-icon" />,
   Shield: () => <div data-testid="shield-icon" />,
   Zap: () => <div data-testid="zap-icon" />,
-// Orphaned closing removed
 /**
  * Footer Component Tests
  * Tests the footer component with proper TypeScript types
@@ -54,7 +49,6 @@ jest.mock('lucide-react', () => ({
 
 
 // Mock UI components
-// Orphaned closing removed
 // Mock Next.js Link
 // Mock Lucide icons
 describe('Footer Component', () => {
@@ -184,3 +178,4 @@ describe('Minimal Mode', () => {
       expect(screen.getByTestId('zap-icon')).toBeInTheDocument();
     });
   });
+}}}}}

@@ -7,7 +7,7 @@ jest.mock('zustand/middleware', () => ({
   devtools: (fn: any) => fn,
   persist: (fn: any) => fn,
   subscribeWithSelector: (fn: any) => fn,
-// Orphaned closing removed
+}));
 /**
  * @jest-environment jsdom
  */
@@ -46,7 +46,7 @@ describe('Initial State', () => {
         soundEffects: false,
         keyboardShortcuts: true,
         autoSave: true,
-        showTips: true,
+        showTips: true
       });
     });
     it('should have default accessibility settings', async () => {
@@ -56,7 +56,7 @@ describe('Initial State', () => {
         fontSize: 'medium',
         reduceMotion: false,
         screenReaderMode: false,
-        keyboardNavigation: true,
+        keyboardNavigation: true
       });
     });
   });
@@ -184,7 +184,7 @@ describe('Preferences Management', () => {
           notifications: false,
           betaFeatures: true,
           soundEffects: true,
-          compactMode: true,
+          compactMode: true
         });
       });
       expect(result.current.preferences.notifications).toBe(false);
@@ -224,7 +224,7 @@ describe('Accessibility Settings', () => {
       act(() => {
         result.current.updateAccessibility({
           highContrast: true,
-          fontSize: 'large',
+          fontSize: 'large'
         });
       });
       expect(result.current.accessibility.highContrast).toBe(true);
@@ -278,7 +278,7 @@ describe('Privacy Settings', () => {
           shareAnalytics: false,
           shareUsageData: false,
           allowCookies: true,
-          allowThirdPartyCookies: false,
+          allowThirdPartyCookies: false
         });
       });
       expect(result.current.privacy.shareAnalytics).toBe(false);
@@ -312,7 +312,7 @@ describe('Security Settings', () => {
           two_factor_enabled: true,
           biometricEnabled: true,
           sessionTimeout: 30,
-          requirePasswordChange: 90,
+          requirePasswordChange: 90
         });
       });
       expect(result.current.security.two_factor_enabled).toBe(true);
@@ -523,7 +523,7 @@ describe('Computed Values', () => {
         matches: true,
         media: '(prefers-color-scheme: dark)',
         addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
+        removeEventListener: jest.fn()
       });
       window.matchMedia = mockMatchMedia;
       expect(result.current.getSystemTheme()).toBe('dark');

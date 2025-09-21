@@ -12,10 +12,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
+  DialogClose
 } from '@/components/ui/dialog';
-
-
 describe('Dialog Component', () => {
   const SimpleDialog = ({
     open,
@@ -451,3 +449,4 @@ describe('Edge Cases', () => {
     });
   });
 });
+}}}}}}}}}}}

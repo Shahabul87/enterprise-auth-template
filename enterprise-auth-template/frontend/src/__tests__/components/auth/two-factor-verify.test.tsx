@@ -5,8 +5,6 @@ import userEvent from '@testing-library/user-event';
 import { TwoFactorVerify } from '@/components/auth/two-factor-verify';
 import apiClient from '@/lib/api-client';
 import { ApiResponse } from '@/types';
-
-
 jest.mock('@/lib/api-client', () => ({
   __esModule: true,
   default: {
@@ -161,7 +159,7 @@ describe('Form Submission - TOTP', () => {
         data: {
           access_token: 'access-token',
           refresh_token: 'refresh-token',
-        },
+        }
       });
       render(<TwoFactorVerify {...defaultProps} />);
       const totpInput = screen.getByPlaceholderText('000000');
@@ -173,7 +171,7 @@ describe('Form Submission - TOTP', () => {
         {
           temp_token: 'temp-token-123',
           code: '123456',
-          is_backup: false,
+          is_backup: false
         }
       );
     });
@@ -184,7 +182,7 @@ describe('Form Submission - TOTP', () => {
         data: {
           access_token: 'access-token',
           refresh_token: 'refresh-token',
-        },
+        }
       });
       render(<TwoFactorVerify {...defaultProps} />);
       const totpInput = screen.getByPlaceholderText('000000');
@@ -202,7 +200,7 @@ describe('Form Submission - TOTP', () => {
         data: {
           access_token: 'access-token',
           refresh_token: 'refresh-token',
-        },
+        }
       });
       render(<TwoFactorVerify {...defaultProps} />);
       const totpInput = screen.getByPlaceholderText('000000');
@@ -231,7 +229,7 @@ describe('Form Submission - Backup Code', () => {
         data: {
           access_token: 'access-token',
           refresh_token: 'refresh-token',
-        },
+        }
       });
       render(<TwoFactorVerify {...defaultProps} />);
       const backupTab = screen.getByRole('tab', { name: /Backup Code/i });
@@ -245,7 +243,7 @@ describe('Form Submission - Backup Code', () => {
         {
           temp_token: 'temp-token-123',
           code: 'TEST-CODE',
-          is_backup: true,
+          is_backup: true
         }
       );
     });
@@ -256,7 +254,7 @@ describe('Form Submission - Backup Code', () => {
         data: {
           access_token: 'access-token',
           refresh_token: 'refresh-token',
-        },
+        }
       });
       render(<TwoFactorVerify {...defaultProps} />);
       const backupTab = screen.getByRole('tab', { name: /Backup Code/i });
@@ -276,7 +274,7 @@ describe('Form Submission - Backup Code', () => {
         data: {
           access_token: 'access-token',
           refresh_token: 'refresh-token',
-        },
+        }
       });
       render(<TwoFactorVerify {...defaultProps} />);
       const backupTab = screen.getByRole('tab', { name: /Backup Code/i });
@@ -297,7 +295,7 @@ describe('Error Handling', () => {
           data: {
             detail: 'Invalid verification code',
           },
-        },
+        }
       });
       render(<TwoFactorVerify {...defaultProps} />);
       const totpInput = screen.getByPlaceholderText('000000');
@@ -313,7 +311,7 @@ describe('Error Handling', () => {
       mockApiClient.post.mockRejectedValue({
         response: {
           status: 429,
-        },
+        }
       });
       render(<TwoFactorVerify {...defaultProps} />);
       const totpInput = screen.getByPlaceholderText('000000');
@@ -329,7 +327,7 @@ describe('Error Handling', () => {
       mockApiClient.post.mockRejectedValue({
         response: {
           status: 500,
-        },
+        }
       });
       render(<TwoFactorVerify {...defaultProps} />);
       const totpInput = screen.getByPlaceholderText('000000');
@@ -348,7 +346,7 @@ describe('Error Handling', () => {
           data: {
             detail: 'Invalid code',
           },
-        },
+        }
       });
       render(<TwoFactorVerify {...defaultProps} />);
       // Generate error on TOTP tab
@@ -428,7 +426,7 @@ describe('Edge Cases', () => {
       const user = userEvent.setup();
       mockApiClient.post.mockResolvedValue({
         success: false,
-        data: null,
+        data: null
       });
       render(<TwoFactorVerify {...defaultProps} />);
       const totpInput = screen.getByPlaceholderText('000000');

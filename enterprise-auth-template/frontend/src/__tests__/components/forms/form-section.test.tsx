@@ -3,8 +3,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { FormSection } from '@/components/forms/form-section';
-
-
 describe('FormSection Component', () => {
   it('should render section title', () => {
     render(

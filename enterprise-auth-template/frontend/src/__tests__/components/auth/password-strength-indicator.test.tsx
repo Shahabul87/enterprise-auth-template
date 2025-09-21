@@ -37,7 +37,6 @@ jest.mock('@/hooks/use-password-strength', () => ({
     };
     return labels[strength] || 'Unknown';
   }),
-// Orphaned closing removed
 /**
  * Comprehensive test suite for PasswordStrengthIndicator component
  * Tests password strength visualization and criteria checking
@@ -75,7 +74,7 @@ describe('Basic Rendering', () => {
       mockUsePasswordStrength.mockReturnValue({
         ...defaultPasswordStrength,
         score: 2,
-        strength: 'weak',
+        strength: 'weak'
       });
       render(<PasswordStrengthIndicator password="test123" />);
       expect(screen.getByText('Weak')).toBeInTheDocument();
@@ -84,7 +83,7 @@ describe('Basic Rendering', () => {
       mockUsePasswordStrength.mockReturnValue({
         ...defaultPasswordStrength,
         score: 1,
-        strength: 'very-weak',
+        strength: 'very-weak'
       });
       const { container } = render(
         <PasswordStrengthIndicator password="test" className="custom-class" />
@@ -99,7 +98,7 @@ describe('Strength Bar Display', () => {
       mockUsePasswordStrength.mockReturnValue({
         ...defaultPasswordStrength,
         score: 3,
-        strength: 'fair',
+        strength: 'fair'
       });
       const { container } = render(<PasswordStrengthIndicator password="Test123!" />);
       // Find all strength bar segments
@@ -110,7 +109,7 @@ describe('Strength Bar Display', () => {
       mockUsePasswordStrength.mockReturnValue({
         ...defaultPasswordStrength,
         score: 3,
-        strength: 'fair',
+        strength: 'fair'
       });
       const { container } = render(<PasswordStrengthIndicator password="Test123!" />);
       const activeSegments = container.querySelectorAll('.bg-yellow-500');
@@ -122,7 +121,7 @@ describe('Strength Bar Display', () => {
       mockUsePasswordStrength.mockReturnValue({
         ...defaultPasswordStrength,
         score: 5,
-        strength: 'strong',
+        strength: 'strong'
       });
       const { container } = render(<PasswordStrengthIndicator password="Test123!@#" />);
       const activeSegments = container.querySelectorAll('.bg-green-500');
@@ -139,7 +138,7 @@ describe('Strength Bar Display', () => {
       testCases.forEach(({ strength, label }) => {
         mockUsePasswordStrength.mockReturnValue({
           ...defaultPasswordStrength,
-          strength,
+          strength
         });
         const { rerender } = render(
           <PasswordStrengthIndicator password={`test${strength}`} />
@@ -160,7 +159,7 @@ describe('Criteria Display', () => {
           hasLowerCase: false,
           hasNumber: false,
           hasSpecialChar: false,
-        },
+        }
       });
       render(<PasswordStrengthIndicator password="test" showDetails={true} />);
       expect(screen.getByText('Password requirements:')).toBeInTheDocument();
@@ -185,7 +184,7 @@ describe('Criteria Display', () => {
           hasLowerCase: false,
           hasNumber: false,
           hasSpecialChar: false,
-        },
+        }
       });
       const { container } = render(<PasswordStrengthIndicator password="TestTest" />);
       // Check for checkmark icons (using the Check component from lucide-react)
@@ -201,7 +200,7 @@ describe('Criteria Display', () => {
           hasLowerCase: true,
           hasNumber: true,
           hasSpecialChar: false,
-        },
+        }
       });
       const { container } = render(<PasswordStrengthIndicator password="test123" />);
       // Check for empty circle indicators
@@ -218,7 +217,7 @@ describe('Feedback Display', () => {
           'Password must be at least 8 characters long',
           'Add at least one uppercase letter',
           'Add at least one number',
-        ],
+        ]
       });
       render(<PasswordStrengthIndicator password="test" showDetails={true} />);
       expect(screen.getByText('Password must be at least 8 characters long')).toBeInTheDocument();
@@ -234,7 +233,7 @@ describe('Feedback Display', () => {
           'Feedback 3',
           'Feedback 4',
           'Feedback 5',
-        ],
+        ]
       });
       render(<PasswordStrengthIndicator password="test" showDetails={true} />);
       expect(screen.getByText('Feedback 1')).toBeInTheDocument();
@@ -246,7 +245,7 @@ describe('Feedback Display', () => {
     it('should not display feedback when showDetails is false', () => {
       mockUsePasswordStrength.mockReturnValue({
         ...defaultPasswordStrength,
-        feedback: ['Password must be at least 8 characters long'],
+        feedback: ['Password must be at least 8 characters long']
       });
       render(<PasswordStrengthIndicator password="test" showDetails={false} />);
       expect(
@@ -256,7 +255,7 @@ describe('Feedback Display', () => {
     it('should display X icons next to feedback messages', () => {
       mockUsePasswordStrength.mockReturnValue({
         ...defaultPasswordStrength,
-        feedback: ['Password must be at least 8 characters long'],
+        feedback: ['Password must be at least 8 characters long']
       });
       const { container } = render(<PasswordStrengthIndicator password="test" showDetails={true} />);
       // Check for X icon (using the X component from lucide-react)
@@ -283,7 +282,7 @@ describe('Different Password Scenarios', () => {
           'Add at least one uppercase letter',
           'Add at least one number',
           'Add at least one special character (@$!%*?&)',
-        ],
+        ]
       });
       render(<PasswordStrengthIndicator password="test" />);
       expect(screen.getByText('Very Weak')).toBeInTheDocument();
@@ -302,7 +301,7 @@ describe('Different Password Scenarios', () => {
           hasSpecialChar: true,
         },
         isValid: true,
-        feedback: [],
+        feedback: []
       });
       render(<PasswordStrengthIndicator password="Test123!@#" />);
       expect(screen.getByText('Strong')).toBeInTheDocument();
@@ -324,7 +323,7 @@ describe('Different Password Scenarios', () => {
         feedback: [
           'Add at least one number',
           'Add at least one special character (@$!%*?&)',
-        ],
+        ]
       });
       render(<PasswordStrengthIndicator password="TestTest" />);
       expect(screen.getByText('Fair')).toBeInTheDocument();
@@ -342,7 +341,7 @@ describe('Integration with Password Hook', () => {
       mockUsePasswordStrength.mockReturnValue({
         ...defaultPasswordStrength,
         score: 3,
-        strength: 'fair',
+        strength: 'fair'
       });
       rerender(<PasswordStrengthIndicator password="Test123" />);
       expect(mockUsePasswordStrength).toHaveBeenCalledWith('Test123');
@@ -356,7 +355,7 @@ describe('Accessibility', () => {
         ...defaultPasswordStrength,
         score: 2,
         strength: 'weak',
-        feedback: ['Add more characters'],
+        feedback: ['Add more characters']
       });
       render(<PasswordStrengthIndicator password="test" />);
       // Check for text size classes
@@ -374,7 +373,7 @@ describe('Accessibility', () => {
           hasLowerCase: true,
           hasNumber: false,
           hasSpecialChar: false,
-        },
+        }
       });
       const { container } = render(<PasswordStrengthIndicator password="testtest" />);
       // Met criteria should use success color
@@ -386,3 +385,4 @@ describe('Accessibility', () => {
     });
   });
 });
+}}

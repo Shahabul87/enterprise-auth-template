@@ -4,7 +4,6 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import '@testing-library/jest-dom';
 import DeviceManagement from '@/components/devices/DeviceManagement';
 import { useToast } from '@/components/ui/use-toast';
-
 /**
  * @jest-environment jsdom
  */
@@ -101,7 +100,7 @@ describe('DeviceManagement', () => {
             sessions: mockSessions,
             total: 3,
             active_count: 3,
-          }),
+          })
         });
       }
       if (url.includes('/api/v1/devices/devices')) {
@@ -110,12 +109,12 @@ describe('DeviceManagement', () => {
           json: () => Promise.resolve({
             devices: mockDevices,
             total: 2,
-          }),
+          })
         });
       }
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({}),
+        json: () => Promise.resolve({})
       });
     });
   });
@@ -155,7 +154,7 @@ describe('DeviceManagement', () => {
             sessions: [...mockSessions, ...mockSessions], // 6 sessions
             total: 6,
             active_count: 6,
-          }),
+          })
         });
       }
       if (url.includes('/api/v1/devices/devices')) {
@@ -164,7 +163,7 @@ describe('DeviceManagement', () => {
           json: () => Promise.resolve({
             devices: mockDevices,
             total: 2,
-          }),
+          })
         });
       }
       return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
@@ -192,7 +191,7 @@ describe('DeviceManagement', () => {
       );
       expect(mockToast).toHaveBeenCalledWith({
         title: 'Success',
-        description: 'Session revoked successfully',
+        description: 'Session revoked successfully'
       });
     });
   }); });
@@ -274,7 +273,7 @@ describe('DeviceManagement', () => {
       );
       expect(mockToast).toHaveBeenCalledWith({
         title: 'Success',
-        description: 'Device trusted successfully',
+        description: 'Device trusted successfully'
       });
     });
   }); });
@@ -298,7 +297,7 @@ describe('DeviceManagement', () => {
             sessions: [],
             total: 0,
             active_count: 0,
-          }),
+          })
         });
       }
       if (url.includes('/api/v1/devices/devices')) {
@@ -307,7 +306,7 @@ describe('DeviceManagement', () => {
           json: () => Promise.resolve({
             devices: [],
             total: 0,
-          }),
+          })
         });
       }
       return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
@@ -329,7 +328,7 @@ describe('DeviceManagement', () => {
       expect(mockToast).toHaveBeenCalledWith({
         title: 'Error',
         description: 'Failed to fetch sessions',
-        variant: 'destructive',
+        variant: 'destructive'
       }); });
     }); });
   });
@@ -346,3 +345,4 @@ describe('DeviceManagement', () => {
     expect(screen.getByText('iPad')).toBeInTheDocument(); // tablet
   });
 });
+}}}}}}}}}}}}

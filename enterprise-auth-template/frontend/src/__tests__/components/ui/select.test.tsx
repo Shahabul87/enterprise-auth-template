@@ -8,7 +8,7 @@ import '@testing-library/jest-dom';
 // Mock scrollIntoView for JSDOM
 Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
   value: jest.fn(),
-  writable: true,
+  writable: true
 });
 import {
   Select,
@@ -18,9 +18,8 @@ import {
   SelectLabel,
   SelectSeparator,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from '@/components/ui/select';
-
 describe('Select Component', () => {
   const SimpleSelect = ({
     onValueChange = jest.fn(),
@@ -106,6 +105,7 @@ describe('Select Component', () => {
       expect(screen.getByText('Carrot')).toBeInTheDocument();
     });
   });
+});
 
 describe('Interactions', () => {
     it('should open dropdown when clicking trigger', async () => {

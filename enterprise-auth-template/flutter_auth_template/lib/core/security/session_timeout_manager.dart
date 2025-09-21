@@ -29,6 +29,11 @@ class SessionTimeoutManager {
 
   SessionTimeoutManager(this._ref, this._secureStorage);
 
+  /// Get last activity time
+  DateTime? getLastActivityTime() {
+    return _lastActivity;
+  }
+
   /// Initialize session timeout management
   void initializeSession({
     VoidCallback? onTimeout,

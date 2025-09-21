@@ -3,8 +3,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Badge } from '@/components/ui/badge';
-
-
 describe('Badge Component', () => {
   describe('Rendering', () => {
     it('should render badge with text content', () => {

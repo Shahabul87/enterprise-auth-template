@@ -1,19 +1,4 @@
 
-import AuthAPI from '@/lib/auth-api';
-import apiClient from '@/lib/api-client';
-
-import React from 'react';
-
-
-jest.mock('@/lib/api-client', () => ({
-  __esModule: true,
-  default: {
-    post: jest.fn(),
-    get: jest.fn(),
-    put: jest.fn(),
-    delete: jest.fn(),
-  },
-// Orphaned closing removed
 /**
  * Comprehensive test suite for AuthAPI class
  * Tests all authentication endpoints with proper TypeScript typing
@@ -28,8 +13,9 @@ jest.mock('@/lib/api-client', () => ({
  * - OAuth provider integration
  * - Error handling and edge cases
  */
+import AuthAPI from '@/lib/auth-api';
+import apiClient from '@/lib/api-client';
 import {
-
   User,
   LoginRequest,
   LoginResponse,
@@ -40,10 +26,20 @@ import {
   ConfirmResetPasswordRequest,
   TokenPair,
   ApiResponse,
-  Role,
+  Role
 } from '@/types';
 
 // Mock the api-client module
+jest.mock('@/lib/api-client', () => ({
+  __esModule: true,
+  default: {
+    post: jest.fn(),
+    get: jest.fn(),
+    put: jest.fn(),
+    delete: jest.fn(),
+  },
+}));
+
 // Type the mocked apiClient
 const mockedApiClient = apiClient as jest.Mocked<typeof apiClient>;
 describe('AuthAPI', () => {
@@ -73,7 +69,7 @@ describe('User Registration', () => {
           password: 'SecurePass123!',
           confirm_password: 'SecurePass123!',
           full_name: 'Test User',
-          agree_to_terms: true,
+          agree_to_terms: true
         }
       );
       expect(result).toEqual(mockRegisterResponse);
@@ -528,7 +524,7 @@ describe('Two-Factor Authentication', () => {
       const result = await AuthAPI.verify2FACode(code, false);
       expect(mockedApiClient.post).toHaveBeenCalledWith('/api/v1/auth/2fa/verify', {
         code,
-        is_backup: false,
+        is_backup: false
       });
       expect(result.success).toBe(true);
     });
@@ -759,7 +755,7 @@ describe('Error Handling', () => {
         email: 'invalid-email',
         password: 'password',
         full_name: 'Test User',
-        agree_to_terms: true,
+        agree_to_terms: true
       });
       expect(result.success).toBe(false);
       expect(result.error?.code).toBe('VALIDATION_ERROR');

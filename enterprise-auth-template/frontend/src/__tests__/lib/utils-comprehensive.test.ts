@@ -22,9 +22,8 @@ import {
   removeLocalStorageItem,
   createSearchParams,
   isNotNull,
-  isNotUndefined,
+  isNotUndefined
 } from '@/lib/utils';
-
 // Mock localStorage for testing
 interface MockStorage {
   getItem: jest.MockedFunction<(key: string) => string | null>;
@@ -415,7 +414,7 @@ describe('localStorage utilities', () => {
       global.window = mockWindow as Window & typeof globalThis;
       Object.defineProperty(global, 'localStorage', {
         value: mockLocalStorage,
-        writable: true,
+        writable: true
       });
     });
 
@@ -424,7 +423,7 @@ describe('localStorage utilities', () => {
       if (originalWindow?.localStorage) {
         Object.defineProperty(global, 'localStorage', {
           value: originalWindow.localStorage,
-          writable: true,
+          writable: true
         });
       }
     });

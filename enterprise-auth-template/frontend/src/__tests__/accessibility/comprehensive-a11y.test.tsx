@@ -1,10 +1,8 @@
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe, toHaveNoViolations } from 'jest-axe';
-
-
 /**
  * Comprehensive Accessibility Tests
  * Testing WCAG 2.1 AA compliance across components
@@ -405,7 +403,7 @@ describe('Screen Reader Support', () => {
       const submitButton = screen.getByRole('button', { name: 'Submit' });
 
       // Submit empty form
-      await act(async () => { await userEvent.click(submitButton);
+      await act(async () => { await userEvent.click(submitButton); });
 
       // Check for alert roles
       const errors = screen.getAllByRole('alert');
@@ -639,7 +637,7 @@ describe('Responsive and Mobile Accessibility', () => {
 
       Object.defineProperty(window.screen, 'orientation', {
         writable: true,
-        value: mockOrientation,
+        value: mockOrientation
       });
 
       const event = new Event('orientationchange');
@@ -669,14 +667,14 @@ describe('Error Prevention and Recovery', () => {
       window.confirm = jest.fn(() => false);
 
       const deleteButton = screen.getByRole('button', { name: 'Delete' });
-      await act(async () => { await userEvent.click(deleteButton);
+      await act(async () => { await userEvent.click(deleteButton); });
 
       expect(window.confirm).toHaveBeenCalledWith('Are you sure you want to delete this item?');
       expect(handleDelete).not.toHaveBeenCalled();
 
       // Confirm deletion
       window.confirm = jest.fn(() => true);
-      await act(async () => { await userEvent.click(deleteButton);
+      await act(async () => { await userEvent.click(deleteButton); });
 
       expect(handleDelete).toHaveBeenCalled();
     });
@@ -685,7 +683,7 @@ describe('Error Prevention and Recovery', () => {
       render(<TestForm />);
 
       const submitButton = screen.getByRole('button', { name: 'Submit' });
-      await act(async () => { await userEvent.click(submitButton);
+      await act(async () => { await userEvent.click(submitButton); });
 
       const emailError = screen.getByText('Email is required');
       const passwordError = screen.getByText('Password is required');

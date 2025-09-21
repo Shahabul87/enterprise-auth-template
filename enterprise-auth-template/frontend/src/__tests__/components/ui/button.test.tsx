@@ -3,8 +3,6 @@ import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Button, buttonVariants } from '@/components/ui/button';
-
-
 describe('Button Component', () => {
   describe('Rendering', () => {
     it('should render button with text content', () => {

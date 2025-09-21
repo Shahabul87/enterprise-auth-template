@@ -4,8 +4,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { Checkbox } from '@/components/ui/checkbox';
-
-
 describe('Checkbox Component', () => {
   describe('Rendering', () => {
     it('should render checkbox element', () => {
@@ -48,6 +46,7 @@ describe('Checkbox Component', () => {
       expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
     });
   });
+});
 
 describe('Interactions', () => {
     it('should toggle when clicked', async () => {
@@ -102,10 +101,11 @@ describe('Interactions', () => {
 
       expect(checkbox).toHaveAttribute('data-state', 'indeterminate');
 
-      await act(async () => { await userEvent.click(checkbox);
+      await act(async () => { await userEvent.click(checkbox); });
       expect(handleChange).toHaveBeenCalledWith(true);
     });
   });
+});
 
 describe('States', () => {
     it('should handle disabled state', () => {
@@ -131,6 +131,7 @@ describe('States', () => {
       expect(checkbox).toBeChecked();
     });
   });
+});
 
 describe('Controlled vs Uncontrolled', () => {
     it('should work as uncontrolled component', async () => {
@@ -188,6 +189,7 @@ describe('Controlled vs Uncontrolled', () => {
       expect(checkbox).toHaveAttribute('data-state', 'indeterminate');
     });
   });
+});
 
 describe('Styling', () => {
     it('should have default styling classes', () => {
@@ -236,6 +238,7 @@ describe('Styling', () => {
       }
     });
   });
+});
 
 describe('Accessibility', () => {
     it('should have proper ARIA attributes', () => {
@@ -291,6 +294,7 @@ describe('Accessibility', () => {
       expect(checkbox).toHaveFocus();
     });
   });
+});
 
 describe('Edge Cases', () => {
     it('should handle rapid clicking', async () => {
@@ -370,6 +374,7 @@ describe('Edge Cases', () => {
       expect(handleBlur).toHaveBeenCalledTimes(1);
     });
   });
+});
 
 describe('Integration with Forms', () => {
     it('should work with form labels', () => {
@@ -409,11 +414,11 @@ describe('Integration with Forms', () => {
       const checkbox1 = screen.getByLabelText('Option 1');
       const checkbox2 = screen.getByLabelText('Option 2');
 
-      await act(async () => { await userEvent.click(checkbox1);
+      await act(async () => { await userEvent.click(checkbox1); });
       expect(handleChange1).toHaveBeenCalledWith(true);
       expect(handleChange2).not.toHaveBeenCalled();
 
-      await act(async () => { await userEvent.click(checkbox2);
+      await act(async () => { await userEvent.click(checkbox2); });
       expect(handleChange2).toHaveBeenCalledWith(true);
     });
   });

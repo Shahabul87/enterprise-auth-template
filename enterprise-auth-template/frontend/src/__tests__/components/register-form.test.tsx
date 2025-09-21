@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { RegisterForm } from '@/components/auth/register-form';
 import { useAuthStore } from '@/stores/auth.store';
 import { useAuthForm } from '@/hooks/use-auth-form';
-
 jest.mock('@/stores/auth.store', () => ({
   useAuthStore: jest.fn(() => ({
     user: null,
@@ -168,7 +167,7 @@ const mockSetUser = jest.fn();
   CardDescriptionProps,
   CardHeaderProps,
   CardTitleProps,
-  FormFieldProps,
+  FormFieldProps
 } from '../../types/test-interfaces';
 // Specific password input props
 interface PasswordInputProps {
@@ -289,7 +288,7 @@ describe('RegisterForm', () => {
   it('shows loading state when submitting', () => {
     (useAuthForm as jest.Mock).mockReturnValue({
       ...mockUseAuthForm,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<RegisterForm />);
     expect(screen.getByText('Creating account...')).toBeInTheDocument();
@@ -297,7 +296,7 @@ describe('RegisterForm', () => {
   it('shows error message when there is an error', () => {
     (useAuthForm as jest.Mock).mockReturnValue({
       ...mockUseAuthForm,
-      error: 'Registration failed',
+      error: 'Registration failed'
     });
     render(<RegisterForm />);
     const alert = screen.getByTestId('alert');
@@ -314,7 +313,7 @@ describe('RegisterForm', () => {
   it('disables submit button when loading', () => {
     (useAuth as jest.Mock).mockReturnValue({
       ...mockAuthContext,
-      isLoading: true,
+      isLoading: true
     });
     render(<RegisterForm />);
     const submitButton = screen.getByRole('button', { name: /create account/i });
@@ -323,7 +322,7 @@ describe('RegisterForm', () => {
   it('disables submit button when submitting', () => {
     (useAuthForm as jest.Mock).mockReturnValue({
       ...mockUseAuthForm,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<RegisterForm />);
     const submitButton = screen.getByRole('button', { name: /creating account/i });
@@ -352,7 +351,7 @@ describe('RegisterForm', () => {
         confirmPassword: 'password123',
         first_name: 'Test',
         last_name: 'User',
-        terms: true,
+        terms: true
       });
       return jest.fn();
     });
@@ -384,7 +383,7 @@ describe('RegisterForm', () => {
   it('disables form fields when loading', () => {
     (useAuth as jest.Mock).mockReturnValue({
       ...mockAuthContext,
-      isLoading: true,
+      isLoading: true
     });
     render(<RegisterForm />);
     const inputs = screen.getAllByRole('textbox');
@@ -403,7 +402,7 @@ describe('RegisterForm', () => {
   it('disables form fields when submitting', () => {
     (useAuthForm as jest.Mock).mockReturnValue({
       ...mockUseAuthForm,
-      isSubmitting: true,
+      isSubmitting: true
     });
     render(<RegisterForm />);
     const inputs = screen.getAllByRole('textbox');
@@ -417,7 +416,7 @@ describe('RegisterForm', () => {
     const mockRegister = jest.fn().mockResolvedValue(true);
     (useAuth as jest.Mock).mockReturnValue({
       ...mockAuthContext,
-      register: mockRegister,
+      register: mockRegister
     });
     const mockSubmitHandler = jest.fn();
     mockUseAuthForm.handleSubmit.mockImplementation((callback) => {
@@ -451,3 +450,4 @@ describe('RegisterForm', () => {
     const form = screen.getByRole('form');
     expect(form).toBeInTheDocument();
   });
+}}}}}}}}}}}}}}}}}

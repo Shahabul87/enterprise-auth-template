@@ -1,7 +1,6 @@
 
 import { renderHook, act } from '@testing-library/react';
 import { useUserStore } from '@/stores/user-store';
-
 /**
  * @jest-environment jsdom
  */
@@ -38,7 +37,7 @@ jest.mock('@/stores/user-store', () => ({
     setUploadingAvatar: jest.fn(),
     setError: jest.fn(),
   })),
-// Orphaned closing removed
+}));
 describe('UserStore', () => {
   beforeEach(() => {
     jest.clearAllMocks();

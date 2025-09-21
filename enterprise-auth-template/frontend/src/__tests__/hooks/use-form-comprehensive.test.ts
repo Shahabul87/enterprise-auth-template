@@ -134,7 +134,7 @@ describe('Value Management', () => {
       act(() => {
         result.current.setValues({
           email: 'test@example.com',
-          name: 'John Doe',
+          name: 'John Doe'
         });
       });
       expect(result.current.values.email).toBe('test@example.com');
@@ -198,7 +198,7 @@ describe('Error Management', () => {
       act(() => {
         result.current.setErrors({
           email: 'Invalid email',
-          password: 'Weak password',
+          password: 'Weak password'
         });
         result.current.setError('formError', 'General error');
       });
@@ -480,7 +480,7 @@ describe('Form Submission', () => {
       const transformOnSubmit = jest.fn((values: TestFormData) => ({
         ...values,
         email: values.email.toLowerCase(),
-// Orphaned closing removed
+}));
       const config: FormConfig<TestFormData> = {
         initialValues: {
           ...validFormData,
@@ -574,7 +574,7 @@ describe('Field Props and State', () => {
         onChange: expect.any(Function),
         onBlur: expect.any(Function),
         error: 'Invalid email',
-        touched: true,
+        touched: true
       });
       // Test onChange and onBlur
       act(() => {
@@ -601,7 +601,7 @@ describe('Field Props and State', () => {
         value: 'modified@example.com',
         error: 'Invalid email',
         touched: true,
-        isDirty: true,
+        isDirty: true
       });
     });
     it('should not include undefined error and touched in field props', async () => {
@@ -643,7 +643,7 @@ describe('Auto-Save Functionality', () => {
       await act(async () => { await act(async () => { await waitFor(() => {
         expect(onAutoSave).toHaveBeenCalledWith({
           ...defaultInitialValues,
-          email: 'test@example.com',
+          email: 'test@example.com'
         }); });
       }); });
     });
@@ -676,7 +676,7 @@ describe('Auto-Save Functionality', () => {
       });
       expect(onAutoSave).toHaveBeenCalledWith({
         ...defaultInitialValues,
-        email: 'test@example.com',
+        email: 'test@example.com'
       });
     });
     it('should handle auto-save errors gracefully', async () => {
@@ -855,3 +855,4 @@ describe('Memory Management and Cleanup', () => {
     });
   });
 });
+}}

@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { useRequireAuth } from '@/stores/auth.store';
 import type { User } from '@/types';
-
-
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));
@@ -26,7 +24,7 @@ jest.mock('next/link', () => {
             children.props.onClick(e);
           }
           mockRouter.push(href);
-        },
+        }
       });
     }
 
@@ -61,7 +59,6 @@ jest.mock('lucide-react', () => ({
   Moon: () => <div data-testid="moon-icon" />,
   Sun: () => <div data-testid="sun-icon" />,
   Monitor: () => <div data-testid="monitor-icon" />,
-// Orphaned closing removed
 /**
  * Header Component Tests
  * Tests the main header component with proper TypeScript types
@@ -292,3 +289,4 @@ describe('Header Component', () => {
       mockAuthStore.isAuthenticated = false;
       render(<Header />);
       expect(screen.queryByText('Test User')).not.toBeInTheDocument();
+}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}

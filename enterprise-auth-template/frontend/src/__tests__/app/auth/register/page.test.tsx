@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import RegisterPage from '@/app/auth/register/page';
 import { useGuestOnly } from '@/stores/auth.store';
 import { AuthState } from '@/stores/auth.store';
-
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));
@@ -18,7 +17,8 @@ jest.mock('@/components/auth/modern-register-form', () => ({
   ModernRegisterForm: function MockModernRegisterForm() {
     return <div data-testid="modern-register-form">Modern Register Form</div>;
   },
-// Orphaned closing removed
+}));
+
 /**
  * @jest-environment jsdom
  */
@@ -77,7 +77,7 @@ const createMockAuthState = (overrides: Partial<AuthState> = {}): AuthState => (
   resendVerification: jest.fn().mockResolvedValue({ success: true, data: { message: 'Success' } }),
   requestPasswordReset: jest.fn().mockResolvedValue({ success: true, data: { message: 'Success' } }),
   confirmPasswordReset: jest.fn().mockResolvedValue({ success: true, data: { message: 'Success' } }),
-  ...overrides,
+  ...overrides
 });
 const mockRouter = {
   push: jest.fn(),

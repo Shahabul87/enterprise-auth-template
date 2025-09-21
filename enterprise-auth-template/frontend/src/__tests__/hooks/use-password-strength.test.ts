@@ -10,9 +10,8 @@ import {
   usePasswordStrength,
   getStrengthColor,
   getStrengthBarColor,
-  getStrengthLabel,
+  getStrengthLabel
 } from '@/hooks/use-password-strength';
-
 describe('usePasswordStrength', () => {
   describe('Empty password', () => {
     it('should return very weak strength for empty password', () => {
@@ -29,7 +28,7 @@ describe('usePasswordStrength', () => {
           hasSpecialChar: false,
         },
         isValid: false,
-        feedback: ['Password is required'],
+        feedback: ['Password is required']
       });
     });
   });

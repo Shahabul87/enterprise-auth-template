@@ -70,9 +70,11 @@ jest.mock('@/stores/auth.store', () => ({
     permissions: [],
     hasPermission: jest.fn(() => false),
     hasRole: jest.fn(() => false),
+  })),
   useGuestOnly: jest.fn(() => ({
     isLoading: false,
-  }));
+  })),
+}));
 jest.mock('@/lib/admin-api');
 // Type definitions
 interface MetricData {
@@ -127,7 +129,7 @@ describe('SystemMetrics Component', () => {
     queryClient = new QueryClient({
       defaultOptions: {
         queries: { retry: false },
-      },
+      }
     });
     // Setup mock implementations
     (useAuth as jest.Mock).mockReturnValue({
@@ -136,13 +138,13 @@ describe('SystemMetrics Component', () => {
       isLoading: false,
       permissions: mockUser.permissions,
       hasPermission: (permission: string) =>
-        mockUser.permissions?.includes(permission) ?? false,
+        mockUser.permissions?.includes(permission) ?? false
     });
     const mockAdminAPI = AdminAPI as jest.Mocked<typeof AdminAPI>;
     const mockGetSystemMetrics = mockAdminAPI.getSystemMetrics || jest.fn();
     mockGetSystemMetrics.mockResolvedValue({
       success: true,
-      data: mockMetrics,
+      data: mockMetrics
     });
     // Ensure the mock is properly set
     if (mockAdminAPI) {
@@ -204,7 +206,7 @@ describe('SystemMetrics Component', () => {
     const mockGetSystemMetrics = mockAdminAPI.getSystemMetrics || jest.fn();
     mockGetSystemMetrics.mockResolvedValue({
       success: true,
-      data: mockMetrics,
+      data: mockMetrics
     });
     if (mockAdminAPI) {
       mockAdminAPI.getSystemMetrics = mockGetSystemMetrics;
@@ -227,7 +229,7 @@ describe('SystemMetrics Component', () => {
     const mockGetSystemMetrics = mockAdminAPI.getSystemMetrics || jest.fn();
     mockGetSystemMetrics.mockResolvedValue({
       success: true,
-      data: mockMetrics,
+      data: mockMetrics
     });
     if (mockAdminAPI) {
       mockAdminAPI.getSystemMetrics = mockGetSystemMetrics;
@@ -248,7 +250,7 @@ describe('SystemMetrics Component', () => {
       isAuthenticated: true,
       isLoading: false,
       permissions: [],
-      hasPermission: () => false,
+      hasPermission: () => false
     });
     renderWithProviders(<SystemMetrics />);
     expect(
@@ -275,7 +277,7 @@ describe('SystemMetrics Component', () => {
     const mockGetSystemMetrics = mockAdminAPI.getSystemMetrics || jest.fn();
     mockGetSystemMetrics.mockResolvedValue({
       success: true,
-      data: criticalMetrics,
+      data: criticalMetrics
     });
     if (mockAdminAPI) {
       mockAdminAPI.getSystemMetrics = mockGetSystemMetrics;

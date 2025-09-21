@@ -10,7 +10,6 @@ import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle } from '@/co
 import { Calendar } from '@/components/ui/calendar';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
-
 /**
  * @jest-environment jsdom
  */
@@ -24,7 +23,6 @@ jest.mock('@/components/ui/tabs', () => ({
     <button data-testid="tabs-trigger" {...props}>{children}</button>,
   TabsContent: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <div data-testid="tabs-content" {...props}>{children}</div>,
-// Orphaned closing removed
 jest.mock('@/components/ui/popover', () => ({
   Popover: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <div data-testid="popover" {...props}>{children}</div>,
@@ -32,7 +30,6 @@ jest.mock('@/components/ui/popover', () => ({
     <button data-testid="popover-trigger" {...props}>{children}</button>,
   PopoverContent: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <div data-testid="popover-content" {...props}>{children}</div>,
-// Orphaned closing removed
 jest.mock('@/components/ui/progress', () => ({
   Progress: ({ value = 0, ...props }: { value?: number } & Record<string, unknown>) =>
     <div
@@ -45,7 +42,6 @@ jest.mock('@/components/ui/progress', () => ({
     >
       <div style={{ width: `${value}%` }} />
     </div>,
-// Orphaned closing removed
 jest.mock('@/components/ui/sheet', () => ({
   Sheet: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <div data-testid="sheet" {...props}>{children}</div>,
@@ -59,7 +55,6 @@ jest.mock('@/components/ui/sheet', () => ({
     <h2 data-testid="sheet-title" {...props}>{children}</h2>,
   SheetDescription: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <p data-testid="sheet-description" {...props}>{children}</p>,
-// Orphaned closing removed
 jest.mock('@/components/ui/calendar', () => ({
   Calendar: ({
     selected,
@@ -74,7 +69,6 @@ jest.mock('@/components/ui/calendar', () => ({
       {selected && <span>Selected: {selected.toISOString()}</span>}
     </div>
   ),
-// Orphaned closing removed
 jest.mock('@/components/ui/avatar', () => ({
   Avatar: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <div data-testid="avatar" {...props}>{children}</div>,
@@ -82,7 +76,6 @@ jest.mock('@/components/ui/avatar', () => ({
     <img data-testid="avatar-image" src={src} alt={alt} {...props} />,
   AvatarFallback: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <span data-testid="avatar-fallback" {...props}>{children}</span>,
-// Orphaned closing removed
 jest.mock('@/components/ui/table', () => ({
   Table: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <table data-testid="table" {...props}>{children}</table>,
@@ -96,7 +89,6 @@ jest.mock('@/components/ui/table', () => ({
     <th data-testid="table-head" {...props}>{children}</th>,
   TableCell: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <td data-testid="table-cell" {...props}>{children}</td>,
-// Orphaned closing removed
 /**
  * Batch Test File for Remaining Components
  * This file contains tests for multiple components to ensure comprehensive coverage
@@ -389,3 +381,4 @@ describe('Additional Coverage Tests', () => {
     });
   });
 });
+}}}}}}}}}}}

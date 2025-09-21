@@ -1,13 +1,12 @@
 
 import { act, renderHook } from '@testing-library/react';
 import { useUserStore } from '@/stores/user-store';
-
 jest.mock('zustand/middleware', () => ({
   devtools: (fn: any) => fn,
   persist: (fn: any) => fn,
   subscribeWithSelector: (fn: any) => fn,
   immer: (fn: any) => fn,
-// Orphaned closing removed
+}));
 jest.mock('@/lib/api-client');
 
 
@@ -48,7 +47,7 @@ describe('Initial State', () => {
         size: 10,
         pages: 0,
         has_next: false,
-        has_prev: false,
+        has_prev: false
       });
     });
     it('should have correct initial search and filter state', () => {
@@ -181,7 +180,7 @@ describe('Utility Actions', () => {
         useUserStore.setState({
           currentUser: mockUser,
           selectedUser: mockUser,
-          users: [mockUser],
+          users: [mockUser]
         });
       });
       expect(result.current.currentUser).toEqual(mockUser);

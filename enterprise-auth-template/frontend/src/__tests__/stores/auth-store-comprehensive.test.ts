@@ -21,8 +21,8 @@ jest.mock('@/stores/auth.store', () => ({
     verifyEmail: jest.fn().mockResolvedValue({ success: true }),
     resendVerification: jest.fn().mockResolvedValue({ success: true }),
     initialize: jest.fn().mockResolvedValue(undefined),
-  }))}));,
-})));
+  })),
+}));
 jest.mock('@/lib/auth-api');
 const mockAuthAPI = {
   login: jest.fn(),
@@ -58,8 +58,7 @@ jest.mock('next/navigation', () => ({
     replace: jest.fn(),
     back: jest.fn(),
   }),
-    logout: jest.fn(),
-    initialize: jest.fn(),
+}));
 /**
  * Comprehensive Auth Store Test Suite
  * Tests all authentication store functionality with proper TypeScript typing
@@ -85,18 +84,15 @@ import {  useAuthStore,
   useAuthLoading,
   useAuthError,
   usePermissions,
-  useRoles,
+  useRoles
 } from '@/stores/auth.store';
 import {  User,
   TokenPair,
-  ApiResponse,
+  ApiResponse
 } from '@/types';
-// Mock dependencies
-(AuthAPI as unknown) = mockAuthAPI;
-Object.assign(require('@/lib/cookie-manager'), mockCookieManager);
+// Mock dependencies are already set up via jest.mock
 // Type the mocked modules
 // AuthAPI is already mocked above
-const mockCookieManager = cookieManager as jest.Mocked<typeof cookieManager>;
 // Mock user data
 const createMockUser = (overrides: Partial<User> = {}): User => ({
   id: 'user-123',
@@ -119,14 +115,14 @@ const createMockUser = (overrides: Partial<User> = {}): User => ({
   updated_at: '2024-01-01T00:00:00Z',
   roles: [],
   permissions: [],
-  ...overrides,
+  ...overrides
 });
 const createMockTokenPair = (overrides: Partial<TokenPair> = {}): TokenPair => ({
   access_token: 'mock-access-token',
   refresh_token: 'mock-refresh-token',
   token_type: 'bearer',
   expires_in: 3600,
-  ...overrides,
+  ...overrides
 });
 
 describe('Auth Store Comprehensive Tests', () => {
@@ -147,7 +143,7 @@ describe('Auth Store Comprehensive Tests', () => {
       authErrors: [],
       isEmailVerified: false,
       is2FAEnabled: false,
-      requiresPasswordChange: false,
+      requiresPasswordChange: false
     });
     // Setup default mock implementations
     mockCookieManager.getAuthTokens.mockReturnValue(null);
@@ -216,7 +212,7 @@ describe('Permission and Role Management', () => {
     beforeEach(() => {
       useAuthStore.setState({
         permissions: ['read:profile', 'write:profile', 'admin:*'],
-        roles: ['user', 'moderator'],
+        roles: ['user', 'moderator']
       });
     });
     it('should check exact permissions correctly', async () => {
@@ -285,7 +281,7 @@ describe('Error Management', () => {
           result.current.addAuthError({
             code: `ERROR_${i}`,
             message: `Error ${i}`,
-            timestamp: new Date(),
+            timestamp: new Date()
           });
         }
       });
@@ -299,12 +295,12 @@ describe('Error Management', () => {
         result.current.addAuthError({
           code: 'ERROR_1',
           message: 'Error 1',
-          timestamp: new Date(),
+          timestamp: new Date()
         });
         result.current.addAuthError({
           code: 'ERROR_2',
           message: 'Error 2',
-          timestamp: new Date(),
+          timestamp: new Date()
         });
       });
       expect(result.current.authErrors).toHaveLength(2);
@@ -337,7 +333,7 @@ describe('Session Management', () => {
         session: {
           loginTime: new Date(),
           lastActivity: new Date(Date.now() - 60000), // 1 minute ago
-        },
+        }
       });
       mockCookieManager.getCookie.mockReturnValue('valid-token');
       mockCookieManager.isTokenExpired.mockReturnValue(false);
@@ -367,7 +363,7 @@ describe('Utility Actions', () => {
       const mockUser = createMockUser();
       mockAuthAPI.getCurrentUser.mockResolvedValue({
         success: true,
-        data: mockUser,
+        data: mockUser
       });
       const { result } = renderHook(() => useAuthStore());
       await act(async () => {
@@ -394,6 +390,7 @@ describe('Utility Actions', () => {
         updated_at: mockUser.updated_at,
         roles: mockUser.roles,
         permissions: mockUser.permissions,
+      }));
       expect(mockCookieManager.storeAuthTokens).toHaveBeenCalled();
     });
   });

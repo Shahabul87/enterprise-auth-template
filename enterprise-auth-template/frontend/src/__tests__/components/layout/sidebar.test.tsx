@@ -4,8 +4,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRouter, usePathname } from 'next/navigation';
 import { Sidebar } from '@/components/layout/sidebar';
-
-
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
   usePathname: jest.fn(),
@@ -34,19 +32,16 @@ jest.mock('@/components/ui/scroll-area', () => ({
       {children}
     </div>
   ),
-// Orphaned closing removed
 jest.mock('@/components/ui/separator', () => ({
   Separator: ({ className, ...props }: any) => (
     <hr className={className} {...props} />
   ),
-// Orphaned closing removed
 jest.mock('@/components/ui/badge', () => ({
   Badge: ({ children, className, variant, ...props }: any) => (
     <span className={className} {...props}>
       {children}
     </span>
   ),
-// Orphaned closing removed
 jest.mock('next/link', () => {
   return ({ children, href, ...props }: any) => (
     <a href={href} {...props}>
@@ -286,7 +281,6 @@ jest.mock('lucide-react', () => ({
   FileText: () => <div data-testid="file-icon" />,
   BarChart3: () => <div data-testid="chart-icon" />,
   Zap: () => <div data-testid="zap-icon" />,
-// Orphaned closing removed
 /**
  * Sidebar Component Tests
  * Tests the sidebar navigation component with proper TypeScript types
@@ -429,3 +423,4 @@ describe('Accessibility', () => {
       expect(screen.getByRole('link', { name: /help/i })).toBeInTheDocument();
     });
   });
+}}}}}}}}}}

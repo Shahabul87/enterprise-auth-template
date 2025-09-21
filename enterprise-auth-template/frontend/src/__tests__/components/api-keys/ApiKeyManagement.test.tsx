@@ -24,7 +24,6 @@ jest.mock('lucide-react', () => ({
   CheckCircle: () => <div data-testid="check-circle-icon" />,
   XCircle: () => <div data-testid="x-circle-icon" />,
   BarChart: () => <div data-testid="bar-chart-icon" />,
-// Orphaned closing removed
 /**
  * ApiKeyManagement Component Tests
  * Simplified tests that work with the current component implementation
@@ -99,13 +98,13 @@ describe('ApiKeyManagement Component', () => {
       ok: true,
       json: jest.fn().mockResolvedValue({
         api_keys: mockApiKeys,
-      }),
+      })
     });
     // Mock clipboard API
     Object.assign(navigator, {
       clipboard: {
         writeText: jest.fn().mockResolvedValue(undefined),
-      },
+      }
     });
   });
   afterEach(() => {
@@ -180,7 +179,7 @@ describe('Error Handling', () => {
       global.fetch = jest.fn() as jest.MockedFunction<typeof fetch>;.mockResolvedValue({
         ok: false,
         status: 500,
-        json: jest.fn().mockResolvedValue({ error: 'Server error' }),
+        json: jest.fn().mockResolvedValue({ error: 'Server error' })
       });
       render(<ApiKeyManagement />);
       // Component should handle error gracefully
@@ -198,7 +197,7 @@ describe('Empty State', () => {
         ok: true,
         json: jest.fn().mockResolvedValue({
           api_keys: [],
-        }),
+        })
       });
       render(<ApiKeyManagement />);
       await waitFor(() => {
@@ -208,3 +207,4 @@ describe('Empty State', () => {
     });
   });
 });
+}

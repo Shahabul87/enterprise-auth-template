@@ -3,8 +3,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { LineChart, SimpleLineChart } from '@/components/charts/line-chart';
-
-
 describe('LineChart Component', () => {
   const mockSeries = [
     {

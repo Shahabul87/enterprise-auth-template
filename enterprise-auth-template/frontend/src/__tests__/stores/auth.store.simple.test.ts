@@ -1,7 +1,6 @@
 
 import { renderHook, act } from '@testing-library/react';
 import { useAuthStore } from '@/stores/auth.store';
-
 jest.mock('@/lib/auth-api');
 jest.mock('@/lib/cookie-manager');
 
@@ -12,14 +11,12 @@ jest.mock('next/navigation', () => ({
     replace: jest.fn(),
     back: jest.fn(),
   }),
-// Orphaned closing removed
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
     replace: jest.fn(),
     back: jest.fn(),
   }),
-// Orphaned closing removed
 /**
  * @jest-environment jsdom
  */
@@ -34,7 +31,7 @@ const mockLocation = {
 };
 Object.defineProperty(window, 'location', {
   value: mockLocation,
-  writable: true,
+  writable: true
 });
 
 // Mock dependencies with manual mocks
@@ -58,7 +55,7 @@ describe('useAuthStore - Basic Tests', () => {
       authErrors: [],
       isEmailVerified: false,
       is2FAEnabled: false,
-      requiresPasswordChange: false,
+      requiresPasswordChange: false
     });
     // Reset location mock
     mockLocation.href = '';
@@ -154,12 +151,12 @@ describe('useAuthStore - Basic Tests', () => {
     act(() => {
       result.current.updateUser({
         full_name: 'Updated Name',
-        email: 'updated@example.com',
+        email: 'updated@example.com'
       });
     });
     expect(result.current.user).toMatchObject({
       full_name: 'Updated Name',
-      email: 'updated@example.com',
+      email: 'updated@example.com'
     });
   });
   it('should handle permission checks', () => {
@@ -168,7 +165,7 @@ describe('useAuthStore - Basic Tests', () => {
     act(() => {
       useAuthStore.setState({
         permissions: ['read:profile', 'write:profile', 'admin:*'],
-        roles: ['user', 'moderator'],
+        roles: ['user', 'moderator']
       });
     });
     // Test exact permissions
@@ -250,7 +247,7 @@ describe('useAuthStore - Basic Tests', () => {
           expires_in: 3600,
         },
         permissions: ['read:profile'],
-        roles: ['user'],
+        roles: ['user']
       });
     });
     // Clear auth data
@@ -264,3 +261,4 @@ describe('useAuthStore - Basic Tests', () => {
     expect(result.current.roles).toEqual([]);
   });
 });
+}}

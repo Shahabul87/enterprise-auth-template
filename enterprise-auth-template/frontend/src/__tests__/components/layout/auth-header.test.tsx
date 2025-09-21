@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { AuthHeader } from '@/components/layout/auth-header';
 import { useRequireAuth } from '@/stores/auth.store';
 import type { User } from '@/types';
-
 /**
  * @jest-environment jsdom
  */
@@ -208,7 +207,7 @@ describe('Mobile Responsiveness', () => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
-        value: 375,
+        value: 375
       });
       render(<AuthHeader />);
       expect(screen.getByRole('button', { name: /menu/i })).toBeInTheDocument();
@@ -217,7 +216,7 @@ describe('Mobile Responsiveness', () => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
-        value: 375,
+        value: 375
       });
       render(<AuthHeader />);
       const menuButton = screen.getByRole('button', { name: /menu/i });
@@ -228,7 +227,7 @@ describe('Mobile Responsiveness', () => {
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
-        value: 375,
+        value: 375
       });
       render(<AuthHeader />);
       const menuButton = screen.getByRole('button', { name: /menu/i });
@@ -311,3 +310,4 @@ describe('Error Handling', () => {
 describe('Sticky Behavior', () => {
   });
 });
+}}}}}}}}}}}}}}}}}}}}}}}}}

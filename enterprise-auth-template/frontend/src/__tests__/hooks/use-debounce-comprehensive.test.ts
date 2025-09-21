@@ -29,9 +29,8 @@ import {
   useDebouncedCallback,
   useDebouncedSearch,
   type DebounceOptions,
-  type DebouncedState,
+  type DebouncedState
 } from '@/hooks/use-debounce';
-
 // Mock timers for consistent testing
 jest.useFakeTimers();
 
@@ -60,7 +59,7 @@ describe('useDebounce', () => {
         const { result, rerender } = renderHook(
           ({ value, delay }) => useDebounce(value, delay),
           {
-            initialProps: { value: 'initial', delay: 300 },
+            initialProps: { value: 'initial', delay: 300 }
           }
         );
 
@@ -87,7 +86,7 @@ describe('useDebounce', () => {
         const { result, rerender } = renderHook(
           ({ value }) => useDebounce(value, 300),
           {
-            initialProps: { value: 'initial' },
+            initialProps: { value: 'initial' }
           }
         );
 
@@ -134,26 +133,33 @@ describe('useDebounce', () => {
     });
 
 describe('Options Configuration', () => {
-      it('should handle leading edge execution', () => {
+      it('should handle leading edge execution', async () => {
         const options: DebounceOptions = { leading: true, trailing: false };
         const { result, rerender } = renderHook(
           ({ value }) => useDebounce(value, 300, options),
           {
-            initialProps: { value: 'initial' },
+            initialProps: { value: 'initial' }
           }
         );
 
         expect(result.current).toBe('initial');
 
-        // Change value - should update immediately with leading edge
-        rerender({ value: 'changed' });
-        // With leading edge, the value should not change immediately in the test environment
-        expect(result.current).toBe('initial');
-
-        // Advance time - no trailing edge update
+        // Change value - leading edge should trigger immediately
+        act(() => {
+          rerender({ value: 'changed' });
+          // Force React to flush all effects and state updates
+          jest.runOnlyPendingTimers();
+        });
+        
+        // The leading edge should have updated the value
+        expect(result.current).toBe('changed');
+        
+        // Advance time to ensure no trailing edge execution
         act(() => {
           jest.advanceTimersByTime(300);
         });
+        
+        // Should still be 'changed' and not trigger again
         expect(result.current).toBe('changed');
       });
 
@@ -162,7 +168,7 @@ describe('Options Configuration', () => {
         const { result, rerender } = renderHook(
           ({ value }) => useDebounce(value, 300, options),
           {
-            initialProps: { value: 'initial' },
+            initialProps: { value: 'initial' }
           }
         );
 
@@ -177,25 +183,29 @@ describe('Options Configuration', () => {
         expect(result.current).toBe('changed');
       });
 
-      it('should handle both leading and trailing execution', () => {
+      it('should handle both leading and trailing execution', async () => {
         const options: DebounceOptions = { leading: true, trailing: true };
         const { result, rerender } = renderHook(
           ({ value }) => useDebounce(value, 300, options),
           {
-            initialProps: { value: 'initial' },
+            initialProps: { value: 'initial' }
           }
         );
 
-        // First change - immediate with leading
-        rerender({ value: 'change1' });
-        // Leading edge doesn't update synchronously in test
-        expect(result.current).toBe('initial');
+        // First change - should trigger leading edge
+        act(() => {
+          rerender({ value: 'change1' });
+          jest.runOnlyPendingTimers();
+        });
+        expect(result.current).toBe('change1');
 
-        // Second change quickly
-        rerender({ value: 'change2' });
-        expect(result.current).toBe('change1'); // Still from leading
-
-        // Complete delay - trailing edge update
+        // Second change quickly - should reset timer but keep leading value
+        act(() => {
+          rerender({ value: 'change2' });
+          jest.runOnlyPendingTimers();
+        });
+        
+        // Complete delay - trailing edge should update to latest value
         act(() => {
           jest.advanceTimersByTime(300);
         });
@@ -212,7 +222,7 @@ describe('Options Configuration', () => {
         const { result, rerender } = renderHook(
           ({ value }) => useDebounce(value, 300, options),
           {
-            initialProps: { value: 'initial' },
+            initialProps: { value: 'initial' }
           }
         );
 
@@ -247,7 +257,7 @@ describe('Edge Cases', () => {
         const { result, rerender } = renderHook(
           ({ value }) => useDebounce(value, 300),
           {
-            initialProps: { value: null as string | null },
+            initialProps: { value: null as string | null }
           }
         );
 
@@ -266,7 +276,7 @@ describe('Edge Cases', () => {
         const { result, rerender } = renderHook(
           ({ value }) => useDebounce(value, 0),
           {
-            initialProps: { value: 'initial' },
+            initialProps: { value: 'initial' }
           }
         );
 
@@ -284,7 +294,7 @@ describe('Edge Cases', () => {
         const { result, rerender } = renderHook(
           ({ value }) => useDebounce(value, -100),
           {
-            initialProps: { value: 'initial' },
+            initialProps: { value: 'initial' }
           }
         );
 
@@ -306,7 +316,7 @@ describe('useAdvancedDebounce', () => {
       const { result, rerender } = renderHook(
         ({ value }) => useAdvancedDebounce(value, 300),
         {
-          initialProps: { value: 'initial' },
+          initialProps: { value: 'initial' }
         }
       );
 
@@ -337,7 +347,7 @@ describe('useAdvancedDebounce', () => {
       const { result, rerender } = renderHook(
         ({ value }) => useAdvancedDebounce(value, 300),
         {
-          initialProps: { value: 'initial' },
+          initialProps: { value: 'initial' }
         }
       );
 
@@ -358,7 +368,7 @@ describe('useAdvancedDebounce', () => {
       const { result, rerender } = renderHook(
         ({ value }) => useAdvancedDebounce(value, 300),
         {
-          initialProps: { value: 'initial' },
+          initialProps: { value: 'initial' }
         }
       );
 
@@ -443,7 +453,7 @@ describe('useDebouncedCallback', () => {
       expect(mockCallback).toHaveBeenCalledTimes(1);
     });
 
-    it('should support leading edge execution', () => {
+    it('should support leading edge execution', async () => {
       const mockCallback = jest.fn((value: string) => value);
       const options: DebounceOptions = { leading: true, trailing: false };
 
@@ -451,25 +461,32 @@ describe('useDebouncedCallback', () => {
         useDebouncedCallback(mockCallback, 300, options)
       );
 
-      // First call should execute immediately
+      // First call should execute immediately (leading edge)
       act(() => {
         result.current.debouncedCallback('immediate');
+        jest.runOnlyPendingTimers();
       });
 
       expect(mockCallback).toHaveBeenCalledWith('immediate');
       expect(mockCallback).toHaveBeenCalledTimes(1);
 
-      // Second call should not execute (within delay period)
+      // Second call within delay period should not execute
       act(() => {
         result.current.debouncedCallback('delayed');
+        jest.runOnlyPendingTimers();
       });
 
-      expect(mockCallback).toHaveBeenCalledTimes(2); // Leading edge triggers again after delay
+      expect(mockCallback).toHaveBeenCalledTimes(1);
 
-      // After delay, next call should execute immediately again
+      // Wait for delay to pass
       act(() => {
         jest.advanceTimersByTime(300);
+      });
+
+      // Next call after delay should execute immediately again (leading edge)
+      act(() => {
         result.current.debouncedCallback('nextImmediate');
+        jest.runOnlyPendingTimers();
       });
 
       expect(mockCallback).toHaveBeenCalledWith('nextImmediate');
@@ -694,7 +711,7 @@ describe('Cleanup and Memory Management', () => {
       const { unmount, rerender } = renderHook(
         ({ value }) => useDebounce(value, 300),
         {
-          initialProps: { value: 'initial' },
+          initialProps: { value: 'initial' }
         }
       );
 
@@ -735,7 +752,7 @@ describe('Cleanup and Memory Management', () => {
       const { result, rerender } = renderHook(
         ({ value }) => useDebounce(value, 300),
         {
-          initialProps: { value: 'initial' },
+          initialProps: { value: 'initial' }
         }
       );
 

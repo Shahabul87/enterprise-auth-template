@@ -1,7 +1,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { middleware } from '@/middleware';
-
 /**
  * @jest-environment jsdom
  */
@@ -96,7 +95,7 @@ describe('Protected Routes', () => {
       it(`should allow authenticated users to access ${route}`, () => {
         const validToken = createValidJWT();
         const request = createMockRequest(`http://localhost${route}`, {
-          cookies: { access_token: validToken },
+          cookies: { access_token: validToken }
         });
         const response = middleware(request);
         expect(NextResponse.redirect).not.toHaveBeenCalled();
@@ -128,7 +127,7 @@ describe('Guest-Only Routes', () => {
       it(`should redirect authenticated users from ${route} to dashboard`, () => {
         const validToken = createValidJWT();
         const request = createMockRequest(`http://localhost${route}`, {
-          cookies: { access_token: validToken },
+          cookies: { access_token: validToken }
         });
         middleware(request);
         expect(NextResponse.redirect).toHaveBeenCalled();
@@ -139,7 +138,7 @@ describe('Guest-Only Routes', () => {
     it('should redirect to returnTo URL if provided', () => {
       const validToken = createValidJWT();
       const request = createMockRequest('http://localhost/auth/login?returnTo=/profile', {
-        cookies: { access_token: validToken },
+        cookies: { access_token: validToken }
       });
       middleware(request);
       expect(NextResponse.redirect).toHaveBeenCalled();
@@ -160,7 +159,7 @@ describe('Public Routes', () => {
       it(`should allow authenticated users to access ${route}`, () => {
         const validToken = createValidJWT();
         const request = createMockRequest(`http://localhost${route}`, {
-          cookies: { access_token: validToken },
+          cookies: { access_token: validToken }
         });
         const response = middleware(request);
         expect(NextResponse.redirect).not.toHaveBeenCalled();
@@ -193,7 +192,7 @@ describe('API Routes', () => {
     it('should allow authenticated access to protected API routes', () => {
       const validToken = createValidJWT();
       const request = createMockRequest('http://localhost/api/protected/users', {
-        cookies: { access_token: validToken },
+        cookies: { access_token: validToken }
       });
       const response = middleware(request);
       expect(NextResponse.json).not.toHaveBeenCalledWith(
@@ -220,7 +219,7 @@ describe('Token Validation', () => {
     it('should accept valid JWT tokens from cookies', () => {
       const validToken = createValidJWT();
       const request = createMockRequest('http://localhost/dashboard', {
-        cookies: { access_token: validToken },
+        cookies: { access_token: validToken }
       });
       const response = middleware(request);
       expect(NextResponse.redirect).not.toHaveBeenCalled();
@@ -229,7 +228,7 @@ describe('Token Validation', () => {
     it('should accept valid JWT tokens from Authorization header', () => {
       const validToken = createValidJWT();
       const request = createMockRequest('http://localhost/dashboard', {
-        headers: { authorization: `Bearer ${validToken}` },
+        headers: { authorization: `Bearer ${validToken}` }
       });
       const response = middleware(request);
       expect(NextResponse.redirect).not.toHaveBeenCalled();
@@ -237,7 +236,7 @@ describe('Token Validation', () => {
     it('should reject expired JWT tokens', () => {
       const expiredToken = createExpiredJWT();
       const request = createMockRequest('http://localhost/dashboard', {
-        cookies: { access_token: expiredToken },
+        cookies: { access_token: expiredToken }
       });
       middleware(request);
       expect(NextResponse.redirect).toHaveBeenCalled();
@@ -245,7 +244,7 @@ describe('Token Validation', () => {
     it('should reject malformed JWT tokens', () => {
       const malformedToken = 'invalid.token';
       const request = createMockRequest('http://localhost/dashboard', {
-        cookies: { access_token: malformedToken },
+        cookies: { access_token: malformedToken }
       });
       middleware(request);
       expect(NextResponse.redirect).toHaveBeenCalled();
@@ -253,7 +252,7 @@ describe('Token Validation', () => {
     it('should reject tokens without required fields', () => {
       const invalidToken = createValidJWT({ sub: undefined }); // Missing subject
       const request = createMockRequest('http://localhost/dashboard', {
-        cookies: { access_token: invalidToken },
+        cookies: { access_token: invalidToken }
       });
       middleware(request);
       expect(NextResponse.redirect).toHaveBeenCalled();
@@ -263,7 +262,7 @@ describe('Token Validation', () => {
       const headerToken = createValidJWT({ sub: 'header-user' });
       const request = createMockRequest('http://localhost/dashboard', {
         cookies: { access_token: cookieToken },
-        headers: { authorization: `Bearer ${headerToken}` },
+        headers: { authorization: `Bearer ${headerToken}` }
       });
       const response = middleware(request);
       expect(NextResponse.redirect).not.toHaveBeenCalled();
@@ -331,14 +330,14 @@ describe('Edge Cases', () => {
     });
     it('should handle requests with empty Authorization header', () => {
       const request = createMockRequest('http://localhost/dashboard', {
-        headers: { authorization: '' },
+        headers: { authorization: '' }
       });
       middleware(request);
       expect(NextResponse.redirect).toHaveBeenCalled();
     });
     it('should handle requests with malformed Authorization header', () => {
       const request = createMockRequest('http://localhost/dashboard', {
-        headers: { authorization: 'NotBearer token' },
+        headers: { authorization: 'NotBearer token' }
       });
       middleware(request);
       expect(NextResponse.redirect).toHaveBeenCalled();
@@ -349,7 +348,7 @@ describe('Edge Cases', () => {
       const signature = 'mock-signature';
       const malformedToken = `${header}.${invalidPayload}.${signature}`;
       const request = createMockRequest('http://localhost/dashboard', {
-        cookies: { access_token: malformedToken },
+        cookies: { access_token: malformedToken }
       });
       middleware(request);
       expect(NextResponse.redirect).toHaveBeenCalled();

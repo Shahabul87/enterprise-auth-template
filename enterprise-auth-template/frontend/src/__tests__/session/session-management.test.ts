@@ -12,7 +12,7 @@ jest.mock('@/lib/session-manager', () => ({
     isExpired: jest.fn().mockReturnValue(false),
     onWarning: jest.fn(),
     onExpired: jest.fn(),
-  }))}));,
+  }))
 }));
 jest.mock('@/stores/auth.store', () => ({
   useAuthStore: jest.fn(() => ({

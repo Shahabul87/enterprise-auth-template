@@ -6,7 +6,6 @@ import { useAuth } from '@/stores/auth.store';
 import { useDebounce } from '@/hooks/use-debounce';
 import AdminAPI from '@/lib/admin-api';
 import { formatDate } from '@/lib/utils';
-
 jest.mock('@/stores/auth.store', () => ({
   useAuthStore: jest.fn(() => ({
     user: null,
@@ -62,26 +61,11 @@ jest.mock('@/stores/auth.store', () => ({
     permissions: [],
     hasPermission: jest.fn(() => false),
     hasRole: jest.fn(() => false),
+  })),
   useGuestOnly: jest.fn(() => ({
     isLoading: false,
-  }))}}))));,
-    user: null,
-    isAuthenticated: false,
-    isLoading: false,
-    error: null,
-    login: jest.fn().mockResolvedValue({ success: true }),
-    register: jest.fn().mockResolvedValue({ success: true }),
-    logout: jest.fn().mockResolvedValue(undefined),
-    setUser: jest.fn(),
-    clearError: jest.fn(),
-    refreshToken: jest.fn().mockResolvedValue(true),
-    requestPasswordReset: jest.fn().mockResolvedValue({ success: true }),
-    confirmPasswordReset: jest.fn().mockResolvedValue({ success: true }),
-    verifyEmail: jest.fn().mockResolvedValue({ success: true }),
-    resendVerification: jest.fn().mockResolvedValue({ success: true }),
-    initialize: jest.fn().mockResolvedValue(undefined),
   })),
-})));
+}));
 jest.mock('@/hooks/use-debounce', () => ({
   useDebounce: jest.fn(),
 }));
@@ -296,7 +280,7 @@ const mockGetUsers = mockAdminAPI.getUsers;
   CardHeaderProps,
   CardTitleProps,
   AlertProps,
-  AlertDescriptionProps,
+  AlertDescriptionProps
 } from '../../../types/test-interfaces';
 // Admin-specific component interfaces
 interface DropdownMenuProps {
@@ -439,7 +423,7 @@ describe('UserTable', () => {
         per_page: 10,
         has_next: false,
         has_prev: false,
-      },
+      }
     });
   });
   it('renders user table with data', async () => {
@@ -645,13 +629,13 @@ describe('UserTable', () => {
     const user = userEvent.setup();
     mockGenerateUserReport.mockResolvedValue({
       success: true,
-      data: { download_url: 'http://example.com/report.csv' },
+      data: { download_url: 'http://example.com/report.csv' }
     });
     // Mock window.open
     const mockOpen = jest.fn();
     Object.defineProperty(window, 'open', {
       value: mockOpen,
-      writable: true,
+      writable: true
     });
     render(<UserTable />);
     await act(async () => { await waitFor(() => {
@@ -759,7 +743,7 @@ describe('UserTable', () => {
         per_page: 10,
         has_next: true,
         has_prev: false,
-      },
+      }
     });
     render(<UserTable />);
     await act(async () => { await waitFor(() => {
@@ -784,7 +768,7 @@ describe('UserTable', () => {
         per_page: 10,
         has_next: false,
         has_prev: false,
-      },
+      }
     });
     render(<UserTable />);
     await act(async () => { await waitFor(() => {
@@ -828,3 +812,4 @@ describe('UserTable', () => {
     expect(mockGetUsers).toHaveBeenCalled();
   }); });
 });
+}}}}}}}}}}}}}

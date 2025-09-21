@@ -3,8 +3,6 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ConfirmModal } from '@/components/modals/confirm-modal';
-
-
 describe('ConfirmModal Component', () => {
   const defaultProps = {
     isOpen: true,

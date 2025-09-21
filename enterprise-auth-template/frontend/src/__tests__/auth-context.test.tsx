@@ -1,7 +1,6 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import { User, TokenPair, LoginRequest, RegisterRequest } from '@/types';
-
 /**
  * Authentication Context Tests
  *

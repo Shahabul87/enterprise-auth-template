@@ -15,7 +15,7 @@ Object.defineProperty(window, 'history', {
   value: {
     replaceState: mockReplaceState,
   },
-  writable: true,
+  writable: true
 });
 
 // Mock fetch for usePaginatedData tests
@@ -357,7 +357,7 @@ describe('Pagination info', () => {
         description: 'Showing 21 to 30 of 95 items',
         shortDescription: '21-30 of 95',
         rangeText: 'Showing 21 to 30',
-        totalText: 'of 95 items',
+        totalText: 'of 95 items'
       });
     });
 
@@ -372,7 +372,7 @@ describe('Pagination info', () => {
         description: 'No items found',
         shortDescription: '0 of 0',
         rangeText: 'No items',
-        totalText: '',
+        totalText: ''
       });
     });
   });
@@ -496,7 +496,7 @@ describe('Utility methods', () => {
         page: 3,
         per_page: 25,
         skip: 50,
-        limit: 25,
+        limit: 25
       });
     });
 
@@ -568,7 +568,7 @@ describe('usePaginatedData', () => {
 
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: jest.fn().mockResolvedValueOnce(mockResponse),
+      json: jest.fn().mockResolvedValueOnce(mockResponse)
     });
 
     const { result } = renderHook(() => usePaginatedData('/api/items'));
@@ -591,7 +591,7 @@ describe('usePaginatedData', () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
       status: 500,
-      json: jest.fn(),
+      json: jest.fn()
     });
 
     const { result } = renderHook(() => usePaginatedData('/api/items'));
@@ -616,7 +616,7 @@ describe('usePaginatedData', () => {
       per_page: 10,
       pages: 1,
       has_next: false,
-      has_prev: false,
+      has_prev: false
     });
 
     const { result } = renderHook(() =>
@@ -690,7 +690,7 @@ describe('usePaginatedData', () => {
           dependencies: [filter],
         }),
       {
-        initialProps: { filter: 'active' },
+        initialProps: { filter: 'active' }
       }
     );
 

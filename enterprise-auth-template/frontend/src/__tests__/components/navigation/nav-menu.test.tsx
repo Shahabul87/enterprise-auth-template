@@ -3,8 +3,6 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { NavMenu } from '@/components/navigation/nav-menu';
-
-
 describe('NavMenu Component', () => {
   const menuItems = [
     { label: 'Dashboard', href: '/dashboard', icon: 'home' },

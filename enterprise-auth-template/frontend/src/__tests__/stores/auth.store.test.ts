@@ -19,7 +19,6 @@ jest.mock('@/lib/auth-api', () => ({
     verify2FA: jest.fn(),
     disable2FA: jest.fn(),
   },
-// Orphaned closing removed
 jest.mock('@/lib/cookie-manager', () => ({
   storeAuthTokens: jest.fn(),
   getAccessToken: jest.fn(),
@@ -32,14 +31,12 @@ jest.mock('@/lib/cookie-manager', () => ({
     ACCESS_TOKEN: 'access-token',
     REFRESH_TOKEN: 'refresh-token',
   },
-// Orphaned closing removed
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
     replace: jest.fn(),
     back: jest.fn(),
   }),
-// Orphaned closing removed
 /**
  * @jest-environment jsdom
  */
@@ -54,7 +51,7 @@ const mockLocation = {
 };
 Object.defineProperty(window, 'location', {
   value: mockLocation,
-  writable: true,
+  writable: true
 });
 
 // Mock AuthAPI
@@ -83,7 +80,7 @@ describe('useAuthStore', () => {
       authErrors: [],
       isEmailVerified: false,
       is2FAEnabled: false,
-      requiresPasswordChange: false,
+      requiresPasswordChange: false
     });
     // Reset location mock
     mockLocation.href = '';
@@ -142,7 +139,7 @@ describe('useAuthStore', () => {
     await act(async () => {
       const response = await result.current.login({
         email: 'test@example.com',
-        password: 'password123',
+        password: 'password123'
       });
       expect(response.success).toBe(true);
     });
@@ -165,7 +162,7 @@ describe('useAuthStore', () => {
     await act(async () => {
       const response = await result.current.login({
         email: 'test@example.com',
-        password: 'wrong-password',
+        password: 'wrong-password'
       });
       expect(response.success).toBe(false);
       expect(response.error?.message).toBe('Invalid email or password');
@@ -180,7 +177,7 @@ describe('useAuthStore', () => {
     await act(async () => {
       const response = await result.current.login({
         email: 'test@example.com',
-        password: 'password123',
+        password: 'password123'
       });
       expect(response.success).toBe(false);
       expect(response.error?.message).toBe('An error occurred during login');
@@ -202,7 +199,7 @@ describe('useAuthStore', () => {
         password: 'password123',
         confirm_password: 'password123',
         full_name: 'Test User',
-        agree_to_terms: true,
+        agree_to_terms: true
       });
       expect(response.success).toBe(true);
     });
@@ -234,7 +231,7 @@ describe('useAuthStore', () => {
       user: mockUser,
       isAuthenticated: true,
       isLoading: false,
-      error: null,
+      error: null
     });
     mockAuthAPI.logout.mockResolvedValue({ success: true });
     mockCookieManager.clearAuthCookies.mockImplementation(() => {});
@@ -270,7 +267,7 @@ describe('useAuthStore', () => {
         token_type: 'Bearer',
         expires_in: 3600,
       },
-      isAuthenticated: true,
+      isAuthenticated: true
     });
     const { result } = renderHook(() => useAuthStore());
     await act(async () => {
@@ -282,7 +279,7 @@ describe('useAuthStore', () => {
   it('should handle failed token refresh', async () => {
     mockAuthAPI.refreshToken.mockResolvedValue({
       success: false,
-      error: { code: 'INVALID_TOKEN', message: 'Token expired' },
+      error: { code: 'INVALID_TOKEN', message: 'Token expired' }
     });
     mockCookieManager.getAuthTokens.mockReturnValue({ refresh_token: 'expired-refresh-token' });
     // Set initial state with tokens
@@ -293,7 +290,7 @@ describe('useAuthStore', () => {
         token_type: 'Bearer',
         expires_in: 3600,
       },
-      isAuthenticated: true,
+      isAuthenticated: true
     });
     const { result } = renderHook(() => useAuthStore());
     await act(async () => {
@@ -325,13 +322,13 @@ describe('useAuthStore', () => {
     mockCookieManager.hasAuthCookies.mockReturnValue(true);
     mockCookieManager.getAuthTokens.mockReturnValue({
       access_token: 'valid-token',
-      refresh_token: 'valid-refresh',
+      refresh_token: 'valid-refresh'
     });
     mockCookieManager.getCookie.mockReturnValue('valid-token');
     mockCookieManager.isTokenExpired.mockReturnValue(false);
     mockAuthAPI.getCurrentUser.mockResolvedValue({
       success: true,
-      data: mockUser,
+      data: mockUser
     });
     const { result } = renderHook(() => useAuthStore());
     await act(async () => {
@@ -345,7 +342,7 @@ describe('useAuthStore', () => {
   it('should handle forgot password', async () => {
     mockAuthAPI.requestPasswordReset.mockResolvedValue({
       success: true,
-      data: { message: 'Password reset email sent' },
+      data: { message: 'Password reset email sent' }
     });
     const { result } = renderHook(() => useAuthStore());
     await act(async () => {
@@ -357,7 +354,7 @@ describe('useAuthStore', () => {
   it('should handle reset password', async () => {
     mockAuthAPI.confirmPasswordReset.mockResolvedValue({
       success: true,
-      data: { message: 'Password reset successfully' },
+      data: { message: 'Password reset successfully' }
     });
     const { result } = renderHook(() => useAuthStore());
     await act(async () => {
@@ -369,7 +366,7 @@ describe('useAuthStore', () => {
   it('should handle email verification', async () => {
     mockAuthAPI.verifyEmail.mockResolvedValue({
       success: true,
-      data: { message: 'Email verified successfully' },
+      data: { message: 'Email verified successfully' }
     });
     const { result } = renderHook(() => useAuthStore());
     await act(async () => {
@@ -381,7 +378,7 @@ describe('useAuthStore', () => {
   it('should handle resend verification email', async () => {
     mockAuthAPI.resendVerification.mockResolvedValue({
       success: true,
-      data: { message: 'Verification email sent' },
+      data: { message: 'Verification email sent' }
     });
     const { result } = renderHook(() => useAuthStore());
     await act(async () => {
@@ -420,18 +417,18 @@ describe('useAuthStore', () => {
     };
     useAuthStore.setState({
       user: initialUser,
-      isAuthenticated: true,
+      isAuthenticated: true
     });
     const { result } = renderHook(() => useAuthStore());
     act(() => {
       result.current.updateUser({
         full_name: 'Updated User',
-        email: 'updated@example.com',
+        email: 'updated@example.com'
       });
     });
     expect(result.current.user).toMatchObject({
       full_name: 'Updated User',
-      email: 'updated@example.com',
+      email: 'updated@example.com'
     });
   });
   it('should handle concurrent requests', async () => {
@@ -475,3 +472,4 @@ describe('useAuthStore', () => {
     expect(mockAuthAPI.login).toHaveBeenCalledTimes(3);
   });
 });
+}}}

@@ -96,7 +96,7 @@ describe('Basic Form State', () => {
       act(() => {
         result.current.setValues({
           email: 'test@example.com',
-          name: 'John Doe',
+          name: 'John Doe'
         });
       });
       expect(result.current.values.email).toBe('test@example.com');
@@ -130,7 +130,7 @@ describe('Error Management', () => {
       act(() => {
         result.current.setErrors({
           email: 'Invalid email',
-          password: 'Weak password',
+          password: 'Weak password'
         });
       });
       act(() => {
@@ -364,7 +364,7 @@ describe('Field Props and State', () => {
         onChange: expect.any(Function),
         onBlur: expect.any(Function),
         error: 'Invalid email',
-        touched: true,
+        touched: true
       });
     });
     it('should provide field state information', async () => {
@@ -382,7 +382,7 @@ describe('Field Props and State', () => {
         value: 'modified@example.com',
         error: 'Invalid email',
         touched: true,
-        isDirty: true,
+        isDirty: true
       });
     });
   });

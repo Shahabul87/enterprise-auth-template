@@ -10,8 +10,6 @@ import {
   CheckboxField,
   MultiSelectField
 } from '@/components/forms/form-field';
-
-
 describe('Form Field Components', () => {
   describe('TextField', () => {
     const defaultProps = {

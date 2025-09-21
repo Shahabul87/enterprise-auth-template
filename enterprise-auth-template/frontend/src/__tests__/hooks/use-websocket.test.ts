@@ -161,7 +161,7 @@ describe('Reconnection Logic', () => {
         shouldReconnect: () => true,
         reconnectInterval: 1000,
         reconnectAttempts: 3
-// Orphaned closing removed
+}));
       act(() => {
         result.current.connect();
       });
@@ -191,7 +191,7 @@ describe('Reconnection Logic', () => {
         shouldReconnect: () => true,
         reconnectInterval: 1000,
         reconnectAttempts: 2
-// Orphaned closing removed
+}));
       act(() => {
         result.current.connect();
       });
@@ -384,7 +384,7 @@ describe('Cleanup', () => {
         shouldConnect: false,
         shouldReconnect: () => true,
         reconnectInterval: 1000
-// Orphaned closing removed
+}));
       act(() => {
         result.current.connect();
       });
@@ -458,3 +458,4 @@ describe('URL Changes', () => {
     });
   });
 });
+}}}}}}}}}}}}}}}}

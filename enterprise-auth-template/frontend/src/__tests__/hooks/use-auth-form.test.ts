@@ -67,7 +67,7 @@ describe('useAuthForm', () => {
     expect(result.current.error).toBeNull();
     expect(mockUseForm).toHaveBeenCalledWith({
       defaultValues,
-      mode: 'onBlur',
+      mode: 'onBlur'
     });
   });
   it('should handle form submission success', async () => {
@@ -184,7 +184,7 @@ describe('validationRules', () => {
       pattern: {
         value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         message: 'Please enter a valid email address',
-      },
+      }
     });
   });
   it('should have password validation rules', async () => {
@@ -197,7 +197,7 @@ describe('validationRules', () => {
       pattern: {
         value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/,
         message: 'Password must contain uppercase, lowercase, number, and special character',
-      },
+      }
     });
   });
   it('should have firstName validation rules', async () => {
@@ -214,7 +214,7 @@ describe('validationRules', () => {
       pattern: {
         value: /^[a-zA-Z\s]+$/,
         message: 'First name can only contain letters and spaces',
-      },
+      }
     });
   });
   it('should have confirmPassword validation function', async () => {
@@ -222,7 +222,7 @@ describe('validationRules', () => {
     
     expect(confirmPasswordRule).toEqual({
       required: 'Please confirm your password',
-      validate: expect.any(Function),
+      validate: expect.any(Function)
     });
     // Test the validate function
     const validateFn = confirmPasswordRule.validate as Function;

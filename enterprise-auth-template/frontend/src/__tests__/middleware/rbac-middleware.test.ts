@@ -15,7 +15,6 @@ jest.mock('next/server', () => ({
     })),
   },
   NextRequest: jest.fn(),
-// Orphaned closing removed
 /**
  * RBAC Middleware Tests
  * Comprehensive tests for role-based access control middleware
@@ -103,35 +102,35 @@ describe('RBAC Middleware', () => {
   describe('Role-Based Access', () => {
     it('should allow access for users with required role', async () => {
       const middleware = new RBACMiddleware({
-        requiredRoles: ['admin'],
+        requiredRoles: ['admin']
       });
       const adminUser = createMockUser({
-        roles: [createMockRole({ name: 'admin' })],
+        roles: [createMockRole({ name: 'admin' })]
       });
       expect(middleware.checkAccess(adminUser)).toBe(true);
     });
     it('should deny access for users without required role', async () => {
       const middleware = new RBACMiddleware({
-        requiredRoles: ['admin'],
+        requiredRoles: ['admin']
       });
       const regularUser = createMockUser({
-        roles: [createMockRole({ name: 'user' })],
+        roles: [createMockRole({ name: 'user' })]
       });
       expect(middleware.checkAccess(regularUser)).toBe(false);
     });
     it('should handle multiple required roles with requireAll=true', async () => {
       const middleware = new RBACMiddleware({
         requiredRoles: ['admin', 'moderator'],
-        requireAll: true,
+        requireAll: true
       });
       const userWithBothRoles = createMockUser({
         roles: [
           createMockRole({ name: 'admin' }),
           createMockRole({ name: 'moderator' }),
-        ],
+        ]
       });
       const userWithOneRole = createMockUser({
-        roles: [createMockRole({ name: 'admin' })],
+        roles: [createMockRole({ name: 'admin' })]
       });
       expect(middleware.checkAccess(userWithBothRoles)).toBe(true);
       expect(middleware.checkAccess(userWithOneRole)).toBe(false);
@@ -139,10 +138,10 @@ describe('RBAC Middleware', () => {
     it('should handle multiple required roles with requireAll=false', async () => {
       const middleware = new RBACMiddleware({
         requiredRoles: ['admin', 'moderator'],
-        requireAll: false,
+        requireAll: false
       });
       const userWithOneRole = createMockUser({
-        roles: [createMockRole({ name: 'admin' })],
+        roles: [createMockRole({ name: 'admin' })]
       });
       expect(middleware.checkAccess(userWithOneRole)).toBe(true);
     });
@@ -151,7 +150,7 @@ describe('RBAC Middleware', () => {
 describe('Permission-Based Access', () => {
     it('should allow access for users with required permission', async () => {
       const middleware = new RBACMiddleware({
-        requiredPermissions: ['users.create'],
+        requiredPermissions: ['users.create']
       });
       const userWithPermission = createMockUser({
         roles: [
@@ -160,13 +159,13 @@ describe('Permission-Based Access', () => {
               createMockPermission({ name: 'users.create' }),
             ],
           }),
-        ],
+        ]
       });
       expect(middleware.checkAccess(userWithPermission)).toBe(true);
     });
     it('should deny access for users without required permission', async () => {
       const middleware = new RBACMiddleware({
-        requiredPermissions: ['users.delete'],
+        requiredPermissions: ['users.delete']
       });
       const userWithoutPermission = createMockUser({
         roles: [
@@ -175,14 +174,14 @@ describe('Permission-Based Access', () => {
               createMockPermission({ name: 'users.read' }),
             ],
           }),
-        ],
+        ]
       });
       expect(middleware.checkAccess(userWithoutPermission)).toBe(false);
     });
     it('should handle nested permissions from multiple roles', async () => {
       const middleware = new RBACMiddleware({
         requiredPermissions: ['posts.create', 'posts.publish'],
-        requireAll: true,
+        requireAll: true
       });
       const userWithPermissionsAcrossRoles = createMockUser({
         roles: [
@@ -194,7 +193,7 @@ describe('Permission-Based Access', () => {
             name: 'editor',
             permissions: [createMockPermission({ name: 'posts.publish' })],
           }),
-        ],
+        ]
       });
       expect(middleware.checkAccess(userWithPermissionsAcrossRoles)).toBe(true);
     });
@@ -205,7 +204,7 @@ describe('Superuser Bypass', () => {
       const restrictiveMiddleware = new RBACMiddleware({
         requiredRoles: ['non-existent-role'],
         requiredPermissions: ['non-existent-permission'],
-        requireAll: true,
+        requireAll: true
       });
       const superuser = createMockUser({
         is_superuser: true,
@@ -219,10 +218,10 @@ describe('Combined Role and Permission Checks', () => {
     it('should require both role and permission when specified', async () => {
       const middleware = new RBACMiddleware({
         requiredRoles: ['admin'],
-        requiredPermissions: ['users.delete'],
+        requiredPermissions: ['users.delete']
       });
       const adminWithoutPermission = createMockUser({
-        roles: [createMockRole({ name: 'admin', permissions: [] })],
+        roles: [createMockRole({ name: 'admin', permissions: [] })]
       });
       const userWithPermissionNotAdmin = createMockUser({
         roles: [
@@ -230,7 +229,7 @@ describe('Combined Role and Permission Checks', () => {
             name: 'user',
             permissions: [createMockPermission({ name: 'users.delete' })],
           }),
-        ],
+        ]
       });
       const adminWithPermission = createMockUser({
         roles: [
@@ -238,7 +237,7 @@ describe('Combined Role and Permission Checks', () => {
             name: 'admin',
             permissions: [createMockPermission({ name: 'users.delete' })],
           }),
-        ],
+        ]
       });
       expect(middleware.checkAccess(adminWithoutPermission)).toBe(false);
       expect(middleware.checkAccess(userWithPermissionNotAdmin)).toBe(false);
@@ -249,17 +248,17 @@ describe('Combined Role and Permission Checks', () => {
 describe('Edge Cases', () => {
     it('should deny access for null user', async () => {
       const middleware = new RBACMiddleware({
-        requiredRoles: ['admin'],
+        requiredRoles: ['admin']
       });
       expect(middleware.checkAccess(null)).toBe(false);
     });
     it('should deny access for inactive users', async () => {
       const middleware = new RBACMiddleware({
-        requiredRoles: ['admin'],
+        requiredRoles: ['admin']
       });
       const inactiveAdmin = createMockUser({
         is_active: false,
-        roles: [createMockRole({ name: 'admin' })],
+        roles: [createMockRole({ name: 'admin' })]
       });
       // Note: Current implementation doesn't check is_active
       // This test documents expected behavior
@@ -267,10 +266,10 @@ describe('Edge Cases', () => {
     });
     it('should handle users with no roles', async () => {
       const middleware = new RBACMiddleware({
-        requiredRoles: ['admin'],
+        requiredRoles: ['admin']
       });
       const userWithNoRoles = createMockUser({
-        roles: [],
+        roles: []
       });
       expect(middleware.checkAccess(userWithNoRoles)).toBe(false);
     });
@@ -284,11 +283,11 @@ describe('Edge Cases', () => {
 describe('HTTP Response Handling', () => {
     it('should return 403 response for unauthorized access', async () => {
       const middleware = new RBACMiddleware({
-        requiredRoles: ['admin'],
+        requiredRoles: ['admin']
       });
       const request = new NextRequest('http://localhost/admin');
       const regularUser = createMockUser({
-        roles: [createMockRole({ name: 'user' })],
+        roles: [createMockRole({ name: 'user' })]
       });
       const response = await middleware.handle(request, regularUser);
       expect(response).not.toBeNull();
@@ -296,16 +295,16 @@ describe('HTTP Response Handling', () => {
       const body = await response?.json();
       expect(body).toEqual({
         error: 'Access denied',
-        code: 'INSUFFICIENT_PERMISSIONS',
+        code: 'INSUFFICIENT_PERMISSIONS'
       });
     });
     it('should return null for authorized access', async () => {
       const middleware = new RBACMiddleware({
-        requiredRoles: ['admin'],
+        requiredRoles: ['admin']
       });
       const request = new NextRequest('http://localhost/admin');
       const adminUser = createMockUser({
-        roles: [createMockRole({ name: 'admin' })],
+        roles: [createMockRole({ name: 'admin' })]
       });
       const response = await middleware.handle(request, adminUser);
       expect(response).toBeNull();
@@ -333,7 +332,7 @@ describe('Dynamic Permission Evaluation', () => {
               }),
             ],
           }),
-        ],
+        ]
       });
       expect(middleware.checkResourceAccess(user, 'document', 'edit')).toBe(true);
       expect(middleware.checkResourceAccess(user, 'document', 'delete')).toBe(false);
@@ -368,10 +367,10 @@ describe('Dynamic Permission Evaluation', () => {
         }
       }
       const middleware = new HierarchicalRBACMiddleware({
-        requiredRoles: ['moderator'],
+        requiredRoles: ['moderator']
       });
       const adminUser = createMockUser({
-        roles: [createMockRole({ name: 'admin' })],
+        roles: [createMockRole({ name: 'admin' })]
       });
       // Admin should have moderator access through hierarchy
       expect(middleware.checkAccess(adminUser)).toBe(true);
@@ -388,21 +387,21 @@ describe('Audit and Logging', () => {
             user: user?.email || 'anonymous',
             resource: 'protected-resource',
             granted,
-            timestamp: new Date(),
+            timestamp: new Date()
           });
           return granted;
         }
       }
       const middleware = new AuditedRBACMiddleware({
-        requiredRoles: ['admin'],
+        requiredRoles: ['admin']
       });
       const adminUser = createMockUser({
         email: 'admin@example.com',
-        roles: [createMockRole({ name: 'admin' })],
+        roles: [createMockRole({ name: 'admin' })]
       });
       const regularUser = createMockUser({
         email: 'user@example.com',
-        roles: [createMockRole({ name: 'user' })],
+        roles: [createMockRole({ name: 'user' })]
       });
       middleware.checkAccess(adminUser);
       middleware.checkAccess(regularUser);
@@ -414,3 +413,4 @@ describe('Audit and Logging', () => {
     });
   });
 });
+}}}}}}}}}}}}

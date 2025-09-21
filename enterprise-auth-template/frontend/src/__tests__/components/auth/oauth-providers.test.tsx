@@ -19,7 +19,6 @@ jest.mock('@/components/icons', () => ({
       <div data-testid="discord-icon" className={className}>Discord</div>
     ),
   },
-// Orphaned closing removed
 /**
  * Comprehensive test suite for OAuthProviders component
  * Tests OAuth provider integration, error handling, and UI interactions
@@ -37,7 +36,7 @@ const mockLocation = {
 };
 Object.defineProperty(window, 'location', {
   value: mockLocation,
-  writable: true,
+  writable: true
 });
 // Mock sessionStorage
 const mockSessionStorage = {
@@ -48,7 +47,7 @@ const mockSessionStorage = {
 };
 Object.defineProperty(window, 'sessionStorage', {
   value: mockSessionStorage,
-  writable: true,
+  writable: true
 });
 
 describe('OAuthProviders Component', () => {
@@ -89,7 +88,7 @@ describe('OAuth Login Flow', () => {
       const mockAuthUrl = 'https://accounts.google.com/oauth/authorize?client_id=123';
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ authorization_url: mockAuthUrl }),
+        json: async () => ({ authorization_url: mockAuthUrl })
       });
       render(<OAuthProviders />);
       const googleButton = screen.getByText('Continue with Google');
@@ -101,7 +100,7 @@ describe('OAuth Login Flow', () => {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-            },
+            }
           }
         );
       });
@@ -113,7 +112,7 @@ describe('OAuth Login Flow', () => {
       const mockAuthUrl = 'https://github.com/login/oauth/authorize?client_id=456';
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ authorization_url: mockAuthUrl }),
+        json: async () => ({ authorization_url: mockAuthUrl })
       });
       render(<OAuthProviders />);
       const githubButton = screen.getByText('Continue with GitHub');
@@ -131,7 +130,7 @@ describe('OAuth Login Flow', () => {
       const mockAuthUrl = 'https://discord.com/oauth/authorize?client_id=789';
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ authorization_url: mockAuthUrl }),
+        json: async () => ({ authorization_url: mockAuthUrl })
       });
       render(<OAuthProviders />);
       const discordButton = screen.getByText('Continue with Discord');
@@ -151,7 +150,7 @@ describe('OAuth Login Flow', () => {
       const mockAuthUrl = 'https://accounts.google.com/oauth/authorize';
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ authorization_url: mockAuthUrl }),
+        json: async () => ({ authorization_url: mockAuthUrl })
       });
       render(<OAuthProviders />);
       const googleButton = screen.getByText('Continue with Google');
@@ -168,7 +167,7 @@ describe('OAuth Login Flow', () => {
       process.env['NEXT_PUBLIC_API_URL'] = 'https://api.example.com';
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ authorization_url: 'https://oauth.example.com' }),
+        json: async () => ({ authorization_url: 'https://oauth.example.com' })
       });
       render(<OAuthProviders />);
       const googleButton = screen.getByText('Continue with Google');
@@ -232,7 +231,7 @@ describe('Error Handling', () => {
     it('should display error when OAuth initialization fails', async () => {
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: false,
-        status: 500,
+        status: 500
       });
       render(<OAuthProviders />);
       const googleButton = screen.getByText('Continue with Google');
@@ -285,7 +284,7 @@ describe('Error Handling', () => {
       // Second request succeeds
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ authorization_url: 'https://github.com/oauth' }),
+        json: async () => ({ authorization_url: 'https://github.com/oauth' })
       });
       const githubButton = screen.getByText('Continue with GitHub');
       act(() => { fireEvent.click(githubButton) });
@@ -321,7 +320,7 @@ describe('Security Considerations', () => {
         json: async () => ({
           authorization_url: mockAuthUrl,
           state: 'abc123' // Server might return state, but we shouldn't store it
-        }),
+        })
       });
       render(<OAuthProviders />);
       const googleButton = screen.getByText('Continue with Google');
@@ -355,7 +354,7 @@ describe('Callback Prop', () => {
       const mockAuthUrl = 'https://accounts.google.com/oauth/authorize';
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ authorization_url: mockAuthUrl }),
+        json: async () => ({ authorization_url: mockAuthUrl })
       });
       render(<OAuthProviders onSuccess={onSuccess} />);
       const googleButton = screen.getByText('Continue with Google');
@@ -394,3 +393,4 @@ describe('Accessibility', () => {
     });
   });
 });
+}}}}}}}}}}}}}}}}}

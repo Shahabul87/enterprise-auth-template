@@ -6,9 +6,8 @@ import type {
   RequestOptions,
   QueryParams,
   PaginatedResponse,
-  User,
+  User
 } from '@/types';
-
 jest.mock('@/stores/auth.store', () => ({
   useAuthStore: {
     getState: jest.fn(),
@@ -124,7 +123,7 @@ describe('ApiClient', () => {
       code: 'NETWORK_ERROR',
       message: 'Network error occurred',
       userMessage: 'Unable to connect to server',
-      details: {},
+      details: {}
     });
     apiClient = new ApiClient(defaultConfig);
   });
@@ -343,7 +342,7 @@ describe('Response Handling', () => {
       const result = await apiClient.get<User>('/users/me');
       expect(result).toEqual({
         success: true,
-        data: mockUser,
+        data: mockUser
       });
     });
     it('handles successful non-JSON response', async () => {
@@ -351,14 +350,14 @@ describe('Response Handling', () => {
       mockResponse.text.mockResolvedValue('Success');
       const result = await apiClient.get<string>('/health');
       expect(result).toEqual({
-        success: true,
+        success: true
       });
     });
     it('handles error response with FastAPI detail format', async () => {
       mockResponse.ok = false;
       mockResponse.status = 400;
       mockResponse.json.mockResolvedValue({
-        detail: 'Validation error occurred',
+        detail: 'Validation error occurred'
       });
       const result = await apiClient.get<User>('/users/invalid');
       expect(result).toEqual({
@@ -366,7 +365,7 @@ describe('Response Handling', () => {
         error: {
           code: 'HTTP_400',
           message: 'Validation error occurred',
-        },
+        }
       });
     });
     it('handles error response without detail field', async () => {
@@ -374,7 +373,7 @@ describe('Response Handling', () => {
       mockResponse.status = 500;
       mockResponse.json.mockResolvedValue({
         error: 'Internal server error',
-        trace: 'error trace',
+        trace: 'error trace'
       });
       const result = await apiClient.get<User>('/users/me');
       expect(result).toEqual({
@@ -386,7 +385,7 @@ describe('Response Handling', () => {
             error: 'Internal server error',
             trace: 'error trace',
           },
-        },
+        }
       });
     });
     it('handles non-JSON error response', async () => {
@@ -400,7 +399,7 @@ describe('Response Handling', () => {
         error: {
           code: 'INVALID_RESPONSE',
           message: 'Not Found',
-        },
+        }
       });
     });
   });
@@ -417,14 +416,14 @@ describe('Error Handling', () => {
           code: 'NETWORK_ERROR',
           message: 'Unable to connect to server',
           details: {},
-        },
+        }
       });
     });
     it('handles 401 unauthorized and clears auth', async () => {
       mockResponse.ok = false;
       mockResponse.status = 401;
       mockResponse.json.mockResolvedValue({
-        detail: 'Unauthorized',
+        detail: 'Unauthorized'
       });
       const result = await apiClient.get<User>('/users/me');
       expect(mockAuthStore.clearAuth).toHaveBeenCalled();
@@ -433,7 +432,7 @@ describe('Error Handling', () => {
         error: {
           code: 'HTTP_401',
           message: 'Unauthorized',
-        },
+        }
       });
     });
     it('handles timeout errors', async () => {
@@ -487,7 +486,7 @@ describe('Specialized Methods', () => {
       it('makes paginated GET request', async () => {
         mockResponse.json.mockResolvedValue({
           success: true,
-          data: mockPaginatedResponse,
+          data: mockPaginatedResponse
         });
         const params = { page: 2, size: 10, search: 'test' };
         const result = await apiClient.getPaginated<User>('/users', params);
@@ -499,7 +498,7 @@ describe('Specialized Methods', () => {
         );
         expect(result).toEqual({
           success: true,
-          data: mockPaginatedResponse,
+          data: mockPaginatedResponse
         });
       });
     });
@@ -515,7 +514,7 @@ describe('upload', () => {
         };
         mockResponse.json.mockResolvedValue({
           success: true,
-          data: uploadResponse,
+          data: uploadResponse
         });
         const result = await apiClient.upload<{ url: string; filename: string; size: number }>(
           '/upload',
@@ -533,7 +532,7 @@ describe('upload', () => {
         );
         expect(result).toEqual({
           success: true,
-          data: uploadResponse,
+          data: uploadResponse
         });
       });
     });
@@ -551,7 +550,7 @@ describe('Configuration Management', () => {
     });
     it('updates base URL and removes trailing slash', async () => {
       apiClient.updateConfig({
-        baseURL: 'https://newapi.example.com/',
+        baseURL: 'https://newapi.example.com/'
       });
       expect(apiClient).toBeInstanceOf(ApiClient);
     });
@@ -603,7 +602,7 @@ describe('Edge Cases', () => {
       const result = await apiClient.get<User>('/users/me');
       expect(result).toEqual({
         success: true,
-        data: {},
+        data: {}
       });
     });
     it('handles null response data', async () => {

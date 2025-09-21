@@ -21,3 +21,4 @@ describe('LoginForm', () => {
       expect(screen.getByText('Login Form')).toBeInTheDocument();
     });
   });
+}

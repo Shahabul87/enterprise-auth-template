@@ -1,8 +1,6 @@
 
 import { TokenPair } from '@/types';
 import { TestJWTPayload } from '../types/test-interfaces';
-
-
 /**
  * Comprehensive test suite for Cookie Manager utilities
  * Tests all cookie management functions with proper TypeScript typing
@@ -27,10 +25,8 @@ import {
   parseJwtPayload,
   isTokenExpired,
   getTokenExpiration,
-  AUTH_COOKIES,
+  AUTH_COOKIES
 } from '@/lib/cookie-manager';
-
-
 // Mock document.cookie for testing with realistic behavior
 let mockCookieStore: string = '';
 
@@ -64,7 +60,7 @@ Object.defineProperty(document, 'cookie', {
         mockCookieStore = nameValue;
       }
     }
-  },
+  }
 });
 
 // Mock window.location for protocol checks
@@ -72,7 +68,7 @@ Object.defineProperty(window, 'location', {
   writable: true,
   value: {
     protocol: 'https:',
-  },
+  }
 });
 
 // Helper function to create valid JWT token for testing
@@ -95,7 +91,7 @@ describe('Cookie Manager', () => {
     // Reset location to https for most tests
     Object.defineProperty(window, 'location', {
       writable: true,
-      value: { protocol: 'https:' },
+      value: { protocol: 'https:' }
     });
   });
 
@@ -243,7 +239,7 @@ describe('setCookie', () => {
       // Test HTTP environment
       Object.defineProperty(window, 'location', {
         writable: true,
-        value: { protocol: 'http:' },
+        value: { protocol: 'http:' }
       });
 
       setCookie('httpCookie', 'httpValue');
@@ -252,7 +248,7 @@ describe('setCookie', () => {
       // Test HTTPS environment
       Object.defineProperty(window, 'location', {
         writable: true,
-        value: { protocol: 'https:' },
+        value: { protocol: 'https:' }
       });
 
       setCookie('httpsCookie', 'httpsValue');

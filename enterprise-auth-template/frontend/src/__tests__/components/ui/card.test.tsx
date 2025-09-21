@@ -13,9 +13,8 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from '@/components/ui/card';
-
 describe('Card Component', () => {
   describe('Card Container', () => {
     it('should render card container', () => {
