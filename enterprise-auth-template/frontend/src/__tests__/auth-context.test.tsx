@@ -32,7 +32,7 @@ import { AuthProvider } from '@/contexts/auth-context';
 import * as cookieManager from '@/lib/cookie-manager';
 
 describe('AuthContext', () => {
-  // Test data
+  // Test data});
   const mockUser: User = {
     id: 'test-user-id',
     email: 'test@example.com',

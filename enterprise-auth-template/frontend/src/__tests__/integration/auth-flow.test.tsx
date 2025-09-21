@@ -253,7 +253,7 @@ jest.mock('@/components/auth/two-factor-verify', () => ({
 const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <div data-testid="test-wrapper">{children}</div>;
 };
-describe('Auth Flow Integration Tests', () => {
+describe('Auth Flow Integration Tests', () => {});
   const mockRouter = {
     push: jest.fn(),
     replace: jest.fn(),

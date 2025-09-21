@@ -23,6 +23,8 @@ jest.mock('@/components/ui/tabs', () => ({
     <button data-testid="tabs-trigger" {...props}>{children}</button>,
   TabsContent: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <div data-testid="tabs-content" {...props}>{children}</div>,
+}));
+
 jest.mock('@/components/ui/popover', () => ({
   Popover: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <div data-testid="popover" {...props}>{children}</div>,
@@ -30,6 +32,8 @@ jest.mock('@/components/ui/popover', () => ({
     <button data-testid="popover-trigger" {...props}>{children}</button>,
   PopoverContent: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <div data-testid="popover-content" {...props}>{children}</div>,
+}));
+
 jest.mock('@/components/ui/progress', () => ({
   Progress: ({ value = 0, ...props }: { value?: number } & Record<string, unknown>) =>
     <div
@@ -42,6 +46,8 @@ jest.mock('@/components/ui/progress', () => ({
     >
       <div style={{ width: `${value}%` }} />
     </div>,
+}));
+
 jest.mock('@/components/ui/sheet', () => ({
   Sheet: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <div data-testid="sheet" {...props}>{children}</div>,
@@ -55,6 +61,8 @@ jest.mock('@/components/ui/sheet', () => ({
     <h2 data-testid="sheet-title" {...props}>{children}</h2>,
   SheetDescription: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <p data-testid="sheet-description" {...props}>{children}</p>,
+}));
+
 jest.mock('@/components/ui/calendar', () => ({
   Calendar: ({
     selected,
@@ -69,6 +77,8 @@ jest.mock('@/components/ui/calendar', () => ({
       {selected && <span>Selected: {selected.toISOString()}</span>}
     </div>
   ),
+}));
+
 jest.mock('@/components/ui/avatar', () => ({
   Avatar: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <div data-testid="avatar" {...props}>{children}</div>,
@@ -76,6 +86,8 @@ jest.mock('@/components/ui/avatar', () => ({
     <img data-testid="avatar-image" src={src} alt={alt} {...props} />,
   AvatarFallback: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <span data-testid="avatar-fallback" {...props}>{children}</span>,
+}));
+
 jest.mock('@/components/ui/table', () => ({
   Table: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <table data-testid="table" {...props}>{children}</table>,
@@ -89,6 +101,7 @@ jest.mock('@/components/ui/table', () => ({
     <th data-testid="table-head" {...props}>{children}</th>,
   TableCell: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
     <td data-testid="table-cell" {...props}>{children}</td>,
+}));
 /**
  * Batch Test File for Remaining Components
  * This file contains tests for multiple components to ensure comprehensive coverage
@@ -99,7 +112,7 @@ jest.mock('@/components/ui/table', () => ({
 // Import components that need testing
 
 
-describe('Batch Component Tests', () => {
+describe('Batch Component Tests', () => {});
   describe('Tabs Component', () => {
     it('should render tabs container', async () => {
       render(
@@ -381,4 +394,3 @@ describe('Additional Coverage Tests', () => {
     });
   });
 });
-}}}}}}}}}}}

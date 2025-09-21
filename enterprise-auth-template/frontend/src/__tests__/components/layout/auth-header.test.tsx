@@ -22,7 +22,7 @@ jest.mock('next/link', () => {
   return ({ children, href }: { children: React.ReactNode; href: string }) => {
     return <a href={href}>{children}</a>;
   };
-
+});
 /**
  * AuthHeader Component Tests
  * Tests the authenticated header component with proper TypeScript types

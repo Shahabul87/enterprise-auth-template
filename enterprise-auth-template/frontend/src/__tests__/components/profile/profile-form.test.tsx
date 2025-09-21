@@ -24,8 +24,8 @@ jest.mock('@/stores/auth.store', () => ({
     verifyEmail: jest.fn().mockResolvedValue({ success: true }),
     resendVerification: jest.fn().mockResolvedValue({ success: true }),
     initialize: jest.fn().mockResolvedValue(undefined),
-  }))}));,
-})));
+  }),
+}));
 jest.mock('@/hooks/use-auth-form', () => ({
   useAuthForm: jest.fn(),
   validationRules: {
@@ -33,7 +33,7 @@ jest.mock('@/hooks/use-auth-form', () => ({
     lastName: { required: 'Last name is required' },
     email: { required: 'Email is required', pattern: /\S+@\S+\.\S+/ },
   },
-  isFormValid: jest.fn(),
+  isFormValid: jest.fn(),}));
 jest.mock('@/lib/auth-api', () => ({
   __esModule: true,
   default: {
@@ -49,7 +49,7 @@ jest.mock('@/lib/auth-api', () => ({
     setup2FA: jest.fn(),
     verify2FA: jest.fn(),
     disable2FA: jest.fn(),
-  },
+  },}));
 jest.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, disabled, variant, type, className, ...props }: ButtonProps) => (
     <button
@@ -62,11 +62,11 @@ jest.mock('@/components/ui/button', () => ({
     >
       {children}
     </button>
-  ),
+  ),}));
 jest.mock('@/components/ui/input', () => ({
   Input: React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(function Input({ ...props }, ref) {
     return <input ref={ref} {...props} />;
-  }),
+  }),}));
 jest.mock('@/components/ui/alert', () => ({
   Alert: ({ children, variant, ...props }: AlertProps) => (
     <div data-testid='alert' data-variant={variant} {...props}>
@@ -77,7 +77,7 @@ jest.mock('@/components/ui/alert', () => ({
     <div data-testid='alert-description' {...props}>
       {children}
     </div>
-  ),
+  ),}));
 jest.mock('@/components/ui/card', () => ({
   Card: ({ children, ...props }: CardProps) => (
     <div data-testid='card' {...props}>
@@ -103,7 +103,7 @@ jest.mock('@/components/ui/card', () => ({
     <h2 data-testid='card-title' className={className} {...props}>
       {children}
     </h2>
-  ),
+  ),}));
 jest.mock('@/components/ui/form', () => ({
   Form: ({ children, ...props }: FormProps) => <form {...props}>{children}</form>,
   FormControl: ({ children, ...props }: FormControlProps) => <div {...props}>{children}</div>,
@@ -121,10 +121,10 @@ jest.mock('@/components/ui/form', () => ({
       onBlur: jest.fn(),
     };
     return render({ field });
-  },
+  },}));
 jest.mock('lucide-react', () => ({
   Loader2: ({ className }: IconProps) => <div data-testid='loader-icon' className={className} />,
-  User: ({ className }: IconProps) => <div data-testid='user-icon' className={className} />,
+  User: ({ className }: IconProps) => <div data-testid='user-icon' className={className} />,}));
 // Mock auth store
 const mockLogin = jest.fn();
 const mockRegister = jest.fn();

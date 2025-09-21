@@ -26,7 +26,7 @@ describe('UserStore - Basic Tests', () => {
       result.current.clearUserData();
     });
   });
-
+});
 describe('Initial State', () => {
     it('should have correct initial state', () => {
       const { result } = renderHook(() => useUserStore());

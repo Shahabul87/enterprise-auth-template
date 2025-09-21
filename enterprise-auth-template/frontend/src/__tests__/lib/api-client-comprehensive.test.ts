@@ -127,7 +127,7 @@ describe('ApiClient', () => {
     });
     apiClient = new ApiClient(defaultConfig);
   });
-
+});
 describe('Constructor', () => {
     it('initializes with correct configuration', async () => {
       const config: ApiConfig = {

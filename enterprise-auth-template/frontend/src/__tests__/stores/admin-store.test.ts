@@ -8,6 +8,8 @@ jest.mock('@/lib/api-client', () => ({
     put: jest.fn(),
     delete: jest.fn(),
   },
+}));
+
 jest.mock('@/lib/admin-api', () => ({
   adminAPI: {
     getStats: jest.fn(),
@@ -20,7 +22,7 @@ jest.mock('@/lib/admin-api', () => ({
     getPermissions: jest.fn(),
     getAuditLogs: jest.fn(),
     getSystemHealth: jest.fn(),
-  },
+  },}));
 /**
  * @jest-environment jsdom
  */

@@ -63,8 +63,8 @@ jest.mock('@/stores/auth.store', () => ({
     hasRole: jest.fn(() => false),
   useGuestOnly: jest.fn(() => ({
     isLoading: false,
-  }))}}))));,
-}}));
+  })),
+}}));));
 jest.mock('@/lib/error-handler', () => ({
   ErrorCategory: {
     AUTHENTICATION: 'authentication',
@@ -76,7 +76,7 @@ jest.mock('@/lib/error-handler', () => ({
   },
   ErrorHandler: {
     handle: jest.fn(),
-  },
+  },}));
 /**
  * @jest-environment jsdom
  */

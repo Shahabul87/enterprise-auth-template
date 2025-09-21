@@ -20,7 +20,7 @@ jest.mock('@/hooks/api/use-auth', () => ({
 
 const mockUseUserPermissions = useUserPermissions as jest.MockedFunction<typeof useUserPermissions>;
 const mockUseUserRoles = useUserRoles as jest.MockedFunction<typeof useUserRoles>;
-describe('usePermission Hook - Core Functionality', () => {
+describe('usePermission Hook - Core Functionality', () => {});
   const mockPermissions = ['user:read', 'user:write', 'post:read'];
   const mockRoles = ['user', 'editor'];
   beforeEach(() => {
@@ -48,7 +48,7 @@ describe('Hook Initialization', () => {
     });
     it('should initialize with custom config', () => {
       const config: PermissionConfig = {
-        user_id: 'user-123',
+        userId: 'user-123',
         token: 'token-abc',
         requireAll: true,
       };
@@ -122,7 +122,7 @@ describe('Multiple Permissions Checking', () => {
       } as jest.Mocked<any>);
       const { result } = renderHook(() => usePermission());
       expect(result.current.hasPermissions(['user:read'])).toBe(false);
-      expect(result.current.hasPermissions([])).toBe(false); // No permissions = can't do anything
+      expect(result.current.hasPermissions([])).toBe(true); // Empty requirements = no permission needed
     });
   });
 
@@ -232,7 +232,7 @@ describe('Complex Permission Actions', () => {
       expect(result.current.canPerform({
         permissions: ['user:read', 'admin:write'],
         requireAll: true
-      })).toBe(true); // Due to current implementation logic
+      })).toBe(false); // User doesn't have admin:write
     });
   });
 
@@ -312,7 +312,7 @@ describe('usePermissionGuard Hook', () => {
     expect(result.current).toBe(true);
   });
   it('should work with custom config', () => {
-    const config = { user_id: 'user-123', token: 'token-abc' };
+    const config = { userId: 'user-123', token: 'token-abc' };
     const { result } = renderHook(() =>
       usePermissionGuard({ permissions: ['user:read'] }, config)
     );

@@ -15,17 +15,17 @@ jest.mock('@/components/ui/button', () => ({
       </button>
     );
   },
-
+}));
 jest.mock('@/components/ui/separator', () => ({
   Separator: ({ className, orientation, ...props }: any) => (
     <hr className={className} {...props} />
-  ),
+  ),}));
 jest.mock('@/components/ui/badge', () => ({
   Badge: ({ children, className, variant, ...props }: any) => (
     <span className={className} {...props}>
       {children}
     </span>
-  ),
+  ),}));
 jest.mock('next/link', () => {
   return ({ children, href, ...props }: any) => (
     <a href={href} {...props}>
@@ -41,7 +41,7 @@ jest.mock('lucide-react', () => ({
   Heart: () => <div data-testid="heart-icon" />,
   ExternalLink: () => <div data-testid="external-link-icon" />,
   Shield: () => <div data-testid="shield-icon" />,
-  Zap: () => <div data-testid="zap-icon" />,
+  Zap: () => <div data-testid="zap-icon" />,}));
 /**
  * Footer Component Tests
  * Tests the footer component with proper TypeScript types

@@ -12,9 +12,7 @@ jest.mock('@/components/ui/use-toast');
 jest.mock('date-fns', () => ({
   formatDistanceToNow: jest.fn(() => '5 minutes'),
   format: jest.fn(() => 'Jan 1, 2024, 12:00 PM'),
-jest.mock('date-fns', () => ({
-  formatDistanceToNow: jest.fn(() => '5 minutes'),
-  format: jest.fn(() => 'Jan 1, 2024, 12:00 PM'),
+}));
 // Mock dependencies
 // Mock fetch globally
 global.fetch = jest.fn() as jest.MockedFunction<typeof fetch>;
@@ -34,7 +32,7 @@ Object.defineProperty(navigator, 'clipboard', {
   writable: true
 });
 
-describe('WebhookManagement', () => {
+describe('WebhookManagement', () => {});
   const mockToast = jest.fn();
   const mockWebhooks = [
     {

@@ -42,7 +42,7 @@ describe('UserStore', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
+});
 describe('Initial State', () => {
     it('should have correct initial state', async () => {
       const { result } = renderHook(() => useUserStore());

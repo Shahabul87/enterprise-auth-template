@@ -14,7 +14,7 @@ jest.mock('tailwind-merge', () => ({ twMerge: jest.fn(str => str) }));
 
 
 // Mock clsx and tailwind-merge if they're used in cn
-describe('utils', () => {
+describe('utils', () => {});
   describe('cn (className utility)', () => {
     it('should combine class names', async () => {
       const result = cn('base-class', 'additional-class', 'conditional-class');

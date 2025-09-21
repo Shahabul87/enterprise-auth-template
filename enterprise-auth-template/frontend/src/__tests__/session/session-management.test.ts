@@ -71,8 +71,8 @@ jest.mock('@/stores/auth.store', () => ({
     hasRole: jest.fn(() => false),
   useGuestOnly: jest.fn(() => ({
     isLoading: false,
-  }))}}))));,
-})),
+  })),
+})),}));
 // Mock auth store
 // Mock session manager
 /**

@@ -244,7 +244,7 @@ describe('RegisterPage', () => {
       expect(orb).toHaveClass('rounded-full');
     });
   });
-
+});
 describe('Loading State', () => {
     it('should center the loading spinner', async () => {
       mockUseGuestOnly.mockReturnValue(createMockAuthState({
@@ -331,4 +331,3 @@ describe('Grid Pattern Overlay', () => {
       expect(gridOverlay).toBeInTheDocument();
     });
   });
-});

@@ -82,6 +82,8 @@ jest.mock('@/components/admin/users/user-create-dialog', () => {
       </div>
     ) : null;
   };
+});
+
 jest.mock('@/components/admin/users/user-edit-dialog', () => {
   return function MockUserEditDialog({ user, open, onClose, onSuccess }: { user?: { id: string }; open: boolean; onClose: () => void; onSuccess: () => void }) {
     return open ? (
@@ -92,6 +94,8 @@ jest.mock('@/components/admin/users/user-edit-dialog', () => {
       </div>
     ) : null;
   };
+});
+
 jest.mock('@/components/admin/users/user-delete-dialog', () => {
   return function MockUserDeleteDialog({ user, open, onClose, onSuccess }: { user?: { id: string }; open: boolean; onClose: () => void; onSuccess: () => void }) {
     return open ? (
@@ -102,6 +106,8 @@ jest.mock('@/components/admin/users/user-delete-dialog', () => {
       </div>
     ) : null;
   };
+});
+
 jest.mock('@/components/admin/users/user-role-dialog', () => {
   return function MockUserRoleDialog({ user, open, onClose, onSuccess }: { user?: { id: string }; open: boolean; onClose: () => void; onSuccess: () => void }) {
     return open ? (
@@ -112,6 +118,8 @@ jest.mock('@/components/admin/users/user-role-dialog', () => {
       </div>
     ) : null;
   };
+});
+
 jest.mock('@/components/ui/table', () => ({
   Table: ({ children, ...props }: React.PropsWithChildren<{ [key: string]: unknown }>) => <table {...props}>{children}</table>,
   TableBody: ({ children, ...props }: React.PropsWithChildren<{ [key: string]: unknown }>) => <tbody {...props}>{children}</tbody>,
@@ -127,6 +135,8 @@ jest.mock('@/components/ui/table', () => ({
   ),
   TableHeader: ({ children, ...props }: React.PropsWithChildren<{ [key: string]: unknown }>) => <thead {...props}>{children}</thead>,
   TableRow: ({ children, ...props }: React.PropsWithChildren<{ [key: string]: unknown }>) => <tr {...props}>{children}</tr>,
+}));
+
 jest.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, disabled, variant, size, className, ...props }: React.PropsWithChildren<{ onClick?: () => void; disabled?: boolean; variant?: string; size?: string; className?: string; [key: string]: unknown }>) => (
     <button
@@ -140,6 +150,8 @@ jest.mock('@/components/ui/button', () => ({
       {children}
     </button>
   ),
+}));
+
 jest.mock('@/components/ui/input', () => ({
   Input: ({ placeholder, value, onChange, className, ...props }: { placeholder?: string; value?: string; onChange?: React.ChangeEventHandler<HTMLInputElement>; className?: string; [key: string]: unknown }) => (
     <input
@@ -150,12 +162,16 @@ jest.mock('@/components/ui/input', () => ({
       {...props}
     />
   ),
+}));
+
 jest.mock('@/components/ui/badge', () => ({
   Badge: ({ children, variant, ...props }: React.PropsWithChildren<{ variant?: string; [key: string]: unknown }>) => (
     <span data-testid='badge' data-variant={variant} {...props}>
       {children}
     </span>
   ),
+}));
+
 jest.mock('@/components/ui/checkbox', () => ({
   Checkbox: ({ checked, onCheckedChange, disabled, ...props }: { checked?: boolean; onCheckedChange?: (checked: boolean) => void; disabled?: boolean; [key: string]: unknown }) => (
     <input
@@ -166,6 +182,8 @@ jest.mock('@/components/ui/checkbox', () => ({
       {...props}
     />
   ),
+}));
+
 jest.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenu: ({ children }: DropdownMenuProps) => <div data-testid='dropdown-menu'>{children}</div>,
   DropdownMenuContent: ({ children, align }: DropdownMenuContentProps) => (
@@ -183,6 +201,8 @@ jest.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenuTrigger: ({ children }: React.PropsWithChildren<{ asChild?: boolean }>) => (
     <div data-testid='dropdown-trigger'>{children}</div>
   ),
+}));
+
 jest.mock('@/components/ui/select', () => ({
   Select: ({ children, value, onValueChange }: SelectProps) => (
     <div data-testid='select' data-value={value}>
@@ -207,7 +227,7 @@ jest.mock('@/components/ui/select', () => ({
   ),
   SelectValue: ({ placeholder }: SelectValueProps) => (
     <span data-testid='select-value' data-placeholder={placeholder} />
-  ),
+  ),}));
 jest.mock('@/components/ui/card', () => ({
   Card: ({ children, ...props }: CardProps) => (
     <div data-testid='card' {...props}>
@@ -233,7 +253,7 @@ jest.mock('@/components/ui/card', () => ({
     <h2 data-testid='card-title' {...props}>
       {children}
     </h2>
-  ),
+  ),}));
 jest.mock('@/components/ui/alert', () => ({
   Alert: ({ children, variant, className, ...props }: AlertProps) => (
     <div data-testid='alert' data-variant={variant} className={className} {...props}>
@@ -244,7 +264,7 @@ jest.mock('@/components/ui/alert', () => ({
     <div data-testid='alert-description' {...props}>
       {children}
     </div>
-  ),
+  ),}));
 jest.mock('lucide-react', () => ({
   Search: ({ className }: { className?: string }) => <div data-testid='search-icon' className={className} />,
   MoreHorizontal: ({ className }: { className?: string }) => (
@@ -267,7 +287,7 @@ jest.mock('lucide-react', () => ({
     <div data-testid='alert-circle-icon' className={className} />
   ),
   Plus: ({ className }: { className?: string }) => <div data-testid='plus-icon' className={className} />,
-  RefreshCw: ({ className }: { className?: string }) => <div data-testid='refresh-icon' className={className} />,
+  RefreshCw: ({ className }: { className?: string }) => <div data-testid='refresh-icon' className={className} />,}));
 const mockUseAuth = jest.mocked(useAuth);
 const mockAdminAPI = jest.mocked(AdminAPI);
 const mockGetUsers = mockAdminAPI.getUsers;
@@ -338,10 +358,6 @@ const mockHasPermission = jest.fn((permission: string) => {
 // Mock auth store with controllable permissions
 // Mock AdminAPI with proper static method mocking
 // Mock dialog components
-});
-});
-});
-});
 // Mock UI components
 // Mock data
 const mockUsers = [
@@ -810,6 +826,5 @@ describe('UserTable', () => {
     // Dialog should close and users should reload
     expect(screen.queryByTestId('user-create-dialog')).not.toBeInTheDocument();
     expect(mockGetUsers).toHaveBeenCalled();
-  }); });
+  });
 });
-}}}}}}}}}}}}}

@@ -158,6 +158,8 @@ const mockSetUser = jest.fn();
 /**
  * @jest-environment jsdom
  */
+
+import type {
   ButtonProps,
   InputProps,
   AlertProps,
@@ -168,7 +170,7 @@ const mockSetUser = jest.fn();
   CardHeaderProps,
   CardTitleProps,
   FormFieldProps
-} from '../../types/test-interfaces';
+} from '@/types/test-interfaces';
 // Specific password input props
 interface PasswordInputProps {
   placeholder?: string;
@@ -179,17 +181,23 @@ interface PasswordInputProps {
   required?: boolean;
   name?: string;
   id?: string;
+}
+
 interface FormProps {
   children: React.ReactNode;
   [key: string]: unknown;
+}
+
 interface FormControlProps {
   children: React.ReactNode;
   [key: string]: unknown;
+}
+
 // Form component props
-interface FormProps {
+interface FormPropsSecond {
   children: React.ReactNode;
   className?: string;
-  onSubmit?: React.FormEventHandler<HTMLFormElement>;
+  onSubmit?: React.FormEventHandler<HTMLFormElement>;};
 interface FormControlProps {
   children: React.ReactNode;
   className?: string;

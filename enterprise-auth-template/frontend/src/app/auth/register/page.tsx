@@ -11,7 +11,13 @@ export default function RegisterPage(): React.ReactElement {
       <div className='relative min-h-screen flex items-center justify-center'>
         <div className='absolute inset-0 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800'></div>
         <div className='relative'>
-          <div className='animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent'></div>
+          <div
+            className='animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent'
+            role='status'
+            aria-label='Loading'
+          >
+            <span className='sr-only'>Loading...</span>
+          </div>
         </div>
       </div>
     );

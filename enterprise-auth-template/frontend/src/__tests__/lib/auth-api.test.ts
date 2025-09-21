@@ -46,7 +46,7 @@ describe('AuthAPI', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
+});
 describe('User Registration', () => {
     const mockRegisterRequest: RegisterRequest = {
       email: 'test@example.com',

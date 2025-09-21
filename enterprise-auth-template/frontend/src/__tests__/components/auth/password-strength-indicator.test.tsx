@@ -36,18 +36,18 @@ jest.mock('@/hooks/use-password-strength', () => ({
       'strong': 'Strong',
     };
     return labels[strength] || 'Unknown';
-  }),
+  }),}));
 /**
  * Comprehensive test suite for PasswordStrengthIndicator component
  * Tests password strength visualization and criteria checking
  */
 
 
-// Mock the password strength hook
-const mockUsePasswordStrength = passwordStrengthHooks.usePasswordStrength as jest.MockedFunction<
-  typeof passwordStrengthHooks.usePasswordStrength
->;
 describe('PasswordStrengthIndicator Component', () => {
+  // Mock the password strength hook
+  const mockUsePasswordStrength = passwordStrengthHooks.usePasswordStrength as jest.MockedFunction<
+    typeof passwordStrengthHooks.usePasswordStrength
+  >;
   const defaultPasswordStrength: passwordStrengthHooks.PasswordStrengthResult = {
     score: 0,
     strength: 'very-weak',

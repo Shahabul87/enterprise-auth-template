@@ -244,7 +244,7 @@ describe('ForgotPasswordPage', () => {
       expect(orb).toHaveClass('rounded-full');
     });
   });
-
+});
 describe('Loading State', () => {
     it('should center the loading spinner', async () => {
       mockUseGuestOnly.mockReturnValue(createMockAuthState({
@@ -369,4 +369,3 @@ describe('Accessibility', () => {
       });
     });
   });
-});

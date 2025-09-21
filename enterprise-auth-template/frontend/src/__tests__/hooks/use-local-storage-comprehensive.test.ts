@@ -61,11 +61,14 @@ Object.defineProperty(window, 'localStorage', {
 
 // Mock storage events for cross-tab testing
 const dispatchStorageEvent = (key: string, newValue: string | null, oldValue?: string | null) => {
-  const event = new StorageEvent('storage', {
-    key,
-    newValue,
-    oldValue: oldValue || null,
-    storageArea: window.localStorage
+  // Create a custom event that mimics StorageEvent for testing
+  const event = new Event('storage') as StorageEvent;
+  Object.defineProperties(event, {
+    key: { value: key, writable: false },
+    newValue: { value: newValue, writable: false },
+    oldValue: { value: oldValue || null, writable: false },
+    storageArea: { value: window.localStorage, writable: false },
+    url: { value: window.location.href, writable: false }
   });
   window.dispatchEvent(event);
 };

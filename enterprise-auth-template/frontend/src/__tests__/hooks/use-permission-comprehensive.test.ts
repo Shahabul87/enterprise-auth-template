@@ -32,7 +32,7 @@ type RolesList = string[];
 
 const mockUseUserPermissions = useUserPermissions as jest.MockedFunction<typeof useUserPermissions>;
 const mockUseUserRoles = useUserRoles as jest.MockedFunction<typeof useUserRoles>;
-describe('usePermission Hook', () => {
+describe('usePermission Hook', () => {});
   const mockPermissions = ['user:read', 'user:write', 'post:read', 'admin:read'];
   const mockRoles = ['user', 'editor'];
   beforeEach(() => {

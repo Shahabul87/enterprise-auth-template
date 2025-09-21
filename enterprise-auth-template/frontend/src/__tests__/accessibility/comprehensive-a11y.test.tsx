@@ -495,7 +495,7 @@ describe('Focus Management', () => {
       const { rerender } = render(
         <div>
           <button id="trigger">Open Modal</button>
-          <TestModal isOpen={false} onClose={jest.fn()} />
+          <TestModal isOpen={false} onClose={jest.fn()} />;
         </div>
       );
 

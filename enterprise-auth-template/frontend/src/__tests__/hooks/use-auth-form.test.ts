@@ -17,7 +17,7 @@ jest.mock('react-hook-form', () => ({
 
 // Mock react-hook-form
 const mockUseForm = useForm as jest.MockedFunction<typeof useForm>;
-describe('useAuthForm', () => {
+describe('useAuthForm', () => {});
   const mockForm = {
     control: {} as Control<AuthFormData>,
     handleSubmit: jest.fn(),

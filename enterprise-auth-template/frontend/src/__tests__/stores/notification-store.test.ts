@@ -8,6 +8,8 @@ jest.mock('zustand/middleware', () => ({
   devtools: (fn: any) => fn,
   persist: (fn: any) => fn,
   subscribeWithSelector: (fn: any) => fn,
+}));
+
 /**
  * @jest-environment jsdom
  */
@@ -23,7 +25,7 @@ describe('NotificationStore', () => {
     });
     jest.clearAllTimers();
   });
-
+});
 describe('Initial State', () => {
     it('should have correct initial state', async () => {
       const { result } = renderHook(() => useNotificationStore());

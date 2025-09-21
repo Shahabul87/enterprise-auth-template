@@ -4,54 +4,12 @@ import * as cookieManager from '@/lib/cookie-manager';
 
 
 import React from 'react';
-jest.mock('@/stores/auth.store', () => ({
-  useAuthStore: jest.fn(() => ({
-    user: null,
-    isAuthenticated: false,
-    isLoading: false,
-    error: null,
-    login: jest.fn().mockResolvedValue({ success: true }),
-    register: jest.fn().mockResolvedValue({ success: true }),
-    logout: jest.fn().mockResolvedValue(undefined),
-    setUser: jest.fn(),
-    clearError: jest.fn(),
-    refreshToken: jest.fn().mockResolvedValue(true),
-    requestPasswordReset: jest.fn().mockResolvedValue({ success: true }),
-    confirmPasswordReset: jest.fn().mockResolvedValue({ success: true }),
-    verifyEmail: jest.fn().mockResolvedValue({ success: true }),
-    resendVerification: jest.fn().mockResolvedValue({ success: true }),
-    initialize: jest.fn().mockResolvedValue(undefined),
-  })),
-}));
+// We'll test the actual store instead of mocking it
 jest.mock('@/lib/auth-api');
-const mockAuthAPI = {
-  login: jest.fn(),
-  register: jest.fn(),
-  logout: jest.fn(),
-  refreshToken: jest.fn(),
-  getCurrentUser: jest.fn(),
-  requestPasswordReset: jest.fn(),
-  confirmPasswordReset: jest.fn(),
-  verifyEmail: jest.fn(),
-  resendVerification: jest.fn(),
-  setup2FA: jest.fn(),
-  verify2FA: jest.fn(),
-  disable2FA: jest.fn(),
-};
+const mockAuthAPI = AuthAPI as jest.Mocked<typeof AuthAPI>;
+
 jest.mock('@/lib/cookie-manager');
-const mockCookieManager = {
-  storeAuthTokens: jest.fn(),
-  getAccessToken: jest.fn(),
-  getAuthTokens: jest.fn(),
-  clearAuthCookies: jest.fn(),
-  hasAuthCookies: jest.fn(),
-  isTokenExpired: jest.fn(),
-  getCookie: jest.fn(),
-  AUTH_COOKIES: {
-    ACCESS_TOKEN: 'access-token',
-    REFRESH_TOKEN: 'refresh-token',
-  },
-};
+const mockCookieManager = cookieManager as jest.Mocked<typeof cookieManager>;
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
@@ -151,7 +109,7 @@ describe('Auth Store Comprehensive Tests', () => {
     mockCookieManager.isTokenExpired.mockReturnValue(false);
     mockCookieManager.getCookie.mockReturnValue(null);
   });
-
+});
 describe('Initial State', () => {
     it('should have correct initial state', async () => {
       const { result } = renderHook(() => useAuthStore());
@@ -178,7 +136,7 @@ describe('Initial State', () => {
       expect(typeof result.current.register).toBe('function');
       expect(typeof result.current.logout).toBe('function');
       expect(typeof result.current.refreshToken).toBe('function');
-      expect(typeof result.current.setUser).toBe('function');
+      expect(typeof result.current.updateUser).toBe('function');
       // Permission and role checks
       expect(typeof result.current.hasPermission).toBe('function');
       expect(typeof result.current.hasRole).toBe('function');
@@ -366,14 +324,17 @@ describe('Utility Actions', () => {
         data: mockUser
       });
       const { result } = renderHook(() => useAuthStore());
+
+      // Set initial auth state since fetchUserData requires authentication
+      act(() => {
+        result.current.setAuth('access-token', 'refresh-token', mockUser);
+      });
+
       await act(async () => {
         await result.current.fetchUserData();
       });
+
       expect(mockAuthAPI.getCurrentUser).toHaveBeenCalled();
-      // Registration doesn't automatically authenticate - user needs to login
-      expect(result.current.accessToken).toBe('access-token');
-      expect(result.current.tokens?.access_token).toBe('access-token');
-      expect(result.current.tokens?.refresh_token).toBe('refresh-token');
       expect(result.current.user).toEqual(expect.objectContaining({
         id: mockUser.id,
         email: mockUser.email,

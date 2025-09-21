@@ -62,7 +62,7 @@ describe('useForm Hook - Core Functionality', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
+});
 describe('Basic Form State', () => {
     it('should initialize with default values and empty state', async () => {
       const config: FormConfig<TestFormData> = {

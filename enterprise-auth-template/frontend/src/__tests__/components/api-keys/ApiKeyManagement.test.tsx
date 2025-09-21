@@ -24,6 +24,8 @@ jest.mock('lucide-react', () => ({
   CheckCircle: () => <div data-testid="check-circle-icon" />,
   XCircle: () => <div data-testid="x-circle-icon" />,
   BarChart: () => <div data-testid="bar-chart-icon" />,
+}));
+
 /**
  * ApiKeyManagement Component Tests
  * Simplified tests that work with the current component implementation
@@ -58,7 +60,7 @@ const mockLocalStorage = {
 };
 Object.defineProperty(window, 'localStorage', { value: mockLocalStorage });
 
-describe('ApiKeyManagement Component', () => {
+describe('ApiKeyManagement Component', () => {});
   const mockApiKeys: ApiKey[] = [
     {
       id: '1',
@@ -179,7 +181,7 @@ describe('Error Handling', () => {
       global.fetch = jest.fn() as jest.MockedFunction<typeof fetch>;.mockResolvedValue({
         ok: false,
         status: 500,
-        json: jest.fn().mockResolvedValue({ error: 'Server error' })
+        json: jest.fn().mockResolvedValue({ error: 'Server error' });
       });
       render(<ApiKeyManagement />);
       // Component should handle error gracefully

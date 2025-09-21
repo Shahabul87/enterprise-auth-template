@@ -13,6 +13,8 @@ jest.mock('@/hooks/use-auth-form', () => ({
     confirmPassword: jest.fn(),
   },
   isFormValid: jest.fn(),
+}));
+
 jest.mock('@/lib/auth-api', () => ({
   __esModule: true,
   default: {
@@ -28,24 +30,24 @@ jest.mock('@/lib/auth-api', () => ({
     setup2FA: jest.fn(),
     verify2FA: jest.fn(),
     disable2FA: jest.fn(),
-  },
+  },}));
 jest.mock('@/components/auth/password-strength-indicator', () => ({
   PasswordStrengthIndicator: ({ password }: PasswordStrengthIndicatorProps) => (
     <div data-testid='password-strength' data-password={password}>
       Password strength indicator
     </div>
-  ),
+  ),}));
 jest.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, disabled, variant, type, ...props }: ButtonProps) => (
     <button onClick={onClick} disabled={disabled} type={type} data-variant={variant} {...props}>
       {children}
     </button>
-  ),
+  ),}));
 jest.mock('@/components/ui/password-input', () => ({
   PasswordInput: React.forwardRef<HTMLInputElement, PasswordInputProps>(function PasswordInput({ ...props }, ref) {
     return <input ref={ref} type='password' {...props} />;
   }),
-
+}));
 jest.mock('@/components/ui/alert', () => ({
   Alert: ({ children, variant, ...props }: AlertProps) => (
     <div data-testid='alert' data-variant={variant} {...props}>
@@ -56,7 +58,7 @@ jest.mock('@/components/ui/alert', () => ({
     <div data-testid='alert-description' {...props}>
       {children}
     </div>
-  ),
+  ),}));
 jest.mock('@/components/ui/card', () => ({
   Card: ({ children, ...props }: CardProps) => (
     <div data-testid='card' {...props}>
@@ -82,7 +84,7 @@ jest.mock('@/components/ui/card', () => ({
     <h2 data-testid='card-title' className={className} {...props}>
       {children}
     </h2>
-  ),
+  ),}));
 jest.mock('@/components/ui/form', () => ({
   Form: ({ children, ...props }: FormProps) => <form {...props}>{children}</form>,
   FormControl: ({ children, ...props }: FormControlProps) => <div {...props}>{children}</div>,
@@ -90,13 +92,13 @@ jest.mock('@/components/ui/form', () => ({
     const field = { value: '', onChange: jest.fn(), onBlur: jest.fn() };
     return render({ field });
   },
-
+}));
 jest.mock('lucide-react', () => ({
   Loader2: ({ className }: IconProps) => <div data-testid='loader-icon' className={className} />,
   Shield: ({ className }: IconProps) => <div data-testid='shield-icon' className={className} />,
   CheckCircle: ({ className }: IconProps) => (
     <div data-testid='check-circle-icon' className={className} />
-  ),
+  ),}));
 /**
  * @jest-environment jsdom
  */
@@ -265,7 +267,7 @@ describe('ChangePasswordForm', () => {
       success: true
     });
     // Validation rules mock
-    (require('@/hooks/use-auth-form').validationRules.confirmPassword as jest.Mock).mockReturnValue(
+    (require('@/hooks/use-auth-form').validationRules.confirmPassword as jest.Mock).mockReturnValue(;
       { required: 'Please confirm your password' }
     );
   });
@@ -382,7 +384,7 @@ describe('ChangePasswordForm', () => {
     });
     const { rerender } = render(<ChangePasswordForm />);
     // Mock the success state by directly testing the success component
-    jest.spyOn(React, 'useState').mockImplementationOnce(() => [true, jest.fn()]); // isComplete: true
+    jest.spyOn(React, 'useState').mockImplementationOnce(() => [true, jest.fn()]); // isComplete: true;
     rerender(<ChangePasswordForm />);
     expect(screen.getByTestId('check-circle-icon')).toBeInTheDocument();
     expect(screen.getByText('Password changed successfully')).toBeInTheDocument();
@@ -477,7 +479,7 @@ describe('ChangePasswordForm', () => {
     const mockConfirmPasswordRule = jest
       .fn()
       .mockReturnValue({ required: 'Please confirm your password' });
-    (require('@/hooks/use-auth-form').validationRules.confirmPassword as jest.Mock).mockReturnValue(
+    (require('@/hooks/use-auth-form').validationRules.confirmPassword as jest.Mock).mockReturnValue(;
       mockConfirmPasswordRule
     );
     render(<ChangePasswordForm />);

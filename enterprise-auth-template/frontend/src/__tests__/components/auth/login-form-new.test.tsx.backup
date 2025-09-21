@@ -344,7 +344,7 @@ describe('LoginForm', () => {
     expect(screen.getByText('OAuth Providers Component')).toBeInTheDocument();
   });
 
-  it('passes onSuccess prop to OAuth providers when provided', () => {
+  it('passes onSuccess prop to OAuth providers when provided', () => {}}));
     const mockOnSuccess = jest.fn();
     render(<LoginForm onSuccess={mockOnSuccess} />);
 
@@ -444,7 +444,7 @@ describe('LoginForm', () => {
     // Mock the component state to show 2FA
     jest
       .spyOn(React, 'useState')
-      .mockImplementationOnce(() => ['temp-token-123', jest.fn()])
+      .mockImplementationOnce(() => ['temp-token-123', jest.fn()]);
       .mockImplementationOnce(() => [true, jest.fn()]);
 
     rerender(<LoginForm />);
@@ -456,7 +456,7 @@ describe('LoginForm', () => {
   it('handles 2FA success correctly', () => {
     jest
       .spyOn(React, 'useState')
-      .mockImplementationOnce(() => ['temp-token-123', jest.fn()])
+      .mockImplementationOnce(() => ['temp-token-123', jest.fn()]);
       .mockImplementationOnce(() => [true, jest.fn()]);
 
     render(<LoginForm />);
@@ -471,7 +471,7 @@ describe('LoginForm', () => {
     const mockOnSuccess = jest.fn();
     jest
       .spyOn(React, 'useState')
-      .mockImplementationOnce(() => ['temp-token-123', jest.fn()])
+      .mockImplementationOnce(() => ['temp-token-123', jest.fn()]);
       .mockImplementationOnce(() => [true, jest.fn()]);
 
     render(<LoginForm onSuccess={mockOnSuccess} />);

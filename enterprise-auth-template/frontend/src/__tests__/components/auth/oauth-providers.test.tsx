@@ -19,13 +19,13 @@ jest.mock('@/components/icons', () => ({
       <div data-testid="discord-icon" className={className}>Discord</div>
     ),
   },
+}));
+
 /**
  * Comprehensive test suite for OAuthProviders component
  * Tests OAuth provider integration, error handling, and UI interactions
  */
 
-
-// Mock the icons
 // Mock fetch globally
 global.fetch = jest.fn() as jest.MockedFunction<typeof fetch>;
 // Mock window.location
@@ -58,7 +58,7 @@ describe('OAuthProviders Component', () => {
     mockLocation.search = '';
     (global.fetch as jest.Mock).mockClear();
   });
-
+});
 describe('Basic Rendering', () => {
     it('should render all OAuth providers', async () => {
       render(<OAuthProviders />);
@@ -93,7 +93,7 @@ describe('OAuth Login Flow', () => {
       render(<OAuthProviders />);
       const googleButton = screen.getByText('Continue with Google');
       act(() => { fireEvent.click(googleButton) });
-      await act(async () => { await waitFor(() => {
+      await waitFor(() => {
         expect(global.fetch).toHaveBeenCalledWith(
           'http://localhost:8000/api/v1/oauth/google/init',
           {
@@ -107,7 +107,7 @@ describe('OAuth Login Flow', () => {
       expect(mockSessionStorage.setItem).toHaveBeenCalledWith('oauth_provider', 'google');
       expect(mockSessionStorage.setItem).toHaveBeenCalledWith('oauth_return_url', '/login');
       expect(mockLocation.href).toBe(mockAuthUrl);
-    }); });
+    });
     it('should handle GitHub OAuth login successfully', async () => {
       const mockAuthUrl = 'https://github.com/login/oauth/authorize?client_id=456';
       (global.fetch as jest.Mock).mockResolvedValueOnce({
@@ -117,12 +117,12 @@ describe('OAuth Login Flow', () => {
       render(<OAuthProviders />);
       const githubButton = screen.getByText('Continue with GitHub');
       act(() => { fireEvent.click(githubButton) });
-      await act(async () => { await act(async () => { await waitFor(() => {
+      await waitFor(() => {
         expect(global.fetch).toHaveBeenCalledWith(
           'http://localhost:8000/api/v1/oauth/github/init',
           expect.any(Object)
         );
-      }); });
+      });
       expect(mockSessionStorage.setItem).toHaveBeenCalledWith('oauth_provider', 'github');
       expect(mockLocation.href).toBe(mockAuthUrl);
     });
@@ -393,4 +393,3 @@ describe('Accessibility', () => {
     });
   });
 });
-}}}}}}}}}}}}}}}}}

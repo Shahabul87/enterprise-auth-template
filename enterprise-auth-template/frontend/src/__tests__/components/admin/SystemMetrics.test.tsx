@@ -94,7 +94,7 @@ interface SystemMetricsData {
   cache_hit_rate: MetricData;
 }
 describe('SystemMetrics Component', () => {
-  let queryClient: QueryClient;
+  let queryClient: QueryClient;});
   const mockUser: User = {
     id: '1',
     email: 'admin@test.com',

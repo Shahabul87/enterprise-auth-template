@@ -30,7 +30,7 @@ describe('useApi', () => {
     expect(result.current.error).toBeNull();
     expect(result.current.loading).toBe(false);
   });
-  it('should handle successful GET request', async () => {
+  it('should handle successful GET request', async () => {}}));
     const mockData = { id: 1, name: 'Test' };
     const apiResponse = { success: true, data: mockData };
     (fetch as jest.Mock).mockResolvedValueOnce({

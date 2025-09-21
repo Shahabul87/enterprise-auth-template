@@ -15,6 +15,8 @@ jest.mock('next/server', () => ({
     })),
   },
   NextRequest: jest.fn(),
+}));
+
 /**
  * RBAC Middleware Tests
  * Comprehensive tests for role-based access control middleware
@@ -33,6 +35,8 @@ function createMockPermission(overrides?: Partial<Permission>): Permission {
     updated_at: new Date().toISOString(),
     ...overrides,
   };
+}
+
 function createMockRole(overrides?: Partial<Role>): Role {
   return {
     id: '1',
@@ -44,6 +48,8 @@ function createMockRole(overrides?: Partial<Role>): Role {
     permissions: [],
     ...overrides,
   };
+}
+
 function createMockUser(overrides?: Partial<User>): User {
   return {
     id: '123',
@@ -63,15 +69,21 @@ function createMockUser(overrides?: Partial<User>): User {
     roles: [createMockRole()],
     ...overrides,
   };
+}
+
 // RBAC Middleware implementation
 interface RBACConfig {
   requiredRoles?: string[];
   requiredPermissions?: string[];
   requireAll?: boolean; // If true, user must have ALL permissions/roles
+}
+
 class RBACMiddleware {
   private config: RBACConfig;
   constructor(config: RBACConfig) {
     this.config = config;
+  }
+
   checkAccess(user: User | null): boolean {
     if (!user) return false;
     // Superuser bypass
@@ -83,6 +95,8 @@ class RBACMiddleware {
         ? this.config.requiredRoles.every(role => userRoles.includes(role))
         : this.config.requiredRoles.some(role => userRoles.includes(role));
       if (!hasRoles) return false;
+    }
+
     // Check permissions
     if (this.config.requiredPermissions && this.config.requiredPermissions.length > 0) {
       const userPermissions = user.roles.flatMap(r => r.permissions.map(p => p.name));
@@ -90,7 +104,11 @@ class RBACMiddleware {
         ? this.config.requiredPermissions.every(perm => userPermissions.includes(perm))
         : this.config.requiredPermissions.some(perm => userPermissions.includes(perm));
       if (!hasPermissions) return false;
+    }
+
     return true;
+  }
+
   async handle(request: NextRequest, user: User | null): Promise<NextResponse | null> {
     if (!this.checkAccess(user)) {
       return NextResponse.json(
@@ -98,6 +116,9 @@ class RBACMiddleware {
         { status: 403 }
       );
     return null; // Continue to next middleware
+  }
+}
+};
 describe('RBAC Middleware', () => {
   describe('Role-Based Access', () => {
     it('should allow access for users with required role', async () => {
@@ -147,7 +168,7 @@ describe('RBAC Middleware', () => {
     });
   });
 
-describe('Permission-Based Access', () => {
+  describe('Permission-Based Access', () => {
     it('should allow access for users with required permission', async () => {
       const middleware = new RBACMiddleware({
         requiredPermissions: ['users.create']
@@ -199,7 +220,7 @@ describe('Permission-Based Access', () => {
     });
   });
 
-describe('Superuser Bypass', () => {
+  describe('Superuser Bypass', () => {
     it('should always allow access for superusers', async () => {
       const restrictiveMiddleware = new RBACMiddleware({
         requiredRoles: ['non-existent-role'],
@@ -214,7 +235,7 @@ describe('Superuser Bypass', () => {
     });
   });
 
-describe('Combined Role and Permission Checks', () => {
+  describe('Combined Role and Permission Checks', () => {
     it('should require both role and permission when specified', async () => {
       const middleware = new RBACMiddleware({
         requiredRoles: ['admin'],
@@ -245,7 +266,7 @@ describe('Combined Role and Permission Checks', () => {
     });
   });
 
-describe('Edge Cases', () => {
+  describe('Edge Cases', () => {
     it('should deny access for null user', async () => {
       const middleware = new RBACMiddleware({
         requiredRoles: ['admin']
@@ -280,7 +301,7 @@ describe('Edge Cases', () => {
     });
   });
 
-describe('HTTP Response Handling', () => {
+  describe('HTTP Response Handling', () => {
     it('should return 403 response for unauthorized access', async () => {
       const middleware = new RBACMiddleware({
         requiredRoles: ['admin']
@@ -311,7 +332,7 @@ describe('HTTP Response Handling', () => {
     });
   });
 
-describe('Dynamic Permission Evaluation', () => {
+  describe('Dynamic Permission Evaluation', () => {
     it('should support resource-based permissions', async () => {
       class ResourceRBACMiddleware extends RBACMiddleware {
         checkResourceAccess(user: User, resource: string, action: string): boolean {
@@ -377,7 +398,7 @@ describe('Dynamic Permission Evaluation', () => {
     });
   });
 
-describe('Audit and Logging', () => {
+  describe('Audit and Logging', () => {
     it('should log access attempts', async () => {
       const auditLog: Array<{ user: string; resource: string; granted: boolean; timestamp: Date }> = [];
       class AuditedRBACMiddleware extends RBACMiddleware {
@@ -413,4 +434,3 @@ describe('Audit and Logging', () => {
     });
   });
 });
-}}}}}}}}}}}}

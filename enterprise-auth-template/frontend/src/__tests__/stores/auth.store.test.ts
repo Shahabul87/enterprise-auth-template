@@ -19,6 +19,8 @@ jest.mock('@/lib/auth-api', () => ({
     verify2FA: jest.fn(),
     disable2FA: jest.fn(),
   },
+}));
+
 jest.mock('@/lib/cookie-manager', () => ({
   storeAuthTokens: jest.fn(),
   getAccessToken: jest.fn(),
@@ -30,13 +32,13 @@ jest.mock('@/lib/cookie-manager', () => ({
   AUTH_COOKIES: {
     ACCESS_TOKEN: 'access-token',
     REFRESH_TOKEN: 'refresh-token',
-  },
+  },}));
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
     replace: jest.fn(),
     back: jest.fn(),
-  }),
+  }),}));
 /**
  * @jest-environment jsdom
  */

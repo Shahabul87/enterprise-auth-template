@@ -56,16 +56,11 @@ jest.mock('@/stores/auth.store', () => ({
     setupTokenRefresh: () => {},
     clearAuthData: () => {},
     setAuth: () => {},
-    user: null,
-    isAuthenticated: false,
-    isLoading: false,
-    permissions: [],
-    hasPermission: jest.fn(() => false),
-    hasRole: jest.fn(() => false),
+  })),
   useGuestOnly: jest.fn(() => ({
     isLoading: false,
-  }))}}))));,
-}}));
+  })),
+}));
 jest.mock('@/hooks/use-auth-form', () => ({
   useAuthForm: jest.fn(),
   validationRules: {
@@ -73,6 +68,8 @@ jest.mock('@/hooks/use-auth-form', () => ({
     password: { required: 'Password is required', minLength: 1 },
   },
   isFormValid: jest.fn(),
+}));
+
 jest.mock('@/components/auth/oauth-providers', () => {
   return function MockOAuthProviders({ className, onSuccess }: MockOAuthProvidersProps) {
     return (
@@ -82,6 +79,8 @@ jest.mock('@/components/auth/oauth-providers', () => {
       </div>
     );
   };
+});
+
 jest.mock('@/components/auth/two-factor-verify', () => ({
   TwoFactorVerify: ({ tempToken, onSuccess, onCancel }: TwoFactorVerifyProps) => (
     <div data-testid='two-factor-verify'>
@@ -90,12 +89,16 @@ jest.mock('@/components/auth/two-factor-verify', () => ({
       <button onClick={onCancel}>Cancel 2FA</button>
     </div>
   ),
+}));
+
 jest.mock('@/components/ui/button', () => ({
   Button: ({ children, disabled, onClick, className, type, ...props }: ComponentProps) => (
     <button disabled={disabled} onClick={onClick} className={className} type={type} {...props}>
       {children}
     </button>
   ),
+}));
+
 jest.mock('@/components/ui/input', () => {
   const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(({ ...props }, ref) => (
     <input ref={ref} {...props} />
@@ -118,6 +121,8 @@ jest.mock('@/components/ui/alert', () => ({
       </div>
     );
   },
+}));
+
 jest.mock('@/components/ui/card', () => ({
   Card: ({ children, className, ...props }: ComponentProps) => (
     <div className={className} {...props}>
@@ -128,6 +133,8 @@ jest.mock('@/components/ui/card', () => ({
   CardDescription: ({ children, ...props }: ComponentProps) => <div {...props}>{children}</div>,
   CardHeader: ({ children, ...props }: ComponentProps) => <div {...props}>{children}</div>,
   CardTitle: ({ children, ...props }: ComponentProps) => <h1 {...props}>{children}</h1>,
+}));
+
 jest.mock('@/components/ui/form', () => ({
   Form: ({ children, ...props }: ComponentProps) => <form {...props}>{children}</form>,
   FormControl: ({ children, ...props }: ComponentProps) => <div {...props}>{children}</div>,
@@ -139,6 +146,8 @@ jest.mock('@/components/ui/form', () => ({
     };
     return render ? render({ field }) : <div data-testid="form-field" />;
   },
+}));
+
 jest.mock('next/link', () => {
   function MockLink({ children, href, ...props }: MockLinkProps) {
     return (
@@ -147,8 +156,13 @@ jest.mock('next/link', () => {
       </a>
     );
   };
+  return MockLink;
+});
+
 jest.mock('lucide-react', () => ({
   Loader2: ({ className }: ComponentProps) => <div data-testid='loader-icon' className={className} />,
+}));
+
 /**
  * @jest-environment jsdom
  */
@@ -200,7 +214,7 @@ interface MockLinkProps {
 const mockRouter = {
   push: jest.fn(),
   replace: jest.fn(),
-  back: jest.fn(),
+  back: jest.fn(),};
 const mockAuthContext = {
   user: {
     id: 'current-user',
@@ -366,7 +380,7 @@ describe('LoginForm', () => {
     // In a real scenario, this would be triggered by a successful login that requires 2FA
     jest
       .spyOn(React, 'useState')
-      .mockImplementationOnce(() => ['temp-token-123', jest.fn()])
+      .mockImplementationOnce(() => ['temp-token-123', jest.fn()]);
       .mockImplementationOnce(() => [true, jest.fn()]);
     rerender(<LoginForm />);
     expect(screen.getByTestId('two-factor-verify')).toBeInTheDocument();
@@ -375,7 +389,7 @@ describe('LoginForm', () => {
   it('handles 2FA success correctly', () => {
     jest
       .spyOn(React, 'useState')
-      .mockImplementationOnce(() => ['temp-token-123', jest.fn()])
+      .mockImplementationOnce(() => ['temp-token-123', jest.fn()]);
       .mockImplementationOnce(() => [true, jest.fn()]);
     render(<LoginForm />);
     const successButton = screen.getByText('Verify Success');
@@ -386,7 +400,7 @@ describe('LoginForm', () => {
     const mockOnSuccess = jest.fn();
     jest
       .spyOn(React, 'useState')
-      .mockImplementationOnce(() => ['temp-token-123', jest.fn()])
+      .mockImplementationOnce(() => ['temp-token-123', jest.fn()]);
       .mockImplementationOnce(() => [true, jest.fn()]);
     render(<LoginForm onSuccess={mockOnSuccess} />);
     const successButton = screen.getByText('Verify Success');

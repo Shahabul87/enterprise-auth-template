@@ -64,10 +64,11 @@ jest.mock('@/stores/auth.store', () => ({
     permissions: [],
     hasPermission: jest.fn(() => false),
     hasRole: jest.fn(() => false),
+  })),
   useGuestOnly: jest.fn(() => ({
     isLoading: false,
-  }))}}))));,
-}}));
+  })),
+}));
 jest.mock('@/hooks/use-error-handler', () => ({
   useFormErrorHandler: () => mockErrorHandler,
 }));
@@ -83,6 +84,8 @@ jest.mock('@/hooks/use-auth-form', () => ({
     },
   },
   isFormValid: () => true,
+}));
+
 jest.mock('@/components/ui/button', () => ({
   Button: ({ children, disabled, onClick, type }: ButtonProps) => (
     <button
@@ -94,6 +97,8 @@ jest.mock('@/components/ui/button', () => ({
       {children}
     </button>
   ),
+}));
+
 jest.mock('@/components/ui/input', () => ({
   Input: ({ type, placeholder, disabled, ...props }: InputProps) => (
     <input
@@ -103,7 +108,7 @@ jest.mock('@/components/ui/input', () => ({
       data-testid={`login-${type === 'email' ? 'email' : 'input'}-field`}
       {...props}
     />
-  ),
+  ),}));
 jest.mock('@/components/ui/password-input', () => ({
   PasswordInput: ({ placeholder, disabled, ...props }: InputProps) => (
     <input
@@ -113,7 +118,7 @@ jest.mock('@/components/ui/password-input', () => ({
       data-testid="login-password-field"
       {...props}
     />
-  ),
+  ),}));
 jest.mock('@/components/ui/checkbox', () => ({
   Checkbox: ({ id, checked, onCheckedChange, disabled }: CheckboxProps) => (
     <input
@@ -124,7 +129,7 @@ jest.mock('@/components/ui/checkbox', () => ({
       data-testid="login-remember-checkbox"
       onChange={(e) => onCheckedChange?.(e.target.checked)}
     />
-  ),
+  ),}));
 jest.mock('@/components/ui/form', () => ({
   FormControl: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   FormField: ({ render }: FormFieldProps) => (
@@ -134,16 +139,16 @@ jest.mock('@/components/ui/form', () => ({
   ),
   FormItem: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   FormLabel: ({ children }: { children: React.ReactNode }) => <label>{children}</label>,
-  FormMessage: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  FormMessage: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,}));
 jest.mock('@/components/ui/alert', () => ({
   Alert: ({ children }: { children: React.ReactNode }) => <div data-testid="error-alert">{children}</div>,
-  AlertDescription: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  AlertDescription: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,}));
 jest.mock('@/components/ui/card', () => ({
   Card: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   CardContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   CardDescription: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   CardHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  CardTitle: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  CardTitle: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,}));
 jest.mock('@/components/ui/separator', () => ({
   Separator: () => <hr data-testid="separator" />,
 }));
@@ -165,16 +170,16 @@ jest.mock('@/components/auth/two-factor-verify', () => ({
     tempToken: string;
     onSuccess: () => void;
     onCancel: () => void;
-  }) => (
+  }) => (})));
 jest.mock('lucide-react', () => ({
   Loader2: () => <span data-testid="loader-icon">Loading</span>,
   Mail: () => <span data-testid="mail-icon">Mail</span>,
   Lock: () => <span data-testid="lock-icon">Lock</span>,
   ArrowRight: () => <span data-testid="arrow-right-icon">Arrow</span>,
   Shield: () => <span data-testid="shield-icon">Shield</span>,
-  Sparkles: () => <span data-testid="sparkles-icon">Sparkles</span>,
+  Sparkles: () => <span data-testid="sparkles-icon">Sparkles</span>,}));
 jest.mock('@/lib/utils', () => ({
-  cn: (...classes: string[]) => classes.filter(Boolean).join(' '),
+  cn: (...classes: string[]) => classes.filter(Boolean).join(' '),}));
 /**
  * Comprehensive Login Form Tests
  *
@@ -483,8 +488,8 @@ describe('Two-Factor Authentication', () => {
       mockAuthStore.login.mockResolvedValue(twoFactorResponse);
       // Mock state to show 2FA component
       jest.spyOn(React, 'useState')
-        .mockReturnValueOnce(['temp-token-123', jest.fn()]) // tempToken
-        .mockReturnValueOnce([true, jest.fn()]); // show2FA
+        .mockReturnValueOnce(['temp-token-123', jest.fn()]) // tempToken;
+        .mockReturnValueOnce([true, jest.fn()]); // show2FA;
       render(<LoginForm />);
       expect(screen.getByTestId('two-factor-verify')).toBeInTheDocument();
       expect(screen.getByTestId('temp-token')).toHaveTextContent('temp-token-123');
@@ -493,8 +498,8 @@ describe('Two-Factor Authentication', () => {
       const user = userEvent.setup();
       // Mock state to show 2FA component
       jest.spyOn(React, 'useState')
-        .mockReturnValueOnce(['temp-token-123', jest.fn()]) // tempToken
-        .mockReturnValueOnce([true, jest.fn()]); // show2FA
+        .mockReturnValueOnce(['temp-token-123', jest.fn()]) // tempToken;
+        .mockReturnValueOnce([true, jest.fn()]); // show2FA;
       // Mock window.location
       delete (window as { location?: Location }).location;
       window.location = { href: '' } as Location;
@@ -509,8 +514,8 @@ describe('Two-Factor Authentication', () => {
       const setTempToken = jest.fn();
       // Mock state to show 2FA component
       jest.spyOn(React, 'useState')
-        .mockReturnValueOnce(['temp-token-123', setTempToken]) // tempToken
-        .mockReturnValueOnce([true, setShow2FA]); // show2FA
+        .mockReturnValueOnce(['temp-token-123', setTempToken]) // tempToken;
+        .mockReturnValueOnce([true, setShow2FA]); // show2FA;
       render(<LoginForm />);
       const cancelButton = screen.getByTestId('2fa-cancel');
       await user.click(cancelButton);

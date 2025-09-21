@@ -25,23 +25,24 @@ jest.mock('@/components/ui/button', () => ({
       </button>
     );
   },
+}));
 
 jest.mock('@/components/ui/scroll-area', () => ({
   ScrollArea: ({ children, className, ...props }: any) => (
     <div className={className} {...props}>
       {children}
     </div>
-  ),
+  ),}));
 jest.mock('@/components/ui/separator', () => ({
   Separator: ({ className, ...props }: any) => (
     <hr className={className} {...props} />
-  ),
+  ),}));
 jest.mock('@/components/ui/badge', () => ({
   Badge: ({ children, className, variant, ...props }: any) => (
     <span className={className} {...props}>
       {children}
     </span>
-  ),
+  ),}));
 jest.mock('next/link', () => {
   return ({ children, href, ...props }: any) => (
     <a href={href} {...props}>
@@ -54,7 +55,7 @@ jest.mock('@/components/layout/sidebar', () => {
   const React = require('react');
   const { usePathname } = require('next/navigation');
   const Link = require('next/link').default;
-
+});
   const mockNavigationItems = [
     {
       title: 'Dashboard',
@@ -280,7 +281,7 @@ jest.mock('lucide-react', () => ({
   Key: () => <div data-testid="key-icon" />,
   FileText: () => <div data-testid="file-icon" />,
   BarChart3: () => <div data-testid="chart-icon" />,
-  Zap: () => <div data-testid="zap-icon" />,
+  Zap: () => <div data-testid="zap-icon" />,}));
 /**
  * Sidebar Component Tests
  * Tests the sidebar navigation component with proper TypeScript types

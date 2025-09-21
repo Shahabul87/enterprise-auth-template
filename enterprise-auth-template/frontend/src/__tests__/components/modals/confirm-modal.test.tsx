@@ -27,7 +27,7 @@ describe('ConfirmModal Component', () => {
     const handleConfirm = jest.fn();
     render(<ConfirmModal {...defaultProps} onConfirm={handleConfirm} />);
 
-    act(() => { fireEvent.click(screen.getByRole('button', { name: 'Confirm' }) }));
+    act(() => { fireEvent.click(screen.getByRole('button', { name: 'Confirm' })); });
     expect(handleConfirm).toHaveBeenCalledTimes(1);
   });
 

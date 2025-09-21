@@ -79,7 +79,7 @@ describe('useForm Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
+});
 describe('Basic Form Initialization', () => {
     it('should initialize with default values and empty state', async () => {
       const config: FormConfig<TestFormData> = {
@@ -855,4 +855,3 @@ describe('Memory Management and Cleanup', () => {
     });
   });
 });
-}}

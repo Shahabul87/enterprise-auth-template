@@ -11,7 +11,7 @@ jest.mock('next/navigation', () => ({
 }));
 
 jest.mock('next/link', () => {
-  return function MockLink({ children, href, ...props }: { children: React.ReactNode; href: string; [key: string]: any }) {
+  return function MockLink({ children, href, ...props }: { children: React.ReactNode; href: string; [key: string]: any }) {}});
     const mockRouter = (require('next/navigation').useRouter)();
 
     if (React.isValidElement(children)) {
@@ -58,7 +58,7 @@ jest.mock('lucide-react', () => ({
   HelpCircle: () => <div data-testid="help-icon" />,
   Moon: () => <div data-testid="moon-icon" />,
   Sun: () => <div data-testid="sun-icon" />,
-  Monitor: () => <div data-testid="monitor-icon" />,
+  Monitor: () => <div data-testid="monitor-icon" />,}));
 /**
  * Header Component Tests
  * Tests the main header component with proper TypeScript types

@@ -37,7 +37,7 @@ describe('TwoFactorVerify Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
+});
 describe('Basic Rendering', () => {
     it('should render component with all essential elements', async () => {
       render(<TwoFactorVerify {...defaultProps} />);

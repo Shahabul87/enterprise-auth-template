@@ -89,7 +89,7 @@ jest.mock('react-hook-form', () => ({
       name,
       onChange: jest.fn(),
       onBlur: jest.fn(),
-      ref: jest.fn()
+      ref: jest.fn();
     })),
     handleSubmit: jest.fn((fn) => (e) => {
       e?.preventDefault();
@@ -209,7 +209,7 @@ const mockLogin = jest.fn().mockResolvedValue({
 jest.mock('@/stores/auth.store');
 jest.mock('next/navigation');
 
-describe('LoginForm', () => {
+describe('LoginForm', () => {});
   const mockLogin = jest.fn();
   const mockPush = jest.fn();
 
@@ -224,7 +224,7 @@ describe('LoginForm', () => {
     });
   });
 
-describe('Rendering', () => {
+  describe('Rendering', () => {
     it('should render login form with all fields', async () => {
       render(<MockLoginForm />);
       expect(screen.getByRole("textbox", { name: /email/i }) || screen.getByPlaceholderText(/email/i)).toBeInTheDocument();
@@ -245,7 +245,7 @@ describe('Rendering', () => {
     });
   });
 
-describe('Validation', () => {
+  describe('Validation', () => {
     it('should show validation errors for empty fields', async () => {
       render(<MockLoginForm />);
       const submitButton = screen.getByRole('button', { name: /sign in/i });
@@ -347,7 +347,7 @@ describe('Submission', () => {
     });
   });
 
-describe('Navigation', () => {
+  describe('Navigation', () => {
     it('should navigate to forgot password page', async () => {
       render(<MockLoginForm />);
       const forgotPasswordLink = screen.getByText(/forgot password/i);
@@ -360,7 +360,7 @@ describe('Navigation', () => {
     });
   });
 
-describe('Remember Me', () => {
+  describe('Remember Me', () => {
     it('should handle remember me checkbox', async () => {
       render(<MockLoginForm />);
       const rememberCheckbox = screen.getByRole('checkbox', { name: /remember me/i });
@@ -390,4 +390,3 @@ describe('Remember Me', () => {
     });
   });
 });
-}}}}}}}}}}}

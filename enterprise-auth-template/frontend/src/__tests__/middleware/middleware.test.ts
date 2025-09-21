@@ -81,7 +81,7 @@ describe('Middleware', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
+});
 describe('Protected Routes', () => {
     const protectedRoutes = ['/dashboard', '/profile', '/admin', '/settings'];
     protectedRoutes.forEach(route => {

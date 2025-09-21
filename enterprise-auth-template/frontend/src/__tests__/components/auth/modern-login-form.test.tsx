@@ -62,9 +62,8 @@ jest.mock('@/stores/auth.store', () => ({
     hasRole: jest.fn(() => false),
   useGuestOnly: jest.fn(() => ({
     isLoading: false,
-  }))}}))));,
-})),
-})));
+  })),
+}));}));
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));
@@ -81,6 +80,8 @@ jest.mock('@/services/auth-api.service', () => ({
   },
   base64ToArrayBuffer: jest.fn(),
   arrayBufferToBase64: jest.fn(),
+}));
+
 jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: unknown) => <div {...props}>{children}</div>,
@@ -88,6 +89,8 @@ jest.mock('framer-motion', () => ({
     form: ({ children, ...props }: unknown) => <form {...props}>{children}</form>,
   },
   AnimatePresence: ({ children }: unknown) => children,
+}));
+
 jest.mock('lucide-react', () => ({
   Mail: () => <div data-testid="mail-icon" />,
   Lock: () => <div data-testid="lock-icon" />,
@@ -102,19 +105,26 @@ jest.mock('lucide-react', () => ({
   Loader2: () => <div data-testid="loader2-icon" />,
   Github: () => <div data-testid="github-icon" />,
   Chrome: () => <div data-testid="chrome-icon" />,
+}));
+
 jest.mock('next/link', () => {
   return function MockLink({ children, href }: { children: React.ReactNode; href: string }) {
     return <a href={href}>{children}</a>;
   };
+});
+
 jest.mock('@/components/ui/button', () => ({
   Button: ({ children, ...props }: unknown) => <button {...props}>{children}</button>,
+}));
+
 jest.mock('@/components/ui/input', () => ({
   Input: ({ ...props }: unknown) => <input {...props} />,
+}));
+
 jest.mock('@/lib/utils', () => ({
   cn: (...args: unknown[]) => args.filter(Boolean).join(' '),
 }));
-    logout: jest.fn(),
-    initialize: jest.fn(),
+
 /**
  * @jest-environment jsdom
  */
@@ -191,8 +201,6 @@ jest.mock('@/hooks/use-error-handler', () => ({
 }));
 
 // Mock dependencies
-  useAuthStore: jest.fn()
-});
 const mockRouter = {
   push: jest.fn(),
   replace: jest.fn(),
@@ -200,16 +208,11 @@ const mockRouter = {
   forward: jest.fn(),
   refresh: jest.fn(),
   prefetch: jest.fn(),
+};
 const mockToast = jest.fn();
 const mockAuthStore = {
   login: jest.fn(),
-// Mock auth store
-    sendMagicLink: jest.fn().mockResolvedValue({ success: true }),
-    loginWithPasskey: jest.fn().mockResolvedValue({ success: true }),
-// Mock Next.js router
-  useRouter: jest.fn(() => ({
-    push: jest.fn(),
-    replace: jest.fn(),
+};
 // Mock passkey support
 global.PublicKeyCredential = jest.fn();
 global.navigator.credentials = {
@@ -217,6 +220,7 @@ global.navigator.credentials = {
   get: jest.fn(),
   store: jest.fn(),
   preventSilentAccess: jest.fn(),
+} as jest.Mocked<CredentialsContainer>;
 describe('ModernLoginForm', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -256,11 +260,11 @@ describe('ModernLoginForm', () => {
     await user.type(screen.getByPlaceholderText(/password/i), 'password123');
     // Submit form
     await user.click(screen.getByRole('button', { name: /sign in/i }));
-    await act(async () => { await act(async () => { await act(async () => { await waitFor(() => {
+    await waitFor(() => {
       expect(mockAuthStore.login).toHaveBeenCalledWith({
         email: 'test@example.com',
         password: 'password123'
-      }); }); });
+      });
     });
   });
   it('should show validation error for empty fields', async () => {
@@ -268,12 +272,12 @@ describe('ModernLoginForm', () => {
     render(<ModernLoginForm />);
     // Submit without filling fields
     await user.click(screen.getByRole('button', { name: /sign in/i }));
-    await act(async () => { await act(async () => { await act(async () => { await waitFor(() => {
+    await waitFor(() => {
       expect(mockToast).toHaveBeenCalledWith({
         title: 'Missing credentials',
         description: 'Please enter both email and password',
         variant: 'destructive'
-      }); }); });
+      });
     });
   });
   it('should toggle password visibility', async () => {
@@ -287,9 +291,9 @@ describe('ModernLoginForm', () => {
     if (toggleButton) {
       await user.click(toggleButton);
     }
-    await act(async () => { await act(async () => { await act(async () => { await waitFor(() => {
+    await waitFor(() => {
       expect(passwordInput).toHaveAttribute('type', 'text');
-    }); }); });
+    });
   });
   it('should handle magic link sending', async () => {
     const user = userEvent.setup();
@@ -304,9 +308,9 @@ describe('ModernLoginForm', () => {
     // Send magic link
     const sendButton = screen.getByRole('button', { name: /send magic link/i });
     await user.click(sendButton);
-    await act(async () => { await act(async () => { await act(async () => { await waitFor(() => {
+    await waitFor(() => {
       expect(magicLinkService.sendMagicLink).toHaveBeenCalledWith('test@example.com');
-    }); }); });
+    });
   });
   it('should handle passkey authentication', async () => {
     const user = userEvent.setup();
@@ -314,7 +318,7 @@ describe('ModernLoginForm', () => {
     webAuthnService.startAuthentication.mockResolvedValue({
       success: true,
       data: { challenge: 'mock-challenge', allowCredentials: [] }
-    });
+    });}}));
     // Mock navigator.credentials.get
     global.navigator.credentials = {
       get: jest.fn().mockResolvedValue({
@@ -333,9 +337,9 @@ describe('ModernLoginForm', () => {
     // Click sign in with passkey
     const signInButton = screen.getByRole('button', { name: /sign in with passkey/i });
     await user.click(signInButton);
-    await act(async () => { await act(async () => { await act(async () => { await waitFor(() => {
+    await waitFor(() => {
       expect(webAuthnService.startAuthentication).toHaveBeenCalled();
-    }); }); });
+    });
   });
   it('should show loading state during authentication', async () => {
     const user = userEvent.setup();
@@ -361,12 +365,12 @@ describe('ModernLoginForm', () => {
     await user.type(screen.getByPlaceholderText(/password/i), 'wrongpassword');
     // Submit form
     await user.click(screen.getByRole('button', { name: /sign in/i }));
-    await act(async () => { await act(async () => { await act(async () => { await waitFor(() => {
+    await waitFor(() => {
       expect(mockToast).toHaveBeenCalledWith({
         title: 'Login failed',
         description: 'Invalid credentials',
         variant: 'destructive'
-      }); }); });
+      });
     });
   });
   it('should render OAuth providers section', async () => {
@@ -401,10 +405,10 @@ describe('ModernLoginForm', () => {
     // Enter email and send
     await user.type(screen.getByPlaceholderText(/email/i), 'test@example.com');
     await user.click(screen.getByRole('button', { name: /send magic link/i }));
-    await act(async () => { await act(async () => { await act(async () => { await waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByTestId('check-icon')).toBeInTheDocument();
       expect(screen.getByText(/check your email/i)).toBeInTheDocument();
-    }); }); });
+    });
   });
 
 describe('Accessibility', () => {
@@ -447,12 +451,12 @@ describe('Edge Cases', () => {
       await user.type(screen.getByPlaceholderText(/email/i), 'test@example.com');
       await user.type(screen.getByPlaceholderText(/password/i), 'password123');
       await user.click(screen.getByRole('button', { name: /sign in/i }));
-      await act(async () => { await act(async () => { await act(async () => { await waitFor(() => {
+      await waitFor(() => {
         expect(mockToast).toHaveBeenCalledWith({
           title: 'Login failed',
           description: 'An unexpected error occurred. Please try again.',
           variant: 'destructive'
-        }); }); });
+        });
       });
     });
     it('should handle passkey not supported', async () => {
@@ -464,12 +468,12 @@ describe('Edge Cases', () => {
       await user.click(passkeyButton);
       const signInButton = screen.getByRole('button', { name: /sign in with passkey/i });
       await user.click(signInButton);
-      await act(async () => { await act(async () => { await act(async () => { await waitFor(() => {
+      await waitFor(() => {
         expect(mockToast).toHaveBeenCalledWith({
           title: 'Passkey not supported',
           description: 'Your browser does not support passkeys.',
           variant: 'destructive'
-        }); }); });
+        });
       });
     });
     it('should prevent multiple simultaneous submissions', async () => {
@@ -507,4 +511,3 @@ describe('Visual States', () => {
     });
   });
 });
-}}}}}}}}}}}}}}}}

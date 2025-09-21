@@ -64,10 +64,124 @@ if (typeof document !== 'undefined') {
   };
 }
 
-// Mock crypto.randomUUID
+// Mock Radix UI Select for testing
+jest.mock('@radix-ui/react-select', () => {
+  const React = require('react');
+  return {
+    Root: ({ children, open, onOpenChange, value, onValueChange, defaultValue, disabled, ...props }) => {
+      const [isOpen, setIsOpen] = React.useState(open || false);
+      const [selectedValue, setSelectedValue] = React.useState(value || defaultValue || '');
+
+      React.useEffect(() => {
+        if (open !== undefined) {
+          setIsOpen(open);
+        }
+      }, [open]);
+
+      React.useEffect(() => {
+        if (value !== undefined) {
+          setSelectedValue(value);
+        }
+      }, [value]);
+
+      const handleOpenChange = React.useCallback((newOpen) => {
+        setIsOpen(newOpen);
+        if (onOpenChange) {
+          onOpenChange(newOpen);
+        }
+      }, [onOpenChange]);
+
+      const handleValueChange = React.useCallback((newValue) => {
+        setSelectedValue(newValue);
+        if (onValueChange) {
+          onValueChange(newValue);
+        }
+        // Close the select when a value is selected
+        handleOpenChange(false);
+      }, [onValueChange, handleOpenChange]);
+
+      return React.Children.map(children, child =>
+        React.isValidElement(child) ? React.cloneElement(child, {
+          isOpen,
+          onOpenChange: handleOpenChange,
+          value: selectedValue,
+          onValueChange: handleValueChange,
+          disabled,
+          ...props
+        }) : child
+      );
+    },
+    Trigger: React.forwardRef(({ children, isOpen, onOpenChange, value, disabled, ...props }, ref) => (
+      <button
+        ref={ref}
+        role="combobox"
+        aria-expanded={isOpen || false}
+        onClick={() => !disabled && onOpenChange && onOpenChange(!isOpen)}
+        disabled={disabled}
+        value={value || ''}
+        {...props}
+      >
+        {children}
+      </button>
+    )),
+    Value: ({ children, placeholder, value }) => <span>{value ? (typeof children === 'function' ? children(value) : value) : placeholder || children}</span>,
+    Icon: ({ children }) => children,
+    Portal: ({ children }) => children,
+    Content: ({ children, isOpen, onOpenChange }) => {
+      // Handle escape key to close
+      React.useEffect(() => {
+        const handleEscape = (e) => {
+          if (e.key === 'Escape' && isOpen && onOpenChange) {
+            onOpenChange(false);
+          }
+        };
+        if (isOpen) {
+          document.addEventListener('keydown', handleEscape);
+        }
+        return () => document.removeEventListener('keydown', handleEscape);
+      }, [isOpen, onOpenChange]);
+
+      return isOpen ? (
+        <div role="listbox">
+          {React.Children.map(children, child =>
+            React.isValidElement(child) ? React.cloneElement(child, { onOpenChange }) : child
+          )}
+        </div>
+      ) : null;
+    },
+    Viewport: ({ children }) => <div>{children}</div>,
+    Item: React.forwardRef(({ children, value, disabled, onValueChange, ...props }, ref) => (
+      <div
+        ref={ref}
+        role="option"
+        aria-disabled={disabled}
+        onClick={() => !disabled && onValueChange && onValueChange(value)}
+        {...props}
+      >
+        {children}
+      </div>
+    )),
+    ItemText: ({ children }) => children,
+    ItemIndicator: ({ children, value, selectedValue }) => value === selectedValue ? children : null,
+    Group: ({ children }) => <div>{children}</div>,
+    Label: ({ children }) => <div>{children}</div>,
+    Separator: () => <div role="separator" className="bg-muted" />,
+    ScrollUpButton: ({ children }) => children,
+    ScrollDownButton: ({ children }) => children,
+  };
+});
+
+// Mock crypto.randomUUID and other crypto methods
 Object.defineProperty(global, 'crypto', {
   value: {
     randomUUID: () => 'test-uuid-' + Math.random().toString(36).substr(2, 9),
+    random: () => Math.random(),
+    getRandomValues: (arr) => {
+      for (let i = 0; i < arr.length; i++) {
+        arr[i] = Math.floor(Math.random() * 256);
+      }
+      return arr;
+    },
   },
 });
 
@@ -123,26 +237,3 @@ global.IS_REACT_ACT_ENVIRONMENT = true;
 
 // Make React available globally for tests
 global.React = require('react');
-
-// Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
-
-// Mock IntersectionObserver
-global.IntersectionObserver = class IntersectionObserver {
-  constructor() {}
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-};

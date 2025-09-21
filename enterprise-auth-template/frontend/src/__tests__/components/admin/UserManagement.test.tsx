@@ -223,7 +223,7 @@ interface MockAuthStore {
 describe('UserManagement Component', () => {
   let queryClient: QueryClient;
   let mockAuthStore: MockAuthStore;
-  let mockAdminStore: any;
+  let mockAdminStore: any;});
 // Mock data with correct schema alignment for UserManagement component
   const mockUsers = [
     {
@@ -344,7 +344,7 @@ describe('UserManagement Component', () => {
         expect(screen.getByPlaceholderText(/search users/i)).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /add user/i })).toBeInTheDocument();
       });
-    }); });
+    });
     it('should display users in a table', async () => {
       renderComponent();
       await waitFor(() => {
@@ -361,7 +361,7 @@ describe('UserManagement Component', () => {
         expect(screen.getByText('suspended')).toBeInTheDocument();
       },
     { timeout: 5000 });
-    }); });
+  });
     it('should show user roles', async () => {
       renderComponent();
       await waitFor(() => {
@@ -443,8 +443,9 @@ describe('User Actions', () => {
         expect(mockUpdateUser).toHaveBeenCalledWith('1', expect.objectContaining({
           first_name: 'Updated',
           last_name: 'Admin'
+        }));
       });
-    }); });
+    });
     it('should open delete confirmation when delete button is clicked', async () => {
       renderComponent();
       await waitFor(() => {
@@ -477,7 +478,7 @@ describe('User Actions', () => {
       await waitFor(() => {
         expect(mockDeactivateUser).toHaveBeenCalledWith('2');
       });
-    }); });
+    });
     it('should reset user password when reset action is clicked', async () => {
       renderComponent();
       await waitFor(() => {
@@ -494,7 +495,7 @@ describe('User Actions', () => {
       await waitFor(() => {
         expect(screen.queryByText('Reset Password')).not.toBeInTheDocument();
       });
-    }); });
+    });
   });
 
 describe('Add New User', () => {
@@ -545,8 +546,9 @@ describe('Add New User', () => {
           email: 'new@example.com',
           first_name: 'New',
           last_name: 'User'
+        }));
       });
-    }); });
+    });
     it('should show validation errors for invalid input', async () => {
       renderComponent();
       const addButton = screen.getByRole('button', { name: /add user/i });
@@ -597,7 +599,7 @@ describe('Bulk Actions', () => {
           operation: 'delete'
         });
       });
-    }); });
+    });
   });
 
 describe('Export', () => {
@@ -617,7 +619,7 @@ describe('Export', () => {
         expect(mockGenerateUserReport).toHaveBeenCalledWith('csv', expect.any(Object));
         expect(mockOpen).toHaveBeenCalledWith('http://example.com/report.csv', '_blank');
       });
-    }); });
+    });
   });
 
 describe('Pagination', () => {
@@ -654,7 +656,7 @@ describe('Pagination', () => {
           10 // pageSize
         );
       });
-    }); });
+    });
   });
 
 describe('Error Handling', () => {
@@ -664,14 +666,14 @@ describe('Error Handling', () => {
       await waitFor(() => {
         expect(screen.getByText(/failed to fetch users/i)).toBeInTheDocument();
       });
-    }); });
+    });
     it('should show retry button on error', async () => {
       mockGetUsers.mockRejectedValueOnce(new Error('Network error'));
       renderComponent();
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument();
       });
-    }); });
+    });
   });
 
 describe('Loading States', () => {

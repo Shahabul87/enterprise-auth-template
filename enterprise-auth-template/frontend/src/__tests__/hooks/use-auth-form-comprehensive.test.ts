@@ -21,7 +21,7 @@ jest.mock('react-hook-form', () => ({
   validationRules,
   getFieldError,
   isFormValid
-} from '../../hooks/use-auth-form';
+} from '@/hooks/use-auth-form';
 // Type-safe interfaces for test data
 interface LoginFormData {
   email: string;

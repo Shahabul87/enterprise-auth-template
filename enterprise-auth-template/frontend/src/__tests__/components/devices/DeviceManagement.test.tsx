@@ -30,7 +30,7 @@ const localStorageMock = {
 };
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
-describe('DeviceManagement', () => {
+describe('DeviceManagement', () => {});
   const mockToast = jest.fn();
   const mockSessions = [
     {
@@ -345,4 +345,3 @@ describe('DeviceManagement', () => {
     expect(screen.getByText('iPad')).toBeInTheDocument(); // tablet
   });
 });
-}}}}}}}}}}}}

@@ -43,6 +43,7 @@ const customJestConfig = {
     '<rootDir>/coverage/',
     '<rootDir>/build/',
     '<rootDir>/dist/',
+    '<rootDir>/__tests__/e2e/', // Exclude E2E tests that should run with Playwright
   ],
   
   // Transform ignore patterns
